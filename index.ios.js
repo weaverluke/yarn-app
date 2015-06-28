@@ -5,6 +5,14 @@
 'use strict';
 
 var React = require('react-native');
+// try {
+  var readability = require('node-read');
+// } catch (ex) {
+  // console.log('loading error', ex);
+// }
+
+var splitGluedTogetherWords = require('./splitGluedTogetherWords');
+
 var {
   AppRegistry,
   StyleSheet,
@@ -117,8 +125,8 @@ var yarn = React.createClass({
     this.parseTimeout = setTimeout(function () {
       this.parseTimeout = undefined;
       this.refs[WEBVIEW_REF].evaluateJavaScript('document.documentElement.outerHTML', function (err, result) {
-        console.log('website content:', result);
-        // this.parseWebsiteContent(result);
+        // console.log('website content:', result);
+        this.parseWebsiteContent(result);
       }.bind(this));
     }.bind(this), 500);
   },
@@ -127,6 +135,7 @@ var yarn = React.createClass({
     readability(html, function (error, article, meta) {
 
       var textContent = article.content.replace(/  +/g, ' '); // if there are multiple spaces, replace them into single one
+      console.log('website text content:', textContent);
       var words = splitGluedTogetherWords(textContent);
       console.log('parsed words,', words);
       var w = [];
