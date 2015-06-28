@@ -113,13 +113,13 @@ var yarn = React.createClass({
     if (this.parseTimeout) {
       clearTimeout(this.parseTimeout);
     }
+    console.log('schedule parsing');
     this.parseTimeout = setTimeout(function () {
       this.parseTimeout = undefined;
-      // debugger;
-      // this.refs[WEBVIEW_REF].evaluateJavaScript('document.documentElement.outerHTML', function (err, result) {
-      //   console.log('website content:', result);
-      //   this.parseWebsiteContent(result);
-      // }.bind(this));
+      this.refs[WEBVIEW_REF].evaluateJavaScript('document.documentElement.outerHTML', function (err, result) {
+        console.log('website content:', result);
+        // this.parseWebsiteContent(result);
+      }.bind(this));
     }.bind(this), 500);
   },
 
