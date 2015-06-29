@@ -5,11 +5,11 @@
 'use strict';
 
 var React = require('react-native');
-// try {
-  var readability = require('node-read');
-// } catch (ex) {
-  // console.log('loading error', ex);
-// }
+var readability = require('node-read');
+
+var YarnToolbar = require('./toolbar');
+var HIGHLIGHT_COLOR = '#22FF22';
+var highlighter = 'window.yarnHighlight=function(){function n(n){var t,r=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,!1);e();for(var d=new RegExp("\\\\b"+n+"\\\\b");t=r.nextNode();)if(d.test(t.nodeValue))return o.node=t.parentNode,o.content=t.parentNode.innerHTML,o.node.innerHTML=o.content.replace(d,\'<mark style="font-style:inherit;font-weight:inherit;background-color:'+HIGHLIGHT_COLOR+';">\'+n+"</mark>"),o.node.scrollIntoViewIfNeeded(),!0;return!1}function e(){o.node&&(o.node.innerHTML=o.content,o.node=void 0,o.content=void 0)}var o={node:void 0,content:void 0};return{highlight:n}}();'
 
 var splitGluedTogetherWords = require('./splitGluedTogetherWords');
 
@@ -101,6 +101,7 @@ var yarn = React.createClass({
           onNavigationStateChange={this.onNavigationStateChange}
           startInLoadingState={false}
         />
+        <YarnToolbar onAction={this.showPopup} words={this.state.words} />
       </View>
     );
   },
@@ -124,6 +125,7 @@ var yarn = React.createClass({
     console.log('schedule parsing');
     this.parseTimeout = setTimeout(function () {
       this.parseTimeout = undefined;
+      this.refs[WEBVIEW_REF].evaluateJavaScript(highlighter, function () {});
       this.refs[WEBVIEW_REF].evaluateJavaScript('document.documentElement.outerHTML', function (err, result) {
         // console.log('website content:', result);
         this.parseWebsiteContent(result);
@@ -153,10 +155,15 @@ var yarn = React.createClass({
 
   },
 
-  showPopup: function (rect) {
+  showPopup: function (rect, word) {
     this.setState({
       popupVisible: true,
       buttonRect: rect
+    });
+    console.log('highlihgt word:', word);
+    this.refs[WEBVIEW_REF].evaluateJavaScript('window.yarnHighlight.highlight("' + word + '");', function (err, result) {
+    // this.refs[WEBVIEW_REF].evaluateJavaScript('/Usługi/.test("Usługi")', function (err, result) {
+      console.log('highlight callback', err, result);
     });
   },
 
