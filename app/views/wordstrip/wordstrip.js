@@ -2,11 +2,7 @@
 
 var React = require('react-native');
 var {
-	TouchableWithoutFeedback,
 	StyleSheet,
-	Text,
-	TextInput,
-	TouchableOpacity,
 	View,
 } = React;
 

@@ -1,4 +1,4 @@
-var words = require('./words');
+var words = require('../../../words');
 var splitGluedTogetherWords = require('./splitGluedTogetherWords');
 
 function getWordsInRange(articleWords, start, stop) {

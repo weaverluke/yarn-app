@@ -11,12 +11,8 @@ var {
 } = React;
 
 var readability = require('node-read');
-var wordHelpers = require('../../../wordHelpers');
 
-var HIGHLIGHT_COLOR = '#22FF22';
-var USER_LEVEL = 40;
-var RANGE = 30;
-var highlighter = 'window.yarnHighlight=function(){function e(e){var r,d=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,!1);n();for(var i=new RegExp("\\\\b"+e+"\\\\b");r=d.nextNode();)if(-1===o.indexOf(r.parentNode.tagName)&&i.test(r.nodeValue))return t.node=r.parentNode,t.content=r.parentNode.innerHTML,t.node.innerHTML=t.content.replace(i,\'<mark style="background-color:' + HIGHLIGHT_COLOR + ';font-style:inherit;font-weight:inherit;">\'+e+"</mark>"),t.node.scrollIntoViewIfNeeded(),!0;return!1}function n(){t.node&&(t.node.innerHTML=t.content,t.node=void 0,t.content=void 0)}var o=["SCRIPT","NOSCRIPT"],t={node:void 0,content:void 0};return{highlight:e}}();';
+var YarnWebView = require('./yarnwebview');
 
 var BORDER = '#E7EAEA';
 var BGWASH = 'rgba(255,255,255,0.8)';
@@ -31,6 +27,7 @@ var Browser = React.createClass({
 
 	getInitialState: function () {
 		return {
+			url: this.props.url,
 			status: 'No Page Loaded',
 			backButtonEnabled: false,
 			forwardButtonEnabled: false,
@@ -71,50 +68,19 @@ var Browser = React.createClass({
 						</View>
 					</TouchableOpacity>
 				</View>
-				<WebView
+				<YarnWebView
 					ref={WEBVIEW_REF}
-					automaticallyAdjustContentInsets={false}
 					style={styles.webView}
-					url={this.props.url}
-					javaScriptEnabledAndroid={true}
+					url={this.state.url}
 					onNavigationStateChange={this.onNavigationStateChange}
-					startInLoadingState={false}
+					onWordsParsed={this.onWordsParsed}
 				/>
 			</View>
 		);
 	},
 
-	scheduleParsing: function () {
-		if (this.parseTimeout) {
-			clearTimeout(this.parseTimeout);
-		}
-		console.log('schedule parsing');
-
-		this.parseTimeout = setTimeout(function () {
-			this.parseTimeout = undefined;
-			this.refs[WEBVIEW_REF].evaluateJavaScript(highlighter, function () {});
-			this.refs[WEBVIEW_REF].evaluateJavaScript('document.documentElement.outerHTML', function (err, result) {
-				if (!result || result.indexOf('body') === -1) {
-					return this.scheduleParsing();
-				}
-				this.parseWebsiteContent(result);
-			}.bind(this));
-		}.bind(this), 1000);
-	},
-
-	parseWebsiteContent: function (html) {
-		readability(html, function (err, article, meta) {
-			if (err) {
-				throw err;
-			}
-			if (!article.content) {
-				return this.scheduleParsing();
-			}
-			var words = wordHelpers.extractWordsFromArticle(article.title + ' ' + article.content, USER_LEVEL, USER_LEVEL + RANGE);
-
-			// this should be done via store
-			this.props.onWordsParsed && this.props.onWordsParsed(words.splice(0, 5));
-		}.bind(this));
+	onWordsParsed: function (words) {
+		this.props.onWordsParsed && this.props.onWordsParsed(words);
 	},
 
 	goBack: function () {
@@ -130,7 +96,6 @@ var Browser = React.createClass({
 	},
 
 	onNavigationStateChange: function (navState) {
-		console.log('onNavigationStateChange', navState);
 		this.setState({
 			backButtonEnabled: navState.canGoBack,
 			forwardButtonEnabled: navState.canGoForward,
@@ -138,9 +103,6 @@ var Browser = React.createClass({
 			status: navState.title,
 			loading: navState.loading,
 		});
-		if (!navState.loading) {
-			this.scheduleParsing();
-		}
 	},
 
 	onSubmitEditing: function (event) {
@@ -159,8 +121,12 @@ var Browser = React.createClass({
 				url: url,
 			});
 		}
-		// dismiss keyoard
+		// dismiss keyboard
 		this.refs[TEXT_INPUT_REF].blur();
+	},
+
+	highlightWord: function (word, cb) {
+		this.refs[WEBVIEW_REF].highlightWord(word, cb);
 	},
 
 	evaluateJavaScript: function () {
@@ -178,10 +144,6 @@ var styles = StyleSheet.create({
 		padding: 8,
 		borderBottomWidth: 1,
 		borderBottomColor: BORDER
-	},
-	webView: {
-		backgroundColor: BGWASH,
-		height: 350,
 	},
 	addressBarTextInput: {
 		backgroundColor: BGWASH,
@@ -227,16 +189,6 @@ var styles = StyleSheet.create({
 		borderWidth: 1,
 		borderRadius: 3,
 		alignSelf: 'stretch',
-	},
-	statusBar: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		paddingLeft: 5,
-		height: 22,
-	},
-	statusBarText: {
-		color: 'white',
-		fontSize: 13,
 	},
 	spinner: {
 		width: 20,

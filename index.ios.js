@@ -55,9 +55,7 @@ var yarn = React.createClass({
 			buttonRect: rect
 		});
 		console.log('highlight word:', word);
-		this.refs[BROWSER_REF].evaluateJavaScript('window.yarnHighlight.highlight("' + word + '");', function (err, result) {
-			console.log('highlight callback', err, result);
-		});
+		this.refs[BROWSER_REF].highlightWord(word);
 	},
 
 	onWordsParsed: function (words) {
