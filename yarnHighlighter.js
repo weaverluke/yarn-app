@@ -1,4 +1,7 @@
 window.yarnHighlight = (function () {
+
+    var SKIP_NODES = ['SCRIPT', 'NOSCRIPT'];
+
     var lastHighlighted = {
         node: undefined,
         content: undefined
@@ -13,6 +16,11 @@ window.yarnHighlight = (function () {
         var rx = new RegExp('\\b' + word + '\\b');
 
         while (n = walker.nextNode()) {
+
+            if (SKIP_NODES.indexOf(n.parentNode.tagName) !== -1) {
+                continue; 
+            }
+
             if (rx.test(n.nodeValue)) {
                 lastHighlighted.node = n.parentNode;
                 lastHighlighted.content = n.parentNode.innerHTML;

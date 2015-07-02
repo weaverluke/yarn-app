@@ -9,9 +9,18 @@ var readability = require('node-read');
 
 var YarnToolbar = require('./toolbar');
 var HIGHLIGHT_COLOR = '#22FF22';
-var highlighter = 'window.yarnHighlight=function(){function n(n){var t,r=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,!1);e();for(var d=new RegExp("\\\\b"+n+"\\\\b");t=r.nextNode();)if(d.test(t.nodeValue))return o.node=t.parentNode,o.content=t.parentNode.innerHTML,o.node.innerHTML=o.content.replace(d,\'<mark style="font-style:inherit;font-weight:inherit;background-color:'+HIGHLIGHT_COLOR+';">\'+n+"</mark>"),o.node.scrollIntoViewIfNeeded(),!0;return!1}function e(){o.node&&(o.node.innerHTML=o.content,o.node=void 0,o.content=void 0)}var o={node:void 0,content:void 0};return{highlight:n}}();'
+var highlighter = 'window.yarnHighlight=function(){function e(e){var r,d=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,!1);n();for(var i=new RegExp("\\\\b"+e+"\\\\b");r=d.nextNode();)if(-1===o.indexOf(r.parentNode.tagName)&&i.test(r.nodeValue))return t.node=r.parentNode,t.content=r.parentNode.innerHTML,t.node.innerHTML=t.content.replace(i,\'<mark style="background-color:'+HIGHLIGHT_COLOR+';font-style:inherit;font-weight:inherit;">\'+e+"</mark>"),t.node.scrollIntoViewIfNeeded(),!0;return!1}function n(){t.node&&(t.node.innerHTML=t.content,t.node=void 0,t.content=void 0)}var o=["SCRIPT","NOSCRIPT"],t={node:void 0,content:void 0};return{highlight:e}}();';
+var wordHelpers = require('./wordHelpers');
 
-var splitGluedTogetherWords = require('./splitGluedTogetherWords');
+// setTimeout(function () {
+//   console.log('loading words');
+  // words = require('./words');
+//   console.log('words loaded');
+// }, 5000);
+
+var USER_LEVEL = 40;
+var RANGE = 30;
+
 
 var {
   AppRegistry,
@@ -30,7 +39,7 @@ var DISABLED_WASH = 'rgba(255,255,255,0.25)';
 
 var TEXT_INPUT_REF = 'urlInput';
 var WEBVIEW_REF = 'webview';
-var DEFAULT_URL = 'http://webngn.pl';
+var DEFAULT_URL = 'http://www.bbc.co.uk/news/education-24433320';
 
 var yarn = React.createClass({
 
@@ -43,7 +52,6 @@ var yarn = React.createClass({
       loading: true,
       popupVisible: false,
       words: []
-      // words: ['foo','bar','baz']
     };
   },
 
@@ -106,17 +114,6 @@ var yarn = React.createClass({
     );
   },
 
-  componentDidMount: function () {
-    // rnfs.readFile('./yarnHighlight.js').then(function (c) {
-    //   console.log(this.highlighterSource);
-    // });
-
-    // this.highlighterSource = fs.readFile('./yarnHighlight.js', 'utf-8', function (err, content) {
-    //   console.log(this.highlighterSource);
-    // }.bind(this));
-
-    // this.refs[WEBVIEW_REF].onMessage(this.onBridgeMessage.bind(this));
-  },
 
   scheduleParsing: function () {
     if (this.parseTimeout) {
@@ -127,27 +124,28 @@ var yarn = React.createClass({
       this.parseTimeout = undefined;
       this.refs[WEBVIEW_REF].evaluateJavaScript(highlighter, function () {});
       this.refs[WEBVIEW_REF].evaluateJavaScript('document.documentElement.outerHTML', function (err, result) {
-        // console.log('website content:', result);
+        if (!result || result.indexOf('body') === -1) {
+          return this.scheduleParsing(); 
+        }
         this.parseWebsiteContent(result);
       }.bind(this));
-    }.bind(this), 500);
+    }.bind(this), 1000);
   },
 
   parseWebsiteContent: function (html) {
-    readability(html, function (error, article, meta) {
-
-      var textContent = article.content.replace(/  +/g, ' '); // if there are multiple spaces, replace them into single one
-      console.log('website text content:', textContent);
-      var words = splitGluedTogetherWords(textContent);
-      console.log('parsed words,', words);
-      var w = [];
-
-      for (var i = 4; i-- >=0;) {
-        w.push(words[~~(Math.random() * words.length)]);
+    readability(html, function (err, article, meta) {
+      if (err) {
+        throw err;
       }
+      if (!article.content) {
+        return this.scheduleParsing();
+      }
+      var words = wordHelpers.extractWordsFromArticle(article.title + ' ' + article.content, USER_LEVEL, USER_LEVEL+RANGE);
+
       this.setState({
-        words: w
+        words: words.splice(0, 5)
       });
+
     }.bind(this));
   },
 
@@ -234,6 +232,9 @@ var yarn = React.createClass({
   },
 
   onSubmitEditing: function(event) {
+    this.setState({
+      words: []
+    });
     this.pressGoButton();
   },
 
