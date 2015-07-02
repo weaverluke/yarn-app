@@ -2,17 +2,13 @@
 
 var React = require('react-native');
 var {
-  AppRegistry,
-  TouchableWithoutFeedback,
-  // StyleSheet,
-  // Text,
-  // View,
-
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+	AppRegistry,
+	TouchableWithoutFeedback,
+	StyleSheet,
+	Text,
+	TextInput,
+	TouchableOpacity,
+	View,
 } = React;
 
 var TOOLBAR_HEIGHT = 18;
@@ -106,12 +102,12 @@ var WordButton = React.createClass({
 		console.log('onAction', this.props.onAction);
 		this.refs.button.measure(function (ox, oy, width, height, px, py) {
 			this.props.onAction({
-	      		x: px, 
-	      		y: py, 
-	      		width: width, 
-	      		height: height
+					x: px,
+					y: py,
+					width: width,
+					height: height
 			}, this.props.text);
-    	}.bind(this));	
+		}.bind(this));
 	}
 });
 
@@ -138,11 +134,11 @@ var styles = StyleSheet.create({
 	},
 
 	buttonArrow: {
-	    width: 5,
-	    borderTopColor: 'rgba(0,0,0,0)',
-	    borderBottomColor: 'rgba(0,0,0,0)',
-	    borderLeftWidth: 3,
-	    backgroundColor: '#777777',
+		width: 5,
+		borderTopColor: 'rgba(0,0,0,0)',
+		borderBottomColor: 'rgba(0,0,0,0)',
+		borderLeftWidth: 3,
+		backgroundColor: '#777777',
 		borderLeftColor: '#F2F1F2',
 	}
 });

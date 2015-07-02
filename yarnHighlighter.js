@@ -1,49 +1,49 @@
 window.yarnHighlight = (function () {
 
-    var SKIP_NODES = ['SCRIPT', 'NOSCRIPT'];
+	var SKIP_NODES = ['SCRIPT', 'NOSCRIPT'];
 
-    var lastHighlighted = {
-        node: undefined,
-        content: undefined
-    };
+	var lastHighlighted = {
+		node: undefined,
+		content: undefined
+	};
 
-    function highlight(word) {
-        var n;
-        var walker = document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,false);
-        
-        unhighlight();
+	function highlight(word) {
+		var n;
+		var walker = document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,false);
 
-        var rx = new RegExp('\\b' + word + '\\b');
+		unhighlight();
 
-        while (n = walker.nextNode()) {
+		var rx = new RegExp('\\b' + word + '\\b');
 
-            if (SKIP_NODES.indexOf(n.parentNode.tagName) !== -1) {
-                continue; 
-            }
+		while (n = walker.nextNode()) {
 
-            if (rx.test(n.nodeValue)) {
-                lastHighlighted.node = n.parentNode;
-                lastHighlighted.content = n.parentNode.innerHTML;
-                lastHighlighted.node.innerHTML = lastHighlighted.content.replace(rx, 
-                    '<mark style="background-color:rgb(0, 255, 100);font-style:inherit;font-weight:inherit;">'+word+'</mark>'
-                );
-                lastHighlighted.node.scrollIntoViewIfNeeded();
-                return true;
-            }
-        }
-        return false;
-    }
+			if (SKIP_NODES.indexOf(n.parentNode.tagName) !== -1) {
+				continue;
+			}
 
-    function unhighlight() {
-        if (lastHighlighted.node) {
-            lastHighlighted.node.innerHTML = lastHighlighted.content;
-            lastHighlighted.node = undefined;
-            lastHighlighted.content = undefined;
-        }
-    }
+			if (rx.test(n.nodeValue)) {
+				lastHighlighted.node = n.parentNode;
+				lastHighlighted.content = n.parentNode.innerHTML;
+				lastHighlighted.node.innerHTML = lastHighlighted.content.replace(rx,
+					'<mark style="background-color:rgb(0, 255, 100);font-style:inherit;font-weight:inherit;">'+word+'</mark>'
+				);
+				lastHighlighted.node.scrollIntoViewIfNeeded();
+				return true;
+			}
+		}
+		return false;
+	}
 
-    return {
-        highlight: highlight
-    };
+	function unhighlight() {
+		if (lastHighlighted.node) {
+			lastHighlighted.node.innerHTML = lastHighlighted.content;
+			lastHighlighted.node = undefined;
+			lastHighlighted.content = undefined;
+		}
+	}
+
+	return {
+		highlight: highlight
+	};
 }());
 
