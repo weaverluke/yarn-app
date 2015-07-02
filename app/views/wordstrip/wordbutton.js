@@ -25,8 +25,10 @@ var WordButton = React.createClass({
 			);
 		}
 		else {
-			additionalStyle.borderRightColor = '#F2F1F2';
+			additionalStyle.backgroundColor = '#777777';
 			additionalStyle.borderRightWidth = 1;
+			additionalStyle.borderRightColor = '#FFFFFF';
+			additionalStyle.color = '#FFFFFF';
 		}
 
 		if (!this.props.text) {
@@ -41,7 +43,7 @@ var WordButton = React.createClass({
 		return (
 			<TouchableWithoutFeedback onPress={this.onButtonPressed}>
 				<View ref="button" style={[styles.wordButton, additionalStyle]}>
-					<Text style={[styles.wordButtonText, {lineHeight: height * 0.7}]}>
+					<Text style={[styles.wordButtonText, {lineHeight: height * 0.7}, additionalStyle]}>
 						{this.props.text}
 					</Text>
 					{arrow}
@@ -72,8 +74,6 @@ var styles = StyleSheet.create({
 	},
 
 	wordButtonText: {
-		backgroundColor: '#F2F1F2',
-		color: '#333333',
 		paddingLeft: 5,
 		paddingRight: 5,
 		fontSize: 8,

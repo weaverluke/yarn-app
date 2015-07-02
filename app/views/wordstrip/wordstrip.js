@@ -19,11 +19,11 @@ var WordStrip = React.createClass({
 
 	render: function () {
 		console.log('WordStrip:', this.props.onAction);
-		var words = (this.props.words || []).map(function (word) {
+		var words = (this.props.words || []).map(function (word, i) {
 			return (
 				<WordButton 
 					height={this.state.height} 
-					arrow={true}
+					arrow={i == 0}
 					onAction={this.props.onAction}
 					text={word}
 				/>
