@@ -1,16 +1,24 @@
 'use strict';
 
-var eventEmitter = require('events').EventEmitter();
+//var eventEmitter = new require('events').EventEmitter();
+var Events = require('events');
+var eventEmitter = new Events.EventEmitter();
 var CHANGE_EVENT = 'store:changed';
 
-var data = {
-	currentWords: [],
-	currentWordIndex: 0
+var initialData = {
+	pageWords: [],
+	currentWordIndex: -1,
+	currentWord: '',
+	currentQuestion: null,
+	randomWordsCount: 5
 };
+
+var data = JSON.parse(JSON.stringify(initialData));
+var listenersPaused = false;
 
 function set(key, d) {
 	data[key] = d;
-	emitChange();
+	!listenersPaused && emitChange();
 }
 
 function get(key) {
@@ -25,8 +33,20 @@ function addChangeListener(listener) {
 	eventEmitter.on(CHANGE_EVENT, listener);
 }
 
+function reset() {
+	data = JSON.parse(JSON.stringify(initialData));
+	!listenersPaused && emitChange();
+}
+
+function pause(b) {
+	listenersPaused = b;
+	!listenersPaused && emitChange();
+}
+
 module.exports = {
 	addChangeListener: addChangeListener,
 	get: get,
-	set: set
+	set: set,
+	reset: reset,
+	pause: pause
 };

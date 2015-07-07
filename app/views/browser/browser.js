@@ -10,6 +10,8 @@ var {
 	WebView
 } = React;
 
+var gameSateStore = require('../../stores/gamestatestore');
+
 var readability = require('node-read');
 
 var YarnWebView = require('./yarnwebview');
@@ -77,6 +79,15 @@ var Browser = React.createClass({
 				/>
 			</View>
 		);
+	},
+
+	componentDidMount: function () {
+		gameSateStore.addChangeListener(this.onGameStateChanged.bind(this));
+	},
+
+	onGameStateChanged: function () {
+		var currentWord = gameSateStore.get('currentWord');
+		this.highlightWord(currentWord);
 	},
 
 	onWordsParsed: function (words) {

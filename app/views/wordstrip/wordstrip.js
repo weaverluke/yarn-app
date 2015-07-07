@@ -18,8 +18,15 @@ var WordStrip = React.createClass({
 	},
 
 	render: function () {
-		console.log('WordStrip:', this.props.onAction);
-		var words = (this.props.words || []).map(function (word, i) {
+		console.log('WordStrip:', this.props.onAction, this.props.words);
+		var wordsToRender = this.prepareWords();
+
+		if (!wordsToRender.length) {
+			return (<View/>);
+		}
+
+		//var words = (this.props.words || []).map(function (word, i) {
+		var words = wordsToRender.map(function (word, i) {
 			return (
 				<WordButton 
 					height={this.state.height} 
@@ -35,6 +42,30 @@ var WordStrip = React.createClass({
 				{words}
 			</View>
 		);
+	},
+
+	prepareWords: function () {
+		if (!this.props.words || !this.props.words.length) {
+			return [];
+		}
+
+		var words = JSON.parse(JSON.stringify(this.props.words));
+		var outputWords = [];
+
+		// shuffle words
+		words.sort(function () {
+			return Math.random() < 0.5;
+		});
+
+		while (words.length) {
+			var nextWord = words.pop();
+			if (nextWord.target) {
+				outputWords.unshift(nextWord.text);
+			}
+			outputWords.push(nextWord.definition);
+		}
+		console.log('wordstrip words', outputWords);
+		return outputWords;
 	}
 });
 

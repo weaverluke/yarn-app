@@ -295,7 +295,8 @@
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
-			tabWidth = 2;
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
@@ -351,7 +352,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0610;
-				ORGANIZATIONNAME = Facebook;
+				ORGANIZATIONNAME = weaverdigital;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
@@ -601,7 +602,7 @@
 					"$(SRCROOT)/node_modules/react-native/React/**",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = yarn;
@@ -619,7 +620,7 @@
 					"$(SRCROOT)/node_modules/react-native/React/**",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = yarn;
