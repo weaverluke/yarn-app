@@ -4,6 +4,7 @@ var React = require('react-native');
 
 var WordStrip = require('./app/views/wordstrip/wordstrip');
 var Browser = require('./app/views/browser/browser');
+var Popup = require('./app/views/popup/popup');
 var googleTranslate = require('./app/helpers/googletranslate');
 var gameStateStore = require('./app/stores/gamestatestore');
 var actions = require('./app/actions/actions');
@@ -37,8 +38,7 @@ var yarn = React.createClass({
 
 	render: function () {
 		this.inputText = this.state.url;
-
-		console.log('app', this.showPopup);
+		console.log('App.render()', this.state);
 
 		return (
 			<View style={[styles.container]}>
@@ -51,8 +51,11 @@ var yarn = React.createClass({
 					disabled={this.state.wordStripDisabled}
 					onAction={this.onWordPressed}
 					words={this.state.question}
-					highlightWord={this.state.highlightWord}
-					highlightWordColor={this.state.highlightWordColor}
+				/>
+				<Popup
+					visible={this.state.popupVisible}
+					onClose={this.onPopupClose}
+					onSubmit={this.onPopupSubmit}
 				/>
 			</View>
 		);
@@ -62,21 +65,31 @@ var yarn = React.createClass({
 		gameStateStore.addChangeListener(this.onGameStateChanged.bind(this));
 	},
 
+	onPopupClose: function () {
+		this.setState({
+			popupVisible: false
+		});
+		// this one should show status bar, but for now let's just continue game
+		actions.emit(actions.SHOW_NEXT_QUESTION);
+	},
+
+	onPopupSubmit: function () {
+		this.setState({
+			popupVisible: false
+		});
+		actions.emit(actions.SHOW_NEXT_QUESTION);
+	},
+
 	onGameStateChanged: function () {
 		var currentGameState = gameStateStore.get('currentState');
-		var highlightWord = currentGameState !== gameStateStore.GAME_STATES.WAITING_FOR_ANSWER ? gameStateStore.get('chosenAnswer') : false;
 		var wordStripDisabled = currentGameState !== gameStateStore.GAME_STATES.WAITING_FOR_ANSWER;
-
-		var highlightWordColor = '';
-		if (highlightWord) {
-			highlightWordColor = currentGameState === gameStateStore.GAME_STATES.CORRECT_ANSWER_CHOSEN ? '#00FF00' : '#FF0000';
-		}
+		var popupVisible = currentGameState === gameStateStore.GAME_STATES.CORRECT_ANSWER_CHOSEN ||
+				currentGameState === gameStateStore.GAME_STATES.WRONG_ANSWER_CHOSEN;
 
 		this.setState({
 			question: gameStateStore.get('currentQuestion'),
-			highlightWord: highlightWord,
-			highlightWordColor: highlightWordColor,
-			wordStripDisabled: wordStripDisabled
+			wordStripDisabled: wordStripDisabled,
+			popupVisible: popupVisible
 		});
 	},
 
@@ -98,7 +111,7 @@ var yarn = React.createClass({
 var styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: HEADER,
+		backgroundColor: HEADER
 	}
 });
 
