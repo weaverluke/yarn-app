@@ -5,12 +5,20 @@ var Events = require('events');
 var eventEmitter = new Events.EventEmitter();
 var CHANGE_EVENT = 'store:changed';
 
+var GAME_STATES = {
+	WAITING_FOR_ANSWER: 'WAITING_FOR_ANSWER',
+	WRONG_ANSWER_CHOSEN: 'ANSWER_CHOSEN',
+	CORRECT_ANSWER_CHOSEN: 'WRONG_ANSWER_CHOSEN'
+};
+
 var initialData = {
 	pageWords: [],
 	currentWordIndex: -1,
 	currentWord: '',
 	currentQuestion: null,
-	randomWordsCount: 5
+	chosenAnswer: '',
+	randomWordsCount: 3,
+	currentState: ''
 };
 
 var data = JSON.parse(JSON.stringify(initialData));
@@ -48,5 +56,6 @@ module.exports = {
 	get: get,
 	set: set,
 	reset: reset,
-	pause: pause
+	pause: pause,
+	GAME_STATES: GAME_STATES
 };

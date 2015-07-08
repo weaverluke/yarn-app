@@ -8,13 +8,25 @@ var {
 	View,
 } = React;
 
+var BUTTON_TYPES = {
+	QUESTION: 'QUESTION',
+	ANSWER_ENABLED: 'ANSWER_ENABLED',
+	ANSWER_DISABLED: 'ANSWER_DISABLED',
+	CORRECT_ANSWER_SELECTED: 'CORRECT_ANSWER_SELECTED',
+	CORRECT_ANSWER_NOT_SELECTED: 'CORRECT_ANSWER_NOT_SELECTED',
+	WRONG_ANSWER_SELECTED: 'WRONG_ANSWER_SELECTED'
+};
+
 var WordButton = React.createClass({
+
 	render: function () {
+		console.log('WordButton.render()', this.props);
+
+		var arrow;
 		var height = this.props.height;
 		var additionalStyle = {
 			height: height
 		};
-		var arrow;
 
 		if (this.props.arrow) {
 			arrow = (
@@ -24,29 +36,21 @@ var WordButton = React.createClass({
 				}]}></View>
 			);
 		}
-		else {
-			additionalStyle.backgroundColor = '#777777';
+
+		if (this.props.type !== BUTTON_TYPES.QUESTION) {
 			additionalStyle.borderRightWidth = 1;
 			additionalStyle.borderRightColor = '#FFFFFF';
-			additionalStyle.color = '#FFFFFF';
 		}
 
-		if (!this.props.text) {
-			additionalStyle.backgroundColor = 'transparent';
-			additionalStyle.width = 60;
-		}
-
-		if (this.props.green) {
-			additionalStyle.backgroundColor = '#41AC60';
-		}
+		var buttonColors = styles[this.props.type] || {};
 
 		return (
 			<TouchableWithoutFeedback onPress={this.onButtonPressed}>
-				<View ref="button" style={[styles.wordButton, additionalStyle]}>
-					<Text style={[styles.wordButtonText, {lineHeight: height * 0.7}, additionalStyle]}>
+				<View ref="button" style={[styles.wordButton, additionalStyle, buttonColors]}>
+					{arrow}
+					<Text style={[styles.wordButtonText, {lineHeight: height * 0.7}, buttonColors]}>
 						{this.props.text}
 					</Text>
-					{arrow}
 				</View>
 			</TouchableWithoutFeedback>
 		);
@@ -68,9 +72,7 @@ var WordButton = React.createClass({
 var styles = StyleSheet.create({
 
 	wordButton: {
-		flexDirection: 'row',
-		backgroundColor: '#F2F1F2',
-		color: '#333333'
+		flexDirection: 'row'
 	},
 
 	wordButtonText: {
@@ -85,9 +87,43 @@ var styles = StyleSheet.create({
 		borderTopColor: 'rgba(0,0,0,0)',
 		borderBottomColor: 'rgba(0,0,0,0)',
 		borderLeftWidth: 3,
-		backgroundColor: '#777777',
-		borderLeftColor: '#F2F1F2'
+		backgroundColor: 'rgba(0,0,0,0)',
+		borderLeftColor: '#F2F2F2'
+	},
+
+	QUESTION: {
+		backgroundColor: '#F2F2F2',
+		color: '#414042'
+	},
+
+	ANSWER_ENABLED: {
+		backgroundColor: '#787878',
+		color: '#FFFFFF'
+	},
+
+	ANSWER_DISABLED: {
+		backgroundColor: '#BEBEBE',
+		color: '#FFFFFF'
+	},
+
+	CORRECT_ANSWER_SELECTED: {
+		backgroundColor: '#41AC60',
+		color: '#FFFFFF'
+
+	},
+
+	CORRECT_ANSWER_NOT_SELECTED: {
+		backgroundColor: '#F2F2F2',
+		color: '#41AC60'
+	},
+
+	WRONG_ANSWER_SELECTED: {
+		backgroundColor: '#DF1C24',
+		color: '#FFFFFF'
+
 	}
 });
+
+WordButton.BUTTON_TYPES = BUTTON_TYPES;
 
 module.exports = WordButton;

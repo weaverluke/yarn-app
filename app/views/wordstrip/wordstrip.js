@@ -7,6 +7,7 @@ var {
 } = React;
 
 var WordButton = require('./wordbutton');
+var BUTTON_TYPES = WordButton.BUTTON_TYPES;
 
 var TOOLBAR_HEIGHT = 18;
 
@@ -18,21 +19,41 @@ var WordStrip = React.createClass({
 	},
 
 	render: function () {
-		console.log('WordStrip:', this.props.onAction, this.props.words);
+		console.log('WordStrip:', this.props.onAction, this.props);
 		var wordsToRender = this.prepareWords();
 
 		if (!wordsToRender.length) {
 			return (<View/>);
 		}
 
-		//var words = (this.props.words || []).map(function (word, i) {
 		var words = wordsToRender.map(function (word, i) {
+			var type;
+
+			if (i === 0) {
+				type = BUTTON_TYPES.QUESTION;
+			}
+			else if (this.props.disabled) {
+				if (word.target) {
+					type = word.chosen ? BUTTON_TYPES.CORRECT_ANSWER_SELECTED : BUTTON_TYPES.CORRECT_ANSWER_NOT_SELECTED;
+				}
+				else if (word.chosen) {
+					type = BUTTON_TYPES.WRONG_ANSWER_SELECTED;
+				}
+				else {
+					type = BUTTON_TYPES.ANSWER_DISABLED;
+				}
+			}
+			else {
+				type = BUTTON_TYPES.ANSWER_ENABLED;
+			}
+
 			return (
 				<WordButton 
 					height={this.state.height} 
-					arrow={i == 0}
-					onAction={this.props.onAction}
-					text={word}
+					arrow={i === 1}
+					onAction={this.props.type !== BUTTON_TYPES.QUESTION ? this.props.onAction : function () {}}
+					text={i === 0 ? word.text : word.definition}
+					type={type}
 				/>
 			);
 		}.bind(this));
@@ -52,19 +73,14 @@ var WordStrip = React.createClass({
 		var words = JSON.parse(JSON.stringify(this.props.words));
 		var outputWords = [];
 
-		// shuffle words
-		words.sort(function () {
-			return Math.random() < 0.5;
-		});
-
 		while (words.length) {
 			var nextWord = words.pop();
+			// if this is target word then copy it on first place in array
 			if (nextWord.target) {
-				outputWords.unshift(nextWord.text);
+				outputWords.unshift(nextWord);
 			}
-			outputWords.push(nextWord.definition);
+			outputWords.push(nextWord);
 		}
-		console.log('wordstrip words', outputWords);
 		return outputWords;
 	}
 });

@@ -87,7 +87,7 @@ var Browser = React.createClass({
 
 	onGameStateChanged: function () {
 		var currentWord = gameSateStore.get('currentWord');
-		this.highlightWord(currentWord);
+		this.highlightWord(currentWord.text);
 	},
 
 	onWordsParsed: function (words) {

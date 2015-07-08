@@ -47,7 +47,13 @@ var yarn = React.createClass({
 					url={this.state.url}
 					onWordsParsed={this.onWordsParsed}
 				/>
-				<WordStrip onAction={this.onWordPressed} words={this.state.question} />
+				<WordStrip
+					disabled={this.state.wordStripDisabled}
+					onAction={this.onWordPressed}
+					words={this.state.question}
+					highlightWord={this.state.highlightWord}
+					highlightWordColor={this.state.highlightWordColor}
+				/>
 			</View>
 		);
 	},
@@ -57,53 +63,34 @@ var yarn = React.createClass({
 	},
 
 	onGameStateChanged: function () {
+		var currentGameState = gameStateStore.get('currentState');
+		var highlightWord = currentGameState !== gameStateStore.GAME_STATES.WAITING_FOR_ANSWER ? gameStateStore.get('chosenAnswer') : false;
+		var wordStripDisabled = currentGameState !== gameStateStore.GAME_STATES.WAITING_FOR_ANSWER;
+
+		var highlightWordColor = '';
+		if (highlightWord) {
+			highlightWordColor = currentGameState === gameStateStore.GAME_STATES.CORRECT_ANSWER_CHOSEN ? '#00FF00' : '#FF0000';
+		}
+
 		this.setState({
-			question: gameStateStore.get('currentQuestion')
+			question: gameStateStore.get('currentQuestion'),
+			highlightWord: highlightWord,
+			highlightWordColor: highlightWordColor,
+			wordStripDisabled: wordStripDisabled
 		});
 	},
 
 	onWordPressed: function (rect, word) {
-		//fetch('https://www.googleapis.com/language/translate/v2?key=AIzaSyDAjHprVDfX_6z2fAs6Vf03g2sOfEiTogs'+
-		//	'&source=en' +
-		//	'&target=pl' +
-		//	'&q='+word
-		//)
-		//	.then(function (resp) {
-		//		return resp.text();
-		//	})
-		//	.then(function (respText) {
-		//		console.log('TRANSLATE RESP:', respText);
-		//	})
-		//	.catch(function (err) {
-		//		console.log('TRANSLATE ERROR', err)
-		//	});
+		//this.setState({
+		//	popupVisible: true,
+		//	buttonRect: rect
+		//});
 
-
-		this.setState({
-			popupVisible: true,
-			buttonRect: rect
-		});
-		console.log('highlight word:', word);
-		this.refs[BROWSER_REF].highlightWord(word);
+		actions.emit(actions.WORD_PRESSED, word);
 	},
 
 	onWordsParsed: function (words) {
 		actions.emit(actions.WORDS_PARSED, words);
-		//gameStateStore.set('currentWords', words);
-
-
-		//console.log('onWordsParsed:', words);
-		//googleTranslate.translateWords(words, 'en','pl')
-		//	.then(function (resp) {
-		//		console.log('TRANSLATION COMPLETE', resp);
-		//	})
-		//	.catch(function (ex) {
-		//		console.log('TRANSLATE ERROR' ,ex);
-		//	});
-
-		this.setState({
-			words: words
-		});
 	}
 
 });
