@@ -3,6 +3,7 @@ var {
 	StyleSheet,
 	View,
 	Text,
+	WebView,
 	TouchableWithoutFeedback
 } = React;
 
@@ -17,8 +18,10 @@ var Popup = React.createClass({
 			<TouchableWithoutFeedback onPress={this.props.onClose}>
 				<View style={styles.overlay} >
 					<View style={styles.popup}>
+						<Text style={styles.header}>{this.props.title}</Text>
+						<WebView html={this.props.content} />
 						<TouchableWithoutFeedback onPress={this.props.onSubmit}>
-							<Text>Next</Text>
+							<Text style={styles.nextButton}>Next</Text>
 						</TouchableWithoutFeedback>
 					</View>
 				</View>
@@ -47,10 +50,20 @@ var styles = StyleSheet.create({
 		bottom: 40,
 		flex: 1,
 		borderWidth: 1,
-		borderColor: '#000000',
+		borderColor: '#777777',
 		backgroundColor: '#FFFFFF',
-		width: 360,
-		height: 300
+		width: 340,
+		height: 300,
+		padding: 10
+	},
+
+	header: {
+		fontWeight: '700'
+	},
+
+	nextButton: {
+		paddingTop: 10,
+		textAlign: 'right'
 	}
 
 });

@@ -56,6 +56,8 @@ var yarn = React.createClass({
 					visible={this.state.popupVisible}
 					onClose={this.onPopupClose}
 					onSubmit={this.onPopupSubmit}
+					title={this.state.popupTitle}
+					content={this.state.popupContent}
 				/>
 			</View>
 		);
@@ -86,10 +88,22 @@ var yarn = React.createClass({
 		var popupVisible = currentGameState === gameStateStore.GAME_STATES.CORRECT_ANSWER_CHOSEN ||
 				currentGameState === gameStateStore.GAME_STATES.WRONG_ANSWER_CHOSEN;
 
+		var popupTitle = popupVisible ?
+			(currentGameState == gameStateStore.GAME_STATES.CORRECT_ANSWER_CHOSEN ? 'That\'s right!' : 'Oops...') : '';
+
+		var definition;
+		(gameStateStore.get('currentQuestion') || []).forEach(function (question) {
+			if (question.def) {
+				definition = question.def.entryContent
+			}
+		});
+
 		this.setState({
 			question: gameStateStore.get('currentQuestion'),
 			wordStripDisabled: wordStripDisabled,
-			popupVisible: popupVisible
+			popupVisible: popupVisible,
+			popupTitle: popupTitle,
+			popupContent: definition
 		});
 	},
 

@@ -5,6 +5,7 @@ var actions = require('./actiontypes');
 
 var getRandomWords = require('../helpers/getrandomwords');
 var googleTranslate = require('../helpers/googletranslate');
+var collins = require('../helpers/collins');
 
 var gameStateStore = require('../stores/gamestatestore');
 var userProfileStore = require('../stores/userprofilestore');
@@ -35,32 +36,54 @@ function onShowNextQuestion() {
 	var wordsToTranslate = getRandomWords(gameStateStore.get('randomWordsCount'));
 	wordsToTranslate.unshift(currentWord);
 
-	googleTranslate.translateWords(wordsToTranslate, 'en', userProfileStore.get('language'))
-		.then(function (translatedWords) {
-			console.log('translated words', translatedWords);
-			var question = translatedWords.data.translations.map(function (translatedWord, index) {
-				return {
-					text: wordsToTranslate[index],
-					definition: translatedWord.translatedText
-				};
-			});
+	var definition;
+	var question;
 
-			question[0].target = true;
-			gameStateStore.pause(true);
+	Promise.all([
+		collins.getDefinition(currentWord)
+			.then(function (resp) {
+				console.log('COLLINS:', resp);
+				definition = {
+					entryLabel: resp.entryLabel,
+					entryContent: resp.entryContent
+				}
+			})
+			.catch(function (ex) {
+				// show error screen
+				console.error('Can not translate words:', ex);
+			}),
 
+		googleTranslate.translateWords(wordsToTranslate, 'en', userProfileStore.get('language'))
+			.then(function (translatedWords) {
+				console.log('translated words', translatedWords);
+				question = translatedWords.data.translations.map(function (translatedWord, index) {
+					return {
+						text: wordsToTranslate[index],
+						definition: translatedWord.translatedText
+					};
+				});
 
-			gameStateStore.set('currentWord', question[0]);
-			// shuffle words
-			question.sort(function () { return Math.random() < 0.5; });
-			gameStateStore.set('currentQuestion', question);
-			gameStateStore.set('currentWordIndex', currentWordIndex);
-			gameStateStore.set('currentState', GAME_STATES.WAITING_FOR_ANSWER);
-			gameStateStore.pause(false);
-		})
-		.catch(function (ex) {
-			// show error screen
-			console.error('Can not translate words:', ex);
-		});
+				question[0].target = true;
+			})
+			.catch(function (ex) {
+				// show error screen
+				console.error('Can not translate words:', ex);
+			})
+
+	]).then(function () {
+		console.log('WORDS READY!');
+
+		gameStateStore.pause(true);
+		question[0].def = definition;
+		gameStateStore.set('currentWord', question[0]);
+		// shuffle words
+		question.sort(function () { return Math.random() < 0.5; });
+		gameStateStore.set('currentQuestion', question);
+		gameStateStore.set('currentWordIndex', currentWordIndex);
+		gameStateStore.set('currentState', GAME_STATES.WAITING_FOR_ANSWER);
+		gameStateStore.pause(false);
+	});
+
 }
 
 function onWordPressed(word) {
