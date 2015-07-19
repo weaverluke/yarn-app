@@ -20,7 +20,7 @@ var BUTTON_TYPES = {
 var WordButton = React.createClass({
 
 	render: function () {
-		console.log('WordButton.render()', this.props);
+		//console.log('WordButton.render()', this.props);
 
 		var arrow;
 		var height = this.props.height;
@@ -57,7 +57,7 @@ var WordButton = React.createClass({
 	},
 
 	onButtonPressed: function () {
-		console.log('onAction', this.props.onAction);
+		//console.log('onAction', this.props.onAction);
 		this.refs.button.measure(function (ox, oy, width, height, px, py) {
 			this.props.onAction({
 				x: px,

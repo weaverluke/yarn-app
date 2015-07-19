@@ -19,7 +19,7 @@ var WordStrip = React.createClass({
 	},
 
 	render: function () {
-		console.log('WordStrip:', this.props.onAction, this.props);
+		//console.log('WordStrip:', this.props.onAction, this.props);
 		var wordsToRender = this.prepareWords();
 
 		if (!wordsToRender.length) {

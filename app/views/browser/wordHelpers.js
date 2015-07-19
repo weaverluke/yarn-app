@@ -17,16 +17,16 @@ function getWordsInRange(articleWords, start, stop) {
 		}
 	});
 
-	console.log('words in desired level: ', output);
+	//console.log('words in desired level: ', output);
 	return output;
 }
 
 module.exports = {
 	extractWordsFromArticle: function (articleText, rangeStart, rangeStop) {
 	    var textContent = articleText.replace(/  +/g, ' '); // if there are multiple spaces, replace them into single one
-	    console.log('website text content:', textContent);
+	    //console.log('website text content:', textContent);
 	    var extractedWords = splitGluedTogetherWords(textContent);
-	    console.log('parsed words,', extractedWords);
+	    //console.log('parsed words,', extractedWords);
 
 		return getWordsInRange(extractedWords, rangeStart, rangeStop);
 	}

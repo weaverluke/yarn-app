@@ -24,6 +24,8 @@ var Popup = React.createClass({
 							<Text style={styles.nextButton}>Next</Text>
 						</TouchableWithoutFeedback>
 					</View>
+					<View style={styles.arrow}>
+					</View>
 				</View>
 			</TouchableWithoutFeedback>
 		);
@@ -64,6 +66,16 @@ var styles = StyleSheet.create({
 	nextButton: {
 		paddingTop: 10,
 		textAlign: 'right'
+	},
+	arrow: {
+		position: 'absolute',
+		bottom: 0,
+		left: 30,
+		width: 0,
+		borderTopColor: '#0000FF',
+		borderTopWidth: 10,
+		borderLeftColor: 'rgba(0,0,0,0)',
+		borderRightColor: 'rgba(0,0,0,0)'
 	}
 
 });

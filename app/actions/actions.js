@@ -42,7 +42,7 @@ function onShowNextQuestion() {
 	Promise.all([
 		collins.getDefinition(currentWord)
 			.then(function (resp) {
-				console.log('COLLINS:', resp);
+				//console.log('COLLINS:', resp);
 				definition = {
 					entryLabel: resp.entryLabel,
 					entryContent: resp.entryContent
@@ -55,7 +55,7 @@ function onShowNextQuestion() {
 
 		googleTranslate.translateWords(wordsToTranslate, 'en', userProfileStore.get('language'))
 			.then(function (translatedWords) {
-				console.log('translated words', translatedWords);
+				//console.log('translated words', translatedWords);
 				question = translatedWords.data.translations.map(function (translatedWord, index) {
 					return {
 						text: wordsToTranslate[index],
@@ -71,7 +71,7 @@ function onShowNextQuestion() {
 			})
 
 	]).then(function () {
-		console.log('WORDS READY!');
+		//console.log('WORDS READY!');
 
 		gameStateStore.pause(true);
 		question[0].def = definition;
