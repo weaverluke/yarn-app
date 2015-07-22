@@ -36,7 +36,8 @@ var yarn = React.createClass({
 			popupVisible: false,
 			initialPopupVisible: false,
 			question: [],
-			buttonRect: {}
+			buttonRect: {},
+			firstButtonRect: {}
 		};
 	},
 
@@ -48,7 +49,7 @@ var yarn = React.createClass({
 
 		var firstButtonRect = {
 			x: 0,
-			width: 70
+			width: 0
 		};
 
 		return (
@@ -59,6 +60,7 @@ var yarn = React.createClass({
 					onWordsParsed={this.onWordsParsed}
 				/>
 				<WordStrip
+					ref='wordstrip'
 					disabled={this.state.wordStripDisabled}
 					onAction={this.onWordPressed}
 					words={this.state.question}
@@ -76,7 +78,7 @@ var yarn = React.createClass({
 					onClose={this.closeInitialPopup}
 					onSubmit={this.closeInitialPopup}
 					type={Popup.POPUP_TYPE.INFO}
-					arrowRect={firstButtonRect}
+					arrowRect={this.state.firstButtonRect}
 				/>
 			</View>
 		);
@@ -128,6 +130,18 @@ var yarn = React.createClass({
 			popupContent: definition,
 			initialPopupVisible: initialPopupVisible
 		});
+
+		// if initial popup should be shown then we need to measure first button so we'll show arrow for that popup
+		// correctly
+		if (initialPopupVisible) {
+			setTimeout(function () {
+				this.refs['wordstrip'].getButtonRect(0, function (rect) {
+					this.setState({
+						firstButtonRect: rect
+					});
+				}.bind(this));
+			}.bind(this), 300);
+		}
 	},
 
 	onWordPressed: function (rect, word) {

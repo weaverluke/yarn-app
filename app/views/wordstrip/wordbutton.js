@@ -56,16 +56,32 @@ var WordButton = React.createClass({
 		);
 	},
 
-	onButtonPressed: function () {
-		//console.log('onAction', this.props.onAction);
+	getButtonRect: function (cb) {
+		console.log('wordbutton.getButtonRect()');
 		this.refs.button.measure(function (ox, oy, width, height, px, py) {
-			this.props.onAction({
+			console.log('wordbutton.getButtonRect()', ox, oy, width, height, px, py);
+			cb({
 				x: px,
 				y: py,
 				width: width,
 				height: height
-			}, this.props.text);
+			});
+		});
+	},
+
+	onButtonPressed: function () {
+		this.getButtonRect(function (rect) {
+			this.props.onAction(rect, this.props.text);
 		}.bind(this));
+		//console.log('onAction', this.props.onAction);
+		//this.refs.button.measure(function (ox, oy, width, height, px, py) {
+		//	this.props.onAction({
+		//		x: px,
+		//		y: py,
+		//		width: width,
+		//		height: height
+		//	}, this.props.text);
+		//}.bind(this));
 	}
 });
 

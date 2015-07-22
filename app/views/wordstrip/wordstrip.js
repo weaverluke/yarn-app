@@ -18,6 +18,11 @@ var WordStrip = React.createClass({
 		};
 	},
 
+	getButtonRect: function (buttonIndex, cb) {
+		console.log('wordstrip.getButtonRect()');
+		this.refs['button-' + buttonIndex].getButtonRect(cb);
+	},
+
 	render: function () {
 		//console.log('WordStrip:', this.props.onAction, this.props);
 		var wordsToRender = this.prepareWords();
@@ -51,6 +56,7 @@ var WordStrip = React.createClass({
 				<WordButton 
 					height={this.state.height} 
 					arrow={i === 1}
+					ref={'button-' + i}
 					onAction={this.props.type !== BUTTON_TYPES.QUESTION ? this.props.onAction : function () {}}
 					text={i === 0 ? word.text : word.definition}
 					type={type}

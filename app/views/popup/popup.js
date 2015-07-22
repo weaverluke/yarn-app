@@ -138,6 +138,7 @@ var styles = StyleSheet.create({
 
 	webView: {
 		borderWidth: 0,
+		marginBottom: 30
 	},
 
 	popup: {
