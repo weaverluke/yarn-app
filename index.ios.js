@@ -9,6 +9,10 @@ var googleTranslate = require('./app/helpers/googletranslate');
 var gameStateStore = require('./app/stores/gamestatestore');
 var actions = require('./app/actions/actions');
 
+var Dimensions = require('Dimensions');
+var {width, height} = Dimensions.get('window');
+console.log('DIM', width, height);
+
 var {
 	AppRegistry,
 	StyleSheet,
@@ -30,7 +34,9 @@ var yarn = React.createClass({
 		return {
 			url: DEFAULT_URL,
 			popupVisible: false,
-			question: []
+			initialPopupVisible: false,
+			question: [],
+			buttonRect: {}
 		};
 	},
 
@@ -39,6 +45,11 @@ var yarn = React.createClass({
 	render: function () {
 		this.inputText = this.state.url;
 		console.log('App.render()', this.state);
+
+		var firstButtonRect = {
+			x: 0,
+			width: 70
+		};
 
 		return (
 			<View style={[styles.container]}>
@@ -58,6 +69,14 @@ var yarn = React.createClass({
 					onSubmit={this.onPopupSubmit}
 					title={this.state.popupTitle}
 					content={this.state.popupContent}
+					arrowRect={this.state.buttonRect}
+				/>
+				<Popup
+					visible={this.state.initialPopupVisible}
+					onClose={this.closeInitialPopup}
+					onSubmit={this.closeInitialPopup}
+					type={Popup.POPUP_TYPE.INFO}
+					arrowRect={firstButtonRect}
 				/>
 			</View>
 		);
@@ -98,26 +117,36 @@ var yarn = React.createClass({
 			}
 		});
 
+		var initialPopupVisible = gameStateStore.get('currentWordIndex') === 0 &&
+				currentGameState === gameStateStore.GAME_STATES.WAITING_FOR_ANSWER;
+
 		this.setState({
 			question: gameStateStore.get('currentQuestion'),
 			wordStripDisabled: wordStripDisabled,
 			popupVisible: popupVisible,
 			popupTitle: popupTitle,
-			popupContent: definition
+			popupContent: definition,
+			initialPopupVisible: initialPopupVisible
 		});
 	},
 
 	onWordPressed: function (rect, word) {
-		//this.setState({
+		console.log('onWordPressed', rect, word);
+		this.setState({
 		//	popupVisible: true,
-		//	buttonRect: rect
-		//});
-
+			buttonRect: rect
+		});
 		actions.emit(actions.WORD_PRESSED, word);
 	},
 
 	onWordsParsed: function (words) {
 		actions.emit(actions.WORDS_PARSED, words);
+	},
+
+	closeInitialPopup: function () {
+		this.setState({
+			initialPopupVisible: false
+		});
 	}
 
 });
