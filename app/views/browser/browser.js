@@ -148,7 +148,7 @@ var Browser = React.createClass({
 var styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: HEADER,
+		backgroundColor: HEADER
 	},
 	addressBarRow: {
 		flexDirection: 'row',
@@ -166,7 +166,7 @@ var styles = StyleSheet.create({
 		paddingTop: 3,
 		paddingBottom: 3,
 		flex: 1,
-		fontSize: 14,
+		fontSize: 14
 	},
 	navButton: {
 		width: 20,
@@ -177,7 +177,7 @@ var styles = StyleSheet.create({
 		backgroundColor: BGWASH,
 		borderWidth: 1,
 		borderColor: BORDER,
-		borderRadius: 3,
+		borderRadius: 3
 	},
 	disabledButton: {
 		width: 20,
@@ -187,8 +187,7 @@ var styles = StyleSheet.create({
 		justifyContent: 'center',
 		backgroundColor: DISABLED_WASH,
 		borderColor: 'transparent',
-		borderRadius: 3,
-		color: '#AAAAAA'
+		borderRadius: 3
 	},
 	goButton: {
 		height: 24,
@@ -199,11 +198,11 @@ var styles = StyleSheet.create({
 		borderColor: BORDER,
 		borderWidth: 1,
 		borderRadius: 3,
-		alignSelf: 'stretch',
+		alignSelf: 'stretch'
 	},
 	spinner: {
 		width: 20,
-		marginRight: 6,
+		marginRight: 6
 	}
 });
 module.exports = Browser;

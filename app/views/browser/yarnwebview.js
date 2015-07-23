@@ -17,7 +17,6 @@ var RANGE = 30;
 var BORDER = '#E7EAEA';
 var BGWASH = 'rgba(255,255,255,0.8)';
 var HEADER = '#F9FAFB';
-var DISABLED_WASH = 'rgba(255,255,255,0.25)';
 
 var WEBVIEW_REF = 'webview';
 
@@ -50,7 +49,7 @@ var Browser = React.createClass({
 		);
 	},
 
-	scheduleParsing: function () {
+	scheduleParsing: function (fast) {
 		if (this.parseTimeout) {
 			clearTimeout(this.parseTimeout);
 		}
@@ -65,18 +64,35 @@ var Browser = React.createClass({
 				}
 				this.parseWebsiteContent(result);
 			}.bind(this));
-		}.bind(this), 1000);
+		}.bind(this), fast ? 300 : 700);
 	},
 
 	parseWebsiteContent: function (html) {
 		readability(html, function (err, article, meta) {
+			//console.log('html to parse', html);
+			//console.log('parsed html', article.title, article.content);
 			if (err) {
 				throw err;
 			}
-			if (!article.content) {
+			var content = (article.content || '').replace(/\s/g, '');
+			// if there's no content then wait for it
+			if (!content.length) {
 				return this.scheduleParsing();
 			}
-			var words = wordHelpers.extractWordsFromArticle(article.title + ' ' + article.content, USER_LEVEL, USER_LEVEL + RANGE);
+			// if there's a content but it's different from previously stored then try again with a shorter timeout
+			// as page might still be loading
+			else if (this.lastArticleContent !== article.content) {
+				this.lastArticleContent = article.content;
+				return this.scheduleParsing(true);
+			}
+
+			var contentToParse = article.title + ' ' + article.content;
+			// we don't want to parse the same content twice
+			if (this.lastParsedContent === contentToParse) {
+				return;
+			}
+			this.lastParsedContnet = contentToParse;
+			var words = wordHelpers.extractWordsFromArticle(contentToParse, USER_LEVEL, USER_LEVEL + RANGE);
 
 			// this should be done via store
 			this.props.onWordsParsed && this.props.onWordsParsed(words.splice(0, 5));
@@ -103,7 +119,7 @@ var Browser = React.createClass({
 		this.setState({
 			url: navState.url,
 			status: navState.title,
-			loading: navState.loading,
+			loading: navState.loading
 		});
 		if (!navState.loading) {
 			this.scheduleParsing();
@@ -112,7 +128,7 @@ var Browser = React.createClass({
 
 	highlightWord: function (word) {
 		this.evaluateJavaScript('window.yarnHighlight.highlight("' + word + '");', function (err, result) {
-			console.log('highlight callback', err, result);
+			//console.log('highlight callback', err, result);
 		});
 	},
 
@@ -124,7 +140,7 @@ var Browser = React.createClass({
 var styles = StyleSheet.create({
 	webView: {
 		backgroundColor: BGWASH,
-		height: 350,
+		height: 350
 	}
 });
 module.exports = Browser;

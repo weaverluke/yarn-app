@@ -57,9 +57,7 @@ var WordButton = React.createClass({
 	},
 
 	getButtonRect: function (cb) {
-		console.log('wordbutton.getButtonRect()');
 		this.refs.button.measure(function (ox, oy, width, height, px, py) {
-			console.log('wordbutton.getButtonRect()', ox, oy, width, height, px, py);
 			cb({
 				x: px,
 				y: py,

@@ -19,7 +19,6 @@ var WordStrip = React.createClass({
 	},
 
 	getButtonRect: function (buttonIndex, cb) {
-		console.log('wordstrip.getButtonRect()');
 		this.refs['button-' + buttonIndex].getButtonRect(cb);
 	},
 

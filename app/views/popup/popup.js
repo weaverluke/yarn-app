@@ -7,10 +7,6 @@ var {
 	TouchableWithoutFeedback
 } = React;
 
-function noop() {
-	console.log('noop', arguments[0], arguments[1]);
-}
-
 var LinearGradient = require('react-native-linear-gradient');
 
 var Dimensions = require('Dimensions');
