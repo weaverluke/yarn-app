@@ -7,6 +7,12 @@ var {
 	TouchableWithoutFeedback
 } = React;
 
+function noop() {
+	console.log('noop', arguments[0], arguments[1]);
+}
+
+var LinearGradient = require('react-native-linear-gradient');
+
 var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
 
@@ -15,11 +21,13 @@ var POPUP_TYPE = {
 	ANSWER: 'ANSWER'
 };
 
-var ARROW_EDGE_WIDTH = 10;
-var ARROW_WIDTH = ARROW_EDGE_WIDTH * Math.sqrt(2);
 
 // margin from left and right edge
 var POPUP_MARGIN = 10;
+
+var ARROW_EDGE_WIDTH = 10;
+var ARROW_WIDTH = ARROW_EDGE_WIDTH * Math.sqrt(2);
+var ARROW_MIN_LEFT = POPUP_MARGIN + 3; // 3 for rounded corners
 
 var Popup = React.createClass({
 
@@ -68,20 +76,21 @@ var Popup = React.createClass({
 
 		return (
 			<View style={[styles.popup, extraStyle]}>
-				<View style={styles.row}>
-					<View>
-						<Text>Tap the best</Text>
-						<Text>translation...</Text>
+				<TouchableWithoutFeedback onPress={this.props.cancelPress}>
+					<View style={[styles.contentWrap, styles.row]}>
+						<View>
+							<Text>Tap the best</Text>
+							<Text>translation...</Text>
+						</View>
+						<View>
+							<TouchableWithoutFeedback onPress={this.props.onSubmit}>
+								<View style={styles.confirmButton}>
+									<Text style={styles.confirmButtonText}>OK</Text>
+								</View>
+							</TouchableWithoutFeedback>
+						</View>
 					</View>
-					<View>
-						<TouchableWithoutFeedback onPress={this.props.onSubmit}>
-							<View style={styles.confirmButton}>
-								<Text style={styles.confirmButtonText}>OK</Text>
-							</View>
-						</TouchableWithoutFeedback>
-					</View>
-				</View>
-
+				</TouchableWithoutFeedback>
 				<View style={[styles.arrow, {left: arrowLeft}]}>
 				</View>
 			</View>
@@ -98,19 +107,24 @@ var Popup = React.createClass({
 
 		return (
 			<View style={[styles.popup, extraStyle]}>
-				<Text style={styles.header}>{this.props.title}</Text>
+				<TouchableWithoutFeedback onPress={this.props.cancelPress}>
+					<View style={styles.contentWrap}>
+						<Text style={styles.header}>{this.props.title}</Text>
 
-				<WebView html={this.props.content} style={styles.webView}/>
+						<WebView html={this.props.content} style={styles.webView}/>
 
-				<View style={styles.footer}>
-					<TouchableWithoutFeedback onPress={this.props.onSubmit}>
-						<View style={styles.nextButton}>
-							<View style={styles.nextButtonArrow}>
-							</View>
+
+						<View style={styles.footer}>
+							<TouchableWithoutFeedback onPress={this.props.onSubmit}>
+								<View style={styles.nextButton}>
+									<View style={styles.nextButtonArrow}>
+									</View>
+								</View>
+							</TouchableWithoutFeedback>
 						</View>
-					</TouchableWithoutFeedback>
-				</View>
 
+					</View>
+				</TouchableWithoutFeedback>
 				<View style={[styles.arrow, {left: arrowLeft}]}>
 				</View>
 			</View>
@@ -118,7 +132,12 @@ var Popup = React.createClass({
 	},
 
 	computeArrowPosition: function () {
-		return this.props.arrowRect.x + this.props.arrowRect.width/2 - ARROW_WIDTH;
+		return Math.max(this.props.arrowRect.x + this.props.arrowRect.width/2 - ARROW_WIDTH, ARROW_MIN_LEFT);
+	},
+
+	cancelPress: function (ev) {
+		ev.preventDefault();
+		ev.stopPropagation();
 	}
 
 });
@@ -136,9 +155,17 @@ var styles = StyleSheet.create({
 		flex: 1
 	},
 
+	contentWrap: {
+		position: 'absolute',
+		top: 10,
+		left: 10,
+		bottom: 10,
+		right: 10
+	},
+
 	webView: {
 		borderWidth: 0,
-		marginBottom: 30
+		marginBottom: 5
 	},
 
 	popup: {
@@ -149,7 +176,6 @@ var styles = StyleSheet.create({
 		backgroundColor: '#FFFFFF',
 		borderRadius: 3,
 		height: 200,
-		padding: 10,
 		paddingBottom: 0,
 		shadowColor: '#000000',
 		shadowOffset: {
@@ -166,21 +192,23 @@ var styles = StyleSheet.create({
 
 	footer: {
 		height: 20,
-		paddingTop: 10,
 		position: 'absolute',
-		bottom: 15,
 		left: 0,
-		right: 0
+		right: 0,
+		bottom: 0,
+		backgroundColor: '#FFFFFF'
 	},
 
 	nextButton: {
 		position: 'absolute',
 		right: 0,
+		top: 0,
 		width: 20,
 		height: 20,
 		backgroundColor: '#27AAE1',
 		borderRadius: 10
 	},
+
 	nextButtonArrow: {
 		borderColor: 'rgba(0,0,0,0)',
 		borderWidth: 5,
