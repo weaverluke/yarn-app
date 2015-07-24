@@ -4,7 +4,8 @@ var {
 	View,
 	Text,
 	WebView,
-	TouchableWithoutFeedback
+	TouchableWithoutFeedback,
+	Image
 } = React;
 
 var LinearGradient = require('react-native-linear-gradient');
@@ -107,8 +108,11 @@ var Popup = React.createClass({
 					<View style={styles.contentWrap}>
 						<Text style={styles.header}>{this.props.title}</Text>
 
-						<WebView html={this.props.content} style={styles.webView}/>
 
+						<WebView html={this.props.content} style={styles.webView}/>
+						<View style={styles.gradient}>
+							<Image source={require('image!horizontal-gradient')} style={styles.gradientImage}/>
+						</View>
 
 						<View style={styles.footer}>
 							<TouchableWithoutFeedback onPress={this.props.onSubmit}>
@@ -245,6 +249,20 @@ var styles = StyleSheet.create({
 
 	confirmButtonText: {
 		color: '#FFFFFF'
+	},
+
+	gradientImage: {
+		height: 20
+	},
+
+	gradient: {
+		height: 20,
+		backgroundColor: 'transparent',
+		position: 'absolute',
+		bottom: 20,
+		left: 0,
+		right: 0,
+		overflow: 'hidden'
 	}
 
 });
