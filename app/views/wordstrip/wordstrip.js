@@ -6,6 +6,7 @@ var {
 	View,
 } = React;
 
+var COLORS = require('../../constants').COLORS;
 var WordButton = require('./wordbutton');
 var BUTTON_TYPES = WordButton.BUTTON_TYPES;
 
@@ -93,7 +94,7 @@ var WordStrip = React.createClass({
 var styles = StyleSheet.create({
 
 	toolbar: {
-		backgroundColor: '#777777',
+		backgroundColor: COLORS.SELECTED_GREY,
 		flexDirection: 'row'
 	}
 

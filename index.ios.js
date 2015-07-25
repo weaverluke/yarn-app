@@ -5,6 +5,8 @@ var React = require('react-native');
 var WordStrip = require('./app/views/wordstrip/wordstrip');
 var Browser = require('./app/views/browser/browser');
 var Popup = require('./app/views/popup/popup');
+var NavBar = require('./app/views/navbar/navbar');
+
 var googleTranslate = require('./app/helpers/googletranslate');
 var gameStateStore = require('./app/stores/gamestatestore');
 var actions = require('./app/actions/actions');
@@ -37,7 +39,8 @@ var yarn = React.createClass({
 			initialPopupVisible: false,
 			question: [],
 			buttonRect: {},
-			firstButtonRect: {}
+			firstButtonRect: {},
+			wordstripVisible: true
 		};
 	},
 
@@ -47,10 +50,8 @@ var yarn = React.createClass({
 		this.inputText = this.state.url;
 		console.log('App.render()', this.state);
 
-		var firstButtonRect = {
-			x: 0,
-			width: 0
-		};
+
+		var bottomBar = this.state.wordstripVisible ? this.renderWordStrip() : this.renderNavbar();
 
 		return (
 			<View style={[styles.container]}>
@@ -59,12 +60,7 @@ var yarn = React.createClass({
 					url={this.state.url}
 					onWordsParsed={this.onWordsParsed}
 				/>
-				<WordStrip
-					ref='wordstrip'
-					disabled={this.state.wordStripDisabled}
-					onAction={this.onWordPressed}
-					words={this.state.question}
-				/>
+				{bottomBar}
 				<Popup
 					visible={this.state.popupVisible}
 					onClose={this.onPopupClose}
@@ -84,23 +80,57 @@ var yarn = React.createClass({
 		);
 	},
 
+	renderNavbar: function () {
+		return (
+			<NavBar
+				currentWordIndex={gameStateStore.get('currentWordIndex')}
+				totalWords={gameStateStore.get('pageWords').length}
+				onSettingsPress={this.showSettings}
+				onNextPress={this.showNextQuestion}
+			/>
+		)
+	},
+
+	renderWordStrip: function () {
+		return (
+			<WordStrip
+				ref='wordstrip'
+				disabled={this.state.wordStripDisabled}
+				onAction={this.onWordPressed}
+				words={this.state.question}
+			/>
+		);
+	},
+
+	showSettings: function () {
+
+	},
+
+	showNextQuestion: function () {
+		this.setState({
+			wordstripVisible: true
+		});
+		actions.emit(actions.SHOW_NEXT_QUESTION);
+	},
+
 	componentDidMount: function () {
 		gameStateStore.addChangeListener(this.onGameStateChanged.bind(this));
 	},
 
 	onPopupClose: function () {
 		this.setState({
-			popupVisible: false
+			popupVisible: false,
+			wordstripVisible: false
 		});
 		// this one should show status bar, but for now let's just continue game
-		actions.emit(actions.SHOW_NEXT_QUESTION);
+		//this.showNextQuestion();
 	},
 
 	onPopupSubmit: function () {
 		this.setState({
 			popupVisible: false
 		});
-		actions.emit(actions.SHOW_NEXT_QUESTION);
+		this.showNextQuestion();
 	},
 
 	onGameStateChanged: function () {
@@ -119,7 +149,8 @@ var yarn = React.createClass({
 			}
 		});
 
-		var initialPopupVisible = gameStateStore.get('currentWordIndex') === 0 &&
+		var initialPopupVisible = this.state.wordstripVisible &&
+				gameStateStore.get('currentWordIndex') === 0 &&
 				currentGameState === gameStateStore.GAME_STATES.WAITING_FOR_ANSWER;
 
 		this.setState({

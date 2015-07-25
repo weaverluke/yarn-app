@@ -8,8 +8,6 @@ var {
 	Image
 } = React;
 
-var LinearGradient = require('react-native-linear-gradient');
-
 var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
 
