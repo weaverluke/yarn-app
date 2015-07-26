@@ -3,6 +3,7 @@
 var React = require('react-native');
 var {
 	StyleSheet,
+	ScrollView,
 	View,
 } = React;
 
@@ -67,13 +68,18 @@ var WordStrip = React.createClass({
 
 		return (
 			<View style={styles.toolbar}>
-				<View style={styles.words}>
-					{words}
-				</View>
-				<NavbarButton
-					onPress={this.props.onSettingsPress}
-					icon={'settings'}
-				/>
+				<ScrollView
+					horizontal={true}
+					showsHorizontalScrollIndicator={false}
+				>
+					<View style={styles.words}>
+						{words}
+					</View>
+					<NavbarButton
+						onPress={this.props.onSettingsPress}
+						icon={'settings'}
+					/>
+				</ScrollView>
 			</View>
 		);
 	},

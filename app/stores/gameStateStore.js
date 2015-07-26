@@ -17,7 +17,7 @@ var initialData = {
 	currentWord: '',
 	currentQuestion: null,
 	chosenAnswer: '',
-	randomWordsCount: 4,
+	randomWordsCount: 5,
 	currentState: '',
 	correct: 0,
 	wrong: 0,
