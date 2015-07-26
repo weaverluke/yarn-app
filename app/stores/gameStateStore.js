@@ -17,8 +17,11 @@ var initialData = {
 	currentWord: '',
 	currentQuestion: null,
 	chosenAnswer: '',
-	randomWordsCount: 3,
-	currentState: ''
+	randomWordsCount: 4,
+	currentState: '',
+	correct: 0,
+	wrong: 0,
+	finished: false
 };
 
 var data = JSON.parse(JSON.stringify(initialData));

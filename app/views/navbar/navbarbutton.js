@@ -58,6 +58,7 @@ var NavBarButton = React.createClass({
 
 var styles = StyleSheet.create({
 	wrap: {
+		backgroundColor: '#FFFFFF',
 		width: 25,
 		borderLeftWidth: 1,
 		borderLeftColor: COLORS.MID_GREY,

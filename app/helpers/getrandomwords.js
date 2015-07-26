@@ -4,7 +4,7 @@ module.exports = function (amount) {
 	amount || (amount = 5);
 	var results = [];
 
-	while (amount--) {
+	while (--amount) {
 		var index = Math.round(Math.random() * words.length);
 		results.push(words[index]);
 	}

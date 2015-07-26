@@ -6,6 +6,7 @@ var WordStrip = require('./app/views/wordstrip/wordstrip');
 var Browser = require('./app/views/browser/browser');
 var Popup = require('./app/views/popup/popup');
 var NavBar = require('./app/views/navbar/navbar');
+var Result = require('./app/views/result/result');
 
 var googleTranslate = require('./app/helpers/googletranslate');
 var gameStateStore = require('./app/stores/gamestatestore');
@@ -40,7 +41,8 @@ var yarn = React.createClass({
 			question: [],
 			buttonRect: {},
 			firstButtonRect: {},
-			wordstripVisible: true
+			wordstripVisible: true,
+			resultViewVisible: false
 		};
 	},
 
@@ -48,8 +50,6 @@ var yarn = React.createClass({
 
 	render: function () {
 		this.inputText = this.state.url;
-		console.log('App.render()', this.state);
-
 
 		var bottomBar = this.state.wordstripVisible ? this.renderWordStrip() : this.renderNavbar();
 
@@ -76,6 +76,7 @@ var yarn = React.createClass({
 					type={Popup.POPUP_TYPE.INFO}
 					arrowRect={this.state.firstButtonRect}
 				/>
+				{this.renderResult()}
 			</View>
 		);
 	},
@@ -100,6 +101,26 @@ var yarn = React.createClass({
 				words={this.state.question}
 			/>
 		);
+	},
+
+	renderResult: function () {
+		if (!this.state.resultViewVisible) {
+			return (<View />);
+		}
+
+		return (
+			<Result
+				onClose={this.closeResultView}
+				correct={gameStateStore.get('correct')}
+				wrong={gameStateStore.get('wrong')}
+			/>
+		);
+	},
+
+	closeResultView: function () {
+		this.setState({
+			resultViewVisible: false
+		});
 	},
 
 	showSettings: function () {
@@ -134,6 +155,11 @@ var yarn = React.createClass({
 	},
 
 	onGameStateChanged: function () {
+		if (gameStateStore.get('finished')) {
+			this.finishGame();
+			return;
+		}
+
 		var currentGameState = gameStateStore.get('currentState');
 		var wordStripDisabled = currentGameState !== gameStateStore.GAME_STATES.WAITING_FOR_ANSWER;
 		var popupVisible = currentGameState === gameStateStore.GAME_STATES.CORRECT_ANSWER_CHOSEN ||
@@ -175,10 +201,16 @@ var yarn = React.createClass({
 		}
 	},
 
-	onWordPressed: function (rect, word) {
-		console.log('onWordPressed', rect, word);
+	finishGame: function () {
 		this.setState({
-		//	popupVisible: true,
+			resultViewVisible: !!gameStateStore.get('pageWords').length,
+			popupVisible: false,
+			wordstripVisible: false
+		});
+	},
+
+	onWordPressed: function (rect, word) {
+		this.setState({
 			buttonRect: rect
 		});
 		actions.emit(actions.WORD_PRESSED, word);

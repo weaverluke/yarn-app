@@ -10,6 +10,11 @@ var collins = require('../helpers/collins');
 var gameStateStore = require('../stores/gamestatestore');
 var userProfileStore = require('../stores/userprofilestore');
 
+var React = require('react-native');
+var {
+	AsyncStorage
+} = React;
+
 var GAME_STATES = gameStateStore.GAME_STATES;
 
 Object.keys(actions).forEach(function (action) {
@@ -31,6 +36,11 @@ function onWordsParsed(words) {
 
 function onShowNextQuestion() {
 	var currentWordIndex = gameStateStore.get('currentWordIndex') + 1;
+
+	if (currentWordIndex === gameStateStore.get('pageWords').length) {
+		gameStateStore.set('finished', true);
+		return
+	}
 
 	var currentWord = gameStateStore.get('pageWords')[currentWordIndex];
 	var wordsToTranslate = getRandomWords(gameStateStore.get('randomWordsCount'));
@@ -96,10 +106,17 @@ function onWordPressed(word) {
 
 	gameStateStore.set('chosenAnswer', word);
 	if (word === gameStateStore.get('currentWord').definition) {
+		gameStateStore.set('correct', gameStateStore.get('correct') + 1);
 		gameStateStore.set('currentState', GAME_STATES.CORRECT_ANSWER_CHOSEN);
+		updateUserStats(1);
+		console.log('correct + 1', gameStateStore.get('correct'));
 	}
 	else {
+		console.log('wrong + 1');
+		gameStateStore.set('wrong', gameStateStore.get('wrong') + 1);
 		gameStateStore.set('currentState', GAME_STATES.WRONG_ANSWER_CHOSEN);
+		updateUserStats(-1);
+		console.log('wrong + 1', gameStateStore.get('wrong'));
 	}
 
 	var question = gameStateStore.get('currentQuestion');
@@ -111,6 +128,38 @@ function onWordPressed(word) {
 	});
 
 	gameStateStore.pause(false);
+}
+
+function updateUserStats(value) {
+	var key = '@yarn:';
+	if (value > 0) {
+		key += 'correct';
+	} else {
+		key += 'wrong'
+	}
+
+	value = Math.abs(value);
+
+	AsyncStorage
+		.getItem(key)
+		.then(incrementValue)
+		.done();
+
+
+	function incrementValue(currentValue) {
+		if (currentValue === null) {
+			currentValue = 0;
+		} else {
+			currentValue = parseInt(currentValue, 10);
+		}
+		currentValue += value;
+
+		console.log('user stats change:', key, currentValue);
+
+		AsyncStorage
+			.setItem(key, ''+currentValue)
+			.done();
+	}
 }
 
 module.exports = bus;

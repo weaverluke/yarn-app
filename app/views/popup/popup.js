@@ -11,6 +11,8 @@ var {
 var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
 
+var COLORS = require('../../constants').COLORS;
+
 var POPUP_TYPE = {
 	INFO: 'INFO',
 	ANSWER: 'ANSWER'
@@ -203,7 +205,7 @@ var styles = StyleSheet.create({
 		top: 0,
 		width: 20,
 		height: 20,
-		backgroundColor: '#27AAE1',
+		backgroundColor: COLORS.BLUE,
 		borderRadius: 10
 	},
 
@@ -235,7 +237,7 @@ var styles = StyleSheet.create({
 	},
 
 	confirmButton: {
-		backgroundColor: '#22FF22',
+		backgroundColor: COLORS.GREEN,
 		paddingTop: 5,
 		paddingBottom: 5,
 		paddingLeft: 15,
