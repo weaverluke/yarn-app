@@ -7,6 +7,7 @@ var Browser = require('./app/views/browser/browser');
 var Popup = require('./app/views/popup/popup');
 var NavBar = require('./app/views/navbar/navbar');
 var Result = require('./app/views/result/result');
+var Settings = require('./app/views/settings/settings');
 
 var googleTranslate = require('./app/helpers/googletranslate');
 var gameStateStore = require('./app/stores/gamestatestore');
@@ -42,7 +43,8 @@ var yarn = React.createClass({
 			buttonRect: {},
 			firstButtonRect: {},
 			wordstripVisible: true,
-			resultViewVisible: false
+			resultViewVisible: false,
+			settingsViewVisible: false
 		};
 	},
 
@@ -77,6 +79,7 @@ var yarn = React.createClass({
 					arrowRect={this.state.firstButtonRect}
 				/>
 				{this.renderResult()}
+				{this.renderSettings()}
 			</View>
 		);
 	},
@@ -118,6 +121,17 @@ var yarn = React.createClass({
 		);
 	},
 
+	renderSettings: function () {
+		if (!this.state.settingsViewVisible) {
+			return (<View />);
+		}
+
+		return (
+			<Settings onClose={this.closeSettingsView} />
+		);
+
+	},
+
 	closeResultView: function () {
 		this.setState({
 			resultViewVisible: false
@@ -125,7 +139,15 @@ var yarn = React.createClass({
 	},
 
 	showSettings: function () {
+		this.setState({
+			settingsViewVisible: true
+		});
+	},
 
+	closeSettingsView: function () {
+		this.setState({
+			settingsViewVisible: false
+		});
 	},
 
 	showNextQuestion: function () {
