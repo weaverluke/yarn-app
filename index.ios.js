@@ -91,6 +91,7 @@ var yarn = React.createClass({
 				totalWords={gameStateStore.get('pageWords').length}
 				onSettingsPress={this.showSettings}
 				onNextPress={this.showNextQuestion}
+				showNextButton={gameStateStore.get('pageWords').length}
 			/>
 		)
 	},

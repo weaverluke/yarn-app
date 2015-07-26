@@ -19,6 +19,7 @@ var NavBar = React.createClass({
 		return {
 			totalWords: 0,
 			currentWordIndex: 0,
+			showNextButton: true,
 			onNextPress: function () {},
 			onSettingsPress: function () {}
 		};
@@ -37,16 +38,27 @@ var NavBar = React.createClass({
 					totalWords={this.props.totalWords}
 					currentWordIndex={this.props.currentWordIndex}
 				/>
-				<NavbarButton
-					icon={'next'}
-					onPress={this.props.onNextPress}
-				/>
+				{this.renderNextButton()}
 				<NavbarButton
 					icon={'settings'}
 					onPress={this.props.onSettingsPress}
 				/>
 			</View>
 		);
+	},
+
+	renderNextButton: function () {
+		if (this.props.showNextButton) {
+			return (
+				<NavbarButton
+					icon={'next'}
+					onPress={this.props.onNextPress}
+					/>
+			);
+		}
+
+		return (<View />);
+
 	}
 });
 
