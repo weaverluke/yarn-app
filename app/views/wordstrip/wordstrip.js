@@ -8,6 +8,7 @@ var {
 
 var COLORS = require('../../constants').COLORS;
 var WordButton = require('./wordbutton');
+var NavbarButton = require('../navbar/navbarbutton');
 var BUTTON_TYPES = WordButton.BUTTON_TYPES;
 
 var TOOLBAR_HEIGHT = 18;
@@ -66,7 +67,13 @@ var WordStrip = React.createClass({
 
 		return (
 			<View style={styles.toolbar}>
-				{words}
+				<View style={styles.words}>
+					{words}
+				</View>
+				<NavbarButton
+					onPress={this.props.onSettingsPress}
+					icon={'settings'}
+				/>
 			</View>
 		);
 	},
@@ -95,6 +102,11 @@ var styles = StyleSheet.create({
 
 	toolbar: {
 		backgroundColor: COLORS.SELECTED_GREY,
+		flexDirection: 'row'
+	},
+
+	words: {
+		flex: 1,
 		flexDirection: 'row'
 	}
 

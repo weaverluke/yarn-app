@@ -99,6 +99,7 @@ var yarn = React.createClass({
 				disabled={this.state.wordStripDisabled}
 				onAction={this.onWordPressed}
 				words={this.state.question}
+				onSettingsPress={this.showSettings}
 			/>
 		);
 	},
