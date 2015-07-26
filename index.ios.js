@@ -240,6 +240,10 @@ var yarn = React.createClass({
 	},
 
 	onWordsParsed: function (words) {
+		var state = this.getInitialState();
+		state.url = this.state.url;
+		this.setState(state);
+
 		actions.emit(actions.WORDS_PARSED, words);
 	},
 

@@ -44,7 +44,7 @@ var Browser = React.createClass({
 				url={this.props.url}
 				javaScriptEnabledAndroid={true}
 				onNavigationStateChange={this.onNavigationStateChange}
-				startInLoadingState={false}
+				startInLoadingState={true}
 			/>
 		);
 	},
