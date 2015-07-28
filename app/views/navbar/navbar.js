@@ -9,9 +9,7 @@ var {
 var StatusBar = require('./statusbar');
 var NavbarButton = require('./navbarbutton');
 
-var COLORS = require('../../constants').COLORS;
-
-var TOOLBAR_HEIGHT = 18;
+var uiConfig = require('../../uiconfig');
 
 var NavBar = React.createClass({
 
@@ -27,7 +25,7 @@ var NavBar = React.createClass({
 
 	getInitialState: function () {
 		return {
-			height: TOOLBAR_HEIGHT
+			height: uiConfig.TOOLBAR_HEIGHT
 		};
 	},
 
@@ -69,7 +67,7 @@ var styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'stretch',
 		borderTopWidth: 1,
-		borderTopColor: COLORS.MID_GREY
+		borderTopColor: uiConfig.COLORS.MID_GREY
 	}
 
 });

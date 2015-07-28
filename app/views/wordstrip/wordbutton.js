@@ -8,6 +8,8 @@ var {
 	View,
 } = React;
 
+var uiConfig = require('../../uiconfig');
+
 var BUTTON_TYPES = {
 	QUESTION: 'QUESTION',
 	ANSWER_ENABLED: 'ANSWER_ENABLED',
@@ -90,9 +92,9 @@ var styles = StyleSheet.create({
 	},
 
 	wordButtonText: {
-		paddingLeft: 5,
-		paddingRight: 5,
-		fontSize: 8,
+		paddingLeft: 10,
+		paddingRight: 10,
+		fontSize: uiConfig.TOOLBAR_FONT_SIZE,
 		fontWeight: '500'
 	},
 

@@ -7,6 +7,13 @@ module.exports = {
 		GREEN: 'rgb(65, 172, 96)',
 		BLUE: 'rgb(39, 170, 225)',
 		TEXT: 'rgb(65, 64, 66)'
-	}
+	},
+
+	TOOLBAR_HEIGHT: 30,
+	TOOLBAR_FONT_SIZE: 12,
+	TOOLBAR_ICON_SIZE: 16,
+	STATUSBAR_FONT_SIZE: 12,
+	PROGRESSBAR_HEIGHT: 2,
+	TOOLBAR_BUTTON_WIDTH: 40
 
 };

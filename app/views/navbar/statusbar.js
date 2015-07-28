@@ -7,10 +7,7 @@ var {
 	Text
 } = React;
 
-var COLORS = require('../../constants').COLORS;
-
-var TOOLBAR_HEIGHT = 18;
-var PROGRESSBAR_HEIGHT = 2;
+var uiConfig = require('../../uiconfig');
 
 var StatusBar = React.createClass({
 
@@ -23,7 +20,7 @@ var StatusBar = React.createClass({
 
 	getInitialState: function () {
 		return {
-			height: TOOLBAR_HEIGHT
+			height: uiConfig.TOOLBAR_HEIGHT
 		};
 	},
 
@@ -71,7 +68,7 @@ var styles = StyleSheet.create({
 
 	wrap: {
 		flex: 1, // so it expands to fit all the space up to the buttons
-		height: TOOLBAR_HEIGHT - PROGRESSBAR_HEIGHT + 1 // 1 for border
+		height: uiConfig.TOOLBAR_HEIGHT - uiConfig.PROGRESSBAR_HEIGHT + 1 // 1 for border
 	},
 
 	textWrap: {
@@ -83,7 +80,7 @@ var styles = StyleSheet.create({
 	text: {
 		flex: 1,
 		textAlign: 'right',
-		color: COLORS.TEXT,
+		color: uiConfig.COLORS.TEXT,
 		fontSize: 6,
 		fontWeight: '700'
 	},
@@ -91,7 +88,7 @@ var styles = StyleSheet.create({
 	textTotal: {
 		flex: 1,
 		textAlign: 'left',
-		color: COLORS.TEXT,
+		color: uiConfig.COLORS.TEXT,
 		fontSize: 6
 	},
 
@@ -101,12 +98,12 @@ var styles = StyleSheet.create({
 	},
 
 	progressBar: {
-		backgroundColor: COLORS.GREEN,
-		height: PROGRESSBAR_HEIGHT
+		backgroundColor: uiConfig.COLORS.GREEN,
+		height: uiConfig.PROGRESSBAR_HEIGHT
 	},
 
 	progressBarEnd: {
-		height: PROGRESSBAR_HEIGHT
+		height: uiConfig.PROGRESSBAR_HEIGHT
 	}
 
 });

@@ -11,7 +11,8 @@ var {
 var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
 
-var COLORS = require('../../constants').COLORS;
+var uiConfig = require('../../uiconfig');
+var COLORS = uiConfig.COLORS;
 
 var POPUP_TYPE = {
 	INFO: 'INFO',
@@ -63,7 +64,7 @@ var Popup = React.createClass({
 	},
 
 	renderInfoPopup: function () {
-		var popupWidth = (width - 2*POPUP_MARGIN) * 0.6;
+		var popupWidth = 180;//(width - 2*POPUP_MARGIN) * 0.6;
 		var extraStyle = {
 			width: popupWidth,
 			left: POPUP_MARGIN,
@@ -171,7 +172,7 @@ var styles = StyleSheet.create({
 	popup: {
 		position: 'absolute',
 		left: 10,
-		bottom: 25,
+		bottom: uiConfig.TOOLBAR_HEIGHT + ARROW_WIDTH/2,
 		flex: 1,
 		backgroundColor: '#FFFFFF',
 		borderRadius: 3,
@@ -191,7 +192,7 @@ var styles = StyleSheet.create({
 	},
 
 	footer: {
-		height: 20,
+		height: 30,
 		position: 'absolute',
 		left: 0,
 		right: 0,
@@ -203,20 +204,20 @@ var styles = StyleSheet.create({
 		position: 'absolute',
 		right: 0,
 		top: 0,
-		width: 20,
-		height: 20,
+		width: 30,
+		height: 30,
 		backgroundColor: COLORS.BLUE,
-		borderRadius: 10
+		borderRadius: 15
 	},
 
 	nextButtonArrow: {
 		borderColor: 'rgba(0,0,0,0)',
-		borderWidth: 5,
+		borderWidth: 8,
 		borderRightWidth: 0,
 		borderLeftColor: '#FFFFFF',
 		position: 'absolute',
-		top: 5,
-		left: 8
+		top: 8,
+		left: 12
 	},
 	arrow: {
 		position: 'absolute',

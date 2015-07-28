@@ -8,7 +8,7 @@ var {
 	TouchableWithoutFeedback
 } = React;
 
-var COLORS = require('../../constants').COLORS;
+var COLORS = require('../../uiconfig').COLORS;
 
 var Result = React.createClass({
 

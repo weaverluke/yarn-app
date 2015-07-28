@@ -7,17 +7,15 @@ var {
 	View,
 } = React;
 
-var COLORS = require('../../constants').COLORS;
+var uiConfig = require('../../uiconfig');
 var WordButton = require('./wordbutton');
 var NavbarButton = require('../navbar/navbarbutton');
 var BUTTON_TYPES = WordButton.BUTTON_TYPES;
 
-var TOOLBAR_HEIGHT = 18;
-
 var WordStrip = React.createClass({
 	getInitialState: function () {
 		return {
-			height: TOOLBAR_HEIGHT
+			height: uiConfig.TOOLBAR_HEIGHT
 		};
 	},
 
@@ -107,7 +105,7 @@ var WordStrip = React.createClass({
 var styles = StyleSheet.create({
 
 	toolbar: {
-		backgroundColor: COLORS.SELECTED_GREY,
+		backgroundColor: uiConfig.COLORS.SELECTED_GREY,
 		flexDirection: 'row'
 	},
 

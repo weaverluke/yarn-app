@@ -25,6 +25,7 @@ Object.keys(actions).forEach(function (action) {
 bus.on(actions.WORDS_PARSED, onWordsParsed);
 bus.on(actions.SHOW_NEXT_QUESTION, onShowNextQuestion);
 bus.on(actions.WORD_PRESSED, onWordPressed);
+bus.on(actions.CHANGE_LANG, onChangeLang);
 
 function onWordsParsed(words) {
 	gameStateStore.pause(true);
@@ -160,6 +161,22 @@ function updateUserStats(value) {
 			.setItem(key, ''+currentValue)
 			.done();
 	}
+}
+
+function onChangeLang(lang) {
+	if (lang === userProfileStore.get('language')) {
+		return;
+	}
+
+	var key = '@yarn:userlang';
+
+	AsyncStorage
+		.setItem(key, lang)
+		.then(function () {
+			userProfileStore.set('language', lang);
+		})
+		.done();
+
 }
 
 module.exports = bus;

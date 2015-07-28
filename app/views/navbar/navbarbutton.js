@@ -9,9 +9,8 @@ var {
 	Image
 } = React;
 
-var COLORS = require('../../constants').COLORS;
+var uiConfig = require('../../uiconfig');
 
-var TOOLBAR_HEIGHT = 18;
 var ICON_SIZE = 12;
 
 var NavBarButton = React.createClass({
@@ -24,7 +23,7 @@ var NavBarButton = React.createClass({
 
 	getInitialState: function () {
 		return {
-			height: TOOLBAR_HEIGHT
+			height: uiConfig.TOOLBAR_HEIGHT
 		};
 	},
 
@@ -59,9 +58,9 @@ var NavBarButton = React.createClass({
 var styles = StyleSheet.create({
 	wrap: {
 		backgroundColor: '#FFFFFF',
-		width: 25,
+		width: uiConfig.TOOLBAR_BUTTON_WIDTH,
 		borderLeftWidth: 1,
-		borderLeftColor: COLORS.MID_GREY,
+		borderLeftColor: uiConfig.COLORS.MID_GREY,
 		alignSelf: 'stretch',
 		// these two do not work, I don't know why, so I'm using marginTop for icon positioning
 		alignItems: 'center',
@@ -69,9 +68,9 @@ var styles = StyleSheet.create({
 	},
 
 	icon: {
-		width: ICON_SIZE,
-		height: ICON_SIZE,
-		marginTop: (TOOLBAR_HEIGHT - ICON_SIZE) / 2 - 1
+		width: uiConfig.TOOLBAR_ICON_SIZE,
+		height: uiConfig.TOOLBAR_ICON_SIZE,
+		marginTop: (uiConfig.TOOLBAR_HEIGHT - uiConfig.TOOLBAR_ICON_SIZE) / 2 - 1
 	}
 });
 

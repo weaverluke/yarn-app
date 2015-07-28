@@ -5,10 +5,28 @@ var {
 	StyleSheet,
 	View,
 	Text,
+	PickerIOS,
+	PickerItemIOS,
 	TouchableWithoutFeedback
 } = React;
 
-var COLORS = require('../../constants').COLORS;
+var actions = require('../../actions/actions');
+
+var COLORS = require('../../uiconfig').COLORS;
+var languages = {
+	pl: {
+		name: 'Polish'
+	},
+	de: {
+		name: 'German'
+	},
+	es: {
+		name: 'Spanish'
+	},
+	ja: {
+		name: 'Japanese'
+	}
+};
 
 var Settings = React.createClass({
 
@@ -18,17 +36,57 @@ var Settings = React.createClass({
 		};
 	},
 
+	getInitialState: function () {
+		return {
+			lang: this.props.initialLang
+		}
+	},
+
 	render: function () {
 		return (
-			<TouchableWithoutFeedback onPress={this.props.onClose}>
-				<View style={styles.overlay}>
-					<View style={styles.content}>
-						<Text>This is going to be settings view</Text>
-						<Text>Tap anywhere to close</Text>
-					</View>
+			<View style={styles.overlay}>
+				<View style={styles.content}>
+					<Text>Settings View</Text>
+
+					<PickerIOS
+						selectedValue={this.state.lang}
+						onValueChange={this.onLanguageChange}
+					>
+						{this.renderLangs()}
+					</PickerIOS>
+
+					<TouchableWithoutFeedback onPress={this.onClose}>
+						<Text>Tap here to close</Text>
+					</TouchableWithoutFeedback>
 				</View>
-			</TouchableWithoutFeedback>
+			</View>
 		);
+	},
+
+	onLanguageChange: function (lang) {
+		console.log('Chosen lang: ', lang);
+		this.setState({
+			lang: lang
+		});
+	},
+
+	renderLangs: function () {
+		var items = Object.keys(languages).map(function (langCode) {
+			var lang = languages[langCode];
+			return (
+				<PickerItemIOS
+					key={langCode}
+					value={langCode}
+					label={lang.name}
+				/>
+			);
+		});
+		return items;
+	},
+
+	onClose: function () {
+		actions.emit(actions.CHANGE_LANG, this.state.lang);
+		this.props.onClose();
 	}
 });
 

@@ -11,6 +11,7 @@ var Settings = require('./app/views/settings/settings');
 
 var googleTranslate = require('./app/helpers/googletranslate');
 var gameStateStore = require('./app/stores/gamestatestore');
+var userProfileStore = require('./app/stores/userprofilestore');
 var actions = require('./app/actions/actions');
 
 var Dimensions = require('Dimensions');
@@ -128,7 +129,10 @@ var yarn = React.createClass({
 		}
 
 		return (
-			<Settings onClose={this.closeSettingsView} />
+			<Settings
+				onClose={this.closeSettingsView}
+				initialLang={userProfileStore.get('language')}
+			/>
 		);
 
 	},
@@ -159,7 +163,10 @@ var yarn = React.createClass({
 	},
 
 	componentDidMount: function () {
+		this.lang = userProfileStore.get('language');
+
 		gameStateStore.addChangeListener(this.onGameStateChanged.bind(this));
+		userProfileStore.addChangeListener(this.onUserProfileChanged.bind(this));
 	},
 
 	onPopupClose: function () {
@@ -252,6 +259,16 @@ var yarn = React.createClass({
 		this.setState({
 			initialPopupVisible: false
 		});
+	},
+
+	onUserProfileChanged: function () {
+		if (this.lang !== userProfileStore.get('language')) {
+			this.lang = userProfileStore.get('language');
+			this.setState({
+				question: []
+			});
+			this.refs[BROWSER_REF].reload();
+		}
 	}
 
 });
