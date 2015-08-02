@@ -240,7 +240,13 @@ var yarn = React.createClass({
 		});
 	},
 
-	onWordPressed: function (rect, word) {
+	onWordPressed: function (rect, word, index) {
+		// first word pressed - just scroll to it
+		if (index === 0) {
+			this.refs[BROWSER_REF].scrollToWord(word);
+			return;
+		}
+
 		this.setState({
 			buttonRect: rect
 		});

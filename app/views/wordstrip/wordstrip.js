@@ -31,6 +31,8 @@ var WordStrip = React.createClass({
 			return (<View/>);
 		}
 
+		console.log('wordsToRender', wordsToRender);
+		console.trace();
 		var words = wordsToRender.map(function (word, i) {
 			var type;
 
@@ -53,7 +55,8 @@ var WordStrip = React.createClass({
 			}
 
 			return (
-				<WordButton 
+				<WordButton
+					index={i}
 					height={this.state.height} 
 					arrow={i === 1}
 					ref={'button-' + i}

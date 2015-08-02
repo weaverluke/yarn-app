@@ -1073,7 +1073,7 @@ throw new TypeError(
 
 var index=findIndex.call(this,predicate,context);
 return index === -1?undefined:this[index];}});}})();
-__d('yarn/index.ios',["react-native/Libraries/react-native/react-native","yarn/app/views/wordstrip/wordstrip","yarn/app/views/browser/browser","yarn/app/views/popup/popup","yarn/app/views/navbar/navbar","yarn/app/views/result/result","yarn/app/views/settings/settings","yarn/app/helpers/googletranslate","yarn/app/stores/gamestatestore","yarn/app/actions/actions","Dimensions"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+__d('yarn/index.ios',["react-native/Libraries/react-native/react-native","yarn/app/views/wordstrip/wordstrip","yarn/app/views/browser/browser","yarn/app/views/popup/popup","yarn/app/views/navbar/navbar","yarn/app/views/result/result","yarn/app/views/settings/settings","yarn/app/helpers/googletranslate","yarn/app/stores/gamestatestore","yarn/app/stores/userprofilestore","yarn/app/actions/actions","Dimensions"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native');
 
@@ -1086,6 +1086,7 @@ var Settings=require('yarn/app/views/settings/settings');
 
 var googleTranslate=require('yarn/app/helpers/googletranslate');
 var gameStateStore=require('yarn/app/stores/gamestatestore');
+var userProfileStore=require('yarn/app/stores/userprofilestore');
 var actions=require('yarn/app/actions/actions');
 
 var Dimensions=require('Dimensions');var _Dimensions$get=
@@ -1203,7 +1204,10 @@ return React.createElement(View,null);}
 
 
 return (
-React.createElement(Settings,{onClose:this.closeSettingsView}));},
+React.createElement(Settings,{
+onClose:this.closeSettingsView,
+initialLang:userProfileStore.get('language')}));},
+
 
 
 
@@ -1234,7 +1238,10 @@ actions.emit(actions.SHOW_NEXT_QUESTION);},
 
 
 componentDidMount:function(){
-gameStateStore.addChangeListener(this.onGameStateChanged.bind(this));},
+this.lang = userProfileStore.get('language');
+
+gameStateStore.addChangeListener(this.onGameStateChanged.bind(this));
+userProfileStore.addChangeListener(this.onUserProfileChanged.bind(this));},
 
 
 onPopupClose:function(){
@@ -1325,7 +1332,17 @@ actions.emit(actions.WORDS_PARSED,words);},
 
 closeInitialPopup:function(){
 this.setState({
-initialPopupVisible:false});}});
+initialPopupVisible:false});},
+
+
+
+onUserProfileChanged:function(){
+if(this.lang !== userProfileStore.get('language')){
+this.lang = userProfileStore.get('language');
+this.setState({
+question:[]});
+
+this.refs[BROWSER_REF].reload();}}});
 
 
 
@@ -42445,7 +42462,7 @@ makeNativeSimulator(eventType);}
 
 
 module.exports = ReactTestUtils;});
-__d('yarn/app/views/wordstrip/wordstrip',["react-native/Libraries/react-native/react-native","yarn/app/constants","yarn/app/views/wordstrip/wordbutton","yarn/app/views/navbar/navbarbutton"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+__d('yarn/app/views/wordstrip/wordstrip',["react-native/Libraries/react-native/react-native","yarn/app/uiconfig","yarn/app/views/wordstrip/wordbutton","yarn/app/views/navbar/navbarbutton"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native');var 
 
@@ -42454,17 +42471,15 @@ StyleSheet=
 
 React.StyleSheet;var ScrollView=React.ScrollView;var View=React.View;
 
-var COLORS=require('yarn/app/constants').COLORS;
+var uiConfig=require('yarn/app/uiconfig');
 var WordButton=require('yarn/app/views/wordstrip/wordbutton');
 var NavbarButton=require('yarn/app/views/navbar/navbarbutton');
 var BUTTON_TYPES=WordButton.BUTTON_TYPES;
 
-var TOOLBAR_HEIGHT=18;
-
 var WordStrip=React.createClass({
 getInitialState:function(){
 return {
-height:TOOLBAR_HEIGHT};},
+height:uiConfig.TOOLBAR_HEIGHT};},
 
 
 
@@ -42554,7 +42569,7 @@ return outputWords;}});
 var styles=StyleSheet.create({
 
 toolbar:{
-backgroundColor:COLORS.SELECTED_GREY,
+backgroundColor:uiConfig.COLORS.SELECTED_GREY,
 flexDirection:'row'},
 
 
@@ -42566,7 +42581,7 @@ flexDirection:'row'}});
 
 
 module.exports = WordStrip;});
-__d('yarn/app/constants',[],function(global, require, requireDynamic, requireLazy, module, exports) {  module.exports = {
+__d('yarn/app/uiconfig',[],function(global, require, requireDynamic, requireLazy, module, exports) {  module.exports = {
 
 COLORS:{
 LIGHT_GREY:'rgb(242, 242, 242)',
@@ -42574,8 +42589,16 @@ SELECTED_GREY:'rgb(120, 120, 120)',
 MID_GREY:'rgb(190, 190, 190)',
 GREEN:'rgb(65, 172, 96)',
 BLUE:'rgb(39, 170, 225)',
-TEXT:'rgb(65, 64, 66)'}};});
-__d('yarn/app/views/wordstrip/wordbutton',["react-native/Libraries/react-native/react-native"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+TEXT:'rgb(65, 64, 66)'},
+
+
+TOOLBAR_HEIGHT:30,
+TOOLBAR_FONT_SIZE:12,
+TOOLBAR_ICON_SIZE:16,
+STATUSBAR_FONT_SIZE:12,
+PROGRESSBAR_HEIGHT:2,
+TOOLBAR_BUTTON_WIDTH:40};});
+__d('yarn/app/views/wordstrip/wordbutton',["react-native/Libraries/react-native/react-native","yarn/app/uiconfig"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native');var 
 
@@ -42584,6 +42607,8 @@ TouchableWithoutFeedback=
 
 
 React.TouchableWithoutFeedback;var StyleSheet=React.StyleSheet;var Text=React.Text;var View=React.View;
+
+var uiConfig=require('yarn/app/uiconfig');
 
 var BUTTON_TYPES={
 QUESTION:'QUESTION',
@@ -42667,9 +42692,9 @@ flexDirection:'row'},
 
 
 wordButtonText:{
-paddingLeft:5,
-paddingRight:5,
-fontSize:8,
+paddingLeft:10,
+paddingRight:10,
+fontSize:uiConfig.TOOLBAR_FONT_SIZE,
 fontWeight:'500'},
 
 
@@ -42718,7 +42743,7 @@ color:'#FFFFFF'}});
 WordButton.BUTTON_TYPES = BUTTON_TYPES;
 
 module.exports = WordButton;});
-__d('yarn/app/views/navbar/navbarbutton',["react-native/Libraries/react-native/react-native","yarn/app/constants","image!settings-icon","image!next-icon"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+__d('yarn/app/views/navbar/navbarbutton',["react-native/Libraries/react-native/react-native","yarn/app/uiconfig","image!settings-icon","image!next-icon"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native');var 
 
@@ -42729,9 +42754,8 @@ StyleSheet=
 
 React.StyleSheet;var View=React.View;var Text=React.Text;var TouchableWithoutFeedback=React.TouchableWithoutFeedback;var Image=React.Image;
 
-var COLORS=require('yarn/app/constants').COLORS;
+var uiConfig=require('yarn/app/uiconfig');
 
-var TOOLBAR_HEIGHT=18;
 var ICON_SIZE=12;
 
 var NavBarButton=React.createClass({
@@ -42744,7 +42768,7 @@ icon:''};},
 
 getInitialState:function(){
 return {
-height:TOOLBAR_HEIGHT};},
+height:uiConfig.TOOLBAR_HEIGHT};},
 
 
 
@@ -42779,9 +42803,9 @@ return React.createElement(View,null);}}});
 var styles=StyleSheet.create({
 wrap:{
 backgroundColor:'#FFFFFF',
-width:25,
+width:uiConfig.TOOLBAR_BUTTON_WIDTH,
 borderLeftWidth:1,
-borderLeftColor:COLORS.MID_GREY,
+borderLeftColor:uiConfig.COLORS.MID_GREY,
 alignSelf:'stretch',
 
 alignItems:'center',
@@ -42789,9 +42813,9 @@ justifyContent:'center'},
 
 
 icon:{
-width:ICON_SIZE,
-height:ICON_SIZE,
-marginTop:(TOOLBAR_HEIGHT - ICON_SIZE) / 2 - 1}});
+width:uiConfig.TOOLBAR_ICON_SIZE,
+height:uiConfig.TOOLBAR_ICON_SIZE,
+marginTop:(uiConfig.TOOLBAR_HEIGHT - uiConfig.TOOLBAR_ICON_SIZE) / 2 - 1}});
 
 
 
@@ -43026,7 +43050,7 @@ currentWordIndex:-1,
 currentWord:'',
 currentQuestion:null,
 chosenAnswer:'',
-randomWordsCount:5,
+randomWordsCount:6,
 currentState:'',
 correct:0,
 wrong:0,
@@ -65971,7 +65995,7 @@ return word !== '';});
 
 
 return words;};});
-__d('yarn/app/views/popup/popup',["react-native/Libraries/react-native/react-native","Dimensions","yarn/app/constants","image!horizontal-gradient"],function(global, require, requireDynamic, requireLazy, module, exports) {  var React=require('react-native/Libraries/react-native/react-native');var 
+__d('yarn/app/views/popup/popup',["react-native/Libraries/react-native/react-native","Dimensions","yarn/app/uiconfig","image!horizontal-gradient"],function(global, require, requireDynamic, requireLazy, module, exports) {  var React=require('react-native/Libraries/react-native/react-native');var 
 
 StyleSheet=
 
@@ -65984,7 +66008,8 @@ React.StyleSheet;var View=React.View;var Text=React.Text;var WebView=React.WebVi
 var Dimensions=require('Dimensions');var _Dimensions$get=
 Dimensions.get('window');var width=_Dimensions$get.width;var height=_Dimensions$get.height;
 
-var COLORS=require('yarn/app/constants').COLORS;
+var uiConfig=require('yarn/app/uiconfig');
+var COLORS=uiConfig.COLORS;
 
 var POPUP_TYPE={
 INFO:'INFO',
@@ -66036,7 +66061,7 @@ content)));},
 
 
 renderInfoPopup:function(){
-var popupWidth=(width - 2 * POPUP_MARGIN) * 0.6;
+var popupWidth=180;
 var extraStyle={
 width:popupWidth,
 left:POPUP_MARGIN,
@@ -66144,7 +66169,7 @@ marginBottom:5},
 popup:{
 position:'absolute',
 left:10,
-bottom:25,
+bottom:uiConfig.TOOLBAR_HEIGHT + ARROW_WIDTH / 2,
 flex:1,
 backgroundColor:'#FFFFFF',
 borderRadius:3,
@@ -66164,7 +66189,7 @@ fontWeight:'700'},
 
 
 footer:{
-height:20,
+height:30,
 position:'absolute',
 left:0,
 right:0,
@@ -66176,20 +66201,20 @@ nextButton:{
 position:'absolute',
 right:0,
 top:0,
-width:20,
-height:20,
+width:30,
+height:30,
 backgroundColor:COLORS.BLUE,
-borderRadius:10},
+borderRadius:15},
 
 
 nextButtonArrow:{
 borderColor:'rgba(0,0,0,0)',
-borderWidth:5,
+borderWidth:8,
 borderRightWidth:0,
 borderLeftColor:'#FFFFFF',
 position:'absolute',
-top:5,
-left:8},
+top:8,
+left:12},
 
 arrow:{
 position:'absolute',
@@ -66244,7 +66269,7 @@ Popup.POPUP_TYPE = POPUP_TYPE;
 
 module.exports = Popup;});
 __d('image!horizontal-gradient',[],function(global, require, requireDynamic, requireLazy, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/horizontal-gradient.imageset/horizontal-gradient.png","uri":"horizontal-gradient","width":600,"height":30,"deprecated":true};});
-__d('yarn/app/views/navbar/navbar',["react-native/Libraries/react-native/react-native","yarn/app/views/navbar/statusbar","yarn/app/views/navbar/navbarbutton","yarn/app/constants"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+__d('yarn/app/views/navbar/navbar',["react-native/Libraries/react-native/react-native","yarn/app/views/navbar/statusbar","yarn/app/views/navbar/navbarbutton","yarn/app/uiconfig"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native');var 
 
@@ -66255,9 +66280,7 @@ React.StyleSheet;var View=React.View;
 var StatusBar=require('yarn/app/views/navbar/statusbar');
 var NavbarButton=require('yarn/app/views/navbar/navbarbutton');
 
-var COLORS=require('yarn/app/constants').COLORS;
-
-var TOOLBAR_HEIGHT=18;
+var uiConfig=require('yarn/app/uiconfig');
 
 var NavBar=React.createClass({
 
@@ -66273,7 +66296,7 @@ onSettingsPress:function(){}};},
 
 getInitialState:function(){
 return {
-height:TOOLBAR_HEIGHT};},
+height:uiConfig.TOOLBAR_HEIGHT};},
 
 
 
@@ -66315,14 +66338,14 @@ backgroundColor:'#FFFFFF',
 flexDirection:'row',
 alignItems:'stretch',
 borderTopWidth:1,
-borderTopColor:COLORS.MID_GREY}});
+borderTopColor:uiConfig.COLORS.MID_GREY}});
 
 
 
 
 
 module.exports = NavBar;});
-__d('yarn/app/views/navbar/statusbar',["react-native/Libraries/react-native/react-native","yarn/app/constants"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+__d('yarn/app/views/navbar/statusbar',["react-native/Libraries/react-native/react-native","yarn/app/uiconfig"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native');var 
 
@@ -66331,10 +66354,7 @@ StyleSheet=
 
 React.StyleSheet;var View=React.View;var Text=React.Text;
 
-var COLORS=require('yarn/app/constants').COLORS;
-
-var TOOLBAR_HEIGHT=18;
-var PROGRESSBAR_HEIGHT=2;
+var uiConfig=require('yarn/app/uiconfig');
 
 var StatusBar=React.createClass({
 
@@ -66347,7 +66367,7 @@ currentWordIndex:0};},
 
 getInitialState:function(){
 return {
-height:TOOLBAR_HEIGHT};},
+height:uiConfig.TOOLBAR_HEIGHT};},
 
 
 
@@ -66395,7 +66415,7 @@ var styles=StyleSheet.create({
 
 wrap:{
 flex:1,
-height:TOOLBAR_HEIGHT - PROGRESSBAR_HEIGHT + 1},
+height:uiConfig.TOOLBAR_HEIGHT - uiConfig.PROGRESSBAR_HEIGHT + 1},
 
 
 textWrap:{
@@ -66407,7 +66427,7 @@ alignItems:'center'},
 text:{
 flex:1,
 textAlign:'right',
-color:COLORS.TEXT,
+color:uiConfig.COLORS.TEXT,
 fontSize:6,
 fontWeight:'700'},
 
@@ -66415,7 +66435,7 @@ fontWeight:'700'},
 textTotal:{
 flex:1,
 textAlign:'left',
-color:COLORS.TEXT,
+color:uiConfig.COLORS.TEXT,
 fontSize:6},
 
 
@@ -66425,19 +66445,19 @@ height:2},
 
 
 progressBar:{
-backgroundColor:COLORS.GREEN,
-height:PROGRESSBAR_HEIGHT},
+backgroundColor:uiConfig.COLORS.GREEN,
+height:uiConfig.PROGRESSBAR_HEIGHT},
 
 
 progressBarEnd:{
-height:PROGRESSBAR_HEIGHT}});
+height:uiConfig.PROGRESSBAR_HEIGHT}});
 
 
 
 
 
 module.exports = StatusBar;});
-__d('yarn/app/views/result/result',["react-native/Libraries/react-native/react-native","yarn/app/constants"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+__d('yarn/app/views/result/result',["react-native/Libraries/react-native/react-native","yarn/app/uiconfig"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native');var 
 
@@ -66447,7 +66467,7 @@ StyleSheet=
 
 React.StyleSheet;var View=React.View;var Text=React.Text;var TouchableWithoutFeedback=React.TouchableWithoutFeedback;
 
-var COLORS=require('yarn/app/constants').COLORS;
+var COLORS=require('yarn/app/uiconfig').COLORS;
 
 var Result=React.createClass({
 
@@ -66502,7 +66522,7 @@ borderRadius:3}});
 
 
 module.exports = Result;});
-__d('yarn/app/views/settings/settings',["react-native/Libraries/react-native/react-native","yarn/app/constants"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+__d('yarn/app/views/settings/settings',["react-native/Libraries/react-native/react-native","yarn/app/actions/actions","yarn/app/uiconfig"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native');var 
 
@@ -66510,9 +66530,27 @@ StyleSheet=
 
 
 
-React.StyleSheet;var View=React.View;var Text=React.Text;var TouchableWithoutFeedback=React.TouchableWithoutFeedback;
 
-var COLORS=require('yarn/app/constants').COLORS;
+
+React.StyleSheet;var View=React.View;var Text=React.Text;var PickerIOS=React.PickerIOS;var PickerItemIOS=React.PickerItemIOS;var TouchableWithoutFeedback=React.TouchableWithoutFeedback;
+
+var actions=require('yarn/app/actions/actions');
+
+var COLORS=require('yarn/app/uiconfig').COLORS;
+var languages={
+pl:{
+name:'Polish'},
+
+de:{
+name:'German'},
+
+es:{
+name:'Spanish'},
+
+ja:{
+name:'Japanese'}};
+
+
 
 var Settings=React.createClass({
 
@@ -66522,17 +66560,57 @@ onClose:function(){}};},
 
 
 
+getInitialState:function(){
+return {
+lang:this.props.initialLang};},
+
+
+
 render:function(){
 return (
-React.createElement(TouchableWithoutFeedback,{onPress:this.props.onClose},
 React.createElement(View,{style:styles.overlay},
 React.createElement(View,{style:styles.content},
-React.createElement(Text,null,'This is going to be settings view'),
-React.createElement(Text,null,'Tap anywhere to close')))));}});
+React.createElement(Text,null,'Settings View'),
+
+React.createElement(PickerIOS,{
+selectedValue:this.state.lang,
+onValueChange:this.onLanguageChange},
+
+this.renderLangs()),
+
+
+React.createElement(TouchableWithoutFeedback,{onPress:this.onClose},
+React.createElement(Text,null,'Tap here to close')))));},
 
 
 
 
+
+
+onLanguageChange:function(lang){
+console.log('Chosen lang: ',lang);
+this.setState({
+lang:lang});},
+
+
+
+renderLangs:function(){
+var items=Object.keys(languages).map(function(langCode){
+var lang=languages[langCode];
+return (
+React.createElement(PickerItemIOS,{
+key:langCode,
+value:langCode,
+label:lang.name}));});
+
+
+
+return items;},
+
+
+onClose:function(){
+actions.emit(actions.CHANGE_LANG,this.state.lang);
+this.props.onClose();}});
 
 
 
@@ -66558,35 +66636,6 @@ borderRadius:3}});
 
 
 module.exports = Settings;});
-__d('yarn/app/helpers/googletranslate',[],function(global, require, requireDynamic, requireLazy, module, exports) {  var API_KEY='AIzaSyDAjHprVDfX_6z2fAs6Vf03g2sOfEiTogs';
-var BASE_URL='https://www.googleapis.com/language/translate/v2?key=' + API_KEY;
-
-function translateWords(words,fromLang,toLang,callback){
-if(!Array.isArray(words)){
-words = [words];}
-
-
-return fetch(createUrl(words,fromLang,toLang)).
-then(function(response){
-return response.text();}).
-
-then(function(responseText){
-return JSON.parse(responseText);});}
-
-
-
-function createUrl(words,fromLang,toLang){
-return BASE_URL + 
-'&source=' + fromLang + 
-'&target=' + toLang + 
-
-words.reduce(function(prev,current){
-return prev + '&q=' + current;},
-'');}
-
-
-module.exports = {
-translateWords:translateWords};});
 __d('yarn/app/actions/actions',["events/events","yarn/app/actions/actiontypes","yarn/app/helpers/getrandomwords","yarn/app/helpers/googletranslate","yarn/app/helpers/collins","yarn/app/stores/gamestatestore","yarn/app/stores/userprofilestore","react-native/Libraries/react-native/react-native"],function(global, require, requireDynamic, requireLazy, module, exports) {  var 
 Events=require('events/events');
 var bus=new Events.EventEmitter();
@@ -66614,6 +66663,7 @@ bus[action] = actions[action];});
 bus.on(actions.WORDS_PARSED,onWordsParsed);
 bus.on(actions.SHOW_NEXT_QUESTION,onShowNextQuestion);
 bus.on(actions.WORD_PRESSED,onWordPressed);
+bus.on(actions.CHANGE_LANG,onChangeLang);
 
 function onWordsParsed(words){
 gameStateStore.pause(true);
@@ -66751,11 +66801,28 @@ done();}}
 
 
 
+function onChangeLang(lang){
+if(lang === userProfileStore.get('language')){
+return;}
+
+
+var key='@yarn:userlang';
+
+AsyncStorage.
+setItem(key,lang).
+then(function(){
+userProfileStore.set('language',lang);}).
+
+done();}
+
+
+
 module.exports = bus;});
 __d('yarn/app/actions/actiontypes',[],function(global, require, requireDynamic, requireLazy, module, exports) {  module.exports = {
 WORDS_PARSED:'WORDS_PARSED',
 SHOW_NEXT_QUESTION:'SHOW_NEXT_QUESTION',
-WORD_PRESSED:'WORD_PRESSED'};});
+WORD_PRESSED:'WORD_PRESSED',
+CHANGE_LANG:'CHANGE_LANG'};});
 __d('yarn/app/helpers/getrandomwords',["yarn/words"],function(global, require, requireDynamic, requireLazy, module, exports) {  var words=Object.keys(require('yarn/words'));
 
 module.exports = function(amount){
@@ -66768,6 +66835,35 @@ results.push(words[index]);}
 
 
 return results;};});
+__d('yarn/app/helpers/googletranslate',[],function(global, require, requireDynamic, requireLazy, module, exports) {  var API_KEY='AIzaSyDAjHprVDfX_6z2fAs6Vf03g2sOfEiTogs';
+var BASE_URL='https://www.googleapis.com/language/translate/v2?key=' + API_KEY;
+
+function translateWords(words,fromLang,toLang,callback){
+if(!Array.isArray(words)){
+words = [words];}
+
+
+return fetch(createUrl(words,fromLang,toLang)).
+then(function(response){
+return response.text();}).
+
+then(function(responseText){
+return JSON.parse(responseText);});}
+
+
+
+function createUrl(words,fromLang,toLang){
+return BASE_URL + 
+'&source=' + fromLang + 
+'&target=' + toLang + 
+
+words.reduce(function(prev,current){
+return prev + '&q=' + current;},
+'');}
+
+
+module.exports = {
+translateWords:translateWords};});
 __d('yarn/app/helpers/collins',[],function(global, require, requireDynamic, requireLazy, module, exports) {  var API_KEY='wOaKqhkqXIuKKIIRkVRyAy7jNB5dVDeaNZoIpzIMEmxkK4eiZEQDGTFNG3TnlG18';
 var BASE_URL='https://api.collinsdictionary.com/api/v1/dictionaries/english-learner/search/first/?format=html&q=';
 
@@ -66795,12 +66891,17 @@ return json;});}
 
 module.exports = {
 getDefinition:getDefinition};});
-__d('yarn/app/stores/userprofilestore',["events/events"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+__d('yarn/app/stores/userprofilestore',["events/events","react-native/Libraries/react-native/react-native"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 
 var Events=require('events/events');
 var eventEmitter=new Events.EventEmitter();
 var CHANGE_EVENT='store:changed';
+
+var React=require('react-native/Libraries/react-native/react-native');var 
+
+AsyncStorage=
+React.AsyncStorage;
 
 var data={
 vocabLevel:50,
@@ -66823,6 +66924,14 @@ eventEmitter.emit(CHANGE_EVENT);}
 function addChangeListener(listener){
 eventEmitter.on(CHANGE_EVENT,listener);}
 
+
+var key='@yarn:userlang';
+AsyncStorage.
+getItem(key).
+then(function(lang){
+set('language',lang || 'pl');}).
+
+done();
 
 module.exports = {
 addChangeListener:addChangeListener,

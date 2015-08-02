@@ -10,7 +10,7 @@ var readability = require('node-read');
 var wordHelpers = require('./wordHelpers');
 
 var HIGHLIGHT_COLOR = '#22FF22';
-var highlighter = 'window.yarnHighlight=function(){function e(e){var r,d=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,!1);n();for(var i=new RegExp("\\\\b"+e+"\\\\b");r=d.nextNode();)if(-1===o.indexOf(r.parentNode.tagName)&&i.test(r.nodeValue))return t.node=r.parentNode,t.content=r.parentNode.innerHTML,t.node.innerHTML=t.content.replace(i,\'<mark style="background-color:' + HIGHLIGHT_COLOR + ';font-style:inherit;font-weight:inherit;">\'+e+"</mark>"),t.node.scrollIntoViewIfNeeded(),!0;return!1}function n(){t.node&&(t.node.innerHTML=t.content,t.node=void 0,t.content=void 0)}var o=["SCRIPT","NOSCRIPT"],t={node:void 0,content:void 0};return{highlight:e}}();';
+var highlighter = 'window.yarnHighlight=function(){function e(e){var o,d=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,!1);n();for(var i=new RegExp("\\\\b"+e+"\\\\b");o=d.nextNode();)if(-1===t.indexOf(o.parentNode.tagName)&&i.test(o.nodeValue))return r.node=o.parentNode,r.content=o.parentNode.innerHTML,r.node.innerHTML=r.content.replace(i,\'<mark style="background-color:'+HIGHLIGHT_COLOR+';font-style:inherit;font-weight:inherit;">\'+e+"</mark>"),!0;return!1}function n(){r.node&&(r.node.innerHTML=r.content,r.node=void 0,r.content=void 0)}function o(n){e(n)&&r.node.scrollIntoViewIfNeeded()}var t=["SCRIPT","NOSCRIPT"],r={node:void 0,content:void 0};return{highlight:e,scrollToWord:o}}();';
 var USER_LEVEL = 40;
 var RANGE = 30;
 
@@ -126,8 +126,14 @@ var Browser = React.createClass({
 		}
 	},
 
-	highlightWord: function (word) {
+	highlightWord: function (word, cb) {
 		this.evaluateJavaScript('window.yarnHighlight.highlight("' + word + '");', function (err, result) {
+			//console.log('highlight callback', err, result);
+		});
+	},
+
+	scrollToWord: function (word, cb) {
+		this.evaluateJavaScript('window.yarnHighlight.scrollToWord("' + word + '");', function (err, result) {
 			//console.log('highlight callback', err, result);
 		});
 	},

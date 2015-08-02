@@ -27,7 +27,6 @@ window.yarnHighlight = (function () {
 				lastHighlighted.node.innerHTML = lastHighlighted.content.replace(rx,
 					'<mark style="background-color:rgb(0, 255, 100);font-style:inherit;font-weight:inherit;">'+word+'</mark>'
 				);
-				lastHighlighted.node.scrollIntoViewIfNeeded();
 				return true;
 			}
 		}
@@ -42,8 +41,15 @@ window.yarnHighlight = (function () {
 		}
 	}
 
+	function scrollToWord(word) {
+		if (highlight(word)) {
+			lastHighlighted.node.scrollIntoViewIfNeeded();
+		}
+	}
+
 	return {
-		highlight: highlight
+		highlight: highlight,
+		scrollToWord: scrollToWord
 	};
 }());
 

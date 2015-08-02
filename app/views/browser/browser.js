@@ -140,6 +140,10 @@ var Browser = React.createClass({
 		this.refs[WEBVIEW_REF].highlightWord(word, cb);
 	},
 
+	scrollToWord: function (word, cb) {
+		this.refs[WEBVIEW_REF].scrollToWord(word, cb);
+	},
+
 	evaluateJavaScript: function () {
 		this.refs[WEBVIEW_REF].evaluateJavaScript.apply(this.refs[WEBVIEW_REF], arguments);
 	}

@@ -71,7 +71,7 @@ var WordButton = React.createClass({
 
 	onButtonPressed: function () {
 		this.getButtonRect(function (rect) {
-			this.props.onAction(rect, this.props.text);
+			this.props.onAction(rect, this.props.text, this.props.index);
 		}.bind(this));
 		//console.log('onAction', this.props.onAction);
 		//this.refs.button.measure(function (ox, oy, width, height, px, py) {
