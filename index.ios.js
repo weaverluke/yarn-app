@@ -39,11 +39,12 @@ var yarn = React.createClass({
 		return {
 			url: DEFAULT_URL,
 			popupVisible: false,
-			initialPopupVisible: false,
 			question: [],
 			buttonRect: {},
 			firstButtonRect: {},
 			wordstripVisible: true,
+			// todo: these could be done as binary number and toggle with binary operators
+			initialPopupVisible: false,
 			resultViewVisible: false,
 			settingsViewVisible: false
 		};

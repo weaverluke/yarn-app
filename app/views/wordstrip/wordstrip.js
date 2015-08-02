@@ -12,11 +12,24 @@ var WordButton = require('./wordbutton');
 var NavbarButton = require('../navbar/navbarbutton');
 var BUTTON_TYPES = WordButton.BUTTON_TYPES;
 
+var lastScrollLeft = 0;
+
 var WordStrip = React.createClass({
 	getInitialState: function () {
 		return {
-			height: uiConfig.TOOLBAR_HEIGHT
+			height: uiConfig.TOOLBAR_HEIGHT,
+			scrollToStart: true
 		};
+	},
+
+	componentWillReceiveProps: function (newProps) {
+		var wordsWillChange = newProps.words && newProps.words[0] &&
+				this.props.words && this.props.words[0] &&
+				newProps.words[0].text !== this.props.words[0].text;
+
+		this.setState({
+			scrollToStart: wordsWillChange
+		});
 	},
 
 	getButtonRect: function (buttonIndex, cb) {
@@ -31,8 +44,6 @@ var WordStrip = React.createClass({
 			return (<View/>);
 		}
 
-		console.log('wordsToRender', wordsToRender);
-		console.trace();
 		var words = wordsToRender.map(function (word, i) {
 			var type;
 
@@ -67,11 +78,22 @@ var WordStrip = React.createClass({
 			);
 		}.bind(this));
 
+		// because react-native doesn't provide ScrollView.scrollTo() yet we use small trick here
+		// contentOffset sets initial offset of scroll, so we change that between 0 and 0.1 (scroll of 0.1 is not
+		// visible for user) when scroll to start is required. We can't keep it at 0 because react renders that value
+		// only when it's changed (if not changed then virtual DOM is not changed so real DOM is not updated)
+		var contentOffset = {x: lastScrollLeft, y: 0};
+		if (this.state.scrollToStart) {
+			lastScrollLeft = lastScrollLeft ? 0 : 0.1;
+			contentOffset.x = lastScrollLeft
+		}
+
 		return (
 			<View style={styles.toolbar}>
 				<ScrollView
 					horizontal={true}
 					showsHorizontalScrollIndicator={false}
+					contentOffset={contentOffset}
 				>
 					<View style={styles.words}>
 						{words}
