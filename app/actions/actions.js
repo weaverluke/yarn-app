@@ -87,8 +87,15 @@ function onShowNextQuestion() {
 		gameStateStore.pause(true);
 		question[0].def = definition;
 		gameStateStore.set('currentWord', question[0]);
+
 		// shuffle words
-		question.sort(function () { return Math.random() < 0.5; });
+		question.sort(function () { return Math.random() < 0.5 ? 1 : -1 });
+
+		// round by random amount
+		var round = Math.floor(Math.random() * question.length);
+		var start = question.splice(0, round);
+		question = question.concat(start);
+
 		gameStateStore.set('currentQuestion', question);
 		gameStateStore.set('currentWordIndex', currentWordIndex);
 		gameStateStore.set('currentState', GAME_STATES.WAITING_FOR_ANSWER);
