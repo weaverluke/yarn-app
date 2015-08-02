@@ -9,6 +9,7 @@ var {
 } = React;
 
 var uiConfig = require('../../uiconfig');
+var FIRST_BUTTON_ARROW_SIZE = 10;
 
 var BUTTON_TYPES = {
 	QUESTION: 'QUESTION',
@@ -44,13 +45,21 @@ var WordButton = React.createClass({
 			additionalStyle.borderRightColor = '#FFFFFF';
 		}
 
+		var additionalTextStyle = {
+			lineHeight: height * 0.7
+		};
+
+		if (this.props.index === 1) {
+			additionalTextStyle.paddingLeft = uiConfig.WORDBUTTON_PADDING - FIRST_BUTTON_ARROW_SIZE/4;
+		}
+
 		var buttonColors = styles[this.props.type] || {};
 
 		return (
 			<TouchableWithoutFeedback onPress={this.onButtonPressed}>
 				<View ref="button" style={[styles.wordButton, additionalStyle, buttonColors]}>
 					{arrow}
-					<Text style={[styles.wordButtonText, {lineHeight: height * 0.7}, buttonColors]}>
+					<Text style={[styles.wordButtonText, additionalTextStyle, buttonColors]}>
 						{this.props.text}
 					</Text>
 				</View>
@@ -92,17 +101,17 @@ var styles = StyleSheet.create({
 	},
 
 	wordButtonText: {
-		paddingLeft: 10,
-		paddingRight: 10,
+		paddingLeft: uiConfig.WORDBUTTON_PADDING,
+		paddingRight: uiConfig.WORDBUTTON_PADDING,
 		fontSize: uiConfig.TOOLBAR_FONT_SIZE,
 		fontWeight: '500'
 	},
 
 	buttonArrow: {
-		width: 5,
+		width: FIRST_BUTTON_ARROW_SIZE,
 		borderTopColor: 'rgba(0,0,0,0)',
 		borderBottomColor: 'rgba(0,0,0,0)',
-		borderLeftWidth: 3,
+		borderLeftWidth: Math.ceil(FIRST_BUTTON_ARROW_SIZE/2),
 		backgroundColor: 'rgba(0,0,0,0)',
 		borderLeftColor: '#F2F2F2'
 	},
@@ -136,7 +145,6 @@ var styles = StyleSheet.create({
 	WRONG_ANSWER_SELECTED: {
 		backgroundColor: '#DF1C24',
 		color: '#FFFFFF'
-
 	}
 });
 

@@ -81,7 +81,7 @@ var styles = StyleSheet.create({
 		flex: 1,
 		textAlign: 'right',
 		color: uiConfig.COLORS.TEXT,
-		fontSize: 6,
+		fontSize: uiConfig.STATUSBAR_FONT_SIZE,
 		fontWeight: '700'
 	},
 
@@ -89,7 +89,7 @@ var styles = StyleSheet.create({
 		flex: 1,
 		textAlign: 'left',
 		color: uiConfig.COLORS.TEXT,
-		fontSize: 6
+		fontSize: uiConfig.STATUSBAR_FONT_SIZE
 	},
 
 	progressBarWrap: {

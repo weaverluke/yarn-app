@@ -70,7 +70,7 @@ var styles = StyleSheet.create({
 	icon: {
 		width: uiConfig.TOOLBAR_ICON_SIZE,
 		height: uiConfig.TOOLBAR_ICON_SIZE,
-		marginTop: (uiConfig.TOOLBAR_HEIGHT - uiConfig.TOOLBAR_ICON_SIZE) / 2 - 1
+		marginTop: Math.floor((uiConfig.TOOLBAR_HEIGHT - uiConfig.TOOLBAR_ICON_SIZE) / 2)
 	}
 });
 
