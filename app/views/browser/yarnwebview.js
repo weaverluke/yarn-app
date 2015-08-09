@@ -91,11 +91,11 @@ var Browser = React.createClass({
 			if (this.lastParsedContent === contentToParse) {
 				return;
 			}
-			this.lastParsedContnet = contentToParse;
-			var words = wordHelpers.extractWordsFromArticle(contentToParse, USER_LEVEL, USER_LEVEL + RANGE);
+			this.lastParsedContent = contentToParse;
+			var words = wordHelpers.extractWordsFromArticle(contentToParse, USER_LEVEL - RANGE, USER_LEVEL + RANGE);
 
 			// this should be done via store
-			this.props.onWordsParsed && this.props.onWordsParsed(words.splice(0, 5));
+			this.props.onWordsParsed && this.props.onWordsParsed(words);
 		}.bind(this));
 	},
 
