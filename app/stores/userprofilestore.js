@@ -1,6 +1,5 @@
 'use strict';
 
-//var eventEmitter = require('events').EventEmitter();
 var Events = require('events');
 var eventEmitter = new Events.EventEmitter();
 var CHANGE_EVENT = 'store:changed';
@@ -11,7 +10,8 @@ var {
 } = React;
 
 var data = {
-	level: 50,
+	level: 0,
+	range: 40,
 	score: 0,
 	language: 'pl',
 	correctAnswers: 0,
@@ -31,6 +31,9 @@ function init() {
 			wrong: 0
 		};
 	}
+	// reset :D
+	//saveData();
+
 	loadData();
 }
 
@@ -67,14 +70,41 @@ function updateLevelStats(level, correct) {
 }
 
 function updateUserLevel() {
-	data.level = 50;
+	var totalAnswers = data.correctAnswers + data.wrongAnswers;
+	// we have to have at least 20 words to compute level
+	if (totalAnswers < 20) {
+		console.log('Cannot compute user level yet');
+		return;
+	}
 
-	// save level after each 10 words
-	//if ((data.correctAnswers + data.wrongAnswers) % 10 === 0) {
-	//	this.historyLevelValues.push(data.level);
-	//}
+	var sum = 0;
+	var max = 0;
+
+	for (var i = 0, len = data.levelStats.length; i < len; i++) {
+		// level must have any entries to be included into computations
+		var lvl = data.levelStats[i];
+		if (lvl.correct || lvl.wrong) {
+			sum += (i + 1) * lvl.correct / (lvl.correct + lvl.wrong) * 100;
+			max += (i + 1) * 100;
+		}
+	}
+
+	data.level = parseInt(sum / max * 100);
+	console.log('New user level:', data.level);
+
+	// range update - after first 50 words shrink range to 30
+	if (totalAnswers > 40 && data.range == 40) {
+		data.range = 30;
+	}
+	else if (totalAnswers > 80 && data.range == 30) {
+		data.range = 20;
+	}
+	else if (totalAnswers > 120 && data.range == 20) {
+		data.range = 10;
+	}
+
+	data.historyLevelValues.push(data.level);
 }
-
 
 function saveData() {
 	console.log('saving userProfileStore:', data);

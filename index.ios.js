@@ -68,6 +68,8 @@ var yarn = React.createClass({
 					ref={BROWSER_REF}
 					url={this.state.url}
 					onWordsParsed={this.onWordsParsed}
+					userLevel={userProfileStore.get('level')}
+					userRange={userProfileStore.get('range')}
 				/>
 				{bottomBar}
 				<Popup
@@ -93,7 +95,7 @@ var yarn = React.createClass({
 	renderResultView: function () {
 		return (
 			<StatusBar
-				currentWordIndex={gameStateStore.get('correct')}
+				correctWords={gameStateStore.get('correct')}
 				totalWords={gameStateStore.get('pageWords').length}
 				onNextPress={this.closeResultView}
 				level={userProfileStore.get('level')}

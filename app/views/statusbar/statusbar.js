@@ -16,7 +16,7 @@ var StatusBar = React.createClass({
 	getDefaultProps: function () {
 		return {
 			totalWords: 0,
-			currentWordIndex: 0,
+			correctWords: 0,
 			score: 0,
 			level: 0,
 			onNextPress: function () {}
@@ -30,13 +30,13 @@ var StatusBar = React.createClass({
 	},
 
 	render: function () {
-		var progress = (this.props.currentWordIndex+1) / this.props.totalWords * 100;
+		var progress = (this.props.correctWords) / this.props.totalWords * 100;
 		return (
 			<View style={styles.wrap}>
 				<View style={styles.progressBox}>
 					<View style={styles.progressTextWrap}>
 						<View style={styles.progressTextWrapVertical}>
-							<Text style={styles.text}>{this.props.currentWordIndex + 1}</Text>
+							<Text style={styles.text}>{this.props.correctWords}</Text>
 							<Text style={styles.textTotal}>/{this.props.totalWords} correct</Text>
 						</View>
 					</View>

@@ -11,8 +11,6 @@ var wordHelpers = require('./wordHelpers');
 
 var HIGHLIGHT_COLOR = '#22FF22';
 var highlighter = 'window.yarnHighlight=function(){function e(e){var o,d=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,!1);n();for(var i=new RegExp("\\\\b"+e+"\\\\b");o=d.nextNode();)if(-1===t.indexOf(o.parentNode.tagName)&&i.test(o.nodeValue))return r.node=o.parentNode,r.content=o.parentNode.innerHTML,r.node.innerHTML=r.content.replace(i,\'<mark style="background-color:'+HIGHLIGHT_COLOR+';font-style:inherit;font-weight:inherit;">\'+e+"</mark>"),!0;return!1}function n(){r.node&&(r.node.innerHTML=r.content,r.node=void 0,r.content=void 0)}function o(n){e(n)&&r.node.scrollIntoViewIfNeeded()}var t=["SCRIPT","NOSCRIPT"],r={node:void 0,content:void 0};return{highlight:e,scrollToWord:o}}();';
-var USER_LEVEL = 40;
-var RANGE = 30;
 
 var BORDER = '#E7EAEA';
 var BGWASH = 'rgba(255,255,255,0.8)';
@@ -92,7 +90,9 @@ var Browser = React.createClass({
 				return;
 			}
 			this.lastParsedContent = contentToParse;
-			var words = wordHelpers.extractWordsFromArticle(contentToParse, USER_LEVEL - RANGE, USER_LEVEL + RANGE);
+			var range = this.props.userRange;
+			var level = this.props.userLevel || 50;
+			var words = wordHelpers.extractWordsFromArticle(contentToParse, level - range, level + range);
 
 			// this should be done via store
 			this.props.onWordsParsed && this.props.onWordsParsed(words);

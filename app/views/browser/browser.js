@@ -73,6 +73,8 @@ var Browser = React.createClass({
 				<YarnWebView
 					ref={WEBVIEW_REF}
 					style={styles.webView}
+					userRange={this.props.userRange}
+					userLevel={this.props.userLevel}
 					url={this.state.url}
 					onNavigationStateChange={this.onNavigationStateChange}
 					onWordsParsed={this.onWordsParsed}

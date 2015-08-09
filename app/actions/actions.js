@@ -147,15 +147,7 @@ function onChangeLang(lang) {
 		return;
 	}
 
-	var key = '@yarn:userlang';
-
-	AsyncStorage
-		.setItem(key, lang)
-		.then(function () {
-			userProfileStore.set('language', lang);
-		})
-		.done();
-
+	userProfileStore.set('language', lang);
 }
 
 module.exports = bus;
