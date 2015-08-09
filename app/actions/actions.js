@@ -10,6 +10,8 @@ var collins = require('../helpers/collins');
 var gameStateStore = require('../stores/gamestatestore');
 var userProfileStore = require('../stores/userprofilestore');
 
+var words = require('../../words');
+
 var React = require('react-native');
 var {
 	AsyncStorage
@@ -112,18 +114,20 @@ function onWordPressed(word) {
 
 	gameStateStore.pause(true);
 
+	var levelOfCurrentWord = words[gameStateStore.get('currentWord').text];
+
 	gameStateStore.set('chosenAnswer', word);
 	if (word === gameStateStore.get('currentWord').definition) {
 		gameStateStore.set('correct', gameStateStore.get('correct') + 1);
 		gameStateStore.set('currentState', GAME_STATES.CORRECT_ANSWER_CHOSEN);
-		updateUserStats(1);
+		userProfileStore.updateLevelStats(levelOfCurrentWord, true);
 		console.log('correct + 1', gameStateStore.get('correct'));
 	}
 	else {
 		console.log('wrong + 1');
 		gameStateStore.set('wrong', gameStateStore.get('wrong') + 1);
 		gameStateStore.set('currentState', GAME_STATES.WRONG_ANSWER_CHOSEN);
-		updateUserStats(-1);
+		userProfileStore.updateLevelStats(levelOfCurrentWord, false);
 		console.log('wrong + 1', gameStateStore.get('wrong'));
 	}
 
@@ -136,38 +140,6 @@ function onWordPressed(word) {
 	});
 
 	gameStateStore.pause(false);
-}
-
-function updateUserStats(value) {
-	var key = '@yarn:';
-	if (value > 0) {
-		key += 'correct';
-	} else {
-		key += 'wrong'
-	}
-
-	value = Math.abs(value);
-
-	AsyncStorage
-		.getItem(key)
-		.then(incrementValue)
-		.done();
-
-
-	function incrementValue(currentValue) {
-		if (currentValue === null) {
-			currentValue = 0;
-		} else {
-			currentValue = parseInt(currentValue, 10);
-		}
-		currentValue += value;
-
-		console.log('user stats change:', key, currentValue);
-
-		AsyncStorage
-			.setItem(key, ''+currentValue)
-			.done();
-	}
 }
 
 function onChangeLang(lang) {
