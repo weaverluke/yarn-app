@@ -16,7 +16,8 @@ var StatusBar = React.createClass({
 	getDefaultProps: function () {
 		return {
 			totalWords: 0,
-			currentWordIndex: 0
+			currentWordIndex: 0,
+			onNextPress: function () {}
 		};
 	},
 
@@ -52,6 +53,7 @@ var StatusBar = React.createClass({
 					specialFont={true}
 				/>
 				<NavBarLabel
+					onPress={this.props.onNextPress}
 					text='Onwards >'
 					color='#FFFFFF'
 					backgroundColor={uiConfig.COLORS.BLUE}

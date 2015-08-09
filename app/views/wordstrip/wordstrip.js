@@ -9,7 +9,7 @@ var {
 
 var uiConfig = require('../../uiconfig');
 var WordButton = require('./wordbutton');
-var NavbarButton = require('../navbar/navbarbutton');
+var NavbarButton = require('../statusbar/navbarbutton');
 var BUTTON_TYPES = WordButton.BUTTON_TYPES;
 
 var lastScrollLeft = 0;

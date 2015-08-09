@@ -5,8 +5,7 @@ var React = require('react-native');
 var WordStrip = require('./app/views/wordstrip/wordstrip');
 var Browser = require('./app/views/browser/browser');
 var Popup = require('./app/views/popup/popup');
-var NavBar = require('./app/views/navbar/navbar');
-var StatusBar = require('./app/views/navbar/statusbar');
+var StatusBar = require('./app/views/statusbar/statusbar');
 var Result = require('./app/views/result/result');
 var Settings = require('./app/views/settings/settings');
 
@@ -56,7 +55,12 @@ var yarn = React.createClass({
 	render: function () {
 		this.inputText = this.state.url;
 
-		var bottomBar = this.state.wordstripVisible ? this.renderWordStrip() : this.renderNavbar();
+		var bottomBar;
+		if (this.state.resultViewVisible) {
+			bottomBar = this.renderResultView();
+		} else if (this.state.wordstripVisible) {
+			bottomBar = this.renderWordStrip();
+		}
 
 		return (
 			<View style={[styles.container]}>
@@ -68,7 +72,7 @@ var yarn = React.createClass({
 				{bottomBar}
 				<Popup
 					visible={this.state.popupVisible}
-					onClose={this.onPopupClose}
+					onClose={this.onPopupSubmit}
 					onSubmit={this.onPopupSubmit}
 					title={this.state.popupTitle}
 					content={this.state.popupContent}
@@ -81,20 +85,17 @@ var yarn = React.createClass({
 					type={Popup.POPUP_TYPE.INFO}
 					arrowRect={this.state.firstButtonRect}
 				/>
-				{this.renderResult()}
 				{this.renderSettings()}
 			</View>
 		);
 	},
 
-	renderNavbar: function () {
+	renderResultView: function () {
 		return (
 			<StatusBar
-				currentWordIndex={gameStateStore.get('currentWordIndex')}
+				currentWordIndex={gameStateStore.get('correct')}
 				totalWords={gameStateStore.get('pageWords').length}
-				onSettingsPress={this.showSettings}
-				onNextPress={this.showNextQuestion}
-				showNextButton={gameStateStore.get('pageWords').length}
+				onNextPress={this.closeResultView}
 			/>
 		);
 	},
@@ -107,20 +108,6 @@ var yarn = React.createClass({
 				onAction={this.onWordPressed}
 				words={this.state.question}
 				onSettingsPress={this.showSettings}
-			/>
-		);
-	},
-
-	renderResult: function () {
-		if (!this.state.resultViewVisible) {
-			return (<View />);
-		}
-
-		return (
-			<Result
-				onClose={this.closeResultView}
-				correct={gameStateStore.get('correct')}
-				wrong={gameStateStore.get('wrong')}
 			/>
 		);
 	},
@@ -169,15 +156,6 @@ var yarn = React.createClass({
 
 		gameStateStore.addChangeListener(this.onGameStateChanged.bind(this));
 		userProfileStore.addChangeListener(this.onUserProfileChanged.bind(this));
-	},
-
-	onPopupClose: function () {
-		this.setState({
-			popupVisible: false,
-			wordstripVisible: false
-		});
-		// this one should show status bar, but for now let's just continue game
-		//this.showNextQuestion();
 	},
 
 	onPopupSubmit: function () {
