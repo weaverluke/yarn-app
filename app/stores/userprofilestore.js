@@ -16,7 +16,8 @@ var data = {
 	language: 'pl',
 	correctAnswers: 0,
 	wrongAnswers: 0,
-	levelStats: []
+	levelStats: [],
+	historyLevelValues: []
 };
 
 var PERSISTENCE_KEY = '@yarn:userProfileStore';
@@ -60,8 +61,18 @@ function updateLevelStats(level, correct) {
 		data.wrongAnswers++;
 	}
 
+	updateUserLevel();
 	saveData();
 	emitChange();
+}
+
+function updateUserLevel() {
+	data.level = 50;
+
+	// save level after each 10 words
+	//if ((data.correctAnswers + data.wrongAnswers) % 10 === 0) {
+	//	this.historyLevelValues.push(data.level);
+	//}
 }
 
 

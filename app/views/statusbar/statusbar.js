@@ -17,6 +17,8 @@ var StatusBar = React.createClass({
 		return {
 			totalWords: 0,
 			currentWordIndex: 0,
+			score: 0,
+			level: 0,
 			onNextPress: function () {}
 		};
 	},
@@ -41,13 +43,13 @@ var StatusBar = React.createClass({
 					<ProgressBar progress={progress}/>
 				</View>
 				<NavBarLabel
-					text='11,320'
+					text={this.props.score}
 					color={uiConfig.COLORS.ORANGE}
 					style={styles.score}
 					specialFont={true}
 				/>
 				<NavBarLabel
-					text='76'
+					text={this.props.level}
 					color={uiConfig.COLORS.RED}
 					style={styles.level}
 					specialFont={true}

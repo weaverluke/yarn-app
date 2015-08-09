@@ -96,6 +96,8 @@ var yarn = React.createClass({
 				currentWordIndex={gameStateStore.get('correct')}
 				totalWords={gameStateStore.get('pageWords').length}
 				onNextPress={this.closeResultView}
+				level={userProfileStore.get('level')}
+				score={userProfileStore.get('score')}
 			/>
 		);
 	},

@@ -11,8 +11,6 @@ var {
 
 var uiConfig = require('../../uiconfig');
 
-var ICON_SIZE = 12;
-
 var NavBarButton = React.createClass({
 
 	getDefaultProps: function () {
