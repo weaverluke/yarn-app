@@ -36,11 +36,6 @@ var NavBar = React.createClass({
 					totalWords={this.props.totalWords}
 					currentWordIndex={this.props.currentWordIndex}
 				/>
-				{this.renderNextButton()}
-				<NavbarButton
-					icon={'settings'}
-					onPress={this.props.onSettingsPress}
-				/>
 			</View>
 		);
 	},

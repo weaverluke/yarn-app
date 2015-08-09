@@ -22,6 +22,8 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		6165D9261B7746390011A703 /* BauhausStd-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6165D9241B7746390011A703 /* BauhausStd-Heavy.otf */; };
+		6165D9271B7746390011A703 /* bauhaus-93.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6165D9251B7746390011A703 /* bauhaus-93.ttf */; };
 		61EDD2EC1B617FAB00A0809B /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 61EDD2E11B617F6D00A0809B /* libBVLinearGradient.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
@@ -133,6 +135,8 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = iOS/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = iOS/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		6165D9241B7746390011A703 /* BauhausStd-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "BauhausStd-Heavy.otf"; path = "/Users/mateusz/workspace/weaverdigital/yarn-files/BauhausStd-Heavy.otf"; sourceTree = "<absolute>"; };
+		6165D9251B7746390011A703 /* bauhaus-93.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "bauhaus-93.ttf"; path = "/Users/mateusz/workspace/weaverdigital/yarn-files/bauhaus-93.ttf"; sourceTree = "<absolute>"; };
 		61EDD2DC1B617F6D00A0809B /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -243,6 +247,7 @@
 		13B07FAE1A68108700A75B9A /* yarn */ = {
 			isa = PBXGroup;
 			children = (
+				6165D9331B7746860011A703 /* Resources */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -260,6 +265,15 @@
 				146834041AC3E56700842450 /* libReact.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		6165D9331B7746860011A703 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				6165D9251B7746390011A703 /* bauhaus-93.ttf */,
+				6165D9241B7746390011A703 /* BauhausStd-Heavy.otf */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		61EDD2DD1B617F6D00A0809B /* Products */ = {
@@ -539,7 +553,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6165D9271B7746390011A703 /* bauhaus-93.ttf in Resources */,
 				008F07F31AC5B25A0029DE68 /* main.jsbundle in Resources */,
+				6165D9261B7746390011A703 /* BauhausStd-Heavy.otf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);

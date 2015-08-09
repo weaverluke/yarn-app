@@ -7,6 +7,8 @@ var {
 	Text
 } = React;
 
+var NavBarLabel = require('./navbarlabel');
+var NavBarButton = require('./navbarbutton');
 var uiConfig = require('../../uiconfig');
 
 var StatusBar = React.createClass({
@@ -28,11 +30,33 @@ var StatusBar = React.createClass({
 		var progress = (this.props.currentWordIndex+1) / this.props.totalWords * 100;
 		return (
 			<View style={styles.wrap}>
-				<View style={styles.textWrap}>
-					<Text style={styles.text}>{this.props.currentWordIndex + 1}</Text>
-					<Text style={styles.textTotal}>/{this.props.totalWords} words...</Text>
+				<View style={styles.progressBox}>
+					<View style={styles.progressTextWrap}>
+						<View style={styles.progressTextWrapVertical}>
+							<Text style={styles.text}>{this.props.currentWordIndex + 1}</Text>
+							<Text style={styles.textTotal}>/{this.props.totalWords} correct</Text>
+						</View>
+					</View>
+					<ProgressBar progress={progress}/>
 				</View>
-				<ProgressBar progress={progress}/>
+				<NavBarLabel
+					text='11,320'
+					color={uiConfig.COLORS.ORANGE}
+					style={styles.score}
+					specialFont={true}
+				/>
+				<NavBarLabel
+					text='76'
+					color={uiConfig.COLORS.RED}
+					style={styles.level}
+					specialFont={true}
+				/>
+				<NavBarLabel
+					text='Onwards >'
+					color='#FFFFFF'
+					backgroundColor={uiConfig.COLORS.BLUE}
+					style={styles.nextButton}
+				/>
 			</View>
 		);
 	}
@@ -67,29 +91,32 @@ var ProgressBar = React.createClass({
 var styles = StyleSheet.create({
 
 	wrap: {
-		flex: 1, // so it expands to fit all the space up to the buttons
-		height: uiConfig.TOOLBAR_HEIGHT - uiConfig.PROGRESSBAR_HEIGHT + 1 // 1 for border
+		height: uiConfig.TOOLBAR_HEIGHT - uiConfig.PROGRESSBAR_HEIGHT + 1, // 1 for border
+		flexDirection: 'row'
 	},
 
-	textWrap: {
+	progressTextWrap: {
+		flex: 1,
+		alignItems: 'center'
+	},
+
+	progressTextWrapVertical: {
 		flex: 1,
 		flexDirection: 'row',
 		alignItems: 'center'
 	},
 
 	text: {
-		flex: 1,
 		textAlign: 'right',
 		color: uiConfig.COLORS.TEXT,
-		fontSize: uiConfig.STATUSBAR_FONT_SIZE,
+		fontSize: uiConfig.PROGRESSBAR_FONT_SIZE,
 		fontWeight: '700'
 	},
 
 	textTotal: {
-		flex: 1,
 		textAlign: 'left',
 		color: uiConfig.COLORS.TEXT,
-		fontSize: uiConfig.STATUSBAR_FONT_SIZE
+		fontSize: uiConfig.PROGRESSBAR_FONT_SIZE
 	},
 
 	progressBarWrap: {
@@ -103,7 +130,24 @@ var styles = StyleSheet.create({
 	},
 
 	progressBarEnd: {
+		backgroundColor: uiConfig.COLORS.MID_GREY,
 		height: uiConfig.PROGRESSBAR_HEIGHT
+	},
+
+	progressBox: {
+		flex: 2
+	},
+
+	score: {
+		flex: 2
+	},
+
+	level: {
+		flex: 1
+	},
+
+	nextButton: {
+		flex: 2
 	}
 
 });

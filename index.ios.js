@@ -6,6 +6,7 @@ var WordStrip = require('./app/views/wordstrip/wordstrip');
 var Browser = require('./app/views/browser/browser');
 var Popup = require('./app/views/popup/popup');
 var NavBar = require('./app/views/navbar/navbar');
+var StatusBar = require('./app/views/navbar/statusbar');
 var Result = require('./app/views/result/result');
 var Settings = require('./app/views/settings/settings');
 
@@ -88,14 +89,14 @@ var yarn = React.createClass({
 
 	renderNavbar: function () {
 		return (
-			<NavBar
+			<StatusBar
 				currentWordIndex={gameStateStore.get('currentWordIndex')}
 				totalWords={gameStateStore.get('pageWords').length}
 				onSettingsPress={this.showSettings}
 				onNextPress={this.showNextQuestion}
 				showNextButton={gameStateStore.get('pageWords').length}
 			/>
-		)
+		);
 	},
 
 	renderWordStrip: function () {

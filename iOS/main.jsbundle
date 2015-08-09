@@ -1114,11 +1114,12 @@ getInitialState:function(){
 return {
 url:DEFAULT_URL,
 popupVisible:false,
-initialPopupVisible:false,
 question:[],
 buttonRect:{},
 firstButtonRect:{},
 wordstripVisible:true,
+
+initialPopupVisible:false,
 resultViewVisible:false,
 settingsViewVisible:false};},
 
@@ -1315,7 +1316,13 @@ wordstripVisible:false});},
 
 
 
-onWordPressed:function(rect,word){
+onWordPressed:function(rect,word,index){
+
+if(index === 0){
+this.refs[BROWSER_REF].scrollToWord(word);
+return;}
+
+
 this.setState({
 buttonRect:rect});
 
@@ -42476,10 +42483,23 @@ var WordButton=require('yarn/app/views/wordstrip/wordbutton');
 var NavbarButton=require('yarn/app/views/navbar/navbarbutton');
 var BUTTON_TYPES=WordButton.BUTTON_TYPES;
 
+var lastScrollLeft=0;
+
 var WordStrip=React.createClass({
 getInitialState:function(){
 return {
-height:uiConfig.TOOLBAR_HEIGHT};},
+height:uiConfig.TOOLBAR_HEIGHT,
+scrollToStart:true};},
+
+
+
+componentWillReceiveProps:function(newProps){
+var wordsWillChange=newProps.words && newProps.words[0] && 
+this.props.words && this.props.words[0] && 
+newProps.words[0].text !== this.props.words[0].text;
+
+this.setState({
+scrollToStart:wordsWillChange});},
 
 
 
@@ -42518,6 +42538,7 @@ type = BUTTON_TYPES.ANSWER_ENABLED;}
 
 return (
 React.createElement(WordButton,{
+index:i,
 height:this.state.height,
 arrow:i === 1,
 ref:'button-' + i,
@@ -42528,11 +42549,22 @@ type:type}));}).
 
 bind(this));
 
+
+
+
+
+var contentOffset={x:lastScrollLeft,y:0};
+if(this.state.scrollToStart){
+lastScrollLeft = lastScrollLeft?0:0.1;
+contentOffset.x = lastScrollLeft;}
+
+
 return (
 React.createElement(View,{style:styles.toolbar},
 React.createElement(ScrollView,{
 horizontal:true,
-showsHorizontalScrollIndicator:false},
+showsHorizontalScrollIndicator:false,
+contentOffset:contentOffset},
 
 React.createElement(View,{style:styles.words},
 words),
@@ -42592,12 +42624,13 @@ BLUE:'rgb(39, 170, 225)',
 TEXT:'rgb(65, 64, 66)'},
 
 
-TOOLBAR_HEIGHT:30,
-TOOLBAR_FONT_SIZE:12,
-TOOLBAR_ICON_SIZE:16,
-STATUSBAR_FONT_SIZE:12,
+TOOLBAR_HEIGHT:40,
+WORDBUTTON_PADDING:14,
+TOOLBAR_FONT_SIZE:14,
+TOOLBAR_ICON_SIZE:22,
+STATUSBAR_FONT_SIZE:14,
 PROGRESSBAR_HEIGHT:2,
-TOOLBAR_BUTTON_WIDTH:40};});
+TOOLBAR_BUTTON_WIDTH:50};});
 __d('yarn/app/views/wordstrip/wordbutton',["react-native/Libraries/react-native/react-native","yarn/app/uiconfig"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native');var 
@@ -42609,6 +42642,7 @@ TouchableWithoutFeedback=
 React.TouchableWithoutFeedback;var StyleSheet=React.StyleSheet;var Text=React.Text;var View=React.View;
 
 var uiConfig=require('yarn/app/uiconfig');
+var FIRST_BUTTON_ARROW_SIZE=10;
 
 var BUTTON_TYPES={
 QUESTION:'QUESTION',
@@ -42644,13 +42678,21 @@ additionalStyle.borderRightWidth = 1;
 additionalStyle.borderRightColor = '#FFFFFF';}
 
 
+var additionalTextStyle={
+lineHeight:height * 0.7};
+
+
+if(this.props.index === 1){
+additionalTextStyle.paddingLeft = uiConfig.WORDBUTTON_PADDING - FIRST_BUTTON_ARROW_SIZE / 4;}
+
+
 var buttonColors=styles[this.props.type] || {};
 
 return (
 React.createElement(TouchableWithoutFeedback,{onPress:this.onButtonPressed},
 React.createElement(View,{ref:'button',style:[styles.wordButton,additionalStyle,buttonColors]},
 arrow,
-React.createElement(Text,{style:[styles.wordButtonText,{lineHeight:height * 0.7},buttonColors]},
+React.createElement(Text,{style:[styles.wordButtonText,additionalTextStyle,buttonColors]},
 this.props.text))));},
 
 
@@ -42671,7 +42713,7 @@ height:height});});},
 
 onButtonPressed:function(){
 this.getButtonRect((function(rect){
-this.props.onAction(rect,this.props.text);}).
+this.props.onAction(rect,this.props.text,this.props.index);}).
 bind(this));}});
 
 
@@ -42692,17 +42734,17 @@ flexDirection:'row'},
 
 
 wordButtonText:{
-paddingLeft:10,
-paddingRight:10,
+paddingLeft:uiConfig.WORDBUTTON_PADDING,
+paddingRight:uiConfig.WORDBUTTON_PADDING,
 fontSize:uiConfig.TOOLBAR_FONT_SIZE,
 fontWeight:'500'},
 
 
 buttonArrow:{
-width:5,
+width:FIRST_BUTTON_ARROW_SIZE,
 borderTopColor:'rgba(0,0,0,0)',
 borderBottomColor:'rgba(0,0,0,0)',
-borderLeftWidth:3,
+borderLeftWidth:Math.ceil(FIRST_BUTTON_ARROW_SIZE / 2),
 backgroundColor:'rgba(0,0,0,0)',
 borderLeftColor:'#F2F2F2'},
 
@@ -42736,7 +42778,6 @@ color:'#41AC60'},
 WRONG_ANSWER_SELECTED:{
 backgroundColor:'#DF1C24',
 color:'#FFFFFF'}});
-
 
 
 
@@ -42815,14 +42856,14 @@ justifyContent:'center'},
 icon:{
 width:uiConfig.TOOLBAR_ICON_SIZE,
 height:uiConfig.TOOLBAR_ICON_SIZE,
-marginTop:(uiConfig.TOOLBAR_HEIGHT - uiConfig.TOOLBAR_ICON_SIZE) / 2 - 1}});
+marginTop:Math.floor((uiConfig.TOOLBAR_HEIGHT - uiConfig.TOOLBAR_ICON_SIZE) / 2)}});
 
 
 
 
 module.exports = NavBarButton;});
-__d('image!settings-icon',[],function(global, require, requireDynamic, requireLazy, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/settings-icon.imageset/settings-icon.png","uri":"settings-icon","width":48,"height":50,"deprecated":true};});
-__d('image!next-icon',[],function(global, require, requireDynamic, requireLazy, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/next-icon.imageset/next-icon.png","uri":"next-icon","width":48,"height":48,"deprecated":true};});
+__d('image!settings-icon',[],function(global, require, requireDynamic, requireLazy, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/settings-icon.imageset/settings-icon.png","uri":"settings-icon","width":44,"height":44,"deprecated":true};});
+__d('image!next-icon',[],function(global, require, requireDynamic, requireLazy, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/next-icon.imageset/next-icon.png","uri":"next-icon","width":44,"height":44,"deprecated":true};});
 __d('yarn/app/views/browser/browser',["react-native/Libraries/react-native/react-native","yarn/app/stores/gamestatestore","node-read/index","yarn/app/views/browser/yarnwebview"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native');var 
@@ -42963,6 +43004,10 @@ this.refs[TEXT_INPUT_REF].blur();},
 
 highlightWord:function(word,cb){
 this.refs[WEBVIEW_REF].highlightWord(word,cb);},
+
+
+scrollToWord:function(word,cb){
+this.refs[WEBVIEW_REF].scrollToWord(word,cb);},
 
 
 evaluateJavaScript:function(){
@@ -65793,7 +65838,7 @@ var readability=require('node-read/index');
 var wordHelpers=require('yarn/app/views/browser/wordHelpers');
 
 var HIGHLIGHT_COLOR='#22FF22';
-var highlighter='window.yarnHighlight=function(){function e(e){var r,d=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,!1);n();for(var i=new RegExp("\\\\b"+e+"\\\\b");r=d.nextNode();)if(-1===o.indexOf(r.parentNode.tagName)&&i.test(r.nodeValue))return t.node=r.parentNode,t.content=r.parentNode.innerHTML,t.node.innerHTML=t.content.replace(i,\'<mark style="background-color:' + HIGHLIGHT_COLOR + ';font-style:inherit;font-weight:inherit;">\'+e+"</mark>"),t.node.scrollIntoViewIfNeeded(),!0;return!1}function n(){t.node&&(t.node.innerHTML=t.content,t.node=void 0,t.content=void 0)}var o=["SCRIPT","NOSCRIPT"],t={node:void 0,content:void 0};return{highlight:e}}();';
+var highlighter='window.yarnHighlight=function(){function e(e){var o,d=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,!1);n();for(var i=new RegExp("\\\\b"+e+"\\\\b");o=d.nextNode();)if(-1===t.indexOf(o.parentNode.tagName)&&i.test(o.nodeValue))return r.node=o.parentNode,r.content=o.parentNode.innerHTML,r.node.innerHTML=r.content.replace(i,\'<mark style="background-color:' + HIGHLIGHT_COLOR + ';font-style:inherit;font-weight:inherit;">\'+e+"</mark>"),!0;return!1}function n(){r.node&&(r.node.innerHTML=r.content,r.node=void 0,r.content=void 0)}function o(n){e(n)&&r.node.scrollIntoViewIfNeeded()}var t=["SCRIPT","NOSCRIPT"],r={node:void 0,content:void 0};return{highlight:e,scrollToWord:o}}();';
 var USER_LEVEL=40;
 var RANGE=30;
 
@@ -65909,8 +65954,14 @@ this.scheduleParsing();}},
 
 
 
-highlightWord:function(word){
+highlightWord:function(word,cb){
 this.evaluateJavaScript('window.yarnHighlight.highlight("' + word + '");',function(err,result){});},
+
+
+
+
+scrollToWord:function(word,cb){
+this.evaluateJavaScript('window.yarnHighlight.scrollToWord("' + word + '");',function(err,result){});},
 
 
 
@@ -66428,7 +66479,7 @@ text:{
 flex:1,
 textAlign:'right',
 color:uiConfig.COLORS.TEXT,
-fontSize:6,
+fontSize:uiConfig.STATUSBAR_FONT_SIZE,
 fontWeight:'700'},
 
 
@@ -66436,7 +66487,7 @@ textTotal:{
 flex:1,
 textAlign:'left',
 color:uiConfig.COLORS.TEXT,
-fontSize:6},
+fontSize:uiConfig.STATUSBAR_FONT_SIZE},
 
 
 progressBarWrap:{
@@ -66726,7 +66777,14 @@ gameStateStore.pause(true);
 question[0].def = definition;
 gameStateStore.set('currentWord',question[0]);
 
-question.sort(function(){return Math.random() < 0.5;});
+
+question.sort(function(){return Math.random() < 0.5?1:-1;});
+
+
+var round=Math.floor(Math.random() * question.length);
+var start=question.splice(0,round);
+question = question.concat(start);
+
 gameStateStore.set('currentQuestion',question);
 gameStateStore.set('currentWordIndex',currentWordIndex);
 gameStateStore.set('currentState',GAME_STATES.WAITING_FOR_ANSWER);
