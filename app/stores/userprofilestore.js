@@ -10,6 +10,7 @@ var {
 } = React;
 
 var data = {
+	wordsLimit: 10,
 	level: 0,
 	range: 40,
 	score: 0,

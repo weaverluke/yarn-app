@@ -30,11 +30,27 @@ bus.on(actions.WORD_PRESSED, onWordPressed);
 bus.on(actions.CHANGE_LANG, onChangeLang);
 
 function onWordsParsed(words) {
+	if (!words.length) {
+		return;
+	}
+
 	gameStateStore.pause(true);
 	gameStateStore.reset(true);
+	words = spreadWords(words, userProfileStore.get('wordsLimit'));
 	gameStateStore.set('pageWords', words);
 	gameStateStore.pause(false);
 	bus.emit(actions.SHOW_NEXT_QUESTION);
+}
+
+function spreadWords(words, limit) {
+	var skip = ~~(words.length / limit);
+	var newWords = [];
+	var i = 0;
+	var len = words.length - skip;
+	for (i = 0; i < len; i += skip) {
+		newWords.push(words[i]);
+	}
+	return newWords;
 }
 
 function onShowNextQuestion() {

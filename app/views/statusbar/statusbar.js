@@ -95,6 +95,8 @@ var ProgressBar = React.createClass({
 var styles = StyleSheet.create({
 
 	wrap: {
+		borderTopWidth: 1,
+		borderTopColor: uiConfig.COLORS.MID_GREY,
 		height: uiConfig.TOOLBAR_HEIGHT - uiConfig.PROGRESSBAR_HEIGHT + 1, // 1 for border
 		flexDirection: 'row'
 	},
