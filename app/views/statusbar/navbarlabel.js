@@ -16,7 +16,8 @@ var NavBarLabel = React.createClass({
 		return {
 			color: uiConfig.COLORS.MID_GREY,
 			backgroundColor: '#FFFFFF',
-			text: '',
+			texts: [],
+			isFirst: false,
 			onPress: function () {}
 		};
 	},
@@ -28,23 +29,39 @@ var NavBarLabel = React.createClass({
 	},
 
 	render: function () {
-		var extraTextStyle = {
-			color: this.props.color
-		};
-		if (this.props.specialFont) {
-			extraTextStyle.fontFamily = 'Bauhaus 93';
-			extraTextStyle.fontSize = 24;
-			extraTextStyle.marginTop = 8;
+		var texts = [];
+		for (var i = 0; i < this.props.texts.length; i++) {
+			texts.push(this.renderTextItem(this.props.texts[i], i, this.props.specialFont));
 		}
 
 		return (
 			<TouchableWithoutFeedback onPress={this.props.onPress}>
-				<View style={[styles.wrap, {backgroundColor: this.props.backgroundColor}]}>
+				<View style={[styles.wrap, {
+					backgroundColor: this.props.backgroundColor,
+					borderLeftWidth: this.props.isFirst ? 0 : 1
+				}]}>
 					<View style={styles.textWrap}>
-						<Text style={[styles.text, extraTextStyle]}>{this.props.text}</Text>
+						{texts}
 					</View>
 				</View>
 			</TouchableWithoutFeedback>
+		);
+	},
+
+	renderTextItem: function (cfg, key, useSpecialFont) {
+		var extraStyle = {};
+		if (useSpecialFont) {
+			extraStyle.fontFamily = 'Bauhaus 93';
+			extraStyle.fontSize = 24;
+			extraStyle.lineHeight = 25;
+			extraStyle.height = 24;
+		}
+		if (cfg.color) {
+			extraStyle.color = cfg.color;
+		}
+
+		return (
+			<Text key={'text-' + key} style={[styles.text, extraStyle]}>{cfg.text}</Text>
 		);
 	}
 });

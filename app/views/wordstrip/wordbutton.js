@@ -23,12 +23,18 @@ var BUTTON_TYPES = {
 var WordButton = React.createClass({
 
 	render: function () {
-		//console.log('WordButton.render()', this.props);
-
 		var arrow;
 		var height = this.props.height;
+
+		var buttonColors = BUTTON_COLORS[this.props.type] || {};
+
 		var additionalStyle = {
-			height: height
+			height: height,
+			backgroundColor: buttonColors.backgroundColor
+		};
+
+		var additionalTextStyle = {
+			lineHeight: height * 0.7
 		};
 
 		if (this.props.arrow) {
@@ -38,6 +44,8 @@ var WordButton = React.createClass({
 					borderBottomWidth: height/2
 				}]}></View>
 			);
+			// adjust text padding for button with arrow
+			additionalTextStyle.paddingLeft = uiConfig.WORDBUTTON_PADDING - FIRST_BUTTON_ARROW_SIZE/4;
 		}
 
 		if (this.props.type !== BUTTON_TYPES.QUESTION) {
@@ -45,19 +53,9 @@ var WordButton = React.createClass({
 			additionalStyle.borderRightColor = '#FFFFFF';
 		}
 
-		var additionalTextStyle = {
-			lineHeight: height * 0.7
-		};
-
-		if (this.props.index === 1) {
-			additionalTextStyle.paddingLeft = uiConfig.WORDBUTTON_PADDING - FIRST_BUTTON_ARROW_SIZE/4;
-		}
-
-		var buttonColors = styles[this.props.type] || {};
-
 		return (
 			<TouchableWithoutFeedback onPress={this.onButtonPressed}>
-				<View ref="button" style={[styles.wordButton, additionalStyle, buttonColors]}>
+				<View ref='button' style={[styles.wordButton, additionalStyle]}>
 					{arrow}
 					<Text style={[styles.wordButtonText, additionalTextStyle, buttonColors]}>
 						{this.props.text}
@@ -109,44 +107,46 @@ var styles = StyleSheet.create({
 
 	buttonArrow: {
 		width: FIRST_BUTTON_ARROW_SIZE,
+		borderLeftWidth: Math.ceil(FIRST_BUTTON_ARROW_SIZE/2),
 		borderTopColor: 'rgba(0,0,0,0)',
 		borderBottomColor: 'rgba(0,0,0,0)',
-		borderLeftWidth: Math.ceil(FIRST_BUTTON_ARROW_SIZE/2),
 		backgroundColor: 'rgba(0,0,0,0)',
-		borderLeftColor: '#F2F2F2'
-	},
+		borderLeftColor: uiConfig.COLORS.LIGHT_GREY
+	}
 
+});
+
+var BUTTON_COLORS = {
 	QUESTION: {
-		backgroundColor: '#F2F2F2',
-		color: '#414042'
+		backgroundColor: uiConfig.COLORS.LIGHT_GREY,
+		color: uiConfig.COLORS.TEXT
 	},
 
 	ANSWER_ENABLED: {
-		backgroundColor: '#787878',
+		backgroundColor: uiConfig.COLORS.SELECTED_GREY,
 		color: '#FFFFFF'
 	},
 
 	ANSWER_DISABLED: {
-		backgroundColor: '#BEBEBE',
+		backgroundColor: uiConfig.COLORS.MID_GREY,
 		color: '#FFFFFF'
 	},
 
 	CORRECT_ANSWER_SELECTED: {
-		backgroundColor: '#41AC60',
+		backgroundColor: uiConfig.COLORS.GREEN,
 		color: '#FFFFFF'
-
 	},
 
 	CORRECT_ANSWER_NOT_SELECTED: {
-		backgroundColor: '#F2F2F2',
+		backgroundColor: uiConfig.COLORS.LIGHT_GREY,
 		color: '#41AC60'
 	},
 
 	WRONG_ANSWER_SELECTED: {
-		backgroundColor: '#DF1C24',
+		backgroundColor: uiConfig.COLORS.RED,
 		color: '#FFFFFF'
 	}
-});
+};
 
 WordButton.BUTTON_TYPES = BUTTON_TYPES;
 

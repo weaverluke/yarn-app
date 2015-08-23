@@ -19,6 +19,9 @@ var StatusBar = React.createClass({
 			correctWords: 0,
 			score: 0,
 			level: 0,
+			nextText: 'Onwards >',
+			showWordsCount: false,
+			wordsCount: 0,
 			onNextPress: function () {}
 		};
 	},
@@ -30,9 +33,50 @@ var StatusBar = React.createClass({
 	},
 
 	render: function () {
-		var progress = (this.props.correctWords) / this.props.totalWords * 100;
+		var items = this.props.showWordsCount ? this.renderWordsCount() : this.renderStats();
+
 		return (
 			<View style={styles.wrap}>
+				{items}
+				<NavBarLabel
+					onPress={this.props.onNextPress}
+					texts={[{text: this.props.nextText, color: '#FFFFFF'}]}
+					backgroundColor={uiConfig.COLORS.BLUE}
+					style={styles.nextButton}
+				/>
+			</View>
+		);
+	},
+
+	renderWordsCount: function () {
+		var texts = [{
+			text: this.props.wordsCount,
+			color: uiConfig.COLORS.ORANGE
+		},{
+			text: ' ' + (this.props.wordsCount === 1 ? 'word' : 'words') + '...',
+			color: uiConfig.COLORS.MID_GREY
+		}];
+
+		return (
+			<View style={styles.contentWrap}>
+				<View style={styles.wordsCountCenterH}>
+					<View style={styles.wordsCountCenterV}>
+						<NavBarLabel
+							texts={texts}
+							specialFont={true}
+							isFirst={true}
+						/>
+					</View>
+				</View>
+			</View>
+		);
+	},
+
+	renderStats: function () {
+		var progress = (this.props.correctWords) / this.props.totalWords * 100;
+
+		return (
+			<View style={styles.contentWrap}>
 				<View style={styles.progressBox}>
 					<View style={styles.progressTextWrap}>
 						<View style={styles.progressTextWrapVertical}>
@@ -43,23 +87,15 @@ var StatusBar = React.createClass({
 					<ProgressBar progress={progress}/>
 				</View>
 				<NavBarLabel
-					text={this.props.score}
-					color={uiConfig.COLORS.ORANGE}
+					texts={[{text: this.props.score, color: uiConfig.COLORS.ORANGE}]}
 					style={styles.score}
 					specialFont={true}
 				/>
 				<NavBarLabel
-					text={this.props.level}
+					texts={[{text: this.props.level, color: uiConfig.COLORS.RED}]}
 					color={uiConfig.COLORS.RED}
 					style={styles.level}
 					specialFont={true}
-				/>
-				<NavBarLabel
-					onPress={this.props.onNextPress}
-					text='Onwards >'
-					color='#FFFFFF'
-					backgroundColor={uiConfig.COLORS.BLUE}
-					style={styles.nextButton}
 				/>
 			</View>
 		);
@@ -98,7 +134,14 @@ var styles = StyleSheet.create({
 		borderTopWidth: 1,
 		borderTopColor: uiConfig.COLORS.MID_GREY,
 		height: uiConfig.TOOLBAR_HEIGHT - uiConfig.PROGRESSBAR_HEIGHT + 1, // 1 for border
-		flexDirection: 'row'
+		flexDirection: 'row',
+		alignItems: 'stretch'
+	},
+
+	contentWrap: {
+		flex: 1,
+		flexDirection: 'row',
+		alignItems: 'stretch'
 	},
 
 	progressTextWrap: {
@@ -153,7 +196,19 @@ var styles = StyleSheet.create({
 	},
 
 	nextButton: {
-		flex: 2
+	},
+
+	wordsCountCenterH: {
+		flex: 1,
+		flexDirection: 'column',
+		alignItems: 'center',
+		backgroundColor: '#FFFFFF'
+	},
+
+	wordsCountCenterV: {
+		flex: 1,
+		flexDirection: 'row',
+		alignItems: 'center'
 	}
 
 });

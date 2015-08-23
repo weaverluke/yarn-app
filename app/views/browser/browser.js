@@ -11,10 +11,8 @@ var {
 } = React;
 
 var gameSateStore = require('../../stores/gamestatestore');
-
-var readability = require('node-read');
-
 var YarnWebView = require('./yarnwebview');
+var actions = require('../../actions/actions');
 
 var BORDER = '#E7EAEA';
 var BGWASH = 'rgba(255,255,255,0.8)';
@@ -78,22 +76,33 @@ var Browser = React.createClass({
 					url={this.state.url}
 					onNavigationStateChange={this.onNavigationStateChange}
 					onWordsParsed={this.onWordsParsed}
+					onVisibleWordsChanged={this.onVisibleWordsChanged}
 				/>
 			</View>
 		);
 	},
 
 	componentDidMount: function () {
-		gameSateStore.addChangeListener(this.onGameStateChanged.bind(this));
+		gameSateStore.addChangeListener(this.onGameStateChanged);
+
+		var webView = this.refs[WEBVIEW_REF];
+		actions.on(actions.WORDS_READY, webView.prepareWords);
+		actions.on(actions.START_GAME, webView.stopScrollTracking);
+	},
+
+	onVisibleWordsChanged: function (words) {
+		actions.emit(actions.VISITED_WORDS_CHANGED, words);
 	},
 
 	onGameStateChanged: function () {
-		var currentWord = gameSateStore.get('currentWord');
-		this.highlightWord(currentWord.text);
+		if (gameSateStore.get('currentState') === gameSateStore.GAME_STATES.WAITING_FOR_ANSWER) {
+			var currentWord = gameSateStore.get('currentWord');
+			this.highlightWord(currentWord.text);
+		}
 	},
 
 	onWordsParsed: function (words) {
-		this.props.onWordsParsed && this.props.onWordsParsed(words);
+		actions.emit('WORDS_PARSED', words);
 	},
 
 	goBack: function () {
@@ -131,23 +140,23 @@ var Browser = React.createClass({
 			this.reload();
 		} else {
 			this.setState({
-				url: url,
+				url: url
 			});
 		}
 		// dismiss keyboard
 		this.refs[TEXT_INPUT_REF].blur();
 	},
 
-	highlightWord: function (word, cb) {
-		this.refs[WEBVIEW_REF].highlightWord(word, cb);
+	highlightWord: function (word) {
+		this.refs[WEBVIEW_REF].highlightWord(word);
 	},
 
-	scrollToWord: function (word, cb) {
-		this.refs[WEBVIEW_REF].scrollToWord(word, cb);
+	scrollToWord: function (word) {
+		this.refs[WEBVIEW_REF].scrollToWord(word);
 	},
 
-	evaluateJavaScript: function () {
-		this.refs[WEBVIEW_REF].evaluateJavaScript.apply(this.refs[WEBVIEW_REF], arguments);
+	unhighlightWords: function () {
+		this.refs[WEBVIEW_REF].unhighlightWords();
 	}
 });
 

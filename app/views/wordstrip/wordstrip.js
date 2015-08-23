@@ -68,6 +68,7 @@ var WordStrip = React.createClass({
 			return (
 				<WordButton
 					index={i}
+					key={'word-' + i}
 					height={this.state.height} 
 					arrow={i === 1}
 					ref={'button-' + i}

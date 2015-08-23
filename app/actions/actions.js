@@ -1,4 +1,3 @@
-//var bus = require('events').EventEmitter();
 var Events = require('events');
 var bus = new Events.EventEmitter();
 var actions = require('./actiontypes');
@@ -23,8 +22,9 @@ Object.keys(actions).forEach(function (action) {
 	bus[action] = actions[action];
 });
 
-
 bus.on(actions.WORDS_PARSED, onWordsParsed);
+bus.on(actions.VISITED_WORDS_CHANGED, onVisitedWordsChanged);
+bus.on(actions.START_GAME, onStartGame);
 bus.on(actions.SHOW_NEXT_QUESTION, onShowNextQuestion);
 bus.on(actions.WORD_PRESSED, onWordPressed);
 bus.on(actions.CHANGE_LANG, onChangeLang);
@@ -38,19 +38,31 @@ function onWordsParsed(words) {
 	gameStateStore.reset(true);
 	words = spreadWords(words, userProfileStore.get('wordsLimit'));
 	gameStateStore.set('pageWords', words);
+	gameStateStore.set('currentState', gameStateStore.GAME_STATES.NOT_STARTED);
 	gameStateStore.pause(false);
-	bus.emit(actions.SHOW_NEXT_QUESTION);
+	bus.emit(actions.WORDS_READY, words);
 }
 
 function spreadWords(words, limit) {
-	var skip = ~~(words.length / limit);
+	var skip = Math.max(~~(words.length / limit), 1);
 	var newWords = [];
 	var i = 0;
-	var len = words.length - skip;
-	for (i = 0; i < len; i += skip) {
+	while (newWords.length < limit && words[i]) {
 		newWords.push(words[i]);
+		i+= skip;
 	}
 	return newWords;
+}
+
+function onVisitedWordsChanged(words) {
+	gameStateStore.set('visitedPageWords', words);
+}
+
+function onStartGame() {
+	gameStateStore.pause(true);
+	gameStateStore.set('pageWords', gameStateStore.get('visitedPageWords'));
+	gameStateStore.pause(false);
+	bus.emit(actions.SHOW_NEXT_QUESTION);
 }
 
 function onShowNextQuestion() {
@@ -164,6 +176,7 @@ function onChangeLang(lang) {
 	}
 
 	userProfileStore.set('language', lang);
+	gameStateStore.reset();
 }
 
 module.exports = bus;

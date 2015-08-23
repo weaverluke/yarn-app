@@ -6,19 +6,21 @@ var eventEmitter = new Events.EventEmitter();
 var CHANGE_EVENT = 'store:changed';
 
 var GAME_STATES = {
+	NOT_STARTED: 'NOT_STARTED',
 	WAITING_FOR_ANSWER: 'WAITING_FOR_ANSWER',
-	WRONG_ANSWER_CHOSEN: 'ANSWER_CHOSEN',
-	CORRECT_ANSWER_CHOSEN: 'WRONG_ANSWER_CHOSEN'
+	WRONG_ANSWER_CHOSEN: 'WRONG_ANSWER_CHOSEN',
+	CORRECT_ANSWER_CHOSEN: 'CORRECT_ANSWER_CHOSEN'
 };
 
 var initialData = {
 	pageWords: [],
+	visitedPageWords: [],
 	currentWordIndex: -1,
 	currentWord: '',
 	currentQuestion: null,
 	chosenAnswer: '',
 	randomWordsCount: 6,
-	currentState: '',
+	currentState: GAME_STATES.NOT_STARTED,
 	correct: 0,
 	wrong: 0,
 	finished: false
