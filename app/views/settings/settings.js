@@ -12,7 +12,6 @@ var {
 
 var actions = require('../../actions/actions');
 
-var COLORS = require('../../uiconfig').COLORS;
 var languages = {
 	pl: {
 		name: 'Polish'
@@ -85,7 +84,9 @@ var Settings = React.createClass({
 	},
 
 	onClose: function () {
-		actions.emit(actions.CHANGE_LANG, this.state.lang);
+		if (this.props.lang !== this.state.lang) {
+			actions.emit(actions.CHANGE_LANG, this.state.lang);
+		}
 		this.props.onClose();
 	}
 });

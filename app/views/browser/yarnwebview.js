@@ -51,6 +51,7 @@ var WEBVIEW_REF = 'webview';
 
 
 var Browser = React.createClass({
+	lastParsedContent: '',
 
 	getInitialState: function () {
 		return {
@@ -229,6 +230,10 @@ var Browser = React.createClass({
 
 	unhighlightWords: function () {
 		this.sendCommand('UNHIGHLIGHT_WORDS');
+	},
+
+	resetLastParsedContent: function () {
+		this.lastParsedContent = '';
 	}
 });
 

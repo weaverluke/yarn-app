@@ -49,6 +49,7 @@ var yarn = React.createClass({
 	},
 
 	render: function () {
+		console.log('render', this.state);
 		var bottomBar = this.renderBottomBar();
 
 		return (
@@ -200,7 +201,7 @@ var yarn = React.createClass({
 		var bottomBar = '';
 		var wordStripDisabled = false;
 
-		if (currentGameState === GAME_STATES.NOT_STARTED) {
+		if (currentGameState === GAME_STATES.NOT_STARTED && gameStateStore.get('pageWords').length) {
 			bottomBar = 'wordscount';
 		}
 		else if (
@@ -285,10 +286,12 @@ var yarn = React.createClass({
 	onUserProfileChanged: function () {
 		if (this.lang !== userProfileStore.get('language')) {
 			this.lang = userProfileStore.get('language');
-			this.setState({
-				question: []
-			});
+			this.refs[BROWSER_REF].resetLastParsedContent();
 			this.refs[BROWSER_REF].reload();
+			this.setState({
+				question: [],
+				bottomBar: ''
+			});
 		}
 	}
 

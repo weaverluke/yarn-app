@@ -157,6 +157,10 @@ var Browser = React.createClass({
 
 	unhighlightWords: function () {
 		this.refs[WEBVIEW_REF].unhighlightWords();
+	},
+
+	resetLastParsedContent: function () {
+		this.refs[WEBVIEW_REF].resetLastParsedContent();
 	}
 });
 

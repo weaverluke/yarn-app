@@ -123,6 +123,7 @@ function loadData(key) {
 			if (parsedData) {
 				data = parsedData;
 			}
+			console.log('user profile loaded:', parsedData);
 			emitChange();
 		})
 		.done();

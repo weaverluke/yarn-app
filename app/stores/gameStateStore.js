@@ -1,6 +1,5 @@
 'use strict';
 
-//var eventEmitter = new require('events').EventEmitter();
 var Events = require('events');
 var eventEmitter = new Events.EventEmitter();
 var CHANGE_EVENT = 'store:changed';
