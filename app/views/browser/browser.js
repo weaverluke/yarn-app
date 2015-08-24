@@ -23,12 +23,12 @@ var WEBVIEW_REF = 'webview';
 var TEXT_INPUT_REF = 'urlInput';
 
 var Browser = React.createClass({
-	inputText: '',
 	lastUrl: '',
 
 	getInitialState: function () {
 		return {
 			url: this.props.url,
+			urlInInput: this.props.url,
 			status: 'No Page Loaded',
 			backButtonEnabled: false,
 			forwardButtonEnabled: false,
@@ -37,7 +37,9 @@ var Browser = React.createClass({
 	},
 
 	handleTextInputChange: function (event) {
-		this.inputText = event.nativeEvent.text;
+		this.setState({
+			urlInInput: event.nativeEvent.text
+		});
 	},
 
 	render: function () {
@@ -57,7 +59,7 @@ var Browser = React.createClass({
 					<TextInput
 						ref={TEXT_INPUT_REF}
 						autoCapitalize="none"
-						value={this.state.url}
+						value={this.state.urlInInput}
 						onSubmitEditing={this.onSubmitEditing}
 						onChange={this.handleTextInputChange}
 						clearButtonMode="while-editing"
@@ -145,7 +147,7 @@ var Browser = React.createClass({
 			this.reload();
 		} else {
 			this.setState({
-				url: url
+				url: this.state.urlInInput
 			});
 		}
 		// dismiss keyboard
