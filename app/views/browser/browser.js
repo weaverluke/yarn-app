@@ -24,6 +24,7 @@ var TEXT_INPUT_REF = 'urlInput';
 
 var Browser = React.createClass({
 	inputText: '',
+	lastUrl: '',
 
 	getInitialState: function () {
 		return {
@@ -123,8 +124,12 @@ var Browser = React.createClass({
 			forwardButtonEnabled: navState.canGoForward,
 			url: navState.url,
 			status: navState.title,
-			loading: navState.loading,
+			loading: navState.loading
 		});
+		if (navState.url !== this.lastUrl) {
+			this.lastUrl = navState.url;
+			this.props.onUrlChange && this.props.onUrlChange(navState);
+		}
 	},
 
 	onSubmitEditing: function (event) {

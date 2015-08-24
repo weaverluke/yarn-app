@@ -117,10 +117,15 @@ module.exports = function () {
 		function isWordInView(wordEl) {
 			var bbox = wordEl.getBoundingClientRect();
 
-			return bbox.top > 0 &&
-				bbox.bottom < window.innerHeight &&
-				bbox.left > 0 &&
-				bbox.right < window.innerWidth;
+			// this method makes sure that word is inside viewport
+			//return bbox.top > 0 &&
+			//	bbox.bottom < window.innerHeight &&
+			//	bbox.left > 0 &&
+			//	bbox.right < window.innerWidth;
+
+			// this checks only if bottom and right edges have been scrolled into view
+			// even if word was omitted during very fast scroll this method will catch it
+			return bbox.bottom < window.innerHeight && bbox.right < window.innerWidth;
 		}
 
 		function reset() {

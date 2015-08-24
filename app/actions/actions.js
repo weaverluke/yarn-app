@@ -28,6 +28,7 @@ bus.on(actions.START_GAME, onStartGame);
 bus.on(actions.SHOW_NEXT_QUESTION, onShowNextQuestion);
 bus.on(actions.WORD_PRESSED, onWordPressed);
 bus.on(actions.CHANGE_LANG, onChangeLang);
+bus.on(actions.RESET, onReset);
 
 function onWordsParsed(words) {
 	if (!words.length) {
@@ -176,6 +177,11 @@ function onChangeLang(lang) {
 	}
 
 	userProfileStore.set('language', lang);
+	gameStateStore.reset();
+}
+
+function onReset() {
+	console.log('game reset');
 	gameStateStore.reset();
 }
 

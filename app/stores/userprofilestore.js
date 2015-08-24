@@ -123,10 +123,18 @@ function loadData(key) {
 			if (parsedData) {
 				data = parsedData;
 			}
+			migrate1();
 			console.log('user profile loaded:', parsedData);
 			emitChange();
 		})
 		.done();
+}
+
+function migrate1() {
+	if (!data.wordsLimit) {
+		data.wordsLimit = 10;
+		saveData();
+	}
 }
 
 module.exports = {

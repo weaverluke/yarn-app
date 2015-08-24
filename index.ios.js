@@ -59,6 +59,7 @@ var yarn = React.createClass({
 					url={this.state.url}
 					userLevel={userProfileStore.get('level')}
 					userRange={userProfileStore.get('range')}
+					onUrlChange={this.onUrlChange}
 				/>
 				{bottomBar}
 				<Popup
@@ -141,7 +142,14 @@ var yarn = React.createClass({
 				initialLang={userProfileStore.get('language')}
 			/>
 		);
+	},
 
+	onUrlChange: function () {
+		actions.emit(actions.RESET);
+		//this.setState({
+		//	question: [],
+		//	bottomBar: ''
+		//});
 	},
 
 	closeResultView: function () {
@@ -203,6 +211,10 @@ var yarn = React.createClass({
 
 		if (currentGameState === GAME_STATES.NOT_STARTED && gameStateStore.get('pageWords').length) {
 			bottomBar = 'wordscount';
+		}
+		// no words and not started game - hide all bars
+		else if (currentGameState === GAME_STATES.NOT_STARTED && !gameStateStore.get('pageWords').length) {
+			bottomBar = '';
 		}
 		else if (
 			currentGameState === GAME_STATES.WAITING_FOR_ANSWER ||
@@ -288,10 +300,10 @@ var yarn = React.createClass({
 			this.lang = userProfileStore.get('language');
 			this.refs[BROWSER_REF].resetLastParsedContent();
 			this.refs[BROWSER_REF].reload();
-			this.setState({
-				question: [],
-				bottomBar: ''
-			});
+			//this.setState({
+			//	question: [],
+			//	bottomBar: ''
+			//});
 		}
 	}
 
