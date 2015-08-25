@@ -26,6 +26,10 @@ var {
 	WebView
 } = React;
 
+var {
+	DictionaryProxy
+} = require('NativeModules');
+
 var HEADER = '#F9FAFB';
 
 var GAME_STATES = gameStateStore.GAME_STATES;
@@ -69,6 +73,7 @@ var yarn = React.createClass({
 					title={this.state.popupTitle}
 					content={this.state.popupContent}
 					arrowRect={this.state.buttonRect}
+					onShowDictionary={this.onShowDictionary}
 				/>
 				<Popup
 					visible={this.state.initialPopupVisible}
@@ -80,6 +85,10 @@ var yarn = React.createClass({
 				{this.renderSettings()}
 			</View>
 		);
+	},
+
+	onShowDictionary: function () {
+		DictionaryProxy.showDefinition(gameStateStore.get('currentWord').text);
 	},
 
 	renderBottomBar: function () {

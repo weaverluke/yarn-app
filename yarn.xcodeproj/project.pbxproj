@@ -26,6 +26,7 @@
 		615534E91B851A5300A20702 /* RCTWebViewManager+WebViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 615534E61B851A5300A20702 /* RCTWebViewManager+WebViewManager.m */; };
 		615534EA1B851A5300A20702 /* webview-bridge-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 615534E71B851A5300A20702 /* webview-bridge-script.js */; };
 		615534F11B851AA800A20702 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 615534F01B851AA200A20702 /* libRNFS.a */; };
+		615932311B8D183A00918D67 /* DictionaryProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 615932301B8D183A00918D67 /* DictionaryProxy.m */; };
 		6165D9261B7746390011A703 /* BauhausStd-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6165D9241B7746390011A703 /* BauhausStd-Heavy.otf */; };
 		6165D9271B7746390011A703 /* bauhaus-93.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6165D9251B7746390011A703 /* bauhaus-93.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
@@ -144,6 +145,8 @@
 		615534E61B851A5300A20702 /* RCTWebViewManager+WebViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTWebViewManager+WebViewManager.m"; sourceTree = "<group>"; };
 		615534E71B851A5300A20702 /* webview-bridge-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "webview-bridge-script.js"; sourceTree = "<group>"; };
 		615534EB1B851AA200A20702 /* RNFS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
+		6159322F1B8D183A00918D67 /* DictionaryProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DictionaryProxy.h; path = iOS/DictionaryProxy.h; sourceTree = "<group>"; };
+		615932301B8D183A00918D67 /* DictionaryProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DictionaryProxy.m; path = iOS/DictionaryProxy.m; sourceTree = "<group>"; };
 		6165D9241B7746390011A703 /* BauhausStd-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "BauhausStd-Heavy.otf"; path = "/Users/mateusz/workspace/weaverdigital/yarn-files/BauhausStd-Heavy.otf"; sourceTree = "<absolute>"; };
 		6165D9251B7746390011A703 /* bauhaus-93.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "bauhaus-93.ttf"; path = "/Users/mateusz/workspace/weaverdigital/yarn-files/bauhaus-93.ttf"; sourceTree = "<absolute>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
@@ -263,6 +266,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				6159322F1B8D183A00918D67 /* DictionaryProxy.h */,
+				615932301B8D183A00918D67 /* DictionaryProxy.m */,
 			);
 			name = yarn;
 			sourceTree = "<group>";
@@ -600,6 +605,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				615932311B8D183A00918D67 /* DictionaryProxy.m in Sources */,
 				615534E91B851A5300A20702 /* RCTWebViewManager+WebViewManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				615534E81B851A5300A20702 /* RCTWebView+WebViewBridge.m in Sources */,

@@ -116,6 +116,11 @@ var Popup = React.createClass({
 						</View>
 
 						<View style={styles.footer}>
+							<TouchableWithoutFeedback onPress={this.props.onShowDictionary}>
+								<View style={styles.dictionary}>
+									<Text style={styles.dictionaryText}>Show native dictionary</Text>
+								</View>
+							</TouchableWithoutFeedback>
 							<TouchableWithoutFeedback onPress={this.props.onSubmit}>
 								<View style={styles.nextButton}>
 									<View style={styles.nextButtonArrow}>
@@ -264,6 +269,23 @@ var styles = StyleSheet.create({
 		left: 0,
 		right: 0,
 		overflow: 'hidden'
+	},
+
+	dictionary: {
+		borderWidth: 1,
+		borderRadius: 4,
+		backgroundColor: uiConfig.COLORS.GREEN,
+		position: 'absolute',
+		padding: 5,
+		top: 0,
+		left: 0,
+		//width: 150,
+		height: 30
+	},
+
+	dictionaryText: {
+		color: '#FFFFFF',
+		//fontSize: 15,
 	}
 
 });
