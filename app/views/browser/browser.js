@@ -142,7 +142,7 @@ var Browser = React.createClass({
 	},
 
 	pressGoButton: function () {
-		var url = this.inputText.toLowerCase();
+		var url = this.state.urlInInput.toLowerCase();
 		if (url === this.state.url) {
 			this.reload();
 		} else {
