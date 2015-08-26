@@ -11,21 +11,22 @@ var {
 } = React;
 
 var actions = require('../../actions/actions');
+var languages = require('./googlelanguages');
 
-var languages = {
-	pl: {
-		name: 'Polish'
-	},
-	de: {
-		name: 'German'
-	},
-	es: {
-		name: 'Spanish'
-	},
-	ja: {
-		name: 'Japanese'
-	}
-};
+//var languages = {
+//	pl: {
+//		name: 'Polish'
+//	},
+//	de: {
+//		name: 'German'
+//	},
+//	es: {
+//		name: 'Spanish'
+//	},
+//	ja: {
+//		name: 'Japanese'
+//	}
+//};
 
 var Settings = React.createClass({
 
@@ -70,13 +71,14 @@ var Settings = React.createClass({
 	},
 
 	renderLangs: function () {
-		var items = Object.keys(languages).map(function (langCode) {
-			var lang = languages[langCode];
+		var items = languages.map(function (lang) {
+			var langName = lang.name;
+			var langCode = lang.language;
 			return (
 				<PickerItemIOS
 					key={langCode}
 					value={langCode}
-					label={lang.name}
+					label={langName}
 				/>
 			);
 		});
