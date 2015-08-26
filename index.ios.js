@@ -11,6 +11,7 @@ var Settings = require('./app/views/settings/settings');
 var gameStateStore = require('./app/stores/gamestatestore');
 var userProfileStore = require('./app/stores/userprofilestore');
 var actions = require('./app/actions/actions');
+var log = require('./app/logger/logger');
 
 var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
@@ -282,6 +283,13 @@ var yarn = React.createClass({
 			popupVisible: false,
 			infoBarVisible: false,
 			wordstripVisible: false
+		});
+		log({
+			message: 'game finished',
+			correctWords: gameStateStore.get('correct'),
+			totalWords: gameStateStore.get('pageWords').length,
+			level: userProfileStore.get('level'),
+			score: userProfileStore.get('score')
 		});
 	},
 

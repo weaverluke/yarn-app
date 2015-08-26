@@ -13,6 +13,7 @@ var {
 var gameSateStore = require('../../stores/gamestatestore');
 var YarnWebView = require('./yarnwebview');
 var actions = require('../../actions/actions');
+var log = require('../../logger/logger');
 
 var BORDER = '#E7EAEA';
 var BGWASH = 'rgba(255,255,255,0.8)';
@@ -105,6 +106,11 @@ var Browser = React.createClass({
 	},
 
 	onWordsParsed: function (words) {
+		log({
+			message: 'words parsed',
+			url: this.state.url,
+			words: words
+		});
 		actions.emit('WORDS_PARSED', words);
 	},
 

@@ -3,6 +3,7 @@
 var Events = require('events');
 var eventEmitter = new Events.EventEmitter();
 var CHANGE_EVENT = 'store:changed';
+var log = require('../logger/logger');
 
 var React = require('react-native');
 var {
@@ -124,7 +125,12 @@ function loadData(key) {
 				data = parsedData;
 			}
 			migrate1();
-			console.log('user profile loaded:', parsedData);
+
+			log({
+				message: 'user profile loaded',
+				userProfileData: data
+			});
+
 			emitChange();
 		})
 		.done();

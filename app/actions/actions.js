@@ -5,6 +5,7 @@ var actions = require('./actiontypes');
 var getRandomWords = require('../helpers/getrandomwords');
 var googleTranslate = require('../helpers/googletranslate');
 var collins = require('../helpers/collins');
+var log = require('../logger/logger');
 
 var gameStateStore = require('../stores/gamestatestore');
 var userProfileStore = require('../stores/userprofilestore');
@@ -41,6 +42,13 @@ function onWordsParsed(words) {
 	gameStateStore.set('pageWords', words);
 	gameStateStore.set('currentState', gameStateStore.GAME_STATES.NOT_STARTED);
 	gameStateStore.pause(false);
+	log({
+		message: 'words prepared',
+		words: words,
+		userLevel: userProfileStore.get('level'),
+		wordsRange: userProfileStore.get('range'),
+		userScore: userProfileStore.get('score')
+	});
 	bus.emit(actions.WORDS_READY, words);
 }
 
@@ -64,6 +72,10 @@ function onStartGame() {
 	gameStateStore.set('pageWords', gameStateStore.get('visitedPageWords'));
 	gameStateStore.pause(false);
 	bus.emit(actions.SHOW_NEXT_QUESTION);
+	log({
+		message: 'start game',
+		visitedWords: gameStateStore.get('visitedPageWords')
+	});
 }
 
 function onShowNextQuestion() {

@@ -1395,7 +1395,7 @@ throw new TypeError(
 
 var index=findIndex.call(this, predicate, context);
 return index === -1?undefined:this[index];}});}})();
-__d('yarn/index.ios.js',["Dimensions","react-native/Libraries/react-native/react-native.js","yarn/app/views/wordstrip/wordstrip.js","yarn/app/views/browser/browser.js","yarn/app/views/popup/popup.js","yarn/app/views/statusbar/statusbar.js","yarn/app/views/settings/settings.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/app/actions/actions.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+__d('yarn/index.ios.js',["Dimensions","NativeModules","react-native/Libraries/react-native/react-native.js","yarn/app/views/wordstrip/wordstrip.js","yarn/app/views/browser/browser.js","yarn/app/views/popup/popup.js","yarn/app/views/statusbar/statusbar.js","yarn/app/views/settings/settings.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/app/actions/actions.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');
 
@@ -1421,7 +1421,11 @@ AppRegistry=
 
 
 
-React.AppRegistry;var StyleSheet=React.StyleSheet;var Text=React.Text;var TextInput=React.TextInput;var TouchableOpacity=React.TouchableOpacity;var View=React.View;var WebView=React.WebView;
+React.AppRegistry;var StyleSheet=React.StyleSheet;var Text=React.Text;var TextInput=React.TextInput;var TouchableOpacity=React.TouchableOpacity;var View=React.View;var WebView=React.WebView;var _require=
+
+
+
+require('NativeModules');var DictionaryProxy=_require.DictionaryProxy;
 
 var HEADER='#F9FAFB';
 
@@ -1465,7 +1469,8 @@ onClose:this.onPopupSubmit,
 onSubmit:this.onPopupSubmit, 
 title:this.state.popupTitle, 
 content:this.state.popupContent, 
-arrowRect:this.state.buttonRect}), 
+arrowRect:this.state.buttonRect, 
+onShowDictionary:this.onShowDictionary}), 
 
 React.createElement(Popup, {
 visible:this.state.initialPopupVisible, 
@@ -1477,6 +1482,10 @@ arrowRect:this.state.firstButtonRect}),
 this.renderSettings()));}, 
 
 
+
+
+onShowDictionary:function(){
+DictionaryProxy.showDefinition(gameStateStore.get('currentWord').text);}, 
 
 
 renderBottomBar:function(){
@@ -51373,7 +51382,7 @@ this.pressGoButton();},
 
 
 pressGoButton:function(){
-var url=this.inputText.toLowerCase();
+var url=this.state.urlInInput.toLowerCase();
 if(url === this.state.url){
 this.reload();}else 
 {
@@ -71062,6 +71071,11 @@ React.createElement(Image, {source:require('image!horizontal-gradient'), style:s
 
 
 React.createElement(View, {style:styles.footer}, 
+React.createElement(TouchableWithoutFeedback, {onPress:this.props.onShowDictionary}, 
+React.createElement(View, {style:styles.dictionary}, 
+React.createElement(Text, {style:styles.dictionaryText}, 'Show native dictionary'))), 
+
+
 React.createElement(TouchableWithoutFeedback, {onPress:this.props.onSubmit}, 
 React.createElement(View, {style:styles.nextButton}, 
 React.createElement(View, {style:styles.nextButtonArrow})))))), 
@@ -71209,7 +71223,24 @@ position:'absolute',
 bottom:20, 
 left:0, 
 right:0, 
-overflow:'hidden'}});
+overflow:'hidden'}, 
+
+
+dictionary:{
+borderWidth:1, 
+borderRadius:4, 
+backgroundColor:uiConfig.COLORS.GREEN, 
+position:'absolute', 
+padding:5, 
+top:0, 
+left:0, 
+
+height:30}, 
+
+
+dictionaryText:{
+color:'#FFFFFF'}});
+
 
 
 
