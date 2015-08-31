@@ -89,9 +89,11 @@ function updateUserLevel() {
 	for (var i = 0, len = data.levelStats.length; i < len; i++) {
 		// level must have any entries to be included into computations
 		var lvl = data.levelStats[i];
+		var weight = (100 - i) * 0.9;
+
 		if (lvl.correct || lvl.wrong) {
-			sum += (i + 1) * lvl.correct / (lvl.correct + lvl.wrong) * 100;
-			max += (i + 1) * 100;
+			sum += (i + 1) * lvl.correct / (lvl.correct + lvl.wrong) * weight;
+			max += (i + 1) * weight;
 		}
 	}
 
