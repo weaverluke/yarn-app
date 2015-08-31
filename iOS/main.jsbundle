@@ -1395,7 +1395,7 @@ throw new TypeError(
 
 var index=findIndex.call(this, predicate, context);
 return index === -1?undefined:this[index];}});}})();
-__d('yarn/index.ios.js',["Dimensions","NativeModules","react-native/Libraries/react-native/react-native.js","yarn/app/views/wordstrip/wordstrip.js","yarn/app/views/browser/browser.js","yarn/app/views/popup/popup.js","yarn/app/views/statusbar/statusbar.js","yarn/app/views/settings/settings.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/app/actions/actions.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+__d('yarn/index.ios.js',["Dimensions","NativeModules","react-native/Libraries/react-native/react-native.js","yarn/app/views/wordstrip/wordstrip.js","yarn/app/views/browser/browser.js","yarn/app/views/popup/popup.js","yarn/app/views/statusbar/statusbar.js","yarn/app/views/settings/settings.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');
 
@@ -1408,6 +1408,7 @@ var Settings=require('yarn/app/views/settings/settings.js');
 var gameStateStore=require('yarn/app/stores/gamestatestore.js');
 var userProfileStore=require('yarn/app/stores/userprofilestore.js');
 var actions=require('yarn/app/actions/actions.js');
+var log=require('yarn/app/logger/logger.js');
 
 var Dimensions=require('Dimensions');var _Dimensions$get=
 Dimensions.get('window');var width=_Dimensions$get.width;var height=_Dimensions$get.height;
@@ -1678,7 +1679,14 @@ this.setState({
 bottomBar:!!gameStateStore.get('pageWords').length?'result':'', 
 popupVisible:false, 
 infoBarVisible:false, 
-wordstripVisible:false});}, 
+wordstripVisible:false});
+
+log({
+message:'game finished', 
+correctWords:gameStateStore.get('correct'), 
+totalWords:gameStateStore.get('pageWords').length, 
+level:userProfileStore.get('level'), 
+score:userProfileStore.get('score')});}, 
 
 
 
@@ -51238,7 +51246,7 @@ __d('image!settings-icon',[],function(global, require, requireDynamic, requireLa
 });
 __d('image!next-icon',[],function(global, require, requireDynamic, requireLazy, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/next-icon.imageset/next-icon.png","uri":"next-icon","width":44,"height":44,"deprecated":true};
 });
-__d('yarn/app/views/browser/browser.js',["react-native/Libraries/react-native/react-native.js","yarn/app/stores/gamestatestore.js","yarn/app/views/browser/yarnwebview.js","yarn/app/actions/actions.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+__d('yarn/app/views/browser/browser.js',["react-native/Libraries/react-native/react-native.js","yarn/app/stores/gamestatestore.js","yarn/app/views/browser/yarnwebview.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -51253,6 +51261,7 @@ React.StyleSheet;var Text=React.Text;var TextInput=React.TextInput;var Touchable
 var gameSateStore=require('yarn/app/stores/gamestatestore.js');
 var YarnWebView=require('yarn/app/views/browser/yarnwebview.js');
 var actions=require('yarn/app/actions/actions.js');
+var log=require('yarn/app/logger/logger.js');
 
 var BORDER='#E7EAEA';
 var BGWASH='rgba(255,255,255,0.8)';
@@ -51345,6 +51354,11 @@ this.highlightWord(currentWord.text);}},
 
 
 onWordsParsed:function(words){
+log({
+message:'words parsed', 
+url:this.state.url, 
+words:words});
+
 actions.emit('WORDS_PARSED', words);}, 
 
 
@@ -70538,13 +70552,14 @@ setTimeout(wait, 13);}}
 
 wait();};
 });
-__d('yarn/app/actions/actions.js',["events/events.js","yarn/app/actions/actiontypes.js","yarn/app/helpers/getrandomwords.js","yarn/app/helpers/googletranslate.js","yarn/app/helpers/collins.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/words.js","react-native/Libraries/react-native/react-native.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  var Events=require('events/events.js');
+__d('yarn/app/actions/actions.js',["events/events.js","yarn/app/actions/actiontypes.js","yarn/app/helpers/getrandomwords.js","yarn/app/helpers/googletranslate.js","yarn/app/helpers/collins.js","yarn/app/logger/logger.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/words.js","react-native/Libraries/react-native/react-native.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  var Events=require('events/events.js');
 var bus=new Events.EventEmitter();
 var actions=require('yarn/app/actions/actiontypes.js');
 
 var getRandomWords=require('yarn/app/helpers/getrandomwords.js');
 var googleTranslate=require('yarn/app/helpers/googletranslate.js');
 var collins=require('yarn/app/helpers/collins.js');
+var log=require('yarn/app/logger/logger.js');
 
 var gameStateStore=require('yarn/app/stores/gamestatestore.js');
 var userProfileStore=require('yarn/app/stores/userprofilestore.js');
@@ -70581,6 +70596,13 @@ words = spreadWords(words, userProfileStore.get('wordsLimit'));
 gameStateStore.set('pageWords', words);
 gameStateStore.set('currentState', gameStateStore.GAME_STATES.NOT_STARTED);
 gameStateStore.pause(false);
+log({
+message:'words prepared', 
+words:words, 
+userLevel:userProfileStore.get('level'), 
+wordsRange:userProfileStore.get('range'), 
+userScore:userProfileStore.get('score')});
+
 bus.emit(actions.WORDS_READY, words);}
 
 
@@ -70603,7 +70625,11 @@ function onStartGame(){
 gameStateStore.pause(true);
 gameStateStore.set('pageWords', gameStateStore.get('visitedPageWords'));
 gameStateStore.pause(false);
-bus.emit(actions.SHOW_NEXT_QUESTION);}
+bus.emit(actions.SHOW_NEXT_QUESTION);
+log({
+message:'start game', 
+visitedWords:gameStateStore.get('visitedPageWords')});}
+
 
 
 function onShowNextQuestion(){
@@ -70808,11 +70834,40 @@ return json;});}
 module.exports = {
 getDefinition:getDefinition};
 });
-__d('yarn/app/stores/userprofilestore.js',["events/events.js","react-native/Libraries/react-native/react-native.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+__d('yarn/app/logger/logger.js',[],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+
+
+var url='http://logs-01.loggly.com/bulk/41096412-3533-4c39-bed4-a19e96b4aa42/tag/bulk/';
+var sessionTimestamp=Date.now();
+
+module.exports = function(data){
+if(typeof data === 'string'){
+data = {
+message:data};}
+
+
+data.sessionTimestamp = sessionTimestamp;
+data.timestamp = Date.now();
+
+var dataStr=JSON.stringify(data);
+
+console.log(data.message, data);
+
+
+return fetch(url, {
+method:'post', 
+headers:{
+'Accept':'application/json', 
+'Content-Type':'application/json'}, 
+
+body:dataStr});};
+});
+__d('yarn/app/stores/userprofilestore.js',["events/events.js","yarn/app/logger/logger.js","react-native/Libraries/react-native/react-native.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var Events=require('events/events.js');
 var eventEmitter=new Events.EventEmitter();
 var CHANGE_EVENT='store:changed';
+var log=require('yarn/app/logger/logger.js');
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -70934,7 +70989,12 @@ if(parsedData){
 data = parsedData;}
 
 migrate1();
-console.log('user profile loaded:', parsedData);
+
+log({
+message:'user profile loaded', 
+userProfileData:data});
+
+
 emitChange();}).
 
 done();}
@@ -71557,7 +71617,7 @@ text:{}});
 
 module.exports = NavBarLabel;
 });
-__d('yarn/app/views/settings/settings.js',["react-native/Libraries/react-native/react-native.js","yarn/app/actions/actions.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+__d('yarn/app/views/settings/settings.js',["react-native/Libraries/react-native/react-native.js","yarn/app/actions/actions.js","yarn/app/views/settings/googlelanguages.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -71570,19 +71630,20 @@ StyleSheet=
 React.StyleSheet;var View=React.View;var Text=React.Text;var PickerIOS=React.PickerIOS;var PickerItemIOS=React.PickerItemIOS;var TouchableWithoutFeedback=React.TouchableWithoutFeedback;
 
 var actions=require('yarn/app/actions/actions.js');
+var languages=require('yarn/app/views/settings/googlelanguages.js');
 
-var languages={
-pl:{
-name:'Polish'}, 
 
-de:{
-name:'German'}, 
 
-es:{
-name:'Spanish'}, 
 
-ja:{
-name:'Japanese'}};
+
+
+
+
+
+
+
+
+
 
 
 
@@ -71629,13 +71690,14 @@ lang:lang});},
 
 
 renderLangs:function(){
-var items=Object.keys(languages).map(function(langCode){
-var lang=languages[langCode];
+var items=languages.map(function(lang){
+var langName=lang.name;
+var langCode=lang.language;
 return (
 React.createElement(PickerItemIOS, {
 key:langCode, 
 value:langCode, 
-label:lang.name}));});
+label:langName}));});
 
 
 
@@ -71672,6 +71734,384 @@ borderRadius:3}});
 
 
 module.exports = Settings;
+});
+__d('yarn/app/views/settings/googlelanguages.js',[],function(global, require, requireDynamic, requireLazy, module, exports) {  "use strict";
+
+
+
+
+var languagesData={
+"data":{
+"languages":[
+{
+"language":"af", 
+"name":"Afrikaans"}, 
+
+{
+"language":"sq", 
+"name":"Albanian"}, 
+
+{
+"language":"ar", 
+"name":"Arabic"}, 
+
+{
+"language":"hy", 
+"name":"Armenian"}, 
+
+{
+"language":"az", 
+"name":"Azerbaijani"}, 
+
+{
+"language":"eu", 
+"name":"Basque"}, 
+
+{
+"language":"be", 
+"name":"Belarusian"}, 
+
+{
+"language":"bn", 
+"name":"Bengali"}, 
+
+{
+"language":"bs", 
+"name":"Bosnian"}, 
+
+{
+"language":"bg", 
+"name":"Bulgarian"}, 
+
+{
+"language":"ca", 
+"name":"Catalan"}, 
+
+{
+"language":"ceb", 
+"name":"Cebuano"}, 
+
+{
+"language":"ny", 
+"name":"Chichewa"}, 
+
+{
+"language":"zh", 
+"name":"Chinese (Simplified)"}, 
+
+{
+"language":"zh-TW", 
+"name":"Chinese (Traditional)"}, 
+
+{
+"language":"hr", 
+"name":"Croatian"}, 
+
+{
+"language":"cs", 
+"name":"Czech"}, 
+
+{
+"language":"da", 
+"name":"Danish"}, 
+
+{
+"language":"nl", 
+"name":"Dutch"}, 
+
+{
+"language":"en", 
+"name":"English"}, 
+
+{
+"language":"eo", 
+"name":"Esperanto"}, 
+
+{
+"language":"et", 
+"name":"Estonian"}, 
+
+{
+"language":"tl", 
+"name":"Filipino"}, 
+
+{
+"language":"fi", 
+"name":"Finnish"}, 
+
+{
+"language":"fr", 
+"name":"French"}, 
+
+{
+"language":"gl", 
+"name":"Galician"}, 
+
+{
+"language":"ka", 
+"name":"Georgian"}, 
+
+{
+"language":"de", 
+"name":"German"}, 
+
+{
+"language":"el", 
+"name":"Greek"}, 
+
+{
+"language":"gu", 
+"name":"Gujarati"}, 
+
+{
+"language":"ht", 
+"name":"Haitian Creole"}, 
+
+{
+"language":"ha", 
+"name":"Hausa"}, 
+
+{
+"language":"iw", 
+"name":"Hebrew"}, 
+
+{
+"language":"hi", 
+"name":"Hindi"}, 
+
+{
+"language":"hmn", 
+"name":"Hmong"}, 
+
+{
+"language":"hu", 
+"name":"Hungarian"}, 
+
+{
+"language":"is", 
+"name":"Icelandic"}, 
+
+{
+"language":"ig", 
+"name":"Igbo"}, 
+
+{
+"language":"id", 
+"name":"Indonesian"}, 
+
+{
+"language":"ga", 
+"name":"Irish"}, 
+
+{
+"language":"it", 
+"name":"Italian"}, 
+
+{
+"language":"ja", 
+"name":"Japanese"}, 
+
+{
+"language":"jw", 
+"name":"Javanese"}, 
+
+{
+"language":"kn", 
+"name":"Kannada"}, 
+
+{
+"language":"kk", 
+"name":"Kazakh"}, 
+
+{
+"language":"km", 
+"name":"Khmer"}, 
+
+{
+"language":"ko", 
+"name":"Korean"}, 
+
+{
+"language":"lo", 
+"name":"Lao"}, 
+
+{
+"language":"la", 
+"name":"Latin"}, 
+
+{
+"language":"lv", 
+"name":"Latvian"}, 
+
+{
+"language":"lt", 
+"name":"Lithuanian"}, 
+
+{
+"language":"mk", 
+"name":"Macedonian"}, 
+
+{
+"language":"mg", 
+"name":"Malagasy"}, 
+
+{
+"language":"ms", 
+"name":"Malay"}, 
+
+{
+"language":"ml", 
+"name":"Malayalam"}, 
+
+{
+"language":"mt", 
+"name":"Maltese"}, 
+
+{
+"language":"mi", 
+"name":"Maori"}, 
+
+{
+"language":"mr", 
+"name":"Marathi"}, 
+
+{
+"language":"mn", 
+"name":"Mongolian"}, 
+
+{
+"language":"my", 
+"name":"Myanmar (Burmese)"}, 
+
+{
+"language":"ne", 
+"name":"Nepali"}, 
+
+{
+"language":"no", 
+"name":"Norwegian"}, 
+
+{
+"language":"fa", 
+"name":"Persian"}, 
+
+{
+"language":"pl", 
+"name":"Polish"}, 
+
+{
+"language":"pt", 
+"name":"Portuguese"}, 
+
+{
+"language":"pa", 
+"name":"Punjabi"}, 
+
+{
+"language":"ro", 
+"name":"Romanian"}, 
+
+{
+"language":"ru", 
+"name":"Russian"}, 
+
+{
+"language":"sr", 
+"name":"Serbian"}, 
+
+{
+"language":"st", 
+"name":"Sesotho"}, 
+
+{
+"language":"si", 
+"name":"Sinhala"}, 
+
+{
+"language":"sk", 
+"name":"Slovak"}, 
+
+{
+"language":"sl", 
+"name":"Slovenian"}, 
+
+{
+"language":"so", 
+"name":"Somali"}, 
+
+{
+"language":"es", 
+"name":"Spanish"}, 
+
+{
+"language":"su", 
+"name":"Sundanese"}, 
+
+{
+"language":"sw", 
+"name":"Swahili"}, 
+
+{
+"language":"sv", 
+"name":"Swedish"}, 
+
+{
+"language":"tg", 
+"name":"Tajik"}, 
+
+{
+"language":"ta", 
+"name":"Tamil"}, 
+
+{
+"language":"te", 
+"name":"Telugu"}, 
+
+{
+"language":"th", 
+"name":"Thai"}, 
+
+{
+"language":"tr", 
+"name":"Turkish"}, 
+
+{
+"language":"uk", 
+"name":"Ukrainian"}, 
+
+{
+"language":"ur", 
+"name":"Urdu"}, 
+
+{
+"language":"uz", 
+"name":"Uzbek"}, 
+
+{
+"language":"vi", 
+"name":"Vietnamese"}, 
+
+{
+"language":"cy", 
+"name":"Welsh"}, 
+
+{
+"language":"yi", 
+"name":"Yiddish"}, 
+
+{
+"language":"yo", 
+"name":"Yoruba"}, 
+
+{
+"language":"zu", 
+"name":"Zulu"}]}};
+
+
+
+
+
+module.exports = languagesData.data.languages;
 });
 ;require("yarn/index.ios.js");
 //@ sourceMappingURL=/index.ios.map

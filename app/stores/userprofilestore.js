@@ -27,16 +27,20 @@ var PERSISTENCE_KEY = '@yarn:userProfileStore';
 init();
 
 function init() {
+	initLevelStats();
+	// reset :D
+	//saveData();
+
+	loadData();
+}
+
+function initLevelStats() {
 	for (var i = 0; i < 100; i++) {
 		data.levelStats[i] = {
 			correct: 0,
 			wrong: 0
 		};
 	}
-	// reset :D
-	//saveData();
-
-	loadData();
 }
 
 function set(key, d) {
@@ -95,14 +99,14 @@ function updateUserLevel() {
 	console.log('New user level:', data.level);
 
 	// range update - after first 50 words shrink range to 30
-	if (totalAnswers > 40 && data.range == 40) {
+	if (totalAnswers > 20 && data.range == 40) {
 		data.range = 30;
 	}
-	else if (totalAnswers > 80 && data.range == 30) {
+	else if (totalAnswers > 40 && data.range == 30) {
 		data.range = 20;
 	}
-	else if (totalAnswers > 120 && data.range == 20) {
-		data.range = 10;
+	else if (totalAnswers > 60 && data.range == 20) {
+		data.range = 15;
 	}
 
 	data.historyLevelValues.push(data.level);
@@ -136,6 +140,31 @@ function loadData(key) {
 		.done();
 }
 
+/**
+ * This has to reset user stats as we compute level at the end of each quiz so level
+ * forced by user would be overwritten by level computation algorithm.
+ * @param level
+ */
+function setUserLevel(level) {
+	if (level === data.level) {
+		return;
+	}
+
+	log({
+		message: 'Setting user level',
+		level: level
+	});
+	data.correctAnswers = 0;
+	data.wrongAnswers = 0;
+	data.level = level;
+	data.range = 40;
+	data.levelStats = [];
+	data.historyLevelValues = [];
+	initLevelStats();
+	saveData();
+	emitChange();
+}
+
 function migrate1() {
 	if (!data.wordsLimit) {
 		data.wordsLimit = 10;
@@ -147,5 +176,6 @@ module.exports = {
 	addChangeListener: addChangeListener,
 	get: get,
 	set: set,
-	updateLevelStats: updateLevelStats
+	updateLevelStats: updateLevelStats,
+	setUserLevel: setUserLevel
 };

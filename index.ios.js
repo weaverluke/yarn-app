@@ -149,6 +149,7 @@ var yarn = React.createClass({
 		return (
 			<Settings
 				onClose={this.closeSettingsView}
+				initialLevel={userProfileStore.get('level')}
 				initialLang={userProfileStore.get('language')}
 			/>
 		);
@@ -193,6 +194,7 @@ var yarn = React.createClass({
 		gameStateStore.addChangeListener(this.onGameStateChanged);
 		userProfileStore.addChangeListener(this.onUserProfileChanged);
 		actions.on(actions.START_GAME, this.hideBottomBar);
+		actions.on(actions.CHANGE_LEVEL, this.onForceChangeLevel);
 	},
 
 	hideBottomBar: function () {
@@ -315,13 +317,26 @@ var yarn = React.createClass({
 	onUserProfileChanged: function () {
 		if (this.lang !== userProfileStore.get('language')) {
 			this.lang = userProfileStore.get('language');
-			this.refs[BROWSER_REF].resetLastParsedContent();
-			this.refs[BROWSER_REF].reload();
-			//this.setState({
-			//	question: [],
-			//	bottomBar: ''
-			//});
+			this.resetGame();
+			this.reloadBrowser();
 		}
+	},
+
+	resetGame: function () {
+		this.setState({
+			question: [],
+			bottomBar: ''
+		});
+	},
+
+	onForceChangeLevel: function () {
+		this.resetGame();
+		this.reloadBrowser();
+	},
+
+	reloadBrowser: function () {
+		this.refs[BROWSER_REF].resetLastParsedContent();
+		this.refs[BROWSER_REF].reload();
 	}
 
 });

@@ -30,6 +30,7 @@ bus.on(actions.SHOW_NEXT_QUESTION, onShowNextQuestion);
 bus.on(actions.WORD_PRESSED, onWordPressed);
 bus.on(actions.CHANGE_LANG, onChangeLang);
 bus.on(actions.RESET, onReset);
+bus.on(actions.CHANGE_LEVEL, onChangeLevel);
 
 function onWordsParsed(words) {
 	if (!words.length) {
@@ -189,7 +190,15 @@ function onChangeLang(lang) {
 	}
 
 	userProfileStore.set('language', lang);
-	gameStateStore.reset();
+	bus.emit(actions.RESET);
+}
+
+function onChangeLevel(level) {
+	if (level === userProfileStore.get('language')) {
+		return;
+	}
+	userProfileStore.setUserLevel(level);
+	bus.emit(actions.RESET);
 }
 
 function onReset() {

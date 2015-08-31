@@ -38,7 +38,8 @@ var Settings = React.createClass({
 
 	getInitialState: function () {
 		return {
-			lang: this.props.initialLang
+			lang: this.props.initialLang,
+			level: this.props.initialLevel
 		}
 	},
 
@@ -46,14 +47,26 @@ var Settings = React.createClass({
 		return (
 			<View style={styles.overlay}>
 				<View style={styles.content}>
-					<Text>Settings View</Text>
-
+					<Text>Language:</Text>
 					<PickerIOS
 						selectedValue={this.state.lang}
 						onValueChange={this.onLanguageChange}
 					>
 						{this.renderLangs()}
 					</PickerIOS>
+
+					<View style={styles.level}>
+						<Text style={styles.levelLabel}>User level:</Text>
+						<Text style={styles.levelValue}>
+							{this.state.level}
+						</Text>
+						<TouchableWithoutFeedback onPress={this.incrementLevel}>
+							<Text style={styles.levelChangeButton}> + </Text>
+						</TouchableWithoutFeedback>
+						<TouchableWithoutFeedback onPress={this.decrementLevel}>
+							<Text style={styles.levelChangeButton}> - </Text>
+						</TouchableWithoutFeedback>
+					</View>
 
 					<TouchableWithoutFeedback onPress={this.onClose}>
 						<Text>Tap here to close</Text>
@@ -70,12 +83,24 @@ var Settings = React.createClass({
 		});
 	},
 
+	incrementLevel: function () {
+		this.setState({
+			level: Math.min(this.state.level + 1, 100)
+		});
+	},
+	decrementLevel: function () {
+		this.setState({
+			level: Math.max(this.state.level - 1, 1)
+		});
+	},
+
 	renderLangs: function () {
 		var items = languages.map(function (lang) {
 			var langName = lang.name;
 			var langCode = lang.language;
 			return (
 				<PickerItemIOS
+					type={1}
 					key={langCode}
 					value={langCode}
 					label={langName}
@@ -88,6 +113,9 @@ var Settings = React.createClass({
 	onClose: function () {
 		if (this.props.lang !== this.state.lang) {
 			actions.emit(actions.CHANGE_LANG, this.state.lang);
+		}
+		if (this.props.lang !== this.state.level) {
+			actions.emit(actions.CHANGE_LEVEL, this.state.level);
 		}
 		this.props.onClose();
 	}
@@ -110,7 +138,27 @@ var styles = StyleSheet.create({
 		margin: 10,
 		padding: 10,
 		borderRadius: 3
+	},
+
+	level: {
+		flex: 1,
+		flexDirection: 'row'
+	},
+
+	levelLabel: {
+		flex: 4
+	},
+
+	levelValue: {
+		flex: 3
+	},
+
+	levelChangeButton: {
+		flex: 1,
+		fontSize: 20,
+		textAlign: 'center'
 	}
+
 });
 
 

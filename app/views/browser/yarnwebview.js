@@ -8,6 +8,7 @@ var {
 
 var WebViewBridge = require('react-native-webview-bridge');
 
+var log = require('../../logger/logger');
 var readability = require('node-read');
 var wordHelpers = require('./wordHelpers');
 
@@ -88,6 +89,11 @@ var Browser = React.createClass({
 			switch (msg.name) {
 				case 'WEBSITE_CONTENT':
 					console.log('website content received', msg.data.length);
+					log({
+						message: 'Page content received',
+						url: this.props.url,
+						length: msg.data.length
+					});
 					if (!msg.data || msg.data.indexOf('body') === -1) {
 						return this.scheduleParsing();
 					}

@@ -149,6 +149,10 @@ var Browser = React.createClass({
 
 	pressGoButton: function () {
 		var url = this.state.urlInInput.toLowerCase();
+		log({
+			message: 'Page loading started',
+			url: url
+		});
 		if (url === this.state.url) {
 			this.reload();
 		} else {
