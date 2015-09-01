@@ -117,6 +117,10 @@ var Browser = React.createClass({
 					console.log('visited words:', msg.data);
 					this.props.onVisibleWordsChanged && this.props.onVisibleWordsChanged(msg.data);
 					break;
+
+				case 'SCROLL':
+					this.props.onScroll && this.props.onScroll(msg.data);
+					break;
 			}
 
 		}.bind(this));

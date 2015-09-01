@@ -7,6 +7,7 @@ var Browser = require('./app/views/browser/browser');
 var Popup = require('./app/views/popup/popup');
 var StatusBar = require('./app/views/statusbar/statusbar');
 var Settings = require('./app/views/settings/settings');
+var MainBar = require('./app/views/mainbar/mainbar');
 
 var gameStateStore = require('./app/stores/gamestatestore');
 var userProfileStore = require('./app/stores/userprofilestore');
@@ -24,7 +25,8 @@ var {
 	TextInput,
 	TouchableOpacity,
 	View,
-	WebView
+	WebView,
+	LayoutAnimation
 } = React;
 
 var {
@@ -49,7 +51,8 @@ var yarn = React.createClass({
 			firstButtonRect: {},
 			initialPopupVisible: false,
 			settingsViewVisible: false,
-			bottomBar: ''
+			bottomBar: '',
+			wordsCountVisible: false
 		};
 	},
 
@@ -65,8 +68,12 @@ var yarn = React.createClass({
 					userLevel={userProfileStore.get('level')}
 					userRange={userProfileStore.get('range')}
 					onUrlChange={this.onUrlChange}
+					onScroll={this.onBrowserScroll}
 				/>
-				{bottomBar}
+				<View style={styles.bottomBarWrap}>
+					{this.renderMainBar()}
+					{bottomBar}
+				</View>
 				<Popup
 					visible={this.state.popupVisible}
 					onClose={this.onPopupSubmit}
@@ -100,6 +107,8 @@ var yarn = React.createClass({
 				return this.renderWordStrip();
 			case 'result':
 				return this.renderResultView();
+			case 'mainbar':
+				return this.renderMainBar();
 			default:
 				return (<View />);
 		}
@@ -119,12 +128,15 @@ var yarn = React.createClass({
 	},
 
 	renderInfoBar: function () {
+		//return (<View />);
 		return (
 			<StatusBar
+				ref='wordscountbar'
 				nextText='Test me!'
 				onNextPress={actions.emit.bind(actions, actions.START_GAME)}
 				showWordsCount={true}
 				wordsCount={gameStateStore.get('visitedPageWords').length}
+				startHidden={true}
 			/>
 		);
 	},
@@ -136,9 +148,12 @@ var yarn = React.createClass({
 				disabled={this.state.wordStripDisabled}
 				onAction={this.onWordPressed}
 				words={this.state.question}
-				onSettingsPress={this.showSettings}
 			/>
 		);
+	},
+
+	renderMainBar: function () {
+		return (<MainBar ref="mainbar"/>);
 	},
 
 	renderSettings: function () {
@@ -163,10 +178,33 @@ var yarn = React.createClass({
 		//});
 	},
 
+	onBrowserScroll: function (data) {
+		console.log('browser scroll', data);
+		if (this.state.bottomBar === 'wordscount') {
+			if (!this.state.wordsCountVisible && data.y > 10) {
+				console.log('show wordscount bar');
+				this.setState({
+					wordsCountVisible: true
+				});
+				this.refs['mainbar'].animateOut();
+				this.refs['wordscountbar'].animateIn();
+			}
+			else if (this.state.wordsCountVisible && data.y < 10) {
+				console.log('hide wordscount bar');
+				this.setState({
+					wordsCountVisible: false
+				});
+				this.refs['mainbar'].animateIn();
+				this.refs['wordscountbar'].animateOut();
+			}
+		}
+	},
+
 	closeResultView: function () {
 		this.setState({
 			bottomBar: ''
 		});
+		this.refs['mainbar'].animateIn();
 	},
 
 	showSettings: function () {
@@ -195,6 +233,7 @@ var yarn = React.createClass({
 		userProfileStore.addChangeListener(this.onUserProfileChanged);
 		actions.on(actions.START_GAME, this.hideBottomBar);
 		actions.on(actions.CHANGE_LEVEL, this.onForceChangeLevel);
+		actions.on(actions.SETTINGS_BUTTON_PRESSED, this.showSettings);
 	},
 
 	hideBottomBar: function () {
@@ -345,6 +384,10 @@ var styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: HEADER
+	},
+
+	bottomBarWrap: {
+
 	}
 });
 

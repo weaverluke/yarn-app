@@ -81,6 +81,7 @@ var Browser = React.createClass({
 					onNavigationStateChange={this.onNavigationStateChange}
 					onWordsParsed={this.onWordsParsed}
 					onVisibleWordsChanged={this.onVisibleWordsChanged}
+					onScroll={this.props.onScroll || function () {}}
 				/>
 			</View>
 		);

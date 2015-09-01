@@ -192,7 +192,6 @@ module.exports = function () {
 		yarnBridge.send(msg);
 	}
 
-	var sendScheduled = false;
 	function onMessage(msg) {
 		//log('onMessage', msg);
 		switch (msg.name) {
@@ -249,6 +248,14 @@ module.exports = function () {
 		document.addEventListener('WebViewBridge', handler, false);
 	}
 
+	function bindScrollInfo() {
+		window.addEventListener('scroll', function () {
+			setTimeout(function () {
+				send('SCROLL', {x: window.scrollX, y: window.scrollY});
+			}, 1);
+		});
+	}
+
 	function log() {
 		var args = [].slice.call(arguments);
 		send('LOG', args);
@@ -268,6 +275,7 @@ module.exports = function () {
 				while (msg = queue.shift()) {
 					send.apply(null, msg);
 				}
+				bindScrollInfo();
 				send('WEBSITE_READY');
 			});
 		}

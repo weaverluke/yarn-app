@@ -99,10 +99,6 @@ var WordStrip = React.createClass({
 					<View style={styles.words}>
 						{words}
 					</View>
-					<NavbarButton
-						onPress={this.props.onSettingsPress}
-						icon={'settings'}
-					/>
 				</ScrollView>
 			</View>
 		);

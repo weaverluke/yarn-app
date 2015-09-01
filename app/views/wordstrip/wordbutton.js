@@ -34,7 +34,7 @@ var WordButton = React.createClass({
 		};
 
 		var additionalTextStyle = {
-			lineHeight: height * 0.7
+			lineHeight: height * 0.65
 		};
 
 		if (this.props.arrow) {

@@ -4,7 +4,8 @@ var React = require('react-native');
 var {
 	StyleSheet,
 	View,
-	Text
+	Text,
+	Animated
 } = React;
 
 var NavBarLabel = require('./navbarlabel');
@@ -22,13 +23,16 @@ var StatusBar = React.createClass({
 			nextText: 'Onwards >',
 			showWordsCount: false,
 			wordsCount: 0,
+			startHidden: false,
 			onNextPress: function () {}
 		};
 	},
 
 	getInitialState: function () {
 		return {
-			height: uiConfig.TOOLBAR_HEIGHT
+			height: uiConfig.TOOLBAR_HEIGHT,
+			opacityValue: new Animated.Value(this.props.startHidden ? 0 : 1),
+			marginTopValue: new Animated.Value(this.props.startHidden ? uiConfig.TOOLBAR_ANIMATION_OFFSET : 0)
 		};
 	},
 
@@ -36,7 +40,12 @@ var StatusBar = React.createClass({
 		var items = this.props.showWordsCount ? this.renderWordsCount() : this.renderStats();
 
 		return (
-			<View style={styles.wrap}>
+			<Animated.View style={[styles.wrap, {
+				transform: [
+					{ translateY: this.state.marginTopValue }
+				],
+				opacity: this.state.opacityValue
+			}]}>
 				{items}
 				<NavBarLabel
 					onPress={this.props.onNextPress}
@@ -44,7 +53,7 @@ var StatusBar = React.createClass({
 					backgroundColor={uiConfig.COLORS.BLUE}
 					style={styles.nextButton}
 				/>
-			</View>
+			</Animated.View>
 		);
 	},
 
@@ -99,6 +108,32 @@ var StatusBar = React.createClass({
 				/>
 			</View>
 		);
+	},
+
+	animateIn: function () {
+		Animated.parallel([
+			Animated.timing(
+				this.state.opacityValue,
+				{ toValue: 1 }
+			),
+			Animated.timing(
+				this.state.marginTopValue,
+				{ toValue: 0 }
+			)
+		]).start();
+	},
+
+	animateOut: function () {
+		Animated.parallel([
+			Animated.timing(
+				this.state.opacityValue,
+				{ toValue: 0 }
+			),
+			Animated.timing(
+				this.state.marginTopValue,
+				{ toValue: uiConfig.TOOLBAR_ANIMATION_OFFSET }
+			)
+		]).start();
 	}
 });
 

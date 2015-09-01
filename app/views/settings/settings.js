@@ -111,10 +111,10 @@ var Settings = React.createClass({
 	},
 
 	onClose: function () {
-		if (this.props.lang !== this.state.lang) {
+		if (this.props.initialLang !== this.state.lang) {
 			actions.emit(actions.CHANGE_LANG, this.state.lang);
 		}
-		if (this.props.lang !== this.state.level) {
+		if (this.props.initialLevel !== this.state.level) {
 			actions.emit(actions.CHANGE_LEVEL, this.state.level);
 		}
 		this.props.onClose();
