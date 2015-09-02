@@ -192,12 +192,25 @@ var Browser = React.createClass({
 			var contentToParse = article.title + ' ' + article.content;
 			// we don't want to parse the same content twice
 			if (this.lastParsedContent === contentToParse) {
+				console.log('content was already parsed - terminating');
 				return;
 			}
 			this.lastParsedContent = contentToParse;
 			var range = this.props.userRange;
 			var level = this.props.userLevel || 50;
 			var words = wordHelpers.extractWordsFromArticle(contentToParse, level - range, level + range);
+
+			var attempts = 0;
+			while (words.length < 8 && attempts++ < 5) {
+				log({
+					message: 'Not enough words, extending the range',
+					previousRange: range,
+					wordsForPreviousRange: words,
+					newRange: range + 5
+				});
+				range += 5;
+				words = wordHelpers.extractWordsFromArticle(contentToParse, level - range, level + range);
+			}
 
 			// this should be done via store
 			//this.refs[WEBVIEW_REF].send(encodeMessage('PREPARE_WORDS', words));

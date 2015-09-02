@@ -1395,7 +1395,7 @@ throw new TypeError(
 
 var index=findIndex.call(this, predicate, context);
 return index === -1?undefined:this[index];}});}})();
-__d('yarn/index.ios.js',["Dimensions","NativeModules","react-native/Libraries/react-native/react-native.js","yarn/app/views/wordstrip/wordstrip.js","yarn/app/views/browser/browser.js","yarn/app/views/popup/popup.js","yarn/app/views/statusbar/statusbar.js","yarn/app/views/settings/settings.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+__d('yarn/index.ios.js',["Dimensions","NativeModules","react-native/Libraries/react-native/react-native.js","yarn/app/views/wordstrip/wordstrip.js","yarn/app/views/browser/browser.js","yarn/app/views/popup/popup.js","yarn/app/views/statusbar/statusbar.js","yarn/app/views/settings/settings.js","yarn/app/views/mainbar/mainbar.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');
 
@@ -1404,6 +1404,7 @@ var Browser=require('yarn/app/views/browser/browser.js');
 var Popup=require('yarn/app/views/popup/popup.js');
 var StatusBar=require('yarn/app/views/statusbar/statusbar.js');
 var Settings=require('yarn/app/views/settings/settings.js');
+var MainBar=require('yarn/app/views/mainbar/mainbar.js');
 
 var gameStateStore=require('yarn/app/stores/gamestatestore.js');
 var userProfileStore=require('yarn/app/stores/userprofilestore.js');
@@ -1422,7 +1423,8 @@ AppRegistry=
 
 
 
-React.AppRegistry;var StyleSheet=React.StyleSheet;var Text=React.Text;var TextInput=React.TextInput;var TouchableOpacity=React.TouchableOpacity;var View=React.View;var WebView=React.WebView;var _require=
+
+React.AppRegistry;var StyleSheet=React.StyleSheet;var Text=React.Text;var TextInput=React.TextInput;var TouchableOpacity=React.TouchableOpacity;var View=React.View;var WebView=React.WebView;var LayoutAnimation=React.LayoutAnimation;var _require=
 
 
 
@@ -1446,7 +1448,8 @@ buttonRect:{},
 firstButtonRect:{}, 
 initialPopupVisible:false, 
 settingsViewVisible:false, 
-bottomBar:''};}, 
+bottomBar:'', 
+wordsCountVisible:false};}, 
 
 
 
@@ -1461,9 +1464,13 @@ ref:BROWSER_REF,
 url:this.state.url, 
 userLevel:userProfileStore.get('level'), 
 userRange:userProfileStore.get('range'), 
-onUrlChange:this.onUrlChange}), 
+onUrlChange:this.onUrlChange, 
+onScroll:this.onBrowserScroll}), 
 
-bottomBar, 
+React.createElement(View, {style:styles.bottomBarWrap}, 
+this.renderMainBar(), 
+bottomBar), 
+
 React.createElement(Popup, {
 visible:this.state.popupVisible, 
 onClose:this.onPopupSubmit, 
@@ -1497,6 +1504,8 @@ case 'wordstrip':
 return this.renderWordStrip();
 case 'result':
 return this.renderResultView();
+case 'mainbar':
+return this.renderMainBar();
 default:
 return React.createElement(View, null);}}, 
 
@@ -1516,12 +1525,15 @@ showWordsCount:false}));},
 
 
 renderInfoBar:function(){
+
 return (
 React.createElement(StatusBar, {
+ref:'wordscountbar', 
 nextText:'Test me!', 
 onNextPress:actions.emit.bind(actions, actions.START_GAME), 
 showWordsCount:true, 
-wordsCount:gameStateStore.get('visitedPageWords').length}));}, 
+wordsCount:gameStateStore.get('visitedPageWords').length, 
+startHidden:true}));}, 
 
 
 
@@ -1532,10 +1544,13 @@ React.createElement(WordStrip, {
 ref:'wordstrip', 
 disabled:this.state.wordStripDisabled, 
 onAction:this.onWordPressed, 
-words:this.state.question, 
-onSettingsPress:this.showSettings}));}, 
+words:this.state.question}));}, 
 
 
+
+
+renderMainBar:function(){
+return React.createElement(MainBar, {ref:'mainbar'});}, 
 
 
 renderSettings:function(){
@@ -1546,6 +1561,7 @@ return React.createElement(View, null);}
 return (
 React.createElement(Settings, {
 onClose:this.closeSettingsView, 
+initialLevel:userProfileStore.get('level'), 
 initialLang:userProfileStore.get('language')}));}, 
 
 
@@ -1559,10 +1575,33 @@ actions.emit(actions.RESET);},
 
 
 
+onBrowserScroll:function(data){
+console.log('browser scroll', data);
+if(this.state.bottomBar === 'wordscount'){
+if(!this.state.wordsCountVisible && data.y > 10){
+console.log('show wordscount bar');
+this.setState({
+wordsCountVisible:true});
+
+this.refs['mainbar'].animateOut();
+this.refs['wordscountbar'].animateIn();}else 
+
+if(this.state.wordsCountVisible && data.y < 10){
+console.log('hide wordscount bar');
+this.setState({
+wordsCountVisible:false});
+
+this.refs['mainbar'].animateIn();
+this.refs['wordscountbar'].animateOut();}}}, 
+
+
+
+
 closeResultView:function(){
 this.setState({
-bottomBar:''});}, 
+bottomBar:''});
 
+this.refs['mainbar'].animateIn();}, 
 
 
 showSettings:function(){
@@ -1589,7 +1628,9 @@ this.lang = userProfileStore.get('language');
 
 gameStateStore.addChangeListener(this.onGameStateChanged);
 userProfileStore.addChangeListener(this.onUserProfileChanged);
-actions.on(actions.START_GAME, this.hideBottomBar);}, 
+actions.on(actions.START_GAME, this.hideBottomBar);
+actions.on(actions.CHANGE_LEVEL, this.onForceChangeLevel);
+actions.on(actions.SETTINGS_BUTTON_PRESSED, this.showSettings);}, 
 
 
 hideBottomBar:function(){
@@ -1712,13 +1753,26 @@ initialPopupVisible:false});},
 onUserProfileChanged:function(){
 if(this.lang !== userProfileStore.get('language')){
 this.lang = userProfileStore.get('language');
+this.resetGame();
+this.reloadBrowser();}}, 
+
+
+
+resetGame:function(){
+this.setState({
+question:[], 
+bottomBar:''});}, 
+
+
+
+onForceChangeLevel:function(){
+this.resetGame();
+this.reloadBrowser();}, 
+
+
+reloadBrowser:function(){
 this.refs[BROWSER_REF].resetLastParsedContent();
-this.refs[BROWSER_REF].reload();}}});
-
-
-
-
-
+this.refs[BROWSER_REF].reload();}});
 
 
 
@@ -1726,7 +1780,11 @@ this.refs[BROWSER_REF].reload();}}});
 var styles=StyleSheet.create({
 container:{
 flex:1, 
-backgroundColor:HEADER}});
+backgroundColor:HEADER}, 
+
+
+bottomBarWrap:{}});
+
 
 
 
@@ -50943,11 +51001,7 @@ showsHorizontalScrollIndicator:false,
 contentOffset:contentOffset}, 
 
 React.createElement(View, {style:styles.words}, 
-words), 
-
-React.createElement(NavbarButton, {
-onPress:this.props.onSettingsPress, 
-icon:'settings'}))));}, 
+words))));}, 
 
 
 
@@ -51003,13 +51057,14 @@ ORANGE:'rgb(247, 148, 30)',
 RED:'rgb(223, 28, 36)'}, 
 
 
-TOOLBAR_HEIGHT:40, 
+TOOLBAR_HEIGHT:50, 
 WORDBUTTON_PADDING:14, 
 TOOLBAR_FONT_SIZE:14, 
 TOOLBAR_ICON_SIZE:22, 
 PROGRESSBAR_FONT_SIZE:12, 
 PROGRESSBAR_HEIGHT:2, 
-TOOLBAR_BUTTON_WIDTH:50};
+TOOLBAR_BUTTON_WIDTH:70, 
+TOOLBAR_ANIMATION_OFFSET:15};
 });
 __d('yarn/app/views/wordstrip/wordbutton.js',["react-native/Libraries/react-native/react-native.js","yarn/app/uiconfig.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
@@ -51047,7 +51102,7 @@ backgroundColor:buttonColors.backgroundColor};
 
 
 var additionalTextStyle={
-lineHeight:height * 0.7};
+lineHeight:height * 0.65};
 
 
 if(this.props.arrow){
@@ -51328,7 +51383,8 @@ userLevel:this.props.userLevel,
 url:this.state.url, 
 onNavigationStateChange:this.onNavigationStateChange, 
 onWordsParsed:this.onWordsParsed, 
-onVisibleWordsChanged:this.onVisibleWordsChanged})));}, 
+onVisibleWordsChanged:this.onVisibleWordsChanged, 
+onScroll:this.props.onScroll || function(){}})));}, 
 
 
 
@@ -51397,6 +51453,10 @@ this.pressGoButton();},
 
 pressGoButton:function(){
 var url=this.state.urlInInput.toLowerCase();
+log({
+message:'Page loading started', 
+url:url});
+
 if(url === this.state.url){
 this.reload();}else 
 {
@@ -51853,7 +51913,7 @@ return typeof arg === 'object' && arg !== null;}
 function isUndefined(arg){
 return arg === void 0;}
 });
-__d('yarn/app/views/browser/yarnwebview.js',["react-native/Libraries/react-native/react-native.js","react-native-webview-bridge/jsx/WebViewBridge.js","node-read/index.js","yarn/app/views/browser/wordHelpers.js","yarn/app/views/browser/websiteapi.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+__d('yarn/app/views/browser/yarnwebview.js',["react-native/Libraries/react-native/react-native.js","react-native-webview-bridge/jsx/WebViewBridge.js","yarn/app/logger/logger.js","node-read/index.js","yarn/app/views/browser/wordHelpers.js","yarn/app/views/browser/websiteapi.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -51863,6 +51923,7 @@ React.StyleSheet;var WebView=React.WebView;
 
 var WebViewBridge=require('react-native-webview-bridge/jsx/WebViewBridge.js');
 
+var log=require('yarn/app/logger/logger.js');
 var readability=require('node-read/index.js');
 var wordHelpers=require('yarn/app/views/browser/wordHelpers.js');
 
@@ -51943,6 +52004,11 @@ var msg=decodeMessage(message);
 switch(msg.name){
 case 'WEBSITE_CONTENT':
 console.log('website content received', msg.data.length);
+log({
+message:'Page content received', 
+url:this.props.url, 
+length:msg.data.length});
+
 if(!msg.data || msg.data.indexOf('body') === -1){
 return this.scheduleParsing();}
 
@@ -51965,6 +52031,10 @@ break;
 case 'WORDS':
 console.log('visited words:', msg.data);
 this.props.onVisibleWordsChanged && this.props.onVisibleWordsChanged(msg.data);
+break;
+
+case 'SCROLL':
+this.props.onScroll && this.props.onScroll(msg.data);
 break;}}).
 
 
@@ -52200,6 +52270,34 @@ _this3.handlerId = 0;});}}]);return WebViewBridge;})(WebView);
 
 
 module.exports = WebViewBridge;
+});
+__d('yarn/app/logger/logger.js',[],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+
+
+var url='http://logs-01.loggly.com/bulk/41096412-3533-4c39-bed4-a19e96b4aa42/tag/bulk/';
+var sessionTimestamp=Date.now();
+
+module.exports = function(data){
+if(typeof data === 'string'){
+data = {
+message:data};}
+
+
+data.sessionTimestamp = sessionTimestamp;
+data.timestamp = Date.now();
+
+var dataStr=JSON.stringify(data);
+
+console.log(data.message, data);
+
+
+return fetch(url, {
+method:'post', 
+headers:{
+'Accept':'application/json', 
+'Content-Type':'application/json'}, 
+
+body:dataStr});};
 });
 __d('node-read/index.js',["node-read/lib/utils.js","url/url.js","cheerio/index.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  var utils=require('node-read/lib/utils.js');
 var url=require('url/url.js');
@@ -70467,7 +70565,6 @@ var msg=encodeMessage(name, data);
 yarnBridge.send(msg);}
 
 
-var sendScheduled=false;
 function onMessage(msg){
 
 switch(msg.name){
@@ -70524,6 +70621,14 @@ cb(window.WebViewBridge);}
 document.addEventListener('WebViewBridge', handler, false);}
 
 
+function bindScrollInfo(){
+window.addEventListener('scroll', function(){
+setTimeout(function(){
+send('SCROLL', {x:window.scrollX, y:window.scrollY});}, 
+1);});}
+
+
+
 function log(){
 var args=[].slice.call(arguments);
 send('LOG', args);}
@@ -70543,6 +70648,7 @@ var msg;
 while(msg = queue.shift()) {
 send.apply(null, msg);}
 
+bindScrollInfo();
 send('WEBSITE_READY');});}else 
 
 
@@ -70584,6 +70690,7 @@ bus.on(actions.SHOW_NEXT_QUESTION, onShowNextQuestion);
 bus.on(actions.WORD_PRESSED, onWordPressed);
 bus.on(actions.CHANGE_LANG, onChangeLang);
 bus.on(actions.RESET, onReset);
+bus.on(actions.CHANGE_LEVEL, onChangeLevel);
 
 function onWordsParsed(words){
 if(!words.length){
@@ -70743,7 +70850,15 @@ return;}
 
 
 userProfileStore.set('language', lang);
-gameStateStore.reset();}
+bus.emit(actions.RESET);}
+
+
+function onChangeLevel(level){
+if(level === userProfileStore.get('language')){
+return;}
+
+userProfileStore.setUserLevel(level);
+bus.emit(actions.RESET);}
 
 
 function onReset(){
@@ -70761,7 +70876,12 @@ SHOW_NEXT_QUESTION:'SHOW_NEXT_QUESTION',
 WORD_PRESSED:'WORD_PRESSED', 
 CHANGE_LANG:'CHANGE_LANG', 
 WORDS_READY:'WORDS_READY', 
-RESET:'RESET'};
+RESET:'RESET', 
+CHANGE_LEVEL:'CHANGE_LEVEL', 
+
+HOME_BUTTON_PRESSED:'HOME_BUTTON_PRESSED', 
+QUIZ_BUTTON_PRESSED:'QUIZ_BUTTON_PRESSED', 
+SETTINGS_BUTTON_PRESSED:'SETTINGS_BUTTON_PRESSED'};
 });
 __d('yarn/app/helpers/getrandomwords.js',["yarn/words.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  var words=Object.keys(require('yarn/words.js'));
 
@@ -70834,34 +70954,6 @@ return json;});}
 module.exports = {
 getDefinition:getDefinition};
 });
-__d('yarn/app/logger/logger.js',[],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
-
-
-var url='http://logs-01.loggly.com/bulk/41096412-3533-4c39-bed4-a19e96b4aa42/tag/bulk/';
-var sessionTimestamp=Date.now();
-
-module.exports = function(data){
-if(typeof data === 'string'){
-data = {
-message:data};}
-
-
-data.sessionTimestamp = sessionTimestamp;
-data.timestamp = Date.now();
-
-var dataStr=JSON.stringify(data);
-
-console.log(data.message, data);
-
-
-return fetch(url, {
-method:'post', 
-headers:{
-'Accept':'application/json', 
-'Content-Type':'application/json'}, 
-
-body:dataStr});};
-});
 __d('yarn/app/stores/userprofilestore.js',["events/events.js","yarn/app/logger/logger.js","react-native/Libraries/react-native/react-native.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var Events=require('events/events.js');
@@ -70891,16 +70983,20 @@ var PERSISTENCE_KEY='@yarn:userProfileStore';
 init();
 
 function init(){
-for(var i=0; i < 100; i++) {
-data.levelStats[i] = {
-correct:0, 
-wrong:0};}
-
-
+initLevelStats();
 
 
 
 loadData();}
+
+
+function initLevelStats(){
+for(var i=0; i < 100; i++) {
+data.levelStats[i] = {
+correct:0, 
+wrong:0};}}
+
+
 
 
 function set(key, d){
@@ -70949,9 +71045,11 @@ var max=0;
 for(var i=0, len=data.levelStats.length; i < len; i++) {
 
 var lvl=data.levelStats[i];
+var weight=(100 - i) * 0.9;
+
 if(lvl.correct || lvl.wrong){
-sum += (i + 1) * lvl.correct / (lvl.correct + lvl.wrong) * 100;
-max += (i + 1) * 100;}}
+sum += (i + 1) * lvl.correct / (lvl.correct + lvl.wrong) * weight;
+max += (i + 1) * weight;}}
 
 
 
@@ -70959,14 +71057,14 @@ data.level = parseInt(sum / max * 100);
 console.log('New user level:', data.level);
 
 
-if(totalAnswers > 40 && data.range == 40){
+if(totalAnswers > 20 && data.range == 40){
 data.range = 30;}else 
 
-if(totalAnswers > 80 && data.range == 30){
+if(totalAnswers > 40 && data.range == 30){
 data.range = 20;}else 
 
-if(totalAnswers > 120 && data.range == 20){
-data.range = 10;}
+if(totalAnswers > 60 && data.range == 20){
+data.range = 15;}
 
 
 data.historyLevelValues.push(data.level);}
@@ -71000,6 +71098,31 @@ emitChange();}).
 done();}
 
 
+
+
+
+
+
+function setUserLevel(level){
+if(level === data.level){
+return;}
+
+
+log({
+message:'Setting user level', 
+level:level});
+
+data.correctAnswers = 0;
+data.wrongAnswers = 0;
+data.level = level;
+data.range = 40;
+data.levelStats = [];
+data.historyLevelValues = [];
+initLevelStats();
+saveData();
+emitChange();}
+
+
 function migrate1(){
 if(!data.wordsLimit){
 data.wordsLimit = 10;
@@ -71011,7 +71134,8 @@ module.exports = {
 addChangeListener:addChangeListener, 
 get:get, 
 set:set, 
-updateLevelStats:updateLevelStats};
+updateLevelStats:updateLevelStats, 
+setUserLevel:setUserLevel};
 });
 __d('yarn/app/views/popup/popup.js',["image!horizontal-gradient","Dimensions","react-native/Libraries/react-native/react-native.js","yarn/app/uiconfig.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -71318,7 +71442,8 @@ var React=require('react-native/Libraries/react-native/react-native.js');var
 StyleSheet=
 
 
-React.StyleSheet;var View=React.View;var Text=React.Text;
+
+React.StyleSheet;var View=React.View;var Text=React.Text;var Animated=React.Animated;
 
 var NavBarLabel=require('yarn/app/views/statusbar/navbarlabel.js');
 var NavBarButton=require('yarn/app/views/statusbar/navbarbutton.js');
@@ -71335,13 +71460,16 @@ level:0,
 nextText:'Onwards >', 
 showWordsCount:false, 
 wordsCount:0, 
+startHidden:false, 
 onNextPress:function(){}};}, 
 
 
 
 getInitialState:function(){
 return {
-height:uiConfig.TOOLBAR_HEIGHT};}, 
+height:uiConfig.TOOLBAR_HEIGHT, 
+opacityValue:new Animated.Value(this.props.startHidden?0:1), 
+marginTopValue:new Animated.Value(this.props.startHidden?uiConfig.TOOLBAR_ANIMATION_OFFSET:0)};}, 
 
 
 
@@ -71349,7 +71477,12 @@ render:function(){
 var items=this.props.showWordsCount?this.renderWordsCount():this.renderStats();
 
 return (
-React.createElement(View, {style:styles.wrap}, 
+React.createElement(Animated.View, {style:[styles.wrap, {
+transform:[
+{translateY:this.state.marginTopValue}], 
+
+opacity:this.state.opacityValue}]}, 
+
 items, 
 React.createElement(NavBarLabel, {
 onPress:this.props.onNextPress, 
@@ -71408,10 +71541,36 @@ React.createElement(NavBarLabel, {
 texts:[{text:this.props.level, color:uiConfig.COLORS.RED}], 
 color:uiConfig.COLORS.RED, 
 style:styles.level, 
-specialFont:true})));}});
+specialFont:true})));}, 
 
 
 
+
+
+animateIn:function(){
+Animated.parallel([
+Animated.timing(
+this.state.opacityValue, 
+{toValue:1}), 
+
+Animated.timing(
+this.state.marginTopValue, 
+{toValue:0})]).
+
+start();}, 
+
+
+animateOut:function(){
+Animated.parallel([
+Animated.timing(
+this.state.opacityValue, 
+{toValue:0}), 
+
+Animated.timing(
+this.state.marginTopValue, 
+{toValue:uiConfig.TOOLBAR_ANIMATION_OFFSET})]).
+
+start();}});
 
 
 
@@ -71657,7 +71816,8 @@ onClose:function(){}};},
 
 getInitialState:function(){
 return {
-lang:this.props.initialLang};}, 
+lang:this.props.initialLang, 
+level:this.props.initialLevel};}, 
 
 
 
@@ -71665,13 +71825,25 @@ render:function(){
 return (
 React.createElement(View, {style:styles.overlay}, 
 React.createElement(View, {style:styles.content}, 
-React.createElement(Text, null, 'Settings View'), 
-
+React.createElement(Text, null, 'Language:'), 
 React.createElement(PickerIOS, {
 selectedValue:this.state.lang, 
 onValueChange:this.onLanguageChange}, 
 
 this.renderLangs()), 
+
+
+React.createElement(View, {style:styles.level}, 
+React.createElement(Text, {style:styles.levelLabel}, 'User level:'), 
+React.createElement(Text, {style:styles.levelValue}, 
+this.state.level), 
+
+React.createElement(TouchableWithoutFeedback, {onPress:this.incrementLevel}, 
+React.createElement(Text, {style:styles.levelChangeButton}, ' + ')), 
+
+React.createElement(TouchableWithoutFeedback, {onPress:this.decrementLevel}, 
+React.createElement(Text, {style:styles.levelChangeButton}, ' - '))), 
+
 
 
 React.createElement(TouchableWithoutFeedback, {onPress:this.onClose}, 
@@ -71689,12 +71861,24 @@ lang:lang});},
 
 
 
+incrementLevel:function(){
+this.setState({
+level:Math.min(this.state.level + 1, 100)});}, 
+
+
+decrementLevel:function(){
+this.setState({
+level:Math.max(this.state.level - 1, 1)});}, 
+
+
+
 renderLangs:function(){
 var items=languages.map(function(lang){
 var langName=lang.name;
 var langCode=lang.language;
 return (
 React.createElement(PickerItemIOS, {
+type:1, 
 key:langCode, 
 value:langCode, 
 label:langName}));});
@@ -71705,8 +71889,11 @@ return items;},
 
 
 onClose:function(){
-if(this.props.lang !== this.state.lang){
+if(this.props.initialLang !== this.state.lang){
 actions.emit(actions.CHANGE_LANG, this.state.lang);}
+
+if(this.props.initialLevel !== this.state.level){
+actions.emit(actions.CHANGE_LEVEL, this.state.level);}
 
 this.props.onClose();}});
 
@@ -71728,7 +71915,27 @@ content:{
 backgroundColor:'#FFFFFF', 
 margin:10, 
 padding:10, 
-borderRadius:3}});
+borderRadius:3}, 
+
+
+level:{
+flex:1, 
+flexDirection:'row'}, 
+
+
+levelLabel:{
+flex:4}, 
+
+
+levelValue:{
+flex:3}, 
+
+
+levelChangeButton:{
+flex:1, 
+fontSize:20, 
+textAlign:'center'}});
+
 
 
 
@@ -72112,6 +72319,136 @@ var languagesData={
 
 
 module.exports = languagesData.data.languages;
+});
+__d('yarn/app/views/mainbar/mainbar.js',["image!home-icon","image!yarn-icon","image!settings-icon","Dimensions","react-native/Libraries/react-native/react-native.js","yarn/app/actions/actions.js","yarn/app/uiconfig.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+
+var React=require('react-native/Libraries/react-native/react-native.js');var 
+
+StyleSheet=
+
+
+
+
+
+React.StyleSheet;var View=React.View;var Text=React.Text;var TouchableWithoutFeedback=React.TouchableWithoutFeedback;var Image=React.Image;var Animated=React.Animated;
+
+var Dimensions=require('Dimensions');var _Dimensions$get=
+Dimensions.get('window');var width=_Dimensions$get.width;var height=_Dimensions$get.height;
+
+var actions=require('yarn/app/actions/actions.js');
+var uiConfig=require('yarn/app/uiconfig.js');
+
+var MainBar=React.createClass({displayName:'MainBar', 
+
+getInitialState:function(){
+return {
+opacityValue:new Animated.Value(0), 
+marginTopValue:new Animated.Value(uiConfig.TOOLBAR_ANIMATION_OFFSET)};}, 
+
+
+
+render:function(){
+return (
+React.createElement(Animated.View, {style:[styles.wrap, {
+transform:[
+{translateY:this.state.marginTopValue}], 
+
+opacity:this.state.opacityValue}]}, 
+
+React.createElement(View, {style:styles.buttonWrap}, 
+React.createElement(TouchableWithoutFeedback, {onPress:this.onHomePressed}, 
+React.createElement(Image, {source:require('image!home-icon'), style:styles.icon}))), 
+
+
+React.createElement(View, {style:styles.buttonWrap}, 
+React.createElement(TouchableWithoutFeedback, {onPress:this.onQuizPressed}, 
+React.createElement(Image, {source:require('image!yarn-icon'), style:styles.iconCentral}))), 
+
+
+React.createElement(View, {style:styles.buttonWrap}, 
+React.createElement(TouchableWithoutFeedback, {onPress:this.onSettingsPressed}, 
+React.createElement(Image, {source:require('image!settings-icon'), style:styles.icon})))));}, 
+
+
+
+
+
+
+componentDidMount:function(){
+this.animateIn();}, 
+
+
+animateIn:function(){
+Animated.parallel([
+Animated.timing(
+this.state.opacityValue, 
+{toValue:1}), 
+
+Animated.timing(
+this.state.marginTopValue, 
+{toValue:0})]).
+
+start();}, 
+
+
+animateOut:function(){
+Animated.parallel([
+Animated.timing(
+this.state.opacityValue, 
+{toValue:0}), 
+
+Animated.timing(
+this.state.marginTopValue, 
+{toValue:uiConfig.TOOLBAR_ANIMATION_OFFSET})]).
+
+start();}, 
+
+
+onHomePressed:function(){
+actions.emit(actions.HOME_BUTTON_PRESSED);}, 
+
+onQuizPressed:function(){
+actions.emit(actions.QUIZ_BUTTON_PRESSED);}, 
+
+onSettingsPressed:function(){
+actions.emit(actions.SETTINGS_BUTTON_PRESSED);}});
+
+
+
+var styles=StyleSheet.create({
+
+wrap:{
+flexDirection:'row', 
+height:uiConfig.TOOLBAR_HEIGHT, 
+position:'absolute', 
+bottom:0, 
+width:width, 
+borderTopWidth:1, 
+borderTopColor:uiConfig.COLORS.MID_GREY}, 
+
+
+buttonWrap:{
+flex:1, 
+alignItems:'center', 
+justifyContent:'center'}, 
+
+
+icon:{
+width:uiConfig.TOOLBAR_ICON_SIZE, 
+height:uiConfig.TOOLBAR_ICON_SIZE}, 
+
+
+iconCentral:{
+width:uiConfig.TOOLBAR_ICON_SIZE + 6, 
+height:uiConfig.TOOLBAR_ICON_SIZE + 6}});
+
+
+
+module.exports = MainBar;
+});
+__d('image!home-icon',[],function(global, require, requireDynamic, requireLazy, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/home-icon.imageset/home-icon.png","uri":"home-icon","width":44,"height":44,"deprecated":true};
+});
+__d('image!yarn-icon',[],function(global, require, requireDynamic, requireLazy, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/yarn-icon.imageset/yarn-icon.png","uri":"yarn-icon","width":50,"height":50,"deprecated":true};
 });
 ;require("yarn/index.ios.js");
 //@ sourceMappingURL=/index.ios.map

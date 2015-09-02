@@ -137,6 +137,7 @@ var Browser = React.createClass({
 		});
 		if (navState.url !== this.lastUrl) {
 			this.lastUrl = navState.url;
+			this.refs[WEBVIEW_REF].resetLastParsedContent();
 			this.props.onUrlChange && this.props.onUrlChange(navState);
 		}
 	},

@@ -38,7 +38,7 @@ var HEADER = '#F9FAFB';
 var GAME_STATES = gameStateStore.GAME_STATES;
 
 var BROWSER_REF = 'browser';
-var DEFAULT_URL = 'http://www.bbc.co.uk/news/education-24433320';
+var DEFAULT_URL = 'http://www.theguardian.com/';
 
 var yarn = React.createClass({
 
@@ -128,7 +128,7 @@ var yarn = React.createClass({
 	},
 
 	renderInfoBar: function () {
-		//return (<View />);
+		console.log('render info bar, visited words:', gameStateStore.get('visitedPageWords').length);
 		return (
 			<StatusBar
 				ref='wordscountbar'
@@ -172,10 +172,10 @@ var yarn = React.createClass({
 
 	onUrlChange: function () {
 		actions.emit(actions.RESET);
-		//this.setState({
-		//	question: [],
-		//	bottomBar: ''
-		//});
+		this.setState({
+			wordsCountVisible: false
+		});
+		this.refs['mainbar'].animateIn();
 	},
 
 	onBrowserScroll: function (data) {
@@ -202,7 +202,8 @@ var yarn = React.createClass({
 
 	closeResultView: function () {
 		this.setState({
-			bottomBar: ''
+			bottomBar: '',
+			wordsCountVisible: false
 		});
 		this.refs['mainbar'].animateIn();
 	},
