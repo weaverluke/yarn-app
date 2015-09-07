@@ -9,6 +9,8 @@ module.exports = function () {
 
 		var SKIP_NODES = ['SCRIPT', 'NOSCRIPT'];
 
+		var styleEl;
+
 		var highlightColor = '#44FF44';
 		var visitedWords = [];
 
@@ -17,11 +19,56 @@ module.exports = function () {
 		}
 
 		function prepareWords(words) {
+			injectStyles();
 			reset();
 			words.forEach(prepareWord);
 			window.addEventListener('scroll', onPageScroll);
 			onPageScroll();
 			return visitedWords;
+		}
+
+		function injectStyles() {
+			if (styleEl && styleEl.parentNode) {
+				styleEl.parentNode.removeChild(styleEl);
+			}
+			var head = document.head || document.getElementsByTagName('head')[0];
+			var commonCss =
+				'width: 3px; height: 100%;' +
+				'position: absolute;' +
+				'top: 0;' +
+				'content: "";' +
+				'display: block;' +
+				'background-color:' + highlightColor +
+				'} ';
+
+			var css = '[data-yarn-highlight] { position: relative; background-color:rgba(0,0,0,0) }' +
+
+				'[data-yarn-highlight].highlighted { ' +
+				'font-style:inherit;font-weight:inherit;' +
+				'background-color:' + highlightColor + '}' +
+
+				'[data-yarn-highlight].highlighted:before {' +
+				'position:absolute; top:0; left:-3px;' +
+				'border-top-left-radius:3px;' +
+				'border-bottom-left-radius:3px;' +
+				commonCss +
+
+				'[data-yarn-highlight].highlighted:after {' +
+				'position:absolute; top:0; right:-3px;' +
+				'border-top-right-radius:3px;' +
+				'border-bottom-right-radius:3px;' +
+				commonCss;
+
+			styleEl = document.createElement('style');
+
+			styleEl.type = 'text/css';
+			if (styleEl.styleSheet){
+				styleEl.styleSheet.cssText = css;
+			} else {
+				styleEl.appendChild(document.createTextNode(css));
+			}
+
+			head.appendChild(styleEl);
 		}
 
 		function prepareWord(word) {
@@ -39,9 +86,7 @@ module.exports = function () {
 				if (rx.test(n.nodeValue)) {
 					var node = n.parentNode;
 					node.innerHTML = node.innerHTML.replace(rx,
-						'<mark data-yarn-highlight=\'' +word+
-						'\' style=\'border-radius:3px;background-color:rgba(0,0,0,0);font-style:inherit;font-weight:inherit;\'>'
-						+word+'</mark>'
+						'<mark data-yarn-highlight="' +word+ '">' +word+ '</mark>'
 					);
 					return true;
 				}
@@ -57,7 +102,8 @@ module.exports = function () {
 				word = getWordElByWord(word);
 			}
 			if (word) {
-				word.style.backgroundColor = highlightColor;
+				word.classList.add('highlighted');
+				//word.style.backgroundColor = highlightColor;
 				word.dataset.yarnHighlighted = 1;
 			}
 			if (scrollToHighlightedWord) {
@@ -75,7 +121,8 @@ module.exports = function () {
 					word = getWordElByWord(word);
 				}
 				if (word) {
-					word.style.backgroundColor = 'rgba(0,0,0,0)';
+					word.classList.remove('highlighted');
+					//word.style.backgroundColor = 'rgba(0,0,0,0)';
 					delete word.dataset.yarnHighlighted;
 				}
 			}
@@ -218,14 +265,22 @@ module.exports = function () {
 		}
 	}
 
+	var lastBodyLength = -1;
 	function sendHtml() {
-		if (document.readyState === 'complete') {
-			log('sending html', document.body.innerHTML.length);
-			return send('WEBSITE_CONTENT', document.documentElement.outerHTML);
+		var currentBodyLength = document.body.innerHTML.length;
+		if (document.readyState === 'complete' || document.readyState === 'interactive' &&
+				// wait for body to stop changing
+			currentBodyLength === lastBodyLength) {
+
+			console.log('sending html', document.body.innerHTML.length);
+			var start = '<html><head><title>' + document.title + '</title></head>';
+			// send only body content
+			return send('WEBSITE_CONTENT', start + document.body.outerHTML + '</html>');
 		}
 		else {
-			log('delay sendHtml');
-			setTimeout(sendHtml, 250);
+			lastBodyLength = currentBodyLength;
+			log('delay sendHtml, document readyState: ' + document.readyState + ' body length:' + currentBodyLength);
+			setTimeout(sendHtml, 800);
 		}
 	}
 
@@ -261,29 +316,40 @@ module.exports = function () {
 		send('LOG', args);
 	}
 
-	function wait() {
-		// we compare against length of 100 to make sure that there's something in body already
-		if (document.readyState == 'complete' && document.body && document.body.innerHTML.length > 100) {
-			WebViewBridgeReady(function (WebViewBridge) {
+	function run() {
+		console.log('run()');
+		window.yarnInitialized = true;
+		WebViewBridgeReady(function (WebViewBridge) {
 
-				yarnBridge = WebViewBridge;
-				WebViewBridge.onMessage = function (msg) {
-					var message = decodeMessage(msg);
-					onMessage(message);
-				};
-				var msg;
-				while (msg = queue.shift()) {
-					send.apply(null, msg);
-				}
-				bindScrollInfo();
-				send('WEBSITE_READY');
-			});
-		}
-		else {
-			setTimeout(wait, 13);
-		}
+			console.log('bridge ready');
+			yarnBridge = WebViewBridge;
+			WebViewBridge.onMessage = function (msg) {
+				var message = decodeMessage(msg);
+				onMessage(message);
+			};
+			var msg;
+			while (msg = queue.shift()) {
+				send.apply(null, msg);
+			}
+			bindScrollInfo();
+			console.log('WEBSITE_READY');
+			send('WEBSITE_READY');
+		});
 	}
-	wait();
+
+	console.log('start! ', location.href, document.readyState, document.documentElement.outerHTML.length);
+
+	if (/(interactive|complete)/.test(document.readyState)) {
+		console.log('dom content already loaded');
+		run();
+	}
+	else {
+		console.log('wait for dom content to be loaded');
+		document.addEventListener('DOMContentLoaded', function () {
+			console.log('DOMContentLoaded!', document.documentElement.outerHTML.length);
+			run();
+		});
+	}
 };
 
 
