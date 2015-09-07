@@ -14,8 +14,6 @@ var wordHelpers = require('./wordHelpers');
 
 var YARN_API = require('./websiteapi').toString();
 YARN_API = '(' + YARN_API + '())';
-//console.log('API:', YARN_API);
-
 
 function encodeMessage(name, data) {
 	return JSON.stringify({
@@ -28,12 +26,7 @@ function decodeMessage(msg) {
 	return JSON.parse(msg);
 }
 
-var HIGHLIGHT_COLOR = '#22FF22';
-
-var BORDER = '#E7EAEA';
 var BGWASH = 'rgba(255,255,255,0.8)';
-var HEADER = '#F9FAFB';
-
 var WEBVIEW_REF = 'webview';
 
 //var YARN_API;
@@ -50,9 +43,9 @@ var WEBVIEW_REF = 'webview';
 //		}
 //	});
 
-
 var Browser = React.createClass({
 	lastParsedContent: '',
+	waitForContentTimeout: 0,
 
 	getInitialState: function () {
 		return {
@@ -61,10 +54,6 @@ var Browser = React.createClass({
 			forwardButtonEnabled: false,
 			loading: true
 		}
-	},
-
-	handleTextInputChange: function (event) {
-		this.inputText = event.nativeEvent.text;
 	},
 
 	render: function () {
@@ -82,21 +71,21 @@ var Browser = React.createClass({
 	},
 
 	componentDidMount: function () {
-		//this.refs[WEBVIEW_REF].evalScript('window.onerror = function (err) { alert(err.toString() + " " + err.message); };');
 		this.refs[WEBVIEW_REF].onMessage(function (message) {
 			var msg = decodeMessage(message);
 
 			switch (msg.name) {
 				case 'WEBSITE_CONTENT':
+					clearTimeout(this.waitForContentTimeout);
 					console.log('website content received', msg.data.length);
 					log({
 						message: 'Page content received',
 						url: this.props.url,
 						length: msg.data.length
 					});
-					if (!msg.data || msg.data.indexOf('body') === -1) {
-						return this.scheduleParsing();
-					}
+					//if (!msg.data || msg.data.indexOf('body') === -1) {
+					//	return this.scheduleParsing();
+					//}
 					this.parseWebsiteContent(msg.data);
 					break;
 
@@ -110,7 +99,7 @@ var Browser = React.createClass({
 					break;
 
 				case 'WEBSITE_READY':
-					this.sendCommand('GET_HTML');
+					this.requestWebsiteContent();
 					break;
 
 				case 'WORDS':
@@ -136,41 +125,18 @@ var Browser = React.createClass({
 			status: navState.title,
 			loading: navState.loading
 		});
-		if (!navState.loading) {
-			this.scheduleParsing();
-		}
 	},
 
-	scheduleParsing: function (fast) {
-		if (this.parseTimeout) {
-			clearTimeout(this.parseTimeout);
-		}
-		console.log('schedule parsing');
-		//return;
-
-		this.parseTimeout = setTimeout(function () {
-			this.parseTimeout = undefined;
-			//this.refs[WEBVIEW_REF].evaluateJavaScript(highlighter, function (err, resp) {
-			//	console.log('highlighter callback', err, resp);
-			//});
-			//this.refs[WEBVIEW_REF].evaluateJavaScript('(function () { return window.yarnHighlighter.toString()}())', function (err, resp) {
-			//	console.log('check highlighter callback', err, resp);
-			//});
-			//this.refs[WEBVIEW_REF].evaluateJavaScript('document.documentElement.outerHTML', function (err, result) {
-			//	if (!result || result.indexOf('body') === -1) {
-			//		return this.scheduleParsing();
-			//	}
-			//	this.parseWebsiteContent(result);
-			//}.bind(this));
-
-			console.log('sending YARN API to webview');
-			this.refs[WEBVIEW_REF].injectBridgeScript();
-			this.refs[WEBVIEW_REF].evalScript(YARN_API);
-			//this.refs[WEBVIEW_REF].send(encodeMessage('GET_HTML'));
-		}.bind(this), fast ? 300 : 700);
+	requestWebsiteContent: function () {
+		this.sendCommand('GET_HTML');
+		this.waitForContentTimeout = setTimeout(function () {
+			console.log('!!!!!! no content, retry');
+			this.requestWebsiteContent();
+		}.bind(this), 5000);
 	},
 
 	parseWebsiteContent: function (html) {
+		//debugger;
 		readability(html, function (err, article, meta) {
 			//console.log('html to parse', html);
 			//console.log('parsed html', article.title, article.content);
@@ -180,7 +146,8 @@ var Browser = React.createClass({
 			var content = (article.content || '').replace(/\s/g, ' ');
 			// if there's no content then wait for it
 			if (!content.length) {
-				return this.scheduleParsing();
+				//return this.scheduleParsing();
+				return this.requestWebsiteContent();
 			}
 			// if there's a content but it's different from previously stored then try again with a shorter timeout
 			// as page might still be loading
@@ -190,6 +157,7 @@ var Browser = React.createClass({
 			//}
 
 			var contentToParse = article.title + ' ' + article.content;
+			console.log('content to parse: ', contentToParse);
 			// we don't want to parse the same content twice
 			if (this.lastParsedContent === contentToParse) {
 				console.log('content was already parsed - terminating');
@@ -217,6 +185,16 @@ var Browser = React.createClass({
 			console.log('parsed words:', words);
 			this.props.onWordsParsed && this.props.onWordsParsed(words);
 		}.bind(this));
+	},
+
+	injectYarnWebsiteApi: function () {
+		try {
+			console.log('sending YARN API to webview');
+			this.refs[WEBVIEW_REF].injectBridgeScript();
+			this.refs[WEBVIEW_REF].evalScript(YARN_API);
+		} catch (ex) {
+			console.log('INJECTION ERROR!');
+		}
 	},
 
 	sendCommand: function (command, data) {

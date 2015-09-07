@@ -22,9 +22,14 @@ var DISABLED_WASH = 'rgba(255,255,255,0.25)';
 
 var WEBVIEW_REF = 'webview';
 var TEXT_INPUT_REF = 'urlInput';
+var WORDS_PARSE_TIMEOUT = 10000;
+
+var uiConfig = require('../../uiconfig');
 
 var Browser = React.createClass({
 	lastUrl: '',
+	lastTitle: '',
+	apiInjectTimeout: 0,
 
 	getInitialState: function () {
 		return {
@@ -135,11 +140,20 @@ var Browser = React.createClass({
 			status: navState.title,
 			loading: navState.loading
 		});
+
 		if (navState.url !== this.lastUrl) {
 			this.lastUrl = navState.url;
 			this.refs[WEBVIEW_REF].resetLastParsedContent();
+			this.scheduleApiInject();
 			this.props.onUrlChange && this.props.onUrlChange(navState);
 		}
+	},
+
+	scheduleApiInject: function () {
+		clearTimeout(this.apiInjectTimeout);
+		this.apiInjectTimeout = setTimeout(function () {
+			this.refs[WEBVIEW_REF].injectYarnWebsiteApi();
+		}.bind(this), 500);
 	},
 
 	onSubmitEditing: function (event) {
@@ -192,7 +206,8 @@ var styles = StyleSheet.create({
 		flexDirection: 'row',
 		padding: 8,
 		borderBottomWidth: 1,
-		borderBottomColor: BORDER
+		borderBottomColor: BORDER,
+		height: uiConfig.BROWSER_BAR_HEIGHT
 	},
 	addressBarTextInput: {
 		backgroundColor: BGWASH,

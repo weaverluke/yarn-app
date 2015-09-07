@@ -1435,7 +1435,7 @@ var HEADER='#F9FAFB';
 var GAME_STATES=gameStateStore.GAME_STATES;
 
 var BROWSER_REF='browser';
-var DEFAULT_URL='http://www.bbc.co.uk/news/education-24433320';
+var DEFAULT_URL='http://www.theguardian.com/';
 
 var yarn=React.createClass({displayName:'yarn', 
 
@@ -1525,7 +1525,7 @@ showWordsCount:false}));},
 
 
 renderInfoBar:function(){
-
+console.log('render info bar, visited words:', gameStateStore.get('visitedPageWords').length);
 return (
 React.createElement(StatusBar, {
 ref:'wordscountbar', 
@@ -1568,11 +1568,11 @@ initialLang:userProfileStore.get('language')}));},
 
 
 onUrlChange:function(){
-actions.emit(actions.RESET);}, 
+actions.emit(actions.RESET);
+this.setState({
+wordsCountVisible:false});
 
-
-
-
+this.refs['mainbar'].animateIn();}, 
 
 
 onBrowserScroll:function(data){
@@ -1599,7 +1599,8 @@ this.refs['wordscountbar'].animateOut();}}},
 
 closeResultView:function(){
 this.setState({
-bottomBar:''});
+bottomBar:'', 
+wordsCountVisible:false});
 
 this.refs['mainbar'].animateIn();}, 
 
@@ -51440,6 +51441,7 @@ loading:navState.loading});
 
 if(navState.url !== this.lastUrl){
 this.lastUrl = navState.url;
+this.refs[WEBVIEW_REF].resetLastParsedContent();
 this.props.onUrlChange && this.props.onUrlChange(navState);}}, 
 
 
@@ -52107,12 +52109,25 @@ return this.scheduleParsing();}
 var contentToParse=article.title + ' ' + article.content;
 
 if(this.lastParsedContent === contentToParse){
+console.log('content was already parsed - terminating');
 return;}
 
 this.lastParsedContent = contentToParse;
 var range=this.props.userRange;
 var level=this.props.userLevel || 50;
 var words=wordHelpers.extractWordsFromArticle(contentToParse, level - range, level + range);
+
+var attempts=0;
+while(words.length < 8 && attempts++ < 5) {
+log({
+message:'Not enough words, extending the range', 
+previousRange:range, 
+wordsForPreviousRange:words, 
+newRange:range + 5});
+
+range += 5;
+words = wordHelpers.extractWordsFromArticle(contentToParse, level - range, level + range);}
+
 
 
 

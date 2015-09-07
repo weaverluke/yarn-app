@@ -51,7 +51,7 @@ var NavBarLabel = React.createClass({
 	renderTextItem: function (cfg, key, useSpecialFont) {
 		var extraStyle = {};
 		if (useSpecialFont) {
-			extraStyle.fontFamily = 'Bauhaus 93';
+			extraStyle.fontFamily = uiConfig.SPECIAL_FONT;
 			extraStyle.fontSize = 24;
 			extraStyle.lineHeight = 25;
 			extraStyle.height = 24;

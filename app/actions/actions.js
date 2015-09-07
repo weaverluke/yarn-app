@@ -31,9 +31,11 @@ bus.on(actions.WORD_PRESSED, onWordPressed);
 bus.on(actions.CHANGE_LANG, onChangeLang);
 bus.on(actions.RESET, onReset);
 bus.on(actions.CHANGE_LEVEL, onChangeLevel);
+bus.on(actions.LOOKING_FOR_WORDS, onLookingForWords);
 
 function onWordsParsed(words) {
 	if (!words.length) {
+		gameStateStore.set('currentState', GAME_STATES.NOT_STARTED);
 		return;
 	}
 
@@ -41,7 +43,7 @@ function onWordsParsed(words) {
 	gameStateStore.reset(true);
 	words = spreadWords(words, userProfileStore.get('wordsLimit'));
 	gameStateStore.set('pageWords', words);
-	gameStateStore.set('currentState', gameStateStore.GAME_STATES.NOT_STARTED);
+	gameStateStore.set('currentState', gameStateStore.GAME_STATES.WORDS_FOUND);
 	gameStateStore.pause(false);
 	log({
 		message: 'words prepared',
@@ -204,6 +206,11 @@ function onChangeLevel(level) {
 function onReset() {
 	console.log('game reset');
 	gameStateStore.reset();
+}
+
+function onLookingForWords() {
+	console.log('-------> ', 'looking for words');
+	gameStateStore.set('currentState', GAME_STATES.LOOKING_FOR_WORDS);
 }
 
 module.exports = bus;

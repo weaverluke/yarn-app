@@ -8,6 +8,9 @@ var Popup = require('./app/views/popup/popup');
 var StatusBar = require('./app/views/statusbar/statusbar');
 var Settings = require('./app/views/settings/settings');
 var MainBar = require('./app/views/mainbar/mainbar');
+var Toast = require('./app/views/toast/toast');
+var ToastContent = require('./app/views/toast/wordscounttoastcontent');
+var SearchingView = require('./app/views/searching/searching');
 
 var gameStateStore = require('./app/stores/gamestatestore');
 var userProfileStore = require('./app/stores/userprofilestore');
@@ -52,7 +55,9 @@ var yarn = React.createClass({
 			initialPopupVisible: false,
 			settingsViewVisible: false,
 			bottomBar: '',
-			wordsCountVisible: false
+			wordsCountVisible: false,
+			toastShown: false,
+			gameState: gameStateStore.GAME_STATES.NOT_STARTED
 		};
 	},
 
@@ -91,6 +96,8 @@ var yarn = React.createClass({
 					arrowRect={this.state.firstButtonRect}
 				/>
 				{this.renderSettings()}
+				{this.renderToast()}
+				{this.renderSearchingState()}
 			</View>
 		);
 	},
@@ -170,12 +177,46 @@ var yarn = React.createClass({
 		);
 	},
 
+	renderToast: function () {
+		if (!this.state.toastShown && this.state.gameState === GAME_STATES.WORDS_FOUND) {
+			var toastContent = <ToastContent newCount={gameStateStore.get('pageWords').length} oldCount={0} />;
+			return (
+				<Toast
+					content={toastContent}
+					onClose={this.hideToast}
+					timeout={2000}
+				/>
+			);
+		}
+		return <View/>;
+	},
+
+	renderSearchingState: function () {
+		if (this.state.gameState === GAME_STATES.LOOKING_FOR_WORDS) {
+			return <SearchingView />;
+		}
+		return <View/>;
+	},
+
+	hideToast: function () {
+		this.setState({
+			toastShown: true
+		});
+	},
+
 	onUrlChange: function () {
 		actions.emit(actions.RESET);
 		this.setState({
-			wordsCountVisible: false
+			wordsCountVisible: false,
+			toastShown: false
 		});
 		this.refs['mainbar'].animateIn();
+
+		setTimeout(function () {
+			actions.emit(actions.LOOKING_FOR_WORDS);
+		}, 400);
+
+		//setTimeout(actions.emit.bind(null, actions.LOOKING_FOR_WORDS), 1000);
 	},
 
 	onBrowserScroll: function (data) {
@@ -235,6 +276,7 @@ var yarn = React.createClass({
 		actions.on(actions.START_GAME, this.hideBottomBar);
 		actions.on(actions.CHANGE_LEVEL, this.onForceChangeLevel);
 		actions.on(actions.SETTINGS_BUTTON_PRESSED, this.showSettings);
+		this.onUrlChange();
 	},
 
 	hideBottomBar: function () {
@@ -251,6 +293,12 @@ var yarn = React.createClass({
 	},
 
 	onGameStateChanged: function () {
+		if (this.state.gameState !== gameStateStore.get('currentState')) {
+			console.log('---------------------------------');
+			console.log('----', gameStateStore.get('currentState'), '----');
+			console.log('---------------------------------');
+		}
+
 		if (gameStateStore.get('finished')) {
 			this.finishGame();
 			return;
@@ -261,11 +309,11 @@ var yarn = React.createClass({
 		var bottomBar = '';
 		var wordStripDisabled = false;
 
-		if (currentGameState === GAME_STATES.NOT_STARTED && gameStateStore.get('pageWords').length) {
+		if (currentGameState === GAME_STATES.WORDS_FOUND && gameStateStore.get('pageWords').length) {
 			bottomBar = 'wordscount';
 		}
 		// no words and not started game - hide all bars
-		else if (currentGameState === GAME_STATES.NOT_STARTED && !gameStateStore.get('pageWords').length) {
+		else if (currentGameState === GAME_STATES.WORDS_FOUND && !gameStateStore.get('pageWords').length) {
 			bottomBar = '';
 		}
 		else if (
@@ -297,6 +345,7 @@ var yarn = React.createClass({
 
 		this.setState({
 			question: gameStateStore.get('currentQuestion'),
+			gameState: currentGameState,
 			wordStripDisabled: wordStripDisabled,
 			bottomBar: bottomBar,
 			popupVisible: popupVisible,
@@ -365,7 +414,8 @@ var yarn = React.createClass({
 	resetGame: function () {
 		this.setState({
 			question: [],
-			bottomBar: ''
+			bottomBar: '',
+			toastShown: false
 		});
 	},
 
