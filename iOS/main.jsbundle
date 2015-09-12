@@ -1395,7 +1395,7 @@ throw new TypeError(
 
 var index=findIndex.call(this, predicate, context);
 return index === -1?undefined:this[index];}});}})();
-__d('yarn/index.ios.js',["Dimensions","NativeModules","react-native/Libraries/react-native/react-native.js","yarn/app/views/wordstrip/wordstrip.js","yarn/app/views/browser/browser.js","yarn/app/views/popup/popup.js","yarn/app/views/statusbar/statusbar.js","yarn/app/views/settings/settings.js","yarn/app/views/mainbar/mainbar.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+__d('yarn/index.ios.js',["Dimensions","NativeModules","react-native/Libraries/react-native/react-native.js","yarn/app/views/wordstrip/wordstrip.js","yarn/app/views/browser/browser.js","yarn/app/views/popup/popup.js","yarn/app/views/statusbar/statusbar.js","yarn/app/views/settings/settings.js","yarn/app/views/mainbar/mainbar.js","yarn/app/views/toast/toast.js","yarn/app/views/toast/wordscounttoastcontent.js","yarn/app/views/searching/searching.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');
 
@@ -1405,6 +1405,9 @@ var Popup=require('yarn/app/views/popup/popup.js');
 var StatusBar=require('yarn/app/views/statusbar/statusbar.js');
 var Settings=require('yarn/app/views/settings/settings.js');
 var MainBar=require('yarn/app/views/mainbar/mainbar.js');
+var Toast=require('yarn/app/views/toast/toast.js');
+var ToastContent=require('yarn/app/views/toast/wordscounttoastcontent.js');
+var SearchingView=require('yarn/app/views/searching/searching.js');
 
 var gameStateStore=require('yarn/app/stores/gamestatestore.js');
 var userProfileStore=require('yarn/app/stores/userprofilestore.js');
@@ -1435,7 +1438,7 @@ var HEADER='#F9FAFB';
 var GAME_STATES=gameStateStore.GAME_STATES;
 
 var BROWSER_REF='browser';
-var DEFAULT_URL='http://www.theguardian.com/';
+var DEFAULT_URL='http://www.theguardian.com/international';
 
 var yarn=React.createClass({displayName:'yarn', 
 
@@ -1449,7 +1452,9 @@ firstButtonRect:{},
 initialPopupVisible:false, 
 settingsViewVisible:false, 
 bottomBar:'', 
-wordsCountVisible:false};}, 
+wordsCountVisible:false, 
+toastShown:false, 
+gameState:gameStateStore.GAME_STATES.NOT_STARTED};}, 
 
 
 
@@ -1487,7 +1492,9 @@ onSubmit:this.closeInitialPopup,
 type:Popup.POPUP_TYPE.INFO, 
 arrowRect:this.state.firstButtonRect}), 
 
-this.renderSettings()));}, 
+this.renderSettings(), 
+this.renderToast(), 
+this.renderSearchingState()));}, 
 
 
 
@@ -1567,12 +1574,46 @@ initialLang:userProfileStore.get('language')}));},
 
 
 
+renderToast:function(){
+if(!this.state.toastShown && this.state.gameState === GAME_STATES.WORDS_FOUND){
+var toastContent=React.createElement(ToastContent, {newCount:gameStateStore.get('pageWords').length, oldCount:0});
+return (
+React.createElement(Toast, {
+content:toastContent, 
+onClose:this.hideToast, 
+timeout:2000}));}
+
+
+
+return React.createElement(View, null);}, 
+
+
+renderSearchingState:function(){
+if(this.state.gameState === GAME_STATES.LOOKING_FOR_WORDS){
+return React.createElement(SearchingView, null);}
+
+return React.createElement(View, null);}, 
+
+
+hideToast:function(){
+this.setState({
+toastShown:true});}, 
+
+
+
 onUrlChange:function(){
 actions.emit(actions.RESET);
 this.setState({
-wordsCountVisible:false});
+wordsCountVisible:false, 
+toastShown:false});
 
-this.refs['mainbar'].animateIn();}, 
+this.refs['mainbar'].animateIn();
+
+setTimeout(function(){
+actions.emit(actions.LOOKING_FOR_WORDS);}, 
+400);}, 
+
+
 
 
 onBrowserScroll:function(data){
@@ -1631,7 +1672,8 @@ gameStateStore.addChangeListener(this.onGameStateChanged);
 userProfileStore.addChangeListener(this.onUserProfileChanged);
 actions.on(actions.START_GAME, this.hideBottomBar);
 actions.on(actions.CHANGE_LEVEL, this.onForceChangeLevel);
-actions.on(actions.SETTINGS_BUTTON_PRESSED, this.showSettings);}, 
+actions.on(actions.SETTINGS_BUTTON_PRESSED, this.showSettings);
+this.onUrlChange();}, 
 
 
 hideBottomBar:function(){
@@ -1648,6 +1690,12 @@ this.showNextQuestion();},
 
 
 onGameStateChanged:function(){
+if(this.state.gameState !== gameStateStore.get('currentState')){
+console.log('---------------------------------');
+console.log('----', gameStateStore.get('currentState'), '----');
+console.log('---------------------------------');}
+
+
 if(gameStateStore.get('finished')){
 this.finishGame();
 return;}
@@ -1658,11 +1706,11 @@ var currentGameState=gameStateStore.get('currentState');
 var bottomBar='';
 var wordStripDisabled=false;
 
-if(currentGameState === GAME_STATES.NOT_STARTED && gameStateStore.get('pageWords').length){
+if(currentGameState === GAME_STATES.WORDS_FOUND && gameStateStore.get('pageWords').length){
 bottomBar = 'wordscount';}else 
 
 
-if(currentGameState === GAME_STATES.NOT_STARTED && !gameStateStore.get('pageWords').length){
+if(currentGameState === GAME_STATES.WORDS_FOUND && !gameStateStore.get('pageWords').length){
 bottomBar = '';}else 
 
 if(
@@ -1694,6 +1742,7 @@ currentGameState === GAME_STATES.WAITING_FOR_ANSWER;
 
 this.setState({
 question:gameStateStore.get('currentQuestion'), 
+gameState:currentGameState, 
 wordStripDisabled:wordStripDisabled, 
 bottomBar:bottomBar, 
 popupVisible:popupVisible, 
@@ -1762,7 +1811,8 @@ this.reloadBrowser();}},
 resetGame:function(){
 this.setState({
 question:[], 
-bottomBar:''});}, 
+bottomBar:'', 
+toastShown:false});}, 
 
 
 
@@ -51058,14 +51108,18 @@ ORANGE:'rgb(247, 148, 30)',
 RED:'rgb(223, 28, 36)'}, 
 
 
+BROWSER_BAR_HEIGHT:40, 
 TOOLBAR_HEIGHT:50, 
+TOAST_HEIGHT:80, 
+TOAST_WIDTH:275, 
 WORDBUTTON_PADDING:14, 
 TOOLBAR_FONT_SIZE:14, 
 TOOLBAR_ICON_SIZE:22, 
 PROGRESSBAR_FONT_SIZE:12, 
 PROGRESSBAR_HEIGHT:2, 
 TOOLBAR_BUTTON_WIDTH:70, 
-TOOLBAR_ANIMATION_OFFSET:15};
+TOOLBAR_ANIMATION_OFFSET:15, 
+SPECIAL_FONT:'Bauhaus 93'};
 });
 __d('yarn/app/views/wordstrip/wordbutton.js',["react-native/Libraries/react-native/react-native.js","yarn/app/uiconfig.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
@@ -51302,7 +51356,7 @@ __d('image!settings-icon',[],function(global, require, requireDynamic, requireLa
 });
 __d('image!next-icon',[],function(global, require, requireDynamic, requireLazy, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/next-icon.imageset/next-icon.png","uri":"next-icon","width":44,"height":44,"deprecated":true};
 });
-__d('yarn/app/views/browser/browser.js',["react-native/Libraries/react-native/react-native.js","yarn/app/stores/gamestatestore.js","yarn/app/views/browser/yarnwebview.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+__d('yarn/app/views/browser/browser.js',["react-native/Libraries/react-native/react-native.js","yarn/app/stores/gamestatestore.js","yarn/app/views/browser/yarnwebview.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js","yarn/app/uiconfig.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -51326,9 +51380,14 @@ var DISABLED_WASH='rgba(255,255,255,0.25)';
 
 var WEBVIEW_REF='webview';
 var TEXT_INPUT_REF='urlInput';
+var WORDS_PARSE_TIMEOUT=10000;
+
+var uiConfig=require('yarn/app/uiconfig.js');
 
 var Browser=React.createClass({displayName:'Browser', 
 lastUrl:'', 
+lastTitle:'', 
+apiInjectTimeout:0, 
 
 getInitialState:function(){
 return {
@@ -51437,13 +51496,23 @@ backButtonEnabled:navState.canGoBack,
 forwardButtonEnabled:navState.canGoForward, 
 url:navState.url, 
 status:navState.title, 
-loading:navState.loading});
+loading:navState.loading, 
+urlInInput:navState.url});
+
 
 if(navState.url !== this.lastUrl){
 this.lastUrl = navState.url;
 this.refs[WEBVIEW_REF].resetLastParsedContent();
+this.scheduleApiInject();
 this.props.onUrlChange && this.props.onUrlChange(navState);}}, 
 
+
+
+scheduleApiInject:function(){
+clearTimeout(this.apiInjectTimeout);
+this.apiInjectTimeout = setTimeout((function(){
+this.refs[WEBVIEW_REF].injectYarnWebsiteApi();}).
+bind(this), 1000);}, 
 
 
 onSubmitEditing:function(event){
@@ -51496,7 +51565,8 @@ addressBarRow:{
 flexDirection:'row', 
 padding:8, 
 borderBottomWidth:1, 
-borderBottomColor:BORDER}, 
+borderBottomColor:BORDER, 
+height:uiConfig.BROWSER_BAR_HEIGHT}, 
 
 addressBarTextInput:{
 backgroundColor:BGWASH, 
@@ -51557,6 +51627,8 @@ var CHANGE_EVENT='store:changed';
 
 var GAME_STATES={
 NOT_STARTED:'NOT_STARTED', 
+LOOKING_FOR_WORDS:'LOOKING_FOR_WORDS', 
+WORDS_FOUND:'WORDS_FOUND', 
 WAITING_FOR_ANSWER:'WAITING_FOR_ANSWER', 
 WRONG_ANSWER_CHOSEN:'WRONG_ANSWER_CHOSEN', 
 CORRECT_ANSWER_CHOSEN:'CORRECT_ANSWER_CHOSEN'};
@@ -51932,8 +52004,6 @@ var wordHelpers=require('yarn/app/views/browser/wordHelpers.js');
 var YARN_API=require('yarn/app/views/browser/websiteapi.js').toString();
 YARN_API = '(' + YARN_API + '())';
 
-
-
 function encodeMessage(name, data){
 return JSON.stringify({
 name:name, 
@@ -51945,14 +52015,8 @@ function decodeMessage(msg){
 return JSON.parse(msg);}
 
 
-var HIGHLIGHT_COLOR='#22FF22';
-
-var BORDER='#E7EAEA';
 var BGWASH='rgba(255,255,255,0.8)';
-var HEADER='#F9FAFB';
-
 var WEBVIEW_REF='webview';
-
 
 
 
@@ -51970,18 +52034,16 @@ var WEBVIEW_REF='webview';
 
 var Browser=React.createClass({displayName:'Browser', 
 lastParsedContent:'', 
+waitForContentTimeout:0, 
 
 getInitialState:function(){
 return {
 status:'No Page Loaded', 
 backButtonEnabled:false, 
 forwardButtonEnabled:false, 
-loading:true};}, 
+loading:true, 
+url:this.props.url};}, 
 
-
-
-handleTextInputChange:function(event){
-this.inputText = event.nativeEvent.text;}, 
 
 
 render:function(){
@@ -51990,7 +52052,7 @@ React.createElement(WebViewBridge, {
 ref:WEBVIEW_REF, 
 automaticallyAdjustContentInsets:false, 
 style:styles.webView, 
-url:this.props.url, 
+url:this.state.url, 
 javaScriptEnabledAndroid:true, 
 onNavigationStateChange:this.onNavigationStateChange, 
 startInLoadingState:true}));}, 
@@ -51999,20 +52061,20 @@ startInLoadingState:true}));},
 
 
 componentDidMount:function(){
-
 this.refs[WEBVIEW_REF].onMessage((function(message){
 var msg=decodeMessage(message);
 
 switch(msg.name){
 case 'WEBSITE_CONTENT':
-console.log('website content received', msg.data.length);
+clearTimeout(this.waitForContentTimeout);
+console.log('website content received', msg.data.length, msg.data.length < 100?msg.data:'');
 log({
 message:'Page content received', 
 url:this.props.url, 
 length:msg.data.length});
 
-if(!msg.data || msg.data.indexOf('body') === -1){
-return this.scheduleParsing();}
+
+
 
 this.parseWebsiteContent(msg.data);
 break;
@@ -52027,7 +52089,7 @@ console.log.apply(console, args);
 break;
 
 case 'WEBSITE_READY':
-this.sendCommand('GET_HTML');
+this.requestWebsiteContent();
 break;
 
 case 'WORDS':
@@ -52051,43 +52113,20 @@ console.log('onNavigationStateChange', navState);
 this.setState({
 url:navState.url, 
 status:navState.title, 
-loading:navState.loading});
-
-if(!navState.loading){
-this.scheduleParsing();}}, 
+loading:navState.loading});}, 
 
 
 
-scheduleParsing:function(fast){
-if(this.parseTimeout){
-clearTimeout(this.parseTimeout);}
-
-console.log('schedule parsing');
-
-
-this.parseTimeout = setTimeout((function(){
-this.parseTimeout = undefined;
-
-
-
-
-
-
-
-
-
-
-
-
-
-console.log('sending YARN API to webview');
-this.refs[WEBVIEW_REF].injectBridgeScript();
-this.refs[WEBVIEW_REF].evalScript(YARN_API);}).
-
-bind(this), fast?300:700);}, 
+requestWebsiteContent:function(shouldInjectYarnApi){
+this.sendCommand('GET_HTML');
+this.waitForContentTimeout = setTimeout((function(){
+console.log('!!!!!! no content, retry');
+this.requestWebsiteContent();}).
+bind(this), 5000);}, 
 
 
 parseWebsiteContent:function(html){
+
 readability(html, (function(err, article, meta){
 
 
@@ -52097,7 +52136,8 @@ throw err;}
 var content=(article.content || '').replace(/\s/g, ' ');
 
 if(!content.length){
-return this.scheduleParsing();}
+
+return this.requestWebsiteContent();}
 
 
 
@@ -52107,6 +52147,7 @@ return this.scheduleParsing();}
 
 
 var contentToParse=article.title + ' ' + article.content;
+console.log('content to parse: ', contentToParse);
 
 if(this.lastParsedContent === contentToParse){
 console.log('content was already parsed - terminating');
@@ -52134,6 +52175,16 @@ words = wordHelpers.extractWordsFromArticle(contentToParse, level - range, level
 console.log('parsed words:', words);
 this.props.onWordsParsed && this.props.onWordsParsed(words);}).
 bind(this));}, 
+
+
+injectYarnWebsiteApi:function(){
+try{
+console.log('sending YARN API to webview');
+this.refs[WEBVIEW_REF].injectBridgeScript();
+this.refs[WEBVIEW_REF].evalScript(YARN_API);}
+catch(ex) {
+console.log('INJECTION ERROR!');}}, 
+
 
 
 sendCommand:function(command, data){
@@ -70397,6 +70448,8 @@ window.yarnHighlight = (function(){
 
 var SKIP_NODES=['SCRIPT', 'NOSCRIPT'];
 
+var styleEl;
+
 var highlightColor='#44FF44';
 var visitedWords=[];
 
@@ -70405,11 +70458,56 @@ highlightColor = color;}
 
 
 function prepareWords(words){
+injectStyles();
 reset();
 words.forEach(prepareWord);
 window.addEventListener('scroll', onPageScroll);
 onPageScroll();
 return visitedWords;}
+
+
+function injectStyles(){
+if(styleEl && styleEl.parentNode){
+styleEl.parentNode.removeChild(styleEl);}
+
+var head=document.head || document.getElementsByTagName('head')[0];
+var commonCss=
+'width: 2px; height: 100%;' + 
+'position: absolute;' + 
+'top: 0;' + 
+'content: "";' + 
+'display: block;' + 
+'background-color:' + highlightColor + 
+'} ';
+
+var css='[data-yarn-highlight] { position: relative; background-color:rgba(0,0,0,0) }' + 
+
+'[data-yarn-highlight].highlighted { ' + 
+'font-style:inherit;font-weight:inherit;' + 
+'background-color:' + highlightColor + '}' + 
+
+'[data-yarn-highlight].highlighted:before {' + 
+'position:absolute; top:0; left:-2px;' + 
+'border-top-left-radius:2px;' + 
+'border-bottom-left-radius:2px;' + 
+commonCss + 
+
+'[data-yarn-highlight].highlighted:after {' + 
+'position:absolute; top:0; right:-2px;' + 
+'border-top-right-radius:2px;' + 
+'border-bottom-right-radius:2px;' + 
+commonCss;
+
+styleEl = document.createElement('style');
+
+styleEl.type = 'text/css';
+if(styleEl.styleSheet){
+styleEl.styleSheet.cssText = css;}else 
+{
+styleEl.appendChild(document.createTextNode(css));}
+
+
+head.appendChild(styleEl);}
 
 
 function prepareWord(word){
@@ -70427,9 +70525,7 @@ continue;}
 if(rx.test(n.nodeValue)){
 var node=n.parentNode;
 node.innerHTML = node.innerHTML.replace(rx, 
-'<mark data-yarn-highlight=\'' + word + 
-'\' style=\'border-radius:3px;background-color:rgba(0,0,0,0);font-style:inherit;font-weight:inherit;\'>' + 
-word + '</mark>');
+'<mark data-yarn-highlight="' + word + '">' + word + '</mark>');
 
 return true;}}
 
@@ -70445,7 +70541,8 @@ if(!word.tagName){
 word = getWordElByWord(word);}
 
 if(word){
-word.style.backgroundColor = highlightColor;
+word.classList.add('highlighted');
+
 word.dataset.yarnHighlighted = 1;}
 
 if(scrollToHighlightedWord){
@@ -70463,7 +70560,8 @@ if(!word.tagName){
 word = getWordElByWord(word);}
 
 if(word){
-word.style.backgroundColor = 'rgba(0,0,0,0)';
+word.classList.remove('highlighted');
+
 delete word.dataset.yarnHighlighted;}}else 
 
 
@@ -70606,14 +70704,22 @@ return;}}
 
 
 
+var lastBodyLength=-1;
 function sendHtml(){
-if(document.readyState === 'complete'){
-log('sending html', document.body.innerHTML.length);
-return send('WEBSITE_CONTENT', document.documentElement.outerHTML);}else 
+var currentBodyLength=document.body.innerHTML.length;
+if(/(interactive|complete)/.test(document.readyState) && document.title && 
+
+currentBodyLength === lastBodyLength && currentBodyLength > 100){
+
+console.log('sending html', document.body.innerHTML.length);
+var start='<html><head><title>' + document.title + '</title></head>';
+
+return send('WEBSITE_CONTENT', start + document.body.outerHTML + '</html>');}else 
 
 {
-log('delay sendHtml');
-setTimeout(sendHtml, 250);}}
+lastBodyLength = currentBodyLength;
+log('delay sendHtml, document readyState: ' + document.readyState + ' body length:' + currentBodyLength);
+setTimeout(sendHtml, 800);}}
 
 
 
@@ -70625,7 +70731,7 @@ return;}
 
 function handler(){
 
-document.removeEventListener('WebViewBridge', handler, false);
+window.removeEventListener('WebViewBridge', handler, false);
 
 cb(window.WebViewBridge);}
 
@@ -70633,7 +70739,7 @@ cb(window.WebViewBridge);}
 
 
 
-document.addEventListener('WebViewBridge', handler, false);}
+window.addEventListener('WebViewBridge', handler, false);}
 
 
 function bindScrollInfo(){
@@ -70649,11 +70755,11 @@ var args=[].slice.call(arguments);
 send('LOG', args);}
 
 
-function wait(){
-
-if(document.readyState == 'complete' && document.body && document.body.innerHTML.length > 100){
+function run(){
+console.log('run()');
 WebViewBridgeReady(function(WebViewBridge){
 
+console.log('bridge ready');
 yarnBridge = WebViewBridge;
 WebViewBridge.onMessage = function(msg){
 var message=decodeMessage(msg);
@@ -70664,14 +70770,22 @@ while(msg = queue.shift()) {
 send.apply(null, msg);}
 
 bindScrollInfo();
-send('WEBSITE_READY');});}else 
+console.log('WEBSITE_READY');
+send('WEBSITE_READY');});}
 
+
+
+console.log('start! ', location.href, document.readyState, document.documentElement.outerHTML.length);
+
+if(/(interactive|complete)/.test(document.readyState)){
+console.log('dom content already loaded');
+run();}else 
 
 {
-setTimeout(wait, 13);}}
-
-
-wait();};
+console.log('wait for dom content to be loaded');
+document.addEventListener('DOMContentLoaded', function(){
+console.log('DOMContentLoaded!', document.documentElement.outerHTML.length);
+run();});}};
 });
 __d('yarn/app/actions/actions.js',["events/events.js","yarn/app/actions/actiontypes.js","yarn/app/helpers/getrandomwords.js","yarn/app/helpers/googletranslate.js","yarn/app/helpers/collins.js","yarn/app/logger/logger.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/words.js","react-native/Libraries/react-native/react-native.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  var Events=require('events/events.js');
 var bus=new Events.EventEmitter();
@@ -70706,9 +70820,12 @@ bus.on(actions.WORD_PRESSED, onWordPressed);
 bus.on(actions.CHANGE_LANG, onChangeLang);
 bus.on(actions.RESET, onReset);
 bus.on(actions.CHANGE_LEVEL, onChangeLevel);
+bus.on(actions.LOOKING_FOR_WORDS, onLookingForWords);
+bus.on(actions.HOME_BUTTON_PRESSED, onHomePressed);
 
 function onWordsParsed(words){
 if(!words.length){
+gameStateStore.set('currentState', GAME_STATES.NOT_STARTED);
 return;}
 
 
@@ -70716,7 +70833,7 @@ gameStateStore.pause(true);
 gameStateStore.reset(true);
 words = spreadWords(words, userProfileStore.get('wordsLimit'));
 gameStateStore.set('pageWords', words);
-gameStateStore.set('currentState', gameStateStore.GAME_STATES.NOT_STARTED);
+gameStateStore.set('currentState', gameStateStore.GAME_STATES.WORDS_FOUND);
 gameStateStore.pause(false);
 log({
 message:'words prepared', 
@@ -70881,6 +70998,15 @@ console.log('game reset');
 gameStateStore.reset();}
 
 
+function onLookingForWords(){
+console.log('-------> ', 'looking for words');
+gameStateStore.set('currentState', GAME_STATES.LOOKING_FOR_WORDS);}
+
+
+function onHomePressed(){
+onReset();}
+
+
 module.exports = bus;
 });
 __d('yarn/app/actions/actiontypes.js',[],function(global, require, requireDynamic, requireLazy, module, exports) {  module.exports = {
@@ -70896,7 +71022,9 @@ CHANGE_LEVEL:'CHANGE_LEVEL',
 
 HOME_BUTTON_PRESSED:'HOME_BUTTON_PRESSED', 
 QUIZ_BUTTON_PRESSED:'QUIZ_BUTTON_PRESSED', 
-SETTINGS_BUTTON_PRESSED:'SETTINGS_BUTTON_PRESSED'};
+SETTINGS_BUTTON_PRESSED:'SETTINGS_BUTTON_PRESSED', 
+
+LOOKING_FOR_WORDS:'LOOKING_FOR_WORDS'};
 });
 __d('yarn/app/helpers/getrandomwords.js',["yarn/words.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  var words=Object.keys(require('yarn/words.js'));
 
@@ -71756,7 +71884,7 @@ texts))));},
 renderTextItem:function(cfg, key, useSpecialFont){
 var extraStyle={};
 if(useSpecialFont){
-extraStyle.fontFamily = 'Bauhaus 93';
+extraStyle.fontFamily = uiConfig.SPECIAL_FONT;
 extraStyle.fontSize = 24;
 extraStyle.lineHeight = 25;
 extraStyle.height = 24;}
@@ -72464,6 +72592,396 @@ module.exports = MainBar;
 __d('image!home-icon',[],function(global, require, requireDynamic, requireLazy, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/home-icon.imageset/home-icon.png","uri":"home-icon","width":44,"height":44,"deprecated":true};
 });
 __d('image!yarn-icon',[],function(global, require, requireDynamic, requireLazy, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/yarn-icon.imageset/yarn-icon.png","uri":"yarn-icon","width":50,"height":50,"deprecated":true};
+});
+__d('yarn/app/views/toast/toast.js',["Dimensions","react-native/Libraries/react-native/react-native.js","yarn/app/uiconfig.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+
+var React=require('react-native/Libraries/react-native/react-native.js');var 
+
+StyleSheet=
+
+
+
+
+
+React.StyleSheet;var View=React.View;var Text=React.Text;var TouchableWithoutFeedback=React.TouchableWithoutFeedback;var Image=React.Image;var Animated=React.Animated;
+
+var ANIMATION_TIME=400;
+
+var Dimensions=require('Dimensions');var _Dimensions$get=
+Dimensions.get('window');var width=_Dimensions$get.width;var height=_Dimensions$get.height;
+var uiConfig=require('yarn/app/uiconfig.js');
+
+var Toast=React.createClass({displayName:'Toast', 
+
+hideTimeout:0, 
+
+getDefaultProps:function(){
+return {
+content:'', 
+width:uiConfig.TOAST_WIDTH, 
+height:uiConfig.TOAST_HEIGHT, 
+onClose:function(){}};}, 
+
+
+
+getInitialState:function(){
+return {
+opacityValue:new Animated.Value(0), 
+marginTopValue:new Animated.Value(30)};}, 
+
+
+
+render:function(){
+var sizeStyle={
+width:this.props.width, 
+height:this.props.height, 
+borderRadius:this.props.height / 2};
+
+var animationStyle={
+transform:[
+{translateY:this.state.marginTopValue}], 
+
+opacity:this.state.opacityValue};
+
+
+return (
+React.createElement(TouchableWithoutFeedback, {onPress:this.hide}, 
+React.createElement(View, {style:styles.wrap}, 
+React.createElement(View, {style:styles.center}, 
+React.createElement(Animated.View, {style:[styles.shadowWrap, sizeStyle, animationStyle]}, 
+React.createElement(View, {style:[styles.toast, sizeStyle]}, 
+this.props.content))))));}, 
+
+
+
+
+
+
+
+
+componentDidMount:function(){
+this.animateIn();}, 
+
+
+animateIn:function(){
+Animated.parallel([
+Animated.timing(
+this.state.opacityValue, 
+{toValue:1, duration:ANIMATION_TIME}), 
+
+Animated.timing(
+this.state.marginTopValue, 
+{toValue:0, duration:ANIMATION_TIME})]).
+
+start();
+
+if(this.props.timeout){
+this.hideTimeout = setTimeout(this.hide, this.props.timeout);}}, 
+
+
+
+animateOut:function(){
+Animated.parallel([
+Animated.timing(
+this.state.opacityValue, 
+{toValue:0, duration:ANIMATION_TIME}), 
+
+Animated.timing(
+this.state.marginTopValue, 
+{toValue:30, duration:ANIMATION_TIME})]).
+
+start(this.props.onClose);}, 
+
+
+hide:function(){
+clearTimeout(this.hideTimeout);
+this.animateOut();}});
+
+
+
+
+var styles=StyleSheet.create({
+wrap:{
+position:'absolute', 
+top:0, 
+left:0, 
+bottom:0, 
+right:0, 
+alignItems:'center', 
+flex:1, 
+backgroundColor:'transparent'}, 
+
+
+
+center:{
+flexDirection:'row', 
+alignItems:'center', 
+flex:1, 
+backgroundColor:'transparent'}, 
+
+
+toast:{
+backgroundColor:'#FFF', 
+borderColor:uiConfig.COLORS.MID_GREY, 
+borderRadius:100, 
+borderWidth:1, 
+overflow:'hidden'}, 
+
+
+shadowWrap:{
+borderColor:uiConfig.COLORS.MID_GREY, 
+borderRadius:100, 
+shadowColor:'#000', 
+shadowOffset:{
+width:0, 
+height:2}, 
+
+shadowOpacity:0.7, 
+shadowRadius:3}});
+
+
+
+
+module.exports = Toast;
+});
+__d('yarn/app/views/toast/wordscounttoastcontent.js',["react-native/Libraries/react-native/react-native.js","yarn/app/uiconfig.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+
+var React=require('react-native/Libraries/react-native/react-native.js');var 
+
+StyleSheet=
+
+
+React.StyleSheet;var View=React.View;var Text=React.Text;
+
+var uiConfig=require('yarn/app/uiconfig.js');
+
+var ToastContent=React.createClass({displayName:'ToastContent', 
+
+getDefaultProps:function(){
+return {
+newCount:0, 
+oldCount:0};}, 
+
+
+
+render:function(){
+return (
+React.createElement(View, {style:styles.wrap}, 
+React.createElement(View, {style:styles.leftCell}, 
+React.createElement(View, {style:styles.vCenter}, 
+React.createElement(Text, {style:styles.leftNumber}, this.props.oldCount), 
+React.createElement(Text, {style:styles.mainText}, 're-test'))), 
+
+
+React.createElement(View, {style:styles.rightCell}, 
+React.createElement(View, {style:styles.vCenter}, 
+React.createElement(Text, {style:styles.rightNumber}, this.props.newCount), 
+React.createElement(Text, {style:styles.mainText}, 'new'))), 
+
+
+React.createElement(View, {style:styles.label}, 
+React.createElement(View, {style:styles.labelBg}, 
+React.createElement(Text, {style:styles.labelText}, 'WORDS FOR YOU')))));}});
+
+
+
+
+
+
+
+var styles=StyleSheet.create({
+wrap:{
+flex:1, 
+flexDirection:'row', 
+alignItems:'stretch', 
+justifyContent:'space-around'}, 
+
+
+label:{
+position:'absolute', 
+top:5, 
+left:0, 
+right:0, 
+height:10, 
+flex:0, 
+alignItems:'center'}, 
+
+
+labelBg:{
+backgroundColor:uiConfig.COLORS.LIGHT_GREY, 
+borderRadius:8, 
+paddingLeft:10, 
+paddingRight:10}, 
+
+
+labelText:{
+color:uiConfig.COLORS.TEXT, 
+fontSize:12}, 
+
+
+leftCell:{
+borderRightWidth:1, 
+borderRightColor:uiConfig.COLORS.MID_GREY, 
+alignItems:'center', 
+flex:1, 
+paddingTop:30, 
+paddingLeft:5}, 
+
+
+rightCell:{
+alignItems:'center', 
+flex:1, 
+paddingTop:30, 
+paddingRight:5}, 
+
+
+vCenter:{
+flexDirection:'row', 
+flex:1, 
+alignItems:'center'}, 
+
+
+mainText:{
+fontSize:26, 
+fontFamily:uiConfig.SPECIAL_FONT, 
+color:uiConfig.COLORS.MID_GREY, 
+marginLeft:5}, 
+
+
+leftNumber:{
+fontSize:36, 
+fontFamily:uiConfig.SPECIAL_FONT, 
+color:uiConfig.COLORS.ORANGE}, 
+
+
+rightNumber:{
+fontSize:36, 
+fontFamily:uiConfig.SPECIAL_FONT, 
+color:uiConfig.COLORS.RED}});
+
+
+
+
+
+module.exports = ToastContent;
+});
+__d('yarn/app/views/searching/searching.js',["react-native/Libraries/react-native/react-native.js","yarn/app/uiconfig.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+
+var React=require('react-native/Libraries/react-native/react-native.js');var 
+
+StyleSheet=
+
+
+React.StyleSheet;var View=React.View;var Animated=React.Animated;
+
+var BAR_WIDTH=18;
+var ANIMATION_TIME=600;
+
+var colors=[
+'rgba(39, 170, 225, 0.3)', 
+'rgba(247, 148, 30, 0.3)', 
+'rgba(65, 172, 96, 0.3)', 
+'rgba(223, 28, 36, 0.3)', 
+'rgba(247, 187, 40, 0.3)', 
+'rgba(39, 170, 225, 0.3)', 
+'rgba(247, 148, 30, 0.3)'];
+
+
+var uiConfig=require('yarn/app/uiconfig.js');
+
+var Toast=React.createClass({displayName:'Toast', 
+
+getInitialState:function(){
+return {
+leftValue:new Animated.Value(-BAR_WIDTH), 
+colorIndex:0};}, 
+
+
+
+render:function(){
+var animationStyle={
+transform:[
+{translateX:this.state.leftValue}], 
+
+backgroundColor:colors[this.state.colorIndex]};
+
+
+return (
+React.createElement(View, {ref:'wrap', pointerEvents:'none', style:styles.wrap}, 
+React.createElement(Animated.View, {pointerEvents:'none', style:[styles.scan, animationStyle]})));}, 
+
+
+
+
+componentDidMount:function(){
+setTimeout(this.animateToRight, 500);}, 
+
+
+animateToRight:function(){
+if(!this.isMounted()){
+return;}
+
+
+this.nextColor();
+
+
+
+if(!this.refs.wrap){
+return setTimeout(this.animateToRight, 500);}
+
+
+this.refs.wrap.measure((function(ox, oy, width, height, px, py){
+Animated.timing(
+this.state.leftValue, 
+{toValue:width, duration:ANIMATION_TIME}).
+start(this.animateToLeft);}).
+bind(this));}, 
+
+
+animateToLeft:function(){
+if(!this.isMounted()){
+return;}
+
+
+this.nextColor();
+
+Animated.timing(
+this.state.leftValue, 
+{toValue:-BAR_WIDTH, duration:ANIMATION_TIME}).
+start(this.animateToRight);}, 
+
+
+nextColor:function(){
+this.setState({
+colorIndex:this.state.colorIndex === colors.length - 1?0:this.state.colorIndex + 1});}});
+
+
+
+
+
+var styles=StyleSheet.create({
+wrap:{
+position:'absolute', 
+top:uiConfig.BROWSER_BAR_HEIGHT, 
+left:0, 
+right:0, 
+bottom:uiConfig.TOOLBAR_HEIGHT, 
+alignItems:'center', 
+flex:1, 
+backgroundColor:'transparent'}, 
+
+
+scan:{
+position:'absolute', 
+left:0, 
+top:0, 
+bottom:0, 
+width:BAR_WIDTH}});
+
+
+
+
+module.exports = Toast;
 });
 ;require("yarn/index.ios.js");
 //@ sourceMappingURL=/index.ios.map

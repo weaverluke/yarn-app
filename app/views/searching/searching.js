@@ -40,8 +40,8 @@ var Toast = React.createClass({
 		};
 
 		return (
-			<View ref='wrap' style={styles.wrap}>
-				<Animated.View style={[styles.scan, animationStyle]}></Animated.View>
+			<View ref='wrap' pointerEvents='none' style={styles.wrap}>
+				<Animated.View pointerEvents='none' style={[styles.scan, animationStyle]}></Animated.View>
 			</View>
 		);
 	},

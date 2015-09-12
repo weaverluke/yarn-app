@@ -138,7 +138,8 @@ var Browser = React.createClass({
 			forwardButtonEnabled: navState.canGoForward,
 			url: navState.url,
 			status: navState.title,
-			loading: navState.loading
+			loading: navState.loading,
+			urlInInput: navState.url
 		});
 
 		if (navState.url !== this.lastUrl) {
@@ -153,7 +154,7 @@ var Browser = React.createClass({
 		clearTimeout(this.apiInjectTimeout);
 		this.apiInjectTimeout = setTimeout(function () {
 			this.refs[WEBVIEW_REF].injectYarnWebsiteApi();
-		}.bind(this), 500);
+		}.bind(this), 1000);
 	},
 
 	onSubmitEditing: function (event) {

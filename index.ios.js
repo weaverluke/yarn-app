@@ -41,7 +41,7 @@ var HEADER = '#F9FAFB';
 var GAME_STATES = gameStateStore.GAME_STATES;
 
 var BROWSER_REF = 'browser';
-var DEFAULT_URL = 'http://www.theguardian.com/';
+var DEFAULT_URL = 'http://www.theguardian.com/international';
 
 var yarn = React.createClass({
 

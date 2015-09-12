@@ -33,7 +33,7 @@ module.exports = function () {
 			}
 			var head = document.head || document.getElementsByTagName('head')[0];
 			var commonCss =
-				'width: 3px; height: 100%;' +
+				'width: 2px; height: 100%;' +
 				'position: absolute;' +
 				'top: 0;' +
 				'content: "";' +
@@ -48,15 +48,15 @@ module.exports = function () {
 				'background-color:' + highlightColor + '}' +
 
 				'[data-yarn-highlight].highlighted:before {' +
-				'position:absolute; top:0; left:-3px;' +
-				'border-top-left-radius:3px;' +
-				'border-bottom-left-radius:3px;' +
+				'position:absolute; top:0; left:-2px;' +
+				'border-top-left-radius:2px;' +
+				'border-bottom-left-radius:2px;' +
 				commonCss +
 
 				'[data-yarn-highlight].highlighted:after {' +
-				'position:absolute; top:0; right:-3px;' +
-				'border-top-right-radius:3px;' +
-				'border-bottom-right-radius:3px;' +
+				'position:absolute; top:0; right:-2px;' +
+				'border-top-right-radius:2px;' +
+				'border-bottom-right-radius:2px;' +
 				commonCss;
 
 			styleEl = document.createElement('style');
@@ -268,9 +268,9 @@ module.exports = function () {
 	var lastBodyLength = -1;
 	function sendHtml() {
 		var currentBodyLength = document.body.innerHTML.length;
-		if (document.readyState === 'complete' || document.readyState === 'interactive' &&
+		if (/(interactive|complete)/.test(document.readyState) && document.title &&
 				// wait for body to stop changing
-			currentBodyLength === lastBodyLength) {
+			currentBodyLength === lastBodyLength && currentBodyLength > 100) {
 
 			console.log('sending html', document.body.innerHTML.length);
 			var start = '<html><head><title>' + document.title + '</title></head>';
@@ -292,7 +292,7 @@ module.exports = function () {
 
 		function handler() {
 			//remove the handler from listener since we don't need it anymore
-			document.removeEventListener('WebViewBridge', handler, false);
+			window.removeEventListener('WebViewBridge', handler, false);
 			//pass the WebViewBridge object to the callback
 			cb(window.WebViewBridge);
 		}
@@ -300,7 +300,7 @@ module.exports = function () {
 		//if WebViewBridge doesn't exist in global scope attach itself to document
 		//event system. Once the code is being injected by extension, the handler will
 		//be called.
-		document.addEventListener('WebViewBridge', handler, false);
+		window.addEventListener('WebViewBridge', handler, false);
 	}
 
 	function bindScrollInfo() {
@@ -318,7 +318,6 @@ module.exports = function () {
 
 	function run() {
 		console.log('run()');
-		window.yarnInitialized = true;
 		WebViewBridgeReady(function (WebViewBridge) {
 
 			console.log('bridge ready');

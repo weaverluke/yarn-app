@@ -52,7 +52,8 @@ var Browser = React.createClass({
 			status: 'No Page Loaded',
 			backButtonEnabled: false,
 			forwardButtonEnabled: false,
-			loading: true
+			loading: true,
+			url: this.props.url
 		}
 	},
 
@@ -62,7 +63,7 @@ var Browser = React.createClass({
 				ref={WEBVIEW_REF}
 				automaticallyAdjustContentInsets={false}
 				style={styles.webView}
-				url={this.props.url}
+				url={this.state.url}
 				javaScriptEnabledAndroid={true}
 				onNavigationStateChange={this.onNavigationStateChange}
 				startInLoadingState={true}
@@ -77,7 +78,7 @@ var Browser = React.createClass({
 			switch (msg.name) {
 				case 'WEBSITE_CONTENT':
 					clearTimeout(this.waitForContentTimeout);
-					console.log('website content received', msg.data.length);
+					console.log('website content received', msg.data.length, msg.data.length < 100 ? msg.data : '');
 					log({
 						message: 'Page content received',
 						url: this.props.url,
@@ -127,7 +128,7 @@ var Browser = React.createClass({
 		});
 	},
 
-	requestWebsiteContent: function () {
+	requestWebsiteContent: function (shouldInjectYarnApi) {
 		this.sendCommand('GET_HTML');
 		this.waitForContentTimeout = setTimeout(function () {
 			console.log('!!!!!! no content, retry');

@@ -32,6 +32,7 @@ bus.on(actions.CHANGE_LANG, onChangeLang);
 bus.on(actions.RESET, onReset);
 bus.on(actions.CHANGE_LEVEL, onChangeLevel);
 bus.on(actions.LOOKING_FOR_WORDS, onLookingForWords);
+bus.on(actions.HOME_BUTTON_PRESSED, onHomePressed);
 
 function onWordsParsed(words) {
 	if (!words.length) {
@@ -211,6 +212,10 @@ function onReset() {
 function onLookingForWords() {
 	console.log('-------> ', 'looking for words');
 	gameStateStore.set('currentState', GAME_STATES.LOOKING_FOR_WORDS);
+}
+
+function onHomePressed() {
+	onReset();
 }
 
 module.exports = bus;
