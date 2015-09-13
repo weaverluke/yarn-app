@@ -12,6 +12,9 @@ var Toast = require('./app/views/toast/toast');
 var ToastContent = require('./app/views/toast/wordscounttoastcontent');
 var SearchingView = require('./app/views/searching/searching');
 
+var QuizStatusBar = require('./app/views/quiz/quizstatusbar');
+var QuestionView = require('./app/views/quiz/question');
+
 var gameStateStore = require('./app/stores/gamestatestore');
 var userProfileStore = require('./app/stores/userprofilestore');
 var actions = require('./app/actions/actions');
@@ -96,6 +99,7 @@ var yarn = React.createClass({
 					arrowRect={this.state.firstButtonRect}
 				/>
 				{this.renderSettings()}
+				{this.renderQuizStatusBar()}
 				{this.renderToast()}
 				{this.renderSearchingState()}
 			</View>
@@ -104,6 +108,24 @@ var yarn = React.createClass({
 
 	onShowDictionary: function () {
 		DictionaryProxy.showDefinition(gameStateStore.get('currentWord').text);
+	},
+
+	renderQuizStatusBar: function () {
+		if (this.state.bottomBar !== 'wordstrip') {
+			return <View />;
+		}
+
+		return (
+			<QuizStatusBar
+				currentIndex={gameStateStore.get('currentWordIndex')+1}
+				total={gameStateStore.get('pageWords').length}
+				onCancelClick={this.stopQuiz}
+			/>
+		);
+	},
+
+	stopQuiz: function () {
+		// todo
 	},
 
 	renderBottomBar: function () {
@@ -150,13 +172,22 @@ var yarn = React.createClass({
 
 	renderWordStrip: function () {
 		return (
-			<WordStrip
+			<QuestionView
 				ref='wordstrip'
 				disabled={this.state.wordStripDisabled}
 				onAction={this.onWordPressed}
+				onNextPress={this.showNextQuestion}
 				words={this.state.question}
 			/>
 		);
+		//return (
+		//	<WordStrip
+		//		ref='wordstrip'
+		//		disabled={this.state.wordStripDisabled}
+		//		onAction={this.onWordPressed}
+		//		words={this.state.question}
+		//	/>
+		//);
 	},
 
 	renderMainBar: function () {
@@ -327,8 +358,9 @@ var yarn = React.createClass({
 			wordStripDisabled = currentGameState !== GAME_STATES.WAITING_FOR_ANSWER;
 		}
 
-		var popupVisible = currentGameState === GAME_STATES.CORRECT_ANSWER_CHOSEN ||
-				currentGameState === GAME_STATES.WRONG_ANSWER_CHOSEN;
+		//var popupVisible = currentGameState === GAME_STATES.CORRECT_ANSWER_CHOSEN ||
+		//		currentGameState === GAME_STATES.WRONG_ANSWER_CHOSEN;
+		var popupVisible = false;
 
 		var popupTitle = popupVisible ?
 			(currentGameState == GAME_STATES.CORRECT_ANSWER_CHOSEN ? 'That\'s right!' : 'Oops...') : '';
@@ -340,8 +372,9 @@ var yarn = React.createClass({
 			}
 		});
 
-		var initialPopupVisible = this.state.wordstripVisible && gameStateStore.get('currentWordIndex') === 0 &&
-				currentGameState === GAME_STATES.WAITING_FOR_ANSWER;
+		//var initialPopupVisible = this.state.wordstripVisible && gameStateStore.get('currentWordIndex') === 0 &&
+		//		currentGameState === GAME_STATES.WAITING_FOR_ANSWER;
+		var initialPopupVisible = false;
 
 		this.setState({
 			question: gameStateStore.get('currentQuestion'),
@@ -384,16 +417,16 @@ var yarn = React.createClass({
 		});
 	},
 
-	onWordPressed: function (rect, word, index) {
+	onWordPressed: function (word, index) {
 		// first word pressed - just scroll to it
 		if (index === 0) {
 			this.refs[BROWSER_REF].scrollToWord(word);
 			return;
 		}
 
-		this.setState({
-			buttonRect: rect
-		});
+		//this.setState({
+		//	buttonRect: rect
+		//});
 		actions.emit(actions.WORD_PRESSED, word);
 	},
 
