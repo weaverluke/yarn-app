@@ -23,6 +23,8 @@ Object.keys(actions).forEach(function (action) {
 	bus[action] = actions[action];
 });
 
+var preloadedWords = {};
+
 bus.on(actions.WORDS_PARSED, onWordsParsed);
 bus.on(actions.VISITED_WORDS_CHANGED, onVisitedWordsChanged);
 bus.on(actions.START_GAME, onStartGame);
@@ -69,6 +71,7 @@ function spreadWords(words, limit) {
 
 function onVisitedWordsChanged(words) {
 	gameStateStore.set('visitedPageWords', words);
+	preloadWords();
 }
 
 function onStartGame() {
@@ -82,6 +85,44 @@ function onStartGame() {
 	});
 }
 
+function preloadWords() {
+	var visited = gameStateStore.get('visitedPageWords');
+	for (var i = 0; i < visited.length; i++) {
+		if (!preloadedWords[visited[i]])	{
+			preloadedWords[visited[i]] = preloadWord(visited[i]);
+		}
+	}
+}
+
+function preloadWord(pageWord) {
+	var wordsToTranslate = getRandomWords(gameStateStore.get('randomWordsCount'));
+	wordsToTranslate.unshift(pageWord);
+
+	var promise = new Promise(function (resolve, reject) {
+
+		googleTranslate.translateWords(wordsToTranslate, 'en', userProfileStore.get('language'))
+			.then(function (translatedWords) {
+				//console.log('translated words', translatedWords);
+				var question = translatedWords.data.translations.map(function (translatedWord, index) {
+					return {
+						text: wordsToTranslate[index],
+						definition: translatedWord.translatedText
+					};
+				});
+
+				question[0].target = true;
+				resolve(question);
+			})
+			.catch(function (ex) {
+				// show error screen
+				console.error('Can not translate words:', ex);
+				reject();
+			});
+	});
+
+	return promise;
+}
+
 function onShowNextQuestion() {
 	var currentWordIndex = gameStateStore.get('currentWordIndex') + 1;
 
@@ -91,48 +132,8 @@ function onShowNextQuestion() {
 	}
 
 	var currentWord = gameStateStore.get('pageWords')[currentWordIndex];
-	var wordsToTranslate = getRandomWords(gameStateStore.get('randomWordsCount'));
-	wordsToTranslate.unshift(currentWord);
-
-	var definition;
-	var question;
-
-	Promise.all([
-		collins.getDefinition(currentWord)
-			.then(function (resp) {
-				//console.log('COLLINS:', resp);
-				definition = {
-					entryLabel: resp.entryLabel,
-					entryContent: resp.entryContent
-				}
-			})
-			.catch(function (ex) {
-				// show error screen
-				console.error('Can not translate words:', ex);
-			}),
-
-		googleTranslate.translateWords(wordsToTranslate, 'en', userProfileStore.get('language'))
-			.then(function (translatedWords) {
-				//console.log('translated words', translatedWords);
-				question = translatedWords.data.translations.map(function (translatedWord, index) {
-					return {
-						text: wordsToTranslate[index],
-						definition: translatedWord.translatedText
-					};
-				});
-
-				question[0].target = true;
-			})
-			.catch(function (ex) {
-				// show error screen
-				console.error('Can not translate words:', ex);
-			})
-
-	]).then(function () {
-		//console.log('WORDS READY!');
-
+	preloadedWords[currentWord].then(function (question) {
 		gameStateStore.pause(true);
-		question[0].def = definition;
 		gameStateStore.set('currentWord', question[0]);
 
 		// shuffle words
@@ -206,6 +207,7 @@ function onChangeLevel(level) {
 
 function onReset() {
 	console.log('game reset');
+	preloadedWords = {};
 	gameStateStore.reset();
 }
 
