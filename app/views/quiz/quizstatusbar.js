@@ -117,7 +117,7 @@ var styles = StyleSheet.create({
 		paddingLeft: 5,
 		paddingRight: 10,
 		flex: 1,
-		justifyContent: 'center',
+		justifyContent: 'flex-start',
 		flexDirection: 'row',
 		alignItems: 'center'
 	},
