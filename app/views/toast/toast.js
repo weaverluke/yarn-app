@@ -90,10 +90,6 @@ var Toast = React.createClass({
 			Animated.timing(
 				this.state.opacityValue,
 				{ toValue: 0, duration: ANIMATION_TIME }
-			),
-			Animated.timing(
-				this.state.marginTopValue,
-				{ toValue: 30, duration: ANIMATION_TIME }
 			)
 		]).start(this.props.onClose);
 	},
