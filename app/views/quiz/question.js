@@ -13,12 +13,6 @@ var WordButton = require('./wordbutton');
 var BUTTON_TYPES = WordButton.BUTTON_TYPES;
 
 var Question = React.createClass({
-	getInitialState: function () {
-		return {
-			//height: uiConfig.TOOLBAR_HEIGHT,
-			//scrollToStart: true
-		};
-	},
 
 	componentWillReceiveProps: function (newProps) {
 		var wordsWillChange = newProps.words && newProps.words[0] &&
@@ -70,23 +64,12 @@ var Question = React.createClass({
 					showDictIcon={this.props.disabled}
 					onAction={this.props.type !== BUTTON_TYPES.QUESTION ? this.props.onAction : function () {}}
 					onNextPress={this.props.onNextPress}
+					onDictIconPressed={this.onDictIconPressed}
 					text={i === 0 ? word.text : word.definition}
 					type={type}
 				/>
 			);
 
-			//return (
-			//	<WordButton
-			//		index={i}
-			//		key={'word-' + i}
-			//		height={this.state.height}
-			//		arrow={i === 1}
-			//		ref={'button-' + i}
-			//		onAction={this.props.type !== BUTTON_TYPES.QUESTION ? this.props.onAction : function () {}}
-			//		text={i === 0 ? word.text : word.definition}
-			//		type={type}
-			//	/>
-			//);
 		}.bind(this));
 
 		return (
@@ -95,29 +78,10 @@ var Question = React.createClass({
 			</Animated.View>
 		);
 
-		// because react-native doesn't provide ScrollView.scrollTo() yet we use small trick here
-		// contentOffset sets initial offset of scroll, so we change that between 0 and 0.1 (scroll of 0.1 is not
-		// visible for user) when scroll to start is required. We can't keep it at 0 because react renders that value
-		// only when it's changed (if not changed then virtual DOM is not changed so real DOM is not updated)
-		//var contentOffset = {x: lastScrollLeft, y: 0};
-		//if (this.state.scrollToStart) {
-		//	lastScrollLeft = lastScrollLeft ? 0 : 0.1;
-		//	contentOffset.x = lastScrollLeft
-		//}
-		//
-		//return (
-		//	<View style={styles.toolbar}>
-		//		<ScrollView
-		//			horizontal={true}
-		//			showsHorizontalScrollIndicator={false}
-		//			contentOffset={contentOffset}
-		//		>
-		//			<View style={styles.words}>
-		//				{words}
-		//			</View>
-		//		</ScrollView>
-		//	</View>
-		//);
+	},
+
+	onDictIconPressed: function (text) {
+		this.props.onShowDictionary(text);
 	},
 
 	prepareWords: function () {

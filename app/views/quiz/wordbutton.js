@@ -6,6 +6,7 @@ var {
 	StyleSheet,
 	Text,
 	View,
+	Image,
 	PropTypes
 } = React;
 
@@ -38,7 +39,10 @@ var WordButton = React.createClass({
 		return (
 			<View style={[styles.wrap, additionalStyle]}>
 				{this.renderDictIcon()}
-				{this.renderButtonContent()}
+				<TouchableWithoutFeedback onPress={this.onButtonPressed}>
+					{this.renderButtonContent()}
+				</TouchableWithoutFeedback>
+				{this.renderInfoText()}
 			</View>
 		);
 	},
@@ -50,52 +54,38 @@ var WordButton = React.createClass({
 
 	renderDictIcon: function () {
 		if (!this.props.showDictIcon) {
-			return;
+			return (<View style={styles.leftSpace}></View>);
 		}
 
 		return (
 			<TouchableWithoutFeedback onPress={this.onDictIconPressed}>
 				<View style={styles.dictIconWrap}>
+					<View style={styles.vCenter}>
+						<Image source={require('image!magnifier')} style={styles.dictIcon}/>
+					</View>
 				</View>
 			</TouchableWithoutFeedback>
 		);
 	},
 
-	renderButtonContent: function () {
-		var buttonContent;
-		switch (this.props.type) {
-			case BUTTON_TYPES.QUESTION:
-				buttonContent = this.renderQuestionButton();
-				break;
+	renderInfoText: function () {
+		if (this.props.type === BUTTON_TYPES.CORRECT_ANSWER_SELECTED ||
+			this.props.type === BUTTON_TYPES.WRONG_ANSWER_SELECTED) {
 
-			case BUTTON_TYPES.ANSWER_ENABLED:
-			case BUTTON_TYPES.ANSWER_DISABLED:
-				buttonContent = this.renderAnswerButton();
-				break;
+			var infoText = this.props.type === BUTTON_TYPES.CORRECT_ANSWER_SELECTED ? 'That\'s right!' : 'Oops...';
 
-			case BUTTON_TYPES.CORRECT_ANSWER_SELECTED:
-			case BUTTON_TYPES.CORRECT_ANSWER_NOT_SELECTED:
-			case BUTTON_TYPES.WRONG_ANSWER_SELECTED:
-				buttonContent = this.renderAnswerChangedButton();
-				break;
-
-			default:
-				buttonContent = <View />;
-		}
-
-		if (this.props.showDictIcon) {
 			return (
-				<View>
-					{buttonContent}
-				</View>
+				<Text style={[styles.info, {color: this.getColor('info')}]}>{infoText}</Text>
 			);
+		}
+	},
+
+	renderButtonContent: function () {
+		if (this.props.type === BUTTON_TYPES.QUESTION) {
+			return this.renderQuestionButton();
 		}
 		else {
-			return (
-				<TouchableWithoutFeedback onPress={this.onButtonPressed}>
-					{buttonContent}
-				</TouchableWithoutFeedback>
-			);
+			return this.renderAnswerButton();
 		}
 	},
 
@@ -105,7 +95,11 @@ var WordButton = React.createClass({
 		if (this.props.showDictIcon) {
 			nextButton = (
 				<TouchableWithoutFeedback onPress={this.props.onNextPress}>
-					<Text>Next</Text>
+					<View style={styles.nextIconWrap}>
+						<View style={styles.vCenter}>
+							<Image source={require('image!next')} style={styles.nextIcon}/>
+						</View>
+					</View>
 				</TouchableWithoutFeedback>
 			);
 		}
@@ -121,34 +115,15 @@ var WordButton = React.createClass({
 	},
 
 	renderAnswerButton: function () {
-		return (
-			<View style={styles.buttonContent}>
-				<Text style={styles.answerButtonText}>
-					{this.props.text}
-				</Text>
-			</View>
-		)
-	},
-
-	renderAnswerChangedButton: function () {
 		var textColor = this.getColor('text');
-		var info;
-
-		if (this.props.type === BUTTON_TYPES.CORRECT_ANSWER_SELECTED ||
-			this.props.type === BUTTON_TYPES.WRONG_ANSWER_SELECTED) {
-
-			var infoText = this.props.type === BUTTON_TYPES.CORRECT_ANSWER_SELECTED ? 'That\'s right!' : 'Oops...';
-			info = <Text style={[styles.info, {color: this.getColor('info')}]}>{infoText}</Text>;
-		}
 
 		return (
 			<View style={styles.buttonContent}>
 				<Text style={[styles.answerButtonText, {color: textColor}]}>
 					{this.props.text}
 				</Text>
-				{info}
 			</View>
-		);
+		)
 	},
 
 	onButtonPressed: function () {
@@ -159,7 +134,7 @@ var WordButton = React.createClass({
 
 	onDictIconPressed: function () {
 		if (this.props.showDictIcon) {
-			// todo
+			this.props.onDictIconPressed(this.props.text);
 		}
 	}
 });
@@ -171,24 +146,15 @@ var styles = StyleSheet.create({
 		borderTopColor: uiConfig.COLORS.MID_GREY,
 		height: uiConfig.QUIZ_BUTTON_HEIGHT,
 		flexDirection: 'row',
-		alignItems: 'stretch'
+		alignItems: 'stretch',
+		flex: 1
 	},
 
-	dictIconWrap: {
-		width: 40,
-		paddingLeft: 10,
-		//flex: 1,
-		height: uiConfig.QUIZ_BUTTON_HEIGHT,
-		backgroundColor: 'green'
-	},
 
 	buttonContent: {
-		//backgroundColor: 'red',
 		flexDirection: 'row',
 		alignItems: 'center',
-		justifyContent: 'space-between',
-		paddingLeft: 20,
-		flex: 3
+		flex: 1
 	},
 
 	questionText: {
@@ -196,22 +162,57 @@ var styles = StyleSheet.create({
 		fontFamily: uiConfig.SPECIAL_FONT,
 		fontSize: uiConfig.WORD_BUTTON_QUESTION_TEXT_SIZE,
 		paddingTop: 5,
-		textAlign: 'left',
-		flex: 2
+		flex: 1
 	},
 
 	answerButtonText: {
 		fontSize: uiConfig.WORD_BUTTON_ANSWER_TEXT_SIZE,
 		lineHeight: uiConfig.WORD_BUTTON_ANSWER_TEXT_SIZE,
-		textAlign: 'left',
-		flex: 2
+		flex: 1
 	},
 
 	info: {
-		flex: 1,
 		fontWeight: '500',
 		textAlign: 'right',
-		paddingRight: 20
+		paddingRight: 20,
+		alignSelf: 'center'
+	},
+
+	dictIconWrap: {
+		width: 40,
+		height: uiConfig.QUIZ_BUTTON_HEIGHT,
+		alignSelf: 'stretch',
+		flexDirection: 'row'
+	},
+
+	dictIcon: {
+		width: 18,
+		height: 18
+	},
+
+	nextIconWrap: {
+		backgroundColor: uiConfig.COLORS.BLUE,
+		width: 70,
+		height: uiConfig.QUIZ_BUTTON_HEIGHT,
+		alignSelf: 'stretch',
+		flexDirection: 'row'
+	},
+
+	nextIcon: {
+		width: 30,
+		height: 30
+	},
+
+	vCenter: {
+		alignSelf: 'stretch',
+		alignItems: 'center',
+		flexDirection: 'column',
+		justifyContent: 'center',
+		flex: 1
+	},
+
+	leftSpace: {
+		width: 20
 	}
 
 });
@@ -234,6 +235,7 @@ var BUTTON_COLORS = {
 
 	CORRECT_ANSWER_SELECTED: {
 		background: uiConfig.COLORS.PALE_GREEN,
+		text: uiConfig.COLORS.TEXT,
 		info: uiConfig.COLORS.GREEN
 	},
 
@@ -244,6 +246,7 @@ var BUTTON_COLORS = {
 
 	WRONG_ANSWER_SELECTED: {
 		background: uiConfig.COLORS.PALE_PINK,
+		text: uiConfig.COLORS.TEXT,
 		info: uiConfig.COLORS.RED
 	},
 

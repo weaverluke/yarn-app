@@ -45,6 +45,7 @@ var GAME_STATES = gameStateStore.GAME_STATES;
 
 var BROWSER_REF = 'browser';
 var DEFAULT_URL = 'http://www.theguardian.com/international';
+var DEFAULT_URL = 'http://www.theguardian.com/us-news/2015/sep/13/donald-trump-ben-carson-republican-debate';
 
 var yarn = React.createClass({
 
@@ -106,8 +107,8 @@ var yarn = React.createClass({
 		);
 	},
 
-	onShowDictionary: function () {
-		DictionaryProxy.showDefinition(gameStateStore.get('currentWord').text);
+	onShowDictionary: function (text) {
+		DictionaryProxy.showDefinition(text);
 	},
 
 	renderQuizStatusBar: function () {
@@ -177,17 +178,10 @@ var yarn = React.createClass({
 				disabled={this.state.wordStripDisabled}
 				onAction={this.onWordPressed}
 				onNextPress={this.showNextQuestion}
+				onShowDictionary={this.onShowDictionary}
 				words={this.state.question}
 			/>
 		);
-		//return (
-		//	<WordStrip
-		//		ref='wordstrip'
-		//		disabled={this.state.wordStripDisabled}
-		//		onAction={this.onWordPressed}
-		//		words={this.state.question}
-		//	/>
-		//);
 	},
 
 	renderMainBar: function () {
