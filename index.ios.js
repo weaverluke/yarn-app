@@ -126,7 +126,8 @@ var yarn = React.createClass({
 	},
 
 	stopQuiz: function () {
-		// todo
+		this.resetGame();
+		this.refs['mainbar'].animateIn();
 	},
 
 	renderBottomBar: function () {
@@ -439,6 +440,7 @@ var yarn = React.createClass({
 	},
 
 	resetGame: function () {
+		this.refs[BROWSER_REF].unhighlightWords();
 		this.setState({
 			question: [],
 			bottomBar: '',

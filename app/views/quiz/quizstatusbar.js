@@ -35,7 +35,7 @@ var QuizStatusBar = React.createClass({
 	},
 
 	render: function () {
-		var cancelText = '< Cancel';
+		var cancelText = 'Cancel';
 		return (
 			<Animated.View style={[styles.wrap, {
 				transform: [
@@ -43,11 +43,12 @@ var QuizStatusBar = React.createClass({
 				],
 				opacity: this.state.opacityValue
 			}]}>
-				<View style={styles.leftContent}>
-					<TouchableWithoutFeedback onPress={this.props.onCancelClick}>
+				<TouchableWithoutFeedback onPress={this.props.onCancelClick}>
+					<View style={styles.leftContent}>
+						<Text style={styles.backIcon}>&#x25C5;</Text>
 						<Text style={styles.clickableText}>{cancelText}</Text>
-					</TouchableWithoutFeedback>
-				</View>
+					</View>
+				</TouchableWithoutFeedback>
 				<View style={styles.centerContent}>
 					<Text style={styles.centerText}>Word {this.props.currentIndex} of {this.props.total}</Text>
 				</View>
@@ -113,10 +114,12 @@ var styles = StyleSheet.create({
 	},
 
 	leftContent: {
-		paddingLeft: 10,
+		paddingLeft: 5,
 		paddingRight: 10,
 		flex: 1,
-		justifyContent: 'center'
+		justifyContent: 'center',
+		flexDirection: 'row',
+		alignItems: 'center'
 	},
 
 	clickableText: {
@@ -138,6 +141,14 @@ var styles = StyleSheet.create({
 	centerText: {
 		fontSize: 18,
 		fontWeight: '500'
+	},
+
+	backIcon: {
+		fontSize: 20,
+		marginTop: 6,
+		marginRight: 2,
+		fontFamily: 'SS Standard',
+		color: uiConfig.COLORS.BLUE
 	}
 
 });

@@ -129,6 +129,7 @@ var Browser = React.createClass({
 	},
 
 	reload: function () {
+		this.props.onUrlChange && this.props.onUrlChange();
 		this.refs[WEBVIEW_REF].reload();
 	},
 

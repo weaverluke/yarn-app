@@ -26,6 +26,7 @@
 	<string></string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>ss-standard.otf</string>
 		<string>bauhaus-93.ttf</string>
 		<string>BauHausStd-Heavy.otf</string>
 	</array>
