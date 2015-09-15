@@ -22,13 +22,12 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
-		615534E81B851A5300A20702 /* RCTWebView+WebViewBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 615534E41B851A5300A20702 /* RCTWebView+WebViewBridge.m */; };
-		615534E91B851A5300A20702 /* RCTWebViewManager+WebViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 615534E61B851A5300A20702 /* RCTWebViewManager+WebViewManager.m */; };
-		615534EA1B851A5300A20702 /* webview-bridge-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 615534E71B851A5300A20702 /* webview-bridge-script.js */; };
-		615534F11B851AA800A20702 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 615534F01B851AA200A20702 /* libRNFS.a */; };
 		615932311B8D183A00918D67 /* DictionaryProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 615932301B8D183A00918D67 /* DictionaryProxy.m */; };
 		6165D9261B7746390011A703 /* BauhausStd-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6165D9241B7746390011A703 /* BauhausStd-Heavy.otf */; };
 		6165D9271B7746390011A703 /* bauhaus-93.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6165D9251B7746390011A703 /* bauhaus-93.ttf */; };
+		61D0DCE51BA898CD00664994 /* RCTWebView+WebViewBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 61D0DCE11BA898CD00664994 /* RCTWebView+WebViewBridge.m */; };
+		61D0DCE61BA898CD00664994 /* RCTWebViewManager+WebViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 61D0DCE31BA898CD00664994 /* RCTWebViewManager+WebViewManager.m */; };
+		61D0DCE71BA898CD00664994 /* webview-bridge-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 61D0DCE41BA898CD00664994 /* webview-bridge-script.js */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
 
@@ -96,13 +95,6 @@
 			remoteGlobalIDString = 83CBBA2E1A601D0E00E9B192;
 			remoteInfo = React;
 		};
-		615534EF1B851AA200A20702 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 615534EB1B851AA200A20702 /* RNFS.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F12AFB9B1ADAF8F800E0535D;
-			remoteInfo = RNFS;
-		};
 		78C398B81ACF4ADC00677621 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */;
@@ -139,16 +131,15 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = iOS/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = iOS/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
-		615534E31B851A5300A20702 /* RCTWebView+WebViewBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTWebView+WebViewBridge.h"; sourceTree = "<group>"; };
-		615534E41B851A5300A20702 /* RCTWebView+WebViewBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTWebView+WebViewBridge.m"; sourceTree = "<group>"; };
-		615534E51B851A5300A20702 /* RCTWebViewManager+WebViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTWebViewManager+WebViewManager.h"; sourceTree = "<group>"; };
-		615534E61B851A5300A20702 /* RCTWebViewManager+WebViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTWebViewManager+WebViewManager.m"; sourceTree = "<group>"; };
-		615534E71B851A5300A20702 /* webview-bridge-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "webview-bridge-script.js"; sourceTree = "<group>"; };
-		615534EB1B851AA200A20702 /* RNFS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
 		6159322F1B8D183A00918D67 /* DictionaryProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DictionaryProxy.h; path = iOS/DictionaryProxy.h; sourceTree = "<group>"; };
 		615932301B8D183A00918D67 /* DictionaryProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DictionaryProxy.m; path = iOS/DictionaryProxy.m; sourceTree = "<group>"; };
 		6165D9241B7746390011A703 /* BauhausStd-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "BauhausStd-Heavy.otf"; path = "/Users/mateusz/workspace/weaverdigital/yarn-files/BauhausStd-Heavy.otf"; sourceTree = "<absolute>"; };
 		6165D9251B7746390011A703 /* bauhaus-93.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "bauhaus-93.ttf"; path = "/Users/mateusz/workspace/weaverdigital/yarn-files/bauhaus-93.ttf"; sourceTree = "<absolute>"; };
+		61D0DCE01BA898CD00664994 /* RCTWebView+WebViewBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTWebView+WebViewBridge.h"; sourceTree = "<group>"; };
+		61D0DCE11BA898CD00664994 /* RCTWebView+WebViewBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTWebView+WebViewBridge.m"; sourceTree = "<group>"; };
+		61D0DCE21BA898CD00664994 /* RCTWebViewManager+WebViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTWebViewManager+WebViewManager.h"; sourceTree = "<group>"; };
+		61D0DCE31BA898CD00664994 /* RCTWebViewManager+WebViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTWebViewManager+WebViewManager.m"; sourceTree = "<group>"; };
+		61D0DCE41BA898CD00664994 /* webview-bridge-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "webview-bridge-script.js"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -165,7 +156,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				615534F11B851AA800A20702 /* libRNFS.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
@@ -280,27 +270,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		615534E21B851A5300A20702 /* WebViewBridge */ = {
-			isa = PBXGroup;
-			children = (
-				615534E31B851A5300A20702 /* RCTWebView+WebViewBridge.h */,
-				615534E41B851A5300A20702 /* RCTWebView+WebViewBridge.m */,
-				615534E51B851A5300A20702 /* RCTWebViewManager+WebViewManager.h */,
-				615534E61B851A5300A20702 /* RCTWebViewManager+WebViewManager.m */,
-				615534E71B851A5300A20702 /* webview-bridge-script.js */,
-			);
-			name = WebViewBridge;
-			path = "node_modules/react-native-webview-bridge/WebViewBridge";
-			sourceTree = "<group>";
-		};
-		615534EC1B851AA200A20702 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				615534F01B851AA200A20702 /* libRNFS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		6165D9331B7746860011A703 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -308,6 +277,19 @@
 				6165D9241B7746390011A703 /* BauhausStd-Heavy.otf */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		61D0DCDF1BA898CD00664994 /* WebViewBridge */ = {
+			isa = PBXGroup;
+			children = (
+				61D0DCE01BA898CD00664994 /* RCTWebView+WebViewBridge.h */,
+				61D0DCE11BA898CD00664994 /* RCTWebView+WebViewBridge.m */,
+				61D0DCE21BA898CD00664994 /* RCTWebViewManager+WebViewManager.h */,
+				61D0DCE31BA898CD00664994 /* RCTWebViewManager+WebViewManager.m */,
+				61D0DCE41BA898CD00664994 /* webview-bridge-script.js */,
+			);
+			name = WebViewBridge;
+			path = "node_modules/react-native-webview-bridge/WebViewBridge";
 			sourceTree = "<group>";
 		};
 		78C398B11ACF4ADC00677621 /* Products */ = {
@@ -321,8 +303,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				615534EB1B851AA200A20702 /* RNFS.xcodeproj */,
-				615534E21B851A5300A20702 /* WebViewBridge */,
+				61D0DCDF1BA898CD00664994 /* WebViewBridge */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
 				00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */,
@@ -475,10 +456,6 @@
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
-				{
-					ProductGroup = 615534EC1B851AA200A20702 /* Products */;
-					ProjectRef = 615534EB1B851AA200A20702 /* RNFS.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -545,13 +522,6 @@
 			remoteRef = 146834031AC3E56700842450 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		615534F01B851AA200A20702 /* libRNFS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNFS.a;
-			remoteRef = 615534EF1B851AA200A20702 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		78C398B91ACF4ADC00677621 /* libRCTLinking.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -580,7 +550,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				615534EA1B851A5300A20702 /* webview-bridge-script.js in Resources */,
+				61D0DCE71BA898CD00664994 /* webview-bridge-script.js in Resources */,
 				6165D9271B7746390011A703 /* bauhaus-93.ttf in Resources */,
 				008F07F31AC5B25A0029DE68 /* main.jsbundle in Resources */,
 				6165D9261B7746390011A703 /* BauhausStd-Heavy.otf in Resources */,
@@ -604,11 +574,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				61D0DCE51BA898CD00664994 /* RCTWebView+WebViewBridge.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				615932311B8D183A00918D67 /* DictionaryProxy.m in Sources */,
-				615534E91B851A5300A20702 /* RCTWebViewManager+WebViewManager.m in Sources */,
+				61D0DCE61BA898CD00664994 /* RCTWebViewManager+WebViewManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				615534E81B851A5300A20702 /* RCTWebView+WebViewBridge.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

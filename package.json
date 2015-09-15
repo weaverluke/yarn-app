@@ -9,9 +9,8 @@
     "events": "^1.0.2",
     "node-read": "git+https://github.com/mateuszwozniak/node-read.git",
     "path": "^0.11.14",
-    "react-native": "^0.9.0",
-    "react-native-fs": "^0.3.4",
-    "react-native-webview-bridge": "^0.3.4",
+    "react-native": "^0.11.0",
+    "react-native-webview-bridge": "^0.3.6",
     "url": "^0.10.3",
     "util": "^0.10.3"
   }
