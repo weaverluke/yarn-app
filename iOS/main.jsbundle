@@ -77233,6 +77233,8 @@ Object.keys(actions).forEach(function(action){
 bus[action] = actions[action];});
 
 
+var preloadedWords={};
+
 bus.on(actions.WORDS_PARSED,onWordsParsed);
 bus.on(actions.VISITED_WORDS_CHANGED,onVisitedWordsChanged);
 bus.on(actions.START_GAME,onStartGame);
@@ -77278,7 +77280,8 @@ return newWords;}
 
 
 function onVisitedWordsChanged(words){
-gameStateStore.set('visitedPageWords',words);}
+gameStateStore.set('visitedPageWords',words);
+preloadWords();}
 
 
 function onStartGame(){
@@ -77292,6 +77295,50 @@ visitedWords:gameStateStore.get('visitedPageWords')});}
 
 
 
+function preloadWords(){
+var visited=gameStateStore.get('visitedPageWords');
+for(var i=0;i < visited.length;i++) {
+if(!preloadedWords[visited[i]]){
+preloadedWords[visited[i]] = preloadWord(visited[i]);}}}
+
+
+
+
+function preloadWord(pageWord){
+var wordsToTranslate=getRandomWords(gameStateStore.get('randomWordsCount'));
+wordsToTranslate.unshift(pageWord);
+
+var promise=new Promise(function(resolve,reject){
+
+
+setTimeout(function(){
+
+googleTranslate.translateWords(wordsToTranslate,'en',userProfileStore.get('language')).
+then(function(translatedWords){
+
+var question=translatedWords.data.translations.map(function(translatedWord,index){
+return {
+text:wordsToTranslate[index],
+definition:translatedWord.translatedText};});
+
+
+
+question[0].target = true;
+resolve(question);}).
+
+catch(function(ex){
+
+console.error('Can not translate words:',ex);
+reject();});},
+
+
+Math.random() * 500 + 500);});
+
+
+
+return promise;}
+
+
 function onShowNextQuestion(){
 var currentWordIndex=gameStateStore.get('currentWordIndex') + 1;
 
@@ -77301,48 +77348,8 @@ return;}
 
 
 var currentWord=gameStateStore.get('pageWords')[currentWordIndex];
-var wordsToTranslate=getRandomWords(gameStateStore.get('randomWordsCount'));
-wordsToTranslate.unshift(currentWord);
-
-var definition;
-var question;
-
-Promise.all([
-collins.getDefinition(currentWord).
-then(function(resp){
-
-definition = {
-entryLabel:resp.entryLabel,
-entryContent:resp.entryContent};}).
-
-
-catch(function(ex){
-
-console.error('Can not translate words:',ex);}),
-
-
-googleTranslate.translateWords(wordsToTranslate,'en',userProfileStore.get('language')).
-then(function(translatedWords){
-
-question = translatedWords.data.translations.map(function(translatedWord,index){
-return {
-text:wordsToTranslate[index],
-definition:translatedWord.translatedText};});
-
-
-
-question[0].target = true;}).
-
-catch(function(ex){
-
-console.error('Can not translate words:',ex);})]).
-
-
-then(function(){
-
-
+preloadedWords[currentWord].then(function(question){
 gameStateStore.pause(true);
-question[0].def = definition;
 gameStateStore.set('currentWord',question[0]);
 
 
@@ -77416,6 +77423,7 @@ bus.emit(actions.RESET);}
 
 function onReset(){
 console.log('game reset');
+preloadedWords = {};
 gameStateStore.reset();}
 
 
@@ -79519,7 +79527,7 @@ leftContent:{
 paddingLeft:5,
 paddingRight:10,
 flex:1,
-justifyContent:'center',
+justifyContent:'flex-start',
 flexDirection:'row',
 alignItems:'center'},
 

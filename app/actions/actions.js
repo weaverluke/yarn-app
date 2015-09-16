@@ -100,24 +100,30 @@ function preloadWord(pageWord) {
 
 	var promise = new Promise(function (resolve, reject) {
 
-		googleTranslate.translateWords(wordsToTranslate, 'en', userProfileStore.get('language'))
-			.then(function (translatedWords) {
-				//console.log('translated words', translatedWords);
-				var question = translatedWords.data.translations.map(function (translatedWord, index) {
-					return {
-						text: wordsToTranslate[index],
-						definition: translatedWord.translatedText
-					};
+		// delay fetching by random amount of time so yarn doesn't trigger too many requests at once
+		setTimeout(function () {
+
+			googleTranslate.translateWords(wordsToTranslate, 'en', userProfileStore.get('language'))
+				.then(function (translatedWords) {
+					//console.log('translated words', translatedWords);
+					var question = translatedWords.data.translations.map(function (translatedWord, index) {
+						return {
+							text: wordsToTranslate[index],
+							definition: translatedWord.translatedText
+						};
+					});
+
+					question[0].target = true;
+					resolve(question);
+				})
+				.catch(function (ex) {
+					// show error screen
+					console.error('Can not translate words:', ex);
+					reject();
 				});
 
-				question[0].target = true;
-				resolve(question);
-			})
-			.catch(function (ex) {
-				// show error screen
-				console.error('Can not translate words:', ex);
-				reject();
-			});
+		}, Math.random() * 500 + 500);
+
 	});
 
 	return promise;
