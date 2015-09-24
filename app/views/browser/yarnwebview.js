@@ -15,6 +15,8 @@ var wordHelpers = require('./wordHelpers');
 var YARN_API = require('./websiteapi').toString();
 YARN_API = '(' + YARN_API + '())';
 
+var uiConfig = require('../../uiconfig');
+
 function encodeMessage(name, data) {
 	return JSON.stringify({
 		name: name,
@@ -100,6 +102,7 @@ var Browser = React.createClass({
 					break;
 
 				case 'WEBSITE_READY':
+					this.setHighlightColor(uiConfig.COLORS.ORANGE_BG);
 					this.requestWebsiteContent();
 					break;
 
@@ -236,6 +239,10 @@ var Browser = React.createClass({
 
 	resetLastParsedContent: function () {
 		this.lastParsedContent = '';
+	},
+
+	setHighlightColor: function (color) {
+		this.sendCommand('SET_HIGHLIGHT_COLOR', color);
 	}
 });
 

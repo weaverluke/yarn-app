@@ -10,16 +10,19 @@ module.exports = function () {
 		var SKIP_NODES = ['SCRIPT', 'NOSCRIPT'];
 
 		var styleEl;
+		var highlightStyleEl;
 
 		var highlightColor = '#44FF44';
 		var visitedWords = [];
 
 		function setHighlightColor(color) {
 			highlightColor = color;
+			injectHighlightStyle();
 		}
 
 		function prepareWords(words) {
 			injectStyles();
+			injectHighlightStyle();
 			reset();
 			words.forEach(prepareWord);
 			window.addEventListener('scroll', onPageScroll);
@@ -32,20 +35,23 @@ module.exports = function () {
 				styleEl.parentNode.removeChild(styleEl);
 			}
 			var head = document.head || document.getElementsByTagName('head')[0];
-			var commonCss =
+
+			var bgAnimationStyle = '-webkit-transition: background-color 1000ms linear;'+
+				'transition: background-color 1000ms linear;';
+
+			var commonCss = bgAnimationStyle +
 				'width: 2px; height: 100%;' +
 				'position: absolute;' +
 				'top: 0;' +
 				'content: "";' +
 				'display: block;' +
-				'background-color:' + highlightColor +
 				'} ';
 
-			var css = '[data-yarn-highlight] { position: relative; background-color:rgba(0,0,0,0) }' +
+			var css = '[data-yarn-highlight] { position: relative; background-color:rgba(0,0,0,0) } ' +
 
 				'[data-yarn-highlight].highlighted { ' +
-				'font-style:inherit;font-weight:inherit;' +
-				'background-color:' + highlightColor + '}' +
+				bgAnimationStyle +
+				'font-style:inherit;font-weight:inherit} ' +
 
 				'[data-yarn-highlight].highlighted:before {' +
 				'position:absolute; top:0; left:-2px;' +
@@ -59,6 +65,29 @@ module.exports = function () {
 				'border-bottom-right-radius:2px;' +
 				commonCss;
 
+			styleEl = document.createElement('style');
+
+			styleEl.type = 'text/css';
+			if (styleEl.styleSheet){
+				styleEl.styleSheet.cssText = css;
+			} else {
+				styleEl.appendChild(document.createTextNode(css));
+			}
+
+			head.appendChild(styleEl);
+		}
+
+		function injectHighlightStyle() {
+			if (highlightStyleEl && highlightStyleEl.parentNode) {
+				highlightStyleEl.parentNode.removeChild(highlightStyleEl);
+			}
+
+			var css = '[data-yarn-highlight].highlighted, ' +
+			'[data-yarn-highlight].highlighted:before, ' +
+			'[data-yarn-highlight].highlighted:after {' +
+				'background-color:' + highlightColor + '}';
+
+			var head = document.head || document.getElementsByTagName('head')[0];
 			styleEl = document.createElement('style');
 
 			styleEl.type = 'text/css';
@@ -244,6 +273,9 @@ module.exports = function () {
 		switch (msg.name) {
 			case 'GET_HTML':
 				return sendHtml();
+
+			case 'SET_HIGHLIGHT_COLOR':
+				return yarnHighlight.setHighlightColor(msg.data);
 
 			case 'PREPARE_WORDS':
 				return yarnHighlight.prepareWords(msg.data);

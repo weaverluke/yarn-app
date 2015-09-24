@@ -10,7 +10,7 @@ var {
 	WebView
 } = React;
 
-var gameSateStore = require('../../stores/gamestatestore');
+var gameStateStore = require('../../stores/gamestatestore');
 var YarnWebView = require('./yarnwebview');
 var actions = require('../../actions/actions');
 var log = require('../../logger/logger');
@@ -93,7 +93,7 @@ var Browser = React.createClass({
 	},
 
 	componentDidMount: function () {
-		gameSateStore.addChangeListener(this.onGameStateChanged);
+		gameStateStore.addChangeListener(this.onGameStateChanged);
 
 		var webView = this.refs[WEBVIEW_REF];
 		actions.on(actions.WORDS_READY, webView.prepareWords);
@@ -105,8 +105,11 @@ var Browser = React.createClass({
 	},
 
 	onGameStateChanged: function () {
-		if (gameSateStore.get('currentState') === gameSateStore.GAME_STATES.WAITING_FOR_ANSWER) {
-			var currentWord = gameSateStore.get('currentWord');
+		if (gameStateStore.get('currentState') === gameStateStore.GAME_STATES.WAITING_FOR_ANSWER) {
+			if (gameStateStore.get('currentWordIndex') === 0) {
+				this.refs[WEBVIEW_REF].setHighlightColor(uiConfig.COLORS.BLUE_BG);
+			}
+			var currentWord = gameStateStore.get('currentWord');
 			this.highlightWord(currentWord.text);
 		}
 	},

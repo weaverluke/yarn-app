@@ -11,7 +11,9 @@ module.exports = {
 		RED: 'rgb(223, 28, 36)',
 		PALE_BLUE: 'rgb(238, 248, 253)',
 		PALE_GREEN: 'rgb(240, 248, 243)',
-		PALE_PINK: 'rgb(253, 243, 244)'
+		PALE_PINK: 'rgb(253, 243, 244)',
+		BLUE_BG: 'rgba(39, 170, 225, 0.25)',
+		ORANGE_BG: 'rgba(247, 148, 30, 0.12)'
 	},
 
 	BROWSER_BAR_HEIGHT: 40,
