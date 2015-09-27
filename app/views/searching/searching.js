@@ -9,6 +9,7 @@ var {
 
 var BAR_WIDTH = 18;
 var ANIMATION_TIME = 600;
+var FADE_OUT_TIME = 1000;
 
 var colors = [
 	'rgba(39, 170, 225, 0.3)',
@@ -27,31 +28,50 @@ var Toast = React.createClass({
 	getInitialState: function () {
 		return {
 			leftValue: new Animated.Value(-BAR_WIDTH),
-			colorIndex: 0
+			opacityValue: new Animated.Value(0),
+			colorIndex: 0,
+			hidden: true
+		};
+	},
+
+	getDefaultProps: function () {
+		return {
+			active: false
 		};
 	},
 
 	render: function () {
-		var animationStyle = {
+		// if it's hidden then render empty view
+		if (this.state.hidden) {
+			return (<View />);
+		}
+
+		var barAnimationStyle = {
 			transform: [
 				{ translateX: this.state.leftValue }
 			],
 			backgroundColor: colors[this.state.colorIndex]
 		};
 
+		var wrapAnimationStyle = {
+			opacity: this.state.opacityValue
+		};
+
 		return (
-			<View ref='wrap' pointerEvents='none' style={styles.wrap}>
-				<Animated.View pointerEvents='none' style={[styles.scan, animationStyle]}></Animated.View>
-			</View>
+			<Animated.View ref='wrap' pointerEvents='none' style={[styles.wrap, wrapAnimationStyle]}>
+				<View ref='barBox' style={styles.barBox}>
+					<Animated.View pointerEvents='none' style={[styles.scan, barAnimationStyle]}></Animated.View>
+				</View>
+			</Animated.View>
 		);
 	},
 
-	componentDidMount: function () {
-		setTimeout(this.animateToRight, 500);
+	componentWillReceiveProps: function (props) {
+		props.active ? this.show() : this.hide();
 	},
 
 	animateToRight: function () {
-		if (!this.isMounted()) {
+		if (!this.isMounted() || this.state.hidden) {
 			return;
 		}
 
@@ -59,11 +79,12 @@ var Toast = React.createClass({
 
 		// it looks like some kind of bug as this is called only if component is mounted
 		// so that ref should be already available but sometimes app throws error when accessing it
-		if (!this.refs.wrap) {
+		if (!this.refs.barBox || !this.refs.barBox.measure) {
 			return setTimeout(this.animateToRight, 500);
 		}
 
-		this.refs.wrap.measure(function (ox, oy, width, height, px, py) {
+
+		this.refs.barBox.measure(function (ox, oy, width, height, px, py) {
 			Animated.timing(
 				this.state.leftValue,
 				{ toValue: width, duration: ANIMATION_TIME }
@@ -72,7 +93,7 @@ var Toast = React.createClass({
 	},
 
 	animateToLeft: function () {
-		if (!this.isMounted()) {
+		if (!this.isMounted() || this.state.hidden) {
 			return;
 		}
 
@@ -88,8 +109,49 @@ var Toast = React.createClass({
 		this.setState({
 			colorIndex: this.state.colorIndex === colors.length - 1 ? 0 : this.state.colorIndex + 1
 		});
-	}
+	},
 
+	animateOut: function (cb) {
+		Animated.parallel([
+			Animated.timing(
+				this.state.opacityValue,
+				{ toValue: 0, duration: FADE_OUT_TIME }
+			)
+		]).start(cb);
+	},
+
+	animateIn: function (cb) {
+		Animated.parallel([
+			Animated.timing(
+				this.state.opacityValue,
+				{ toValue: 1, duration: FADE_OUT_TIME/10 }
+			)
+		]).start(cb);
+	},
+
+	hide: function () {
+		// do not set the same state again
+		if (this.state.hidden) {
+			return;
+		}
+
+		this.animateOut(function () {
+			this.setState({hidden: true});
+		}.bind(this));
+	},
+
+	show: function () {
+		// do not set the same state again
+		if (!this.state.hidden) {
+			return;
+		}
+
+		this.setState({hidden: false});
+		setTimeout(function () {
+			this.animateIn();
+			this.animateToRight();
+		}.bind(this), 10);
+	}
 });
 
 var styles = StyleSheet.create({
@@ -102,6 +164,14 @@ var styles = StyleSheet.create({
 		alignItems: 'center',
 		flex: 1,
 		backgroundColor: 'transparent'
+	},
+
+	barBox: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0
 	},
 
 	scan: {

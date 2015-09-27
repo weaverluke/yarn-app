@@ -44,8 +44,8 @@ var HEADER = '#F9FAFB';
 var GAME_STATES = gameStateStore.GAME_STATES;
 
 var BROWSER_REF = 'browser';
-var DEFAULT_URL = 'http://www.theguardian.com/international';
-//var DEFAULT_URL = 'http://www.theguardian.com/us-news/2015/sep/13/donald-trump-ben-carson-republican-debate';
+//var DEFAULT_URL = 'http://www.theguardian.com/international';
+var DEFAULT_URL = 'http://www.theguardian.com/us-news/2015/sep/13/donald-trump-ben-carson-republican-debate';
 
 var yarn = React.createClass({
 
@@ -218,10 +218,10 @@ var yarn = React.createClass({
 	},
 
 	renderSearchingState: function () {
-		if (this.state.gameState === GAME_STATES.LOOKING_FOR_WORDS) {
-			return <SearchingView />;
-		}
-		return <View/>;
+		//if (this.state.gameState === GAME_STATES.LOOKING_FOR_WORDS) {
+			return <SearchingView ref="searching" active={this.state.gameState === GAME_STATES.LOOKING_FOR_WORDS} />;
+		//}
+		//return <View/>;
 	},
 
 	hideToast: function () {

@@ -36,8 +36,8 @@ module.exports = function () {
 			}
 			var head = document.head || document.getElementsByTagName('head')[0];
 
-			var bgAnimationStyle = '-webkit-transition: background-color 1000ms linear;'+
-				'transition: background-color 1000ms linear;';
+			var bgAnimationStyle = '-webkit-transition: background-color 500ms linear;'+
+				'transition: background-color 500ms linear;';
 
 			var commonCss = bgAnimationStyle +
 				'width: 2px; height: 100%;' +
