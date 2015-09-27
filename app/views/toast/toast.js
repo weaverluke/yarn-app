@@ -124,14 +124,14 @@ var styles = StyleSheet.create({
 	toast: {
 		backgroundColor: '#FFF',
 		borderColor: uiConfig.COLORS.MID_GREY,
-		borderRadius: 100,
+		borderRadius: 10,
 		borderWidth: 1,
 		overflow: 'hidden'
 	},
 
 	shadowWrap: {
 		borderColor: uiConfig.COLORS.MID_GREY,
-		borderRadius: 100,
+		borderRadius: 10,
 		shadowColor: '#000',
 		shadowOffset: {
 			width: 0,

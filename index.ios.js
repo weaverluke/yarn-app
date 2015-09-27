@@ -205,7 +205,7 @@ var yarn = React.createClass({
 
 	renderToast: function () {
 		if (!this.state.toastShown && this.state.gameState === GAME_STATES.WORDS_FOUND) {
-			var toastContent = <ToastContent newCount={gameStateStore.get('pageWords').length} oldCount={0} />;
+			var toastContent = <ToastContent count={gameStateStore.get('pageWords').length} />;
 			return (
 				<Toast
 					content={toastContent}
@@ -218,10 +218,7 @@ var yarn = React.createClass({
 	},
 
 	renderSearchingState: function () {
-		//if (this.state.gameState === GAME_STATES.LOOKING_FOR_WORDS) {
-			return <SearchingView ref="searching" active={this.state.gameState === GAME_STATES.LOOKING_FOR_WORDS} />;
-		//}
-		//return <View/>;
+		return <SearchingView ref="searching" active={this.state.gameState === GAME_STATES.LOOKING_FOR_WORDS} />;
 	},
 
 	hideToast: function () {
