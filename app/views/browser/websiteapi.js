@@ -393,8 +393,18 @@ module.exports = function () {
 			}
 			bindScrollInfo();
 			console.log('WEBSITE_READY');
+			hookLinks();
 			send('WEBSITE_READY');
 		});
+	}
+
+	function hookLinks() {
+		document.addEventListener('click', function (ev) {
+			if (ev.target && ev.target.tagName === 'A' && ev.target.getAttribute('href')) {
+				ev.preventDefault();
+				location = ev.target.getAttribute('href');
+			}
+		})
 	}
 
 	console.log('start! ', location.href, document.readyState, document.documentElement.outerHTML.length);
