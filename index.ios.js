@@ -14,6 +14,7 @@ var SearchingView = require('./app/views/searching/searching');
 
 var QuizStatusBar = require('./app/views/quiz/quizstatusbar');
 var QuestionView = require('./app/views/quiz/question');
+var ResultView = require('./app/views/quiz/result');
 
 var gameStateStore = require('./app/stores/gamestatestore');
 var userProfileStore = require('./app/stores/userprofilestore');
@@ -44,8 +45,8 @@ var HEADER = '#F9FAFB';
 var GAME_STATES = gameStateStore.GAME_STATES;
 
 var BROWSER_REF = 'browser';
-//var DEFAULT_URL = 'http://www.theguardian.com/international';
-var DEFAULT_URL = 'http://www.theguardian.com/us-news/2015/sep/13/donald-trump-ben-carson-republican-debate';
+var DEFAULT_URL = 'http://www.theguardian.com/international';
+//var DEFAULT_URL = 'http://www.theguardian.com/us-news/2015/sep/13/donald-trump-ben-carson-republican-debate';
 
 var yarn = React.createClass({
 
@@ -101,8 +102,9 @@ var yarn = React.createClass({
 				/>
 				{this.renderSettings()}
 				{this.renderQuizStatusBar()}
-				{this.renderToast()}
 				{this.renderSearchingState()}
+				{this.renderToast()}
+				{this.renderResultView()}
 			</View>
 		);
 	},
@@ -116,10 +118,12 @@ var yarn = React.createClass({
 			return <View />;
 		}
 
+		var text = 'Word ' + (gameStateStore.get('currentWordIndex') + 1) +
+			' of ' + gameStateStore.get('pageWords').length;
+
 		return (
 			<QuizStatusBar
-				currentIndex={gameStateStore.get('currentWordIndex')+1}
-				total={gameStateStore.get('pageWords').length}
+				text={text}
 				onCancelClick={this.stopQuiz}
 			/>
 		);
@@ -136,8 +140,9 @@ var yarn = React.createClass({
 				return this.renderInfoBar();
 			case 'wordstrip':
 				return this.renderWordStrip();
-			case 'result':
-				return this.renderResultView();
+			// result is now rendered as separate view
+			//case 'result':
+			//	return this.renderResultView();
 			case 'mainbar':
 				return this.renderMainBar();
 			default:
@@ -146,14 +151,18 @@ var yarn = React.createClass({
 	},
 
 	renderResultView: function () {
+		if (this.state.bottomBar !== 'result') {
+			return <View/>;
+		}
+
 		return (
-			<StatusBar
+			<ResultView
 				correctWords={gameStateStore.get('correct')}
 				totalWords={gameStateStore.get('pageWords').length}
-				onNextPress={this.closeResultView}
 				level={userProfileStore.get('level')}
 				score={userProfileStore.get('score')}
-				showWordsCount={false}
+				onDonePressed={this.closeResultView}
+				onRandomPressed={this.onRandomPagePressed}
 			/>
 		);
 	},
@@ -272,6 +281,11 @@ var yarn = React.createClass({
 		this.refs['mainbar'].animateIn();
 	},
 
+	onRandomPagePressed: function () {
+		this.closeResultView();
+		this.refs[BROWSER_REF].goToRandomUrl();
+	},
+
 	showSettings: function () {
 		this.setState({
 			settingsViewVisible: true
@@ -300,6 +314,13 @@ var yarn = React.createClass({
 		actions.on(actions.CHANGE_LEVEL, this.onForceChangeLevel);
 		actions.on(actions.SETTINGS_BUTTON_PRESSED, this.showSettings);
 		this.onUrlChange();
+	},
+
+	_componentDidMount: function () {
+		// override state (dev only);
+		this.setState({
+			bottomBar: 'result'
+		});
 	},
 
 	hideBottomBar: function () {
@@ -416,9 +437,6 @@ var yarn = React.createClass({
 			return;
 		}
 
-		//this.setState({
-		//	buttonRect: rect
-		//});
 		actions.emit(actions.WORD_PRESSED, word);
 	},
 

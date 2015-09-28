@@ -292,9 +292,38 @@ module.exports = function () {
 			case 'UNHIGHLIGHT_WORDS':
 				return yarnHighlight.unhighlight();
 
+			case 'GO_TO_RANDOM_URL':
+				return goToRandomUrl();
+
 			default:
 				return;
 		}
+	}
+
+	function goToRandomUrl() {
+		var links = [].slice.call(document.getElementsByTagName('a'));
+		var origin = location.origin;
+		links = links.filter(function (link) {
+			var href = link.getAttribute('href');
+			// ignore url to this page
+			if (!href || href === location.href) {
+				return false;
+			}
+			// trim trailing slash as location.origin doesn't have it
+			href = href.replace(/\/$/, '');
+			return href && href.indexOf(origin) === 0 && href !== origin;
+		}).map(function (link) {
+			return link.getAttribute('href');
+		});
+
+		// sort from the longest to the shortest
+		links.sort(function (a, b) {
+			return b.length - a.length;
+		});
+
+		// pick 50% of the longest links
+		var index = Math.floor(Math.random() * links.length * 0.5);
+		location = links[index].getAttribute('href');
 	}
 
 	var lastBodyLength = -1;

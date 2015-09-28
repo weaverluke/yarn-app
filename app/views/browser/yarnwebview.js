@@ -243,6 +243,10 @@ var Browser = React.createClass({
 
 	setHighlightColor: function (color) {
 		this.sendCommand('SET_HIGHLIGHT_COLOR', color);
+	},
+
+	goToRandomUrl: function () {
+		this.sendCommand('GO_TO_RANDOM_URL');
 	}
 });
 

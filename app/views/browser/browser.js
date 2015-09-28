@@ -114,6 +114,13 @@ var Browser = React.createClass({
 		}
 	},
 
+	goToUrl: function (url) {
+		this.setState({
+			urlInInput: url
+		});
+		this.onSubmitEditing();
+	},
+
 	onWordsParsed: function (words) {
 		log({
 			message: 'words parsed',
@@ -161,7 +168,7 @@ var Browser = React.createClass({
 		}.bind(this), 1000);
 	},
 
-	onSubmitEditing: function (event) {
+	onSubmitEditing: function () {
 		this.setState({
 			words: []
 		});
@@ -195,6 +202,10 @@ var Browser = React.createClass({
 
 	unhighlightWords: function () {
 		this.refs[WEBVIEW_REF].unhighlightWords();
+	},
+
+	goToRandomUrl: function (cb) {
+		this.refs[WEBVIEW_REF].goToRandomUrl();
 	},
 
 	resetLastParsedContent: function () {

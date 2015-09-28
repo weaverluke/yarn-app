@@ -23,7 +23,9 @@ var QuizStatusBar = React.createClass({
 	getDefaultProps: function () {
 		return {
 			currentIndex: 0,
-			total: 0
+			total: 0,
+			showCancelButton: true,
+			text: ''
 		};
 	},
 
@@ -36,6 +38,21 @@ var QuizStatusBar = React.createClass({
 
 	render: function () {
 		var cancelText = 'Cancel';
+		var cancelButton;
+
+		if (this.props.showCancelButton) {
+			cancelButton = (
+				<TouchableWithoutFeedback onPress={this.props.onCancelClick}>
+					<View style={styles.leftContent}>
+						<Text style={styles.backIcon}>&#x25C5;</Text>
+						<Text style={styles.clickableText}>{cancelText}</Text>
+					</View>
+				</TouchableWithoutFeedback>
+			);
+		} else {
+			cancelButton = <View style={styles.leftContent} />;
+		}
+
 		return (
 			<Animated.View style={[styles.wrap, {
 				transform: [
@@ -43,14 +60,9 @@ var QuizStatusBar = React.createClass({
 				],
 				opacity: this.state.opacityValue
 			}]}>
-				<TouchableWithoutFeedback onPress={this.props.onCancelClick}>
-					<View style={styles.leftContent}>
-						<Text style={styles.backIcon}>&#x25C5;</Text>
-						<Text style={styles.clickableText}>{cancelText}</Text>
-					</View>
-				</TouchableWithoutFeedback>
+				{cancelButton}
 				<View style={styles.centerContent}>
-					<Text style={styles.centerText}>Word {this.props.currentIndex} of {this.props.total}</Text>
+					<Text style={styles.centerText}>{this.props.text}</Text>
 				</View>
 				<View style={styles.rightContent}>
 				</View>
