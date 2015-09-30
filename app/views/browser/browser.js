@@ -15,6 +15,8 @@ var YarnWebView = require('./yarnwebview');
 var actions = require('../../actions/actions');
 var log = require('../../logger/logger');
 
+var BLACKLIST = require('../../blacklist');
+
 var BORDER = '#E7EAEA';
 var BGWASH = 'rgba(255,255,255,0.8)';
 var HEADER = '#F9FAFB';
@@ -153,12 +155,15 @@ var Browser = React.createClass({
 			urlInInput: navState.url
 		});
 
-		this.scheduleApiInject();
+		// run api only for allowed websites
+		if (BLACKLIST.indexOf(navState.url) === -1) {
+			this.scheduleApiInject();
+		}
 
 		if (navState.url !== this.lastUrl) {
 			this.lastUrl = navState.url;
 			this.refs[WEBVIEW_REF].resetLastParsedContent();
-			this.props.onUrlChange && this.props.onUrlChange(navState);
+			this.props.onUrlChange && this.props.onUrlChange(navState.url);
 		}
 	},
 

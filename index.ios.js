@@ -21,6 +21,8 @@ var userProfileStore = require('./app/stores/userprofilestore');
 var actions = require('./app/actions/actions');
 var log = require('./app/logger/logger');
 
+var BLACKLIST = require('./app/blacklist');
+
 var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
 console.log('DIM', width, height);
@@ -236,7 +238,7 @@ var yarn = React.createClass({
 		});
 	},
 
-	onUrlChange: function () {
+	onUrlChange: function (url) {
 		actions.emit(actions.RESET);
 		this.setState({
 			wordsCountVisible: false,
@@ -244,9 +246,12 @@ var yarn = React.createClass({
 		});
 		this.refs['mainbar'].animateIn();
 
-		setTimeout(function () {
-			actions.emit(actions.LOOKING_FOR_WORDS);
-		}, 400);
+		// run api only for allowed websites
+		if (BLACKLIST.indexOf(url) === -1) {
+			setTimeout(function () {
+				actions.emit(actions.LOOKING_FOR_WORDS);
+			}, 1500);
+		}
 
 		//setTimeout(actions.emit.bind(null, actions.LOOKING_FOR_WORDS), 1000);
 	},
@@ -313,7 +318,7 @@ var yarn = React.createClass({
 		actions.on(actions.START_GAME, this.hideBottomBar);
 		actions.on(actions.CHANGE_LEVEL, this.onForceChangeLevel);
 		actions.on(actions.SETTINGS_BUTTON_PRESSED, this.showSettings);
-		this.onUrlChange();
+		this.onUrlChange(this.state.url);
 	},
 
 	_componentDidMount: function () {
