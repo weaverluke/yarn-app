@@ -258,15 +258,42 @@ module.exports = function () {
 	}
 
 	var queue = [];
+	var sendTimeout;
+
 	function send(name, data) {
 		// if no bridge yet then queue message
-		if (!yarnBridge) {
+		if (name) {
 			queue.push([name, data]);
+		}
+
+
+		if (yarnBridge) {
+			sendNextFromQueue();
+		}
+	}
+
+	function sendNextFromQueue() {
+		if (sendTimeout || !queue.length) {
 			return;
 		}
-		var msg = encodeMessage(name, data);
+
+		sendTimeout = setTimeout(function () {
+			sendTimeout = 0;
+
+			if (!queue.length) {
+				return;
+			}
+
+			sendPacket(queue.shift());
+			sendNextFromQueue();
+		}, 50);
+	}
+
+	function sendPacket(packet) {
+		var msg = encodeMessage(packet[0], packet[1]);
 		yarnBridge.send(msg);
 	}
+
 
 	function onMessage(msg) {
 		//log('onMessage', msg);
@@ -389,9 +416,10 @@ module.exports = function () {
 				onMessage(message);
 			};
 			var msg;
-			while (msg = queue.shift()) {
-				send.apply(null, msg);
-			}
+			send();
+			//while (msg = queue.shift()) {
+			//	send.apply(null, msg);
+			//}
 			bindScrollInfo();
 			console.log('WEBSITE_READY');
 			hookLinks();
