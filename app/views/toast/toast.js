@@ -48,6 +48,7 @@ var Toast = React.createClass({
 			],
 			opacity: this.state.opacityValue
 		};
+		var content = this.getToastContent();
 
 		return (
 			<TouchableWithoutFeedback onPress={this.hide}>
@@ -55,7 +56,7 @@ var Toast = React.createClass({
 					<View style={styles.center}>
 						<Animated.View style={[styles.shadowWrap, sizeStyle, animationStyle]}>
 							<View style={[styles.toast, sizeStyle]}>
-								{this.props.content}
+								{content}
 							</View>
 						</Animated.View>
 					</View>
@@ -66,6 +67,17 @@ var Toast = React.createClass({
 
 	componentDidMount: function () {
 		this.animateIn();
+	},
+
+	getToastContent: function () {
+		if (typeof this.props.content !== 'string') {
+			return this.props.content;
+		}
+		else {
+			return (
+				<Text style={styles.textContent}>{this.props.content}</Text>
+			);
+		}
 	},
 
 	animateIn: function () {
@@ -139,6 +151,15 @@ var styles = StyleSheet.create({
 		},
 		shadowOpacity: 0.7,
 		shadowRadius: 3
+	},
+
+	textContent: {
+		fontFamily: uiConfig.SPECIAL_FONT,
+		color: uiConfig.COLORS.ORANGE,
+		fontSize: 24,
+		lineHeight: 38,
+		alignSelf: 'center',
+		justifyContent: 'center'
 	}
 });
 

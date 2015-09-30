@@ -64,6 +64,7 @@ var yarn = React.createClass({
 			bottomBar: '',
 			wordsCountVisible: false,
 			toastShown: false,
+			introToastShown: false,
 			gameState: gameStateStore.GAME_STATES.NOT_STARTED
 		};
 	},
@@ -106,6 +107,7 @@ var yarn = React.createClass({
 				{this.renderQuizStatusBar()}
 				{this.renderSearchingState()}
 				{this.renderToast()}
+				{this.renderIntroToast()}
 				{this.renderResultView()}
 			</View>
 		);
@@ -228,6 +230,18 @@ var yarn = React.createClass({
 		return <View/>;
 	},
 
+	renderIntroToast: function () {
+		if (!this.state.introToastShown) {
+			return (
+				<Toast
+					content={'Choose a page...'}
+					onClose={this.hideIntroToast}
+				/>
+			);
+		}
+		return <View/>;
+	},
+
 	renderSearchingState: function () {
 		return <SearchingView ref="searching" active={this.state.gameState === GAME_STATES.LOOKING_FOR_WORDS} />;
 	},
@@ -235,6 +249,12 @@ var yarn = React.createClass({
 	hideToast: function () {
 		this.setState({
 			toastShown: true
+		});
+	},
+
+	hideIntroToast: function () {
+		this.setState({
+			introToastShown: true
 		});
 	},
 
