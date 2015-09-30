@@ -286,7 +286,7 @@ module.exports = function () {
 
 			sendPacket(queue.shift());
 			sendNextFromQueue();
-		}, 50);
+		}, 100);
 	}
 
 	function sendPacket(packet) {
@@ -349,12 +349,19 @@ module.exports = function () {
 		});
 
 		// pick 50% of the longest links
-		var index = Math.floor(Math.random() * links.length * 0.5);
+		var index = Math.floor(Math.random() * 3);
 		location = links[index];
 	}
 
 	var lastBodyLength = -1;
+	var alreadySent = false;
+
 	function sendHtml() {
+		console.trace();
+		if (alreadySent) {
+			return;
+		}
+
 		var currentBodyLength = document.body.innerHTML.length;
 		if (/(interactive|complete)/.test(document.readyState) && document.title &&
 				// wait for body to stop changing
@@ -362,6 +369,9 @@ module.exports = function () {
 
 			console.log('sending html', document.body.innerHTML.length);
 			var start = '<html><head><title>' + document.title + '</title></head>';
+
+			alreadySent = true;
+
 			// send only body content
 			return send('WEBSITE_CONTENT', start + document.body.outerHTML + '</html>');
 		}

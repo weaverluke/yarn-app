@@ -153,10 +153,11 @@ var Browser = React.createClass({
 			urlInInput: navState.url
 		});
 
+		this.scheduleApiInject();
+
 		if (navState.url !== this.lastUrl) {
 			this.lastUrl = navState.url;
 			this.refs[WEBVIEW_REF].resetLastParsedContent();
-			this.scheduleApiInject();
 			this.props.onUrlChange && this.props.onUrlChange(navState);
 		}
 	},
