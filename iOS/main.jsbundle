@@ -1358,7 +1358,7 @@ throw new TypeError(
 
 var index=findIndex.call(this,predicate,context);
 return index === -1?undefined:this[index];}});}})();
-__d('yarn/index.ios.js',["react-native/Libraries/react-native/react-native.js","yarn/app/views/wordstrip/wordstrip.js","yarn/app/views/browser/browser.js","yarn/app/views/popup/popup.js","yarn/app/views/statusbar/statusbar.js","yarn/app/views/settings/settings.js","yarn/app/views/mainbar/mainbar.js","yarn/app/views/toast/toast.js","yarn/app/views/toast/wordscounttoastcontent.js","yarn/app/views/searching/searching.js","yarn/app/views/quiz/quizstatusbar.js","yarn/app/views/quiz/question.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js","Dimensions","NativeModules"],function(global, require, module, exports) {  'use strict';
+__d('yarn/index.ios.js',["react-native/Libraries/react-native/react-native.js","yarn/app/views/wordstrip/wordstrip.js","yarn/app/views/browser/browser.js","yarn/app/views/popup/popup.js","yarn/app/views/statusbar/statusbar.js","yarn/app/views/settings/settings.js","yarn/app/views/mainbar/mainbar.js","yarn/app/views/toast/toast.js","yarn/app/views/toast/wordscounttoastcontent.js","yarn/app/views/searching/searching.js","yarn/app/views/quiz/quizstatusbar.js","yarn/app/views/quiz/question.js","yarn/app/views/quiz/result.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js","Dimensions","NativeModules"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');
 
@@ -1374,6 +1374,7 @@ var SearchingView=require('yarn/app/views/searching/searching.js');
 
 var QuizStatusBar=require('yarn/app/views/quiz/quizstatusbar.js');
 var QuestionView=require('yarn/app/views/quiz/question.js');
+var ResultView=require('yarn/app/views/quiz/result.js');
 
 var gameStateStore=require('yarn/app/stores/gamestatestore.js');
 var userProfileStore=require('yarn/app/stores/userprofilestore.js');
@@ -1461,8 +1462,9 @@ arrowRect:this.state.firstButtonRect}),
 
 this.renderSettings(),
 this.renderQuizStatusBar(),
+this.renderSearchingState(),
 this.renderToast(),
-this.renderSearchingState()));},
+this.renderResultView()));},
 
 
 
@@ -1476,10 +1478,12 @@ if(this.state.bottomBar !== 'wordstrip'){
 return React.createElement(View,null);}
 
 
+var text='Word ' + (gameStateStore.get('currentWordIndex') + 1) + 
+' of ' + gameStateStore.get('pageWords').length;
+
 return (
 React.createElement(QuizStatusBar,{
-currentIndex:gameStateStore.get('currentWordIndex') + 1,
-total:gameStateStore.get('pageWords').length,
+text:text,
 onCancelClick:this.stopQuiz}));},
 
 
@@ -1496,8 +1500,9 @@ case 'wordscount':
 return this.renderInfoBar();
 case 'wordstrip':
 return this.renderWordStrip();
-case 'result':
-return this.renderResultView();
+
+
+
 case 'mainbar':
 return this.renderMainBar();
 default:
@@ -1506,14 +1511,18 @@ return React.createElement(View,null);}},
 
 
 renderResultView:function(){
+if(this.state.bottomBar !== 'result'){
+return React.createElement(View,null);}
+
+
 return (
-React.createElement(StatusBar,{
+React.createElement(ResultView,{
 correctWords:gameStateStore.get('correct'),
 totalWords:gameStateStore.get('pageWords').length,
-onNextPress:this.closeResultView,
 level:userProfileStore.get('level'),
 score:userProfileStore.get('score'),
-showWordsCount:false}));},
+onDonePressed:this.closeResultView,
+onRandomPressed:this.onRandomPagePressed}));},
 
 
 
@@ -1565,7 +1574,7 @@ initialLang:userProfileStore.get('language')}));},
 
 renderToast:function(){
 if(!this.state.toastShown && this.state.gameState === GAME_STATES.WORDS_FOUND){
-var toastContent=React.createElement(ToastContent,{newCount:gameStateStore.get('pageWords').length,oldCount:0});
+var toastContent=React.createElement(ToastContent,{count:gameStateStore.get('pageWords').length});
 return (
 React.createElement(Toast,{
 content:toastContent,
@@ -1578,10 +1587,7 @@ return React.createElement(View,null);},
 
 
 renderSearchingState:function(){
-if(this.state.gameState === GAME_STATES.LOOKING_FOR_WORDS){
-return React.createElement(SearchingView,null);}
-
-return React.createElement(View,null);},
+return React.createElement(SearchingView,{ref:'searching',active:this.state.gameState === GAME_STATES.LOOKING_FOR_WORDS});},
 
 
 hideToast:function(){
@@ -1635,6 +1641,11 @@ wordsCountVisible:false});
 this.refs['mainbar'].animateIn();},
 
 
+onRandomPagePressed:function(){
+this.closeResultView();
+this.refs[BROWSER_REF].goToRandomUrl();},
+
+
 showSettings:function(){
 this.setState({
 settingsViewVisible:true});},
@@ -1663,6 +1674,13 @@ actions.on(actions.START_GAME,this.hideBottomBar);
 actions.on(actions.CHANGE_LEVEL,this.onForceChangeLevel);
 actions.on(actions.SETTINGS_BUTTON_PRESSED,this.showSettings);
 this.onUrlChange();},
+
+
+_componentDidMount:function(){
+
+this.setState({
+bottomBar:'result'});},
+
 
 
 hideBottomBar:function(){
@@ -1777,9 +1795,6 @@ onWordPressed:function(word,index){
 if(index === 0){
 this.refs[BROWSER_REF].scrollToWord(word);
 return;}
-
-
-
 
 
 actions.emit(actions.WORD_PRESSED,word);},
@@ -52268,7 +52283,7 @@ Object.keys(componentOrElement));}
 
 module.exports = findDOMNode;
 });
-__d('yarn/app/views/wordstrip/wordstrip.js',["react-native/Libraries/react-native/react-native.js","yarn/app/uiconfig.js","yarn/app/views/wordstrip/wordbutton.js","yarn/app/views/statusbar/navbarbutton.js"],function(global, require, module, exports) {  'use strict';
+__d('yarn/app/views/wordstrip/wordstrip.js',["react-native/Libraries/react-native/react-native.js","yarn/app/views/wordstrip/wordbutton.js","yarn/app/views/statusbar/navbarbutton.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -52423,18 +52438,22 @@ ORANGE:'rgb(247, 148, 30)',
 RED:'rgb(223, 28, 36)',
 PALE_BLUE:'rgb(238, 248, 253)',
 PALE_GREEN:'rgb(240, 248, 243)',
-PALE_PINK:'rgb(253, 243, 244)'},
+PALE_PINK:'rgb(253, 243, 244)',
+BLUE_BG:'rgba(39, 170, 225, 0.25)',
+ORANGE_BG:'rgba(247, 148, 30, 0.12)'},
 
 
 BROWSER_BAR_HEIGHT:40,
 TOOLBAR_HEIGHT:50,
-TOAST_HEIGHT:80,
+
+TOAST_HEIGHT:50,
 TOAST_WIDTH:275,
+
 WORDBUTTON_PADDING:14,
 TOOLBAR_FONT_SIZE:14,
 TOOLBAR_ICON_SIZE:22,
-PROGRESSBAR_FONT_SIZE:12,
-PROGRESSBAR_HEIGHT:2,
+PROGRESSBAR_FONT_SIZE:24,
+PROGRESSBAR_HEIGHT:6,
 TOOLBAR_BUTTON_WIDTH:70,
 TOOLBAR_ANIMATION_OFFSET:15,
 SPECIAL_FONT:'Bauhaus 93',
@@ -52678,7 +52697,7 @@ __d('image!settings-icon',[],function(global, require, module, exports) {  modul
 });
 __d('image!next-icon',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/next-icon.imageset/next-icon.png","uri":"next-icon","width":44,"height":44,"deprecated":true};
 });
-__d('yarn/app/views/browser/browser.js',["react-native/Libraries/react-native/react-native.js","yarn/app/stores/gamestatestore.js","yarn/app/views/browser/yarnwebview.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
+__d('yarn/app/views/browser/browser.js',["react-native/Libraries/react-native/react-native.js","yarn/app/stores/gamestatestore.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js","yarn/app/uiconfig.js","yarn/app/views/browser/yarnwebview.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -52690,7 +52709,7 @@ StyleSheet=
 
 React.StyleSheet;var Text=React.Text;var TextInput=React.TextInput;var TouchableOpacity=React.TouchableOpacity;var View=React.View;var WebView=React.WebView;
 
-var gameSateStore=require('yarn/app/stores/gamestatestore.js');
+var gameStateStore=require('yarn/app/stores/gamestatestore.js');
 var YarnWebView=require('yarn/app/views/browser/yarnwebview.js');
 var actions=require('yarn/app/actions/actions.js');
 var log=require('yarn/app/logger/logger.js');
@@ -52773,7 +52792,7 @@ onScroll:this.props.onScroll || function(){}})));},
 
 
 componentDidMount:function(){
-gameSateStore.addChangeListener(this.onGameStateChanged);
+gameStateStore.addChangeListener(this.onGameStateChanged);
 
 var webView=this.refs[WEBVIEW_REF];
 actions.on(actions.WORDS_READY,webView.prepareWords);
@@ -52785,10 +52804,20 @@ actions.emit(actions.VISITED_WORDS_CHANGED,words);},
 
 
 onGameStateChanged:function(){
-if(gameSateStore.get('currentState') === gameSateStore.GAME_STATES.WAITING_FOR_ANSWER){
-var currentWord=gameSateStore.get('currentWord');
+if(gameStateStore.get('currentState') === gameStateStore.GAME_STATES.WAITING_FOR_ANSWER){
+if(gameStateStore.get('currentWordIndex') === 0){
+this.refs[WEBVIEW_REF].setHighlightColor(uiConfig.COLORS.BLUE_BG);}
+
+var currentWord=gameStateStore.get('currentWord');
 this.highlightWord(currentWord.text);}},
 
+
+
+goToUrl:function(url){
+this.setState({
+urlInInput:url});
+
+this.onSubmitEditing();},
 
 
 onWordsParsed:function(words){
@@ -52838,7 +52867,7 @@ this.refs[WEBVIEW_REF].injectYarnWebsiteApi();}).
 bind(this),1000);},
 
 
-onSubmitEditing:function(event){
+onSubmitEditing:function(){
 this.setState({
 words:[]});
 
@@ -52872,6 +52901,10 @@ this.refs[WEBVIEW_REF].scrollToWord(word);},
 
 unhighlightWords:function(){
 this.refs[WEBVIEW_REF].unhighlightWords();},
+
+
+goToRandomUrl:function(cb){
+this.refs[WEBVIEW_REF].goToRandomUrl();},
 
 
 resetLastParsedContent:function(){
@@ -53310,7 +53343,7 @@ return typeof arg === 'object' && arg !== null;}
 function isUndefined(arg){
 return arg === void 0;}
 });
-__d('yarn/app/views/browser/yarnwebview.js',["react-native/Libraries/react-native/react-native.js","react-native-webview-bridge/jsx/WebViewBridge.js","yarn/app/logger/logger.js","node-read/index.js","yarn/app/views/browser/wordHelpers.js","yarn/app/views/browser/websiteapi.js"],function(global, require, module, exports) {  'use strict';
+__d('yarn/app/views/browser/yarnwebview.js',["react-native/Libraries/react-native/react-native.js","react-native-webview-bridge/jsx/WebViewBridge.js","yarn/app/logger/logger.js","node-read/index.js","yarn/app/views/browser/wordHelpers.js","yarn/app/uiconfig.js","yarn/app/views/browser/websiteapi.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -53326,6 +53359,8 @@ var wordHelpers=require('yarn/app/views/browser/wordHelpers.js');
 
 var YARN_API=require('yarn/app/views/browser/websiteapi.js').toString();
 YARN_API = '(' + YARN_API + '())';
+
+var uiConfig=require('yarn/app/uiconfig.js');
 
 function encodeMessage(name,data){
 return JSON.stringify({
@@ -53412,6 +53447,7 @@ console.log.apply(console,args);
 break;
 
 case 'WEBSITE_READY':
+this.setHighlightColor(uiConfig.COLORS.ORANGE_BG);
 this.requestWebsiteContent();
 break;
 
@@ -53547,7 +53583,15 @@ this.sendCommand('UNHIGHLIGHT_WORDS');},
 
 
 resetLastParsedContent:function(){
-this.lastParsedContent = '';}});
+this.lastParsedContent = '';},
+
+
+setHighlightColor:function(color){
+this.sendCommand('SET_HIGHLIGHT_COLOR',color);},
+
+
+goToRandomUrl:function(){
+this.sendCommand('GO_TO_RANDOM_URL');}});
 
 
 
@@ -76870,16 +76914,19 @@ window.yarnHighlight = (function(){
 var SKIP_NODES=['SCRIPT','NOSCRIPT'];
 
 var styleEl;
+var highlightStyleEl;
 
 var highlightColor='#44FF44';
 var visitedWords=[];
 
 function setHighlightColor(color){
-highlightColor = color;}
+highlightColor = color;
+injectHighlightStyle();}
 
 
 function prepareWords(words){
 injectStyles();
+injectHighlightStyle();
 reset();
 words.forEach(prepareWord);
 window.addEventListener('scroll',onPageScroll);
@@ -76892,20 +76939,23 @@ if(styleEl && styleEl.parentNode){
 styleEl.parentNode.removeChild(styleEl);}
 
 var head=document.head || document.getElementsByTagName('head')[0];
-var commonCss=
+
+var bgAnimationStyle='-webkit-transition: background-color 500ms linear;' + 
+'transition: background-color 500ms linear;';
+
+var commonCss=bgAnimationStyle + 
 'width: 2px; height: 100%;' + 
 'position: absolute;' + 
 'top: 0;' + 
 'content: "";' + 
 'display: block;' + 
-'background-color:' + highlightColor + 
 '} ';
 
-var css='[data-yarn-highlight] { position: relative; background-color:rgba(0,0,0,0) }' + 
+var css='[data-yarn-highlight] { position: relative; background-color:rgba(0,0,0,0) } ' + 
 
 '[data-yarn-highlight].highlighted { ' + 
-'font-style:inherit;font-weight:inherit;' + 
-'background-color:' + highlightColor + '}' + 
+bgAnimationStyle + 
+'font-style:inherit;font-weight:inherit} ' + 
 
 '[data-yarn-highlight].highlighted:before {' + 
 'position:absolute; top:0; left:-2px;' + 
@@ -76919,6 +76969,29 @@ commonCss +
 'border-bottom-right-radius:2px;' + 
 commonCss;
 
+styleEl = document.createElement('style');
+
+styleEl.type = 'text/css';
+if(styleEl.styleSheet){
+styleEl.styleSheet.cssText = css;}else 
+{
+styleEl.appendChild(document.createTextNode(css));}
+
+
+head.appendChild(styleEl);}
+
+
+function injectHighlightStyle(){
+if(highlightStyleEl && highlightStyleEl.parentNode){
+highlightStyleEl.parentNode.removeChild(highlightStyleEl);}
+
+
+var css='[data-yarn-highlight].highlighted, ' + 
+'[data-yarn-highlight].highlighted:before, ' + 
+'[data-yarn-highlight].highlighted:after {' + 
+'background-color:' + highlightColor + '}';
+
+var head=document.head || document.getElementsByTagName('head')[0];
 styleEl = document.createElement('style');
 
 styleEl.type = 'text/css';
@@ -77105,6 +77178,9 @@ switch(msg.name){
 case 'GET_HTML':
 return sendHtml();
 
+case 'SET_HIGHLIGHT_COLOR':
+return yarnHighlight.setHighlightColor(msg.data);
+
 case 'PREPARE_WORDS':
 return yarnHighlight.prepareWords(msg.data);
 
@@ -77120,9 +77196,38 @@ return yarnHighlight.scrollToWord(msg.data);
 case 'UNHIGHLIGHT_WORDS':
 return yarnHighlight.unhighlight();
 
+case 'GO_TO_RANDOM_URL':
+return goToRandomUrl();
+
 default:
 return;}}
 
+
+
+function goToRandomUrl(){
+var links=[].slice.call(document.getElementsByTagName('a'));
+var origin=location.origin;
+links = links.filter(function(link){
+var href=link.getAttribute('href');
+
+if(!href || href === location.href){
+return false;}
+
+
+href = href.replace(/\/$/,'');
+return href && href.indexOf(origin) === 0 && href !== origin;}).
+map(function(link){
+return link.getAttribute('href');});
+
+
+
+links.sort(function(a,b){
+return b.length - a.length;});
+
+
+
+var index=Math.floor(Math.random() * links.length * 0.5);
+location = links[index].getAttribute('href');}
 
 
 var lastBodyLength=-1;
@@ -77192,7 +77297,17 @@ send.apply(null,msg);}
 
 bindScrollInfo();
 console.log('WEBSITE_READY');
+hookLinks();
 send('WEBSITE_READY');});}
+
+
+
+function hookLinks(){
+document.addEventListener('click',function(ev){
+if(ev.target && ev.target.tagName === 'A' && ev.target.getAttribute('href')){
+ev.preventDefault();
+location = ev.target.getAttribute('href');}});}
+
 
 
 
@@ -79148,14 +79263,14 @@ backgroundColor:'transparent'},
 toast:{
 backgroundColor:'#FFF',
 borderColor:uiConfig.COLORS.MID_GREY,
-borderRadius:100,
+borderRadius:10,
 borderWidth:1,
 overflow:'hidden'},
 
 
 shadowWrap:{
 borderColor:uiConfig.COLORS.MID_GREY,
-borderRadius:100,
+borderRadius:10,
 shadowColor:'#000',
 shadowOffset:{
 width:0,
@@ -79184,29 +79299,17 @@ var ToastContent=React.createClass({
 
 getDefaultProps:function(){
 return {
-newCount:0,
-oldCount:0};},
+count:0};},
 
 
 
 render:function(){
 return (
 React.createElement(View,{style:styles.wrap},
-React.createElement(View,{style:styles.leftCell},
+React.createElement(View,{style:styles.cell},
 React.createElement(View,{style:styles.vCenter},
-React.createElement(Text,{style:styles.leftNumber},this.props.oldCount),
-React.createElement(Text,{style:styles.mainText},'re-test'))),
-
-
-React.createElement(View,{style:styles.rightCell},
-React.createElement(View,{style:styles.vCenter},
-React.createElement(Text,{style:styles.rightNumber},this.props.newCount),
-React.createElement(Text,{style:styles.mainText},'new'))),
-
-
-React.createElement(View,{style:styles.label},
-React.createElement(View,{style:styles.labelBg},
-React.createElement(Text,{style:styles.labelText},'WORDS FOR YOU')))));}});
+React.createElement(Text,{style:styles.number},this.props.count),
+React.createElement(Text,{style:styles.text},'words to study')))));}});
 
 
 
@@ -79217,73 +79320,29 @@ React.createElement(Text,{style:styles.labelText},'WORDS FOR YOU')))));}});
 var styles=StyleSheet.create({
 wrap:{
 flex:1,
-flexDirection:'row',
-alignItems:'stretch',
-justifyContent:'space-around'},
-
-
-label:{
-position:'absolute',
-top:5,
-left:0,
-right:0,
-height:10,
-flex:0,
-alignItems:'center'},
-
-
-labelBg:{
-backgroundColor:uiConfig.COLORS.LIGHT_GREY,
-borderRadius:8,
-paddingLeft:10,
-paddingRight:10},
-
-
-labelText:{
-color:uiConfig.COLORS.TEXT,
-fontSize:12},
-
-
-leftCell:{
-borderRightWidth:1,
-borderRightColor:uiConfig.COLORS.MID_GREY,
-alignItems:'center',
-flex:1,
-paddingTop:30,
-paddingLeft:5},
-
-
-rightCell:{
-alignItems:'center',
-flex:1,
-paddingTop:30,
-paddingRight:5},
+flexDirection:'column',
+alignItems:'stretch'},
 
 
 vCenter:{
 flexDirection:'row',
 flex:1,
-alignItems:'center'},
+alignItems:'center',
+justifyContent:'center'},
 
 
-mainText:{
+text:{
 fontSize:26,
 fontFamily:uiConfig.SPECIAL_FONT,
 color:uiConfig.COLORS.MID_GREY,
-marginLeft:5},
+marginLeft:10},
 
 
-leftNumber:{
+number:{
 fontSize:36,
+marginTop:4,
 fontFamily:uiConfig.SPECIAL_FONT,
-color:uiConfig.COLORS.ORANGE},
-
-
-rightNumber:{
-fontSize:36,
-fontFamily:uiConfig.SPECIAL_FONT,
-color:uiConfig.COLORS.RED}});
-
+color:uiConfig.COLORS.ORANGE}});
 
 
 
@@ -79301,6 +79360,7 @@ React.StyleSheet;var View=React.View;var Animated=React.Animated;
 
 var BAR_WIDTH=18;
 var ANIMATION_TIME=600;
+var FADE_OUT_TIME=1000;
 
 var colors=[
 'rgba(39, 170, 225, 0.3)',
@@ -79319,31 +79379,50 @@ var Toast=React.createClass({
 getInitialState:function(){
 return {
 leftValue:new Animated.Value(-BAR_WIDTH),
-colorIndex:0};},
+opacityValue:new Animated.Value(0),
+colorIndex:0,
+hidden:true};},
+
+
+
+getDefaultProps:function(){
+return {
+active:false};},
 
 
 
 render:function(){
-var animationStyle={
+
+if(this.state.hidden){
+return React.createElement(View,null);}
+
+
+var barAnimationStyle={
 transform:[
 {translateX:this.state.leftValue}],
 
 backgroundColor:colors[this.state.colorIndex]};
 
 
+var wrapAnimationStyle={
+opacity:this.state.opacityValue};
+
+
 return (
-React.createElement(View,{ref:'wrap',pointerEvents:'none',style:styles.wrap},
-React.createElement(Animated.View,{pointerEvents:'none',style:[styles.scan,animationStyle]})));},
+React.createElement(Animated.View,{ref:'wrap',pointerEvents:'none',style:[styles.wrap,wrapAnimationStyle]},
+React.createElement(View,{ref:'barBox',style:styles.barBox},
+React.createElement(Animated.View,{pointerEvents:'none',style:[styles.scan,barAnimationStyle]}))));},
 
 
 
 
-componentDidMount:function(){
-setTimeout(this.animateToRight,500);},
+
+componentWillReceiveProps:function(props){
+props.active?this.show():this.hide();},
 
 
 animateToRight:function(){
-if(!this.isMounted()){
+if(!this.isMounted() || this.state.hidden){
 return;}
 
 
@@ -79351,11 +79430,12 @@ this.nextColor();
 
 
 
-if(!this.refs.wrap){
+if(!this.refs.barBox || !this.refs.barBox.measure){
 return setTimeout(this.animateToRight,500);}
 
 
-this.refs.wrap.measure((function(ox,oy,width,height,px,py){
+
+this.refs.barBox.measure((function(ox,oy,width,height,px,py){
 Animated.timing(
 this.state.leftValue,
 {toValue:width,duration:ANIMATION_TIME}).
@@ -79364,7 +79444,7 @@ bind(this));},
 
 
 animateToLeft:function(){
-if(!this.isMounted()){
+if(!this.isMounted() || this.state.hidden){
 return;}
 
 
@@ -79378,9 +79458,50 @@ start(this.animateToRight);},
 
 nextColor:function(){
 this.setState({
-colorIndex:this.state.colorIndex === colors.length - 1?0:this.state.colorIndex + 1});}});
+colorIndex:this.state.colorIndex === colors.length - 1?0:this.state.colorIndex + 1});},
 
 
+
+animateOut:function(cb){
+Animated.parallel([
+Animated.timing(
+this.state.opacityValue,
+{toValue:0,duration:FADE_OUT_TIME})]).
+
+start(cb);},
+
+
+animateIn:function(cb){
+Animated.parallel([
+Animated.timing(
+this.state.opacityValue,
+{toValue:1,duration:FADE_OUT_TIME / 10})]).
+
+start(cb);},
+
+
+hide:function(){
+
+if(this.state.hidden){
+return;}
+
+
+this.animateOut((function(){
+this.setState({hidden:true});}).
+bind(this));},
+
+
+show:function(){
+
+if(!this.state.hidden){
+return;}
+
+
+this.setState({hidden:false});
+setTimeout((function(){
+this.animateIn();
+this.animateToRight();}).
+bind(this),10);}});
 
 
 
@@ -79394,6 +79515,14 @@ bottom:uiConfig.TOOLBAR_HEIGHT,
 alignItems:'center',
 flex:1,
 backgroundColor:'transparent'},
+
+
+barBox:{
+position:'absolute',
+top:0,
+left:0,
+right:0,
+bottom:0},
 
 
 scan:{
@@ -79433,7 +79562,9 @@ onCancelClick:PropTypes.func.isRequired},
 getDefaultProps:function(){
 return {
 currentIndex:0,
-total:0};},
+total:0,
+showCancelButton:true,
+text:''};},
 
 
 
@@ -79446,6 +79577,21 @@ marginTopValue:new Animated.Value(-uiConfig.TOOLBAR_ANIMATION_OFFSET)};},
 
 render:function(){
 var cancelText='Cancel';
+var cancelButton;
+
+if(this.props.showCancelButton){
+cancelButton = 
+React.createElement(TouchableWithoutFeedback,{onPress:this.props.onCancelClick},
+React.createElement(View,{style:styles.leftContent},
+React.createElement(Text,{style:styles.backIcon},'◅'),
+React.createElement(Text,{style:styles.clickableText},cancelText)));}else 
+
+
+
+{
+cancelButton = React.createElement(View,{style:styles.leftContent});}
+
+
 return (
 React.createElement(Animated.View,{style:[styles.wrap,{
 transform:[
@@ -79453,14 +79599,9 @@ transform:[
 
 opacity:this.state.opacityValue}]},
 
-React.createElement(TouchableWithoutFeedback,{onPress:this.props.onCancelClick},
-React.createElement(View,{style:styles.leftContent},
-React.createElement(Text,{style:styles.backIcon},'◅'),
-React.createElement(Text,{style:styles.clickableText},cancelText))),
-
-
+cancelButton,
 React.createElement(View,{style:styles.centerContent},
-React.createElement(Text,{style:styles.centerText},'Word ',this.props.currentIndex,' of ',this.props.total)),
+React.createElement(Text,{style:styles.centerText},this.props.text)),
 
 React.createElement(View,{style:styles.rightContent})));},
 
@@ -79566,7 +79707,7 @@ color:uiConfig.COLORS.BLUE}});
 
 module.exports = QuizStatusBar;
 });
-__d('yarn/app/views/quiz/question.js',["react-native/Libraries/react-native/react-native.js","yarn/app/uiconfig.js","yarn/app/views/quiz/wordbutton.js"],function(global, require, module, exports) {  'use strict';
+__d('yarn/app/views/quiz/question.js',["react-native/Libraries/react-native/react-native.js","yarn/app/views/quiz/wordbutton.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -79954,6 +80095,392 @@ module.exports = WordButton;
 __d('image!magnifier',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/magnifier.imageset/magnifier.png","uri":"magnifier","width":44,"height":44,"deprecated":true};
 });
 __d('image!next',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/next.imageset/next.png","uri":"next","width":60,"height":60,"deprecated":true};
+});
+__d('yarn/app/views/quiz/result.js',["react-native/Libraries/react-native/react-native.js","yarn/app/uiconfig.js","Dimensions","yarn/app/views/quiz/quizresult.js"],function(global, require, module, exports) {  'use strict';
+
+var React=require('react-native/Libraries/react-native/react-native.js');var 
+
+StyleSheet=
+
+
+
+
+
+
+React.StyleSheet;var View=React.View;var Text=React.Text;var TouchableWithoutFeedback=React.TouchableWithoutFeedback;var Image=React.Image;var Animated=React.Animated;var Easing=React.Easing;
+
+var QuizResult=require('yarn/app/views/quiz/quizresult.js');
+
+var ANIMATION_TIME=300;
+
+var uiConfig=require('yarn/app/uiconfig.js');
+
+var Dimensions=require('Dimensions');var _Dimensions$get=
+Dimensions.get('window');var width=_Dimensions$get.width;var height=_Dimensions$get.height;
+
+var ResultView=React.createClass({
+
+getDefaultProps:function(){
+return {
+correctWords:0,
+totalWords:0,
+onDonePressed:function(){},
+onRandomPressed:function(){},
+level:0,
+score:0,
+showWordsCount:false};},
+
+
+
+getInitialState:function(){
+return {
+topOffsetValue:new Animated.Value(height - uiConfig.TOOLBAR_HEIGHT)};},
+
+
+
+render:function(){
+var animationStyle={
+transform:[
+{translateY:this.state.topOffsetValue}]};
+
+
+
+return (
+React.createElement(Animated.View,{style:[styles.wrap,animationStyle]},
+React.createElement(View,{style:[styles.row,styles.transparentBg]},
+React.createElement(View,{style:styles.headerWrap},
+React.createElement(Text,{style:styles.headerText},'Quiz completed'))),
+
+
+
+React.createElement(QuizResult,{
+correctWords:this.props.correctWords,
+totalWords:this.props.totalWords}),
+
+
+React.createElement(Spacer,null),
+
+React.createElement(View,{style:styles.row},
+React.createElement(View,{style:styles.rowLabel},
+React.createElement(Text,{style:[styles.text,styles.blueText]},'Score')),
+
+React.createElement(View,{style:[styles.rowValue,styles.paleBlueBg]},
+React.createElement(Text,{style:[styles.text,styles.blueText]},this.props.score))),
+
+
+
+React.createElement(View,{style:styles.row},
+React.createElement(View,{style:styles.rowLabel},
+React.createElement(Text,{style:[styles.text,styles.orangeText]},'Vocab level')),
+
+React.createElement(View,{style:[styles.rowValue,styles.orangeBg]},
+React.createElement(Text,{style:[styles.text,styles.whiteText]},this.props.level))),
+
+
+
+React.createElement(Stretch,null),
+
+React.createElement(View,{style:styles.row},
+React.createElement(TouchableWithoutFeedback,{onPress:this.hide(this.props.onDonePressed)},
+React.createElement(View,{style:[styles.button,styles.greyBg]},
+React.createElement(Text,{style:styles.buttonText},'Done'))),
+
+
+React.createElement(TouchableWithoutFeedback,{onPress:this.hide(this.props.onRandomPressed)},
+React.createElement(View,{style:[styles.button,styles.blueBg]},
+React.createElement(Text,{style:styles.buttonText},'Random!'))))));},
+
+
+
+
+
+
+
+
+componentDidMount:function(){
+
+setTimeout(this.animateIn,150);},
+
+
+animateIn:function(){
+Animated.parallel([
+Animated.timing(
+this.state.topOffsetValue,
+{toValue:0,duration:ANIMATION_TIME,easing:Easing.in})]).
+
+start();},
+
+
+animateOut:function(cb){
+Animated.parallel([
+Animated.timing(
+this.state.topOffsetValue,
+{toValue:height,duration:ANIMATION_TIME})]).
+
+start(cb);},
+
+
+hide:function(cb){
+return (function(){
+this.animateOut(cb);}).
+bind(this);}});
+
+
+
+
+var Spacer=React.createClass({
+render:function(){
+return React.createElement(View,{style:styles.spacer});}});
+
+
+
+var Stretch=React.createClass({
+render:function(){
+return React.createElement(View,{style:styles.stretch});}});
+
+
+
+var styles=StyleSheet.create({
+
+wrap:{
+position:'absolute',
+top:0,
+left:0,
+bottom:0,
+right:0,
+alignItems:'stretch',
+flex:1,
+backgroundColor:uiConfig.COLORS.LIGHT_GREY},
+
+
+spacer:{
+height:uiConfig.TOOLBAR_HEIGHT,
+backgroundColor:'transparent',
+borderBottomWidth:1,
+borderBottomColor:uiConfig.COLORS.MID_GREY},
+
+
+stretch:{
+height:uiConfig.TOOLBAR_HEIGHT,
+backgroundColor:'transparent',
+flex:1},
+
+
+row:{
+height:uiConfig.TOOLBAR_HEIGHT,
+backgroundColor:'white',
+flexDirection:'row',
+alignItems:'stretch',
+borderBottomWidth:1,
+borderBottomColor:uiConfig.COLORS.MID_GREY},
+
+
+text:{
+fontFamily:uiConfig.SPECIAL_FONT,
+fontSize:30,
+lineHeight:40,
+backgroundColor:'transparent'},
+
+
+rowLabel:{
+flex:1,
+paddingLeft:20},
+
+
+rowValue:{
+alignItems:'center',
+width:100},
+
+
+blueBg:{
+backgroundColor:uiConfig.COLORS.BLUE},
+
+
+paleBlueBg:{
+backgroundColor:uiConfig.COLORS.PALE_BLUE},
+
+
+orangeBg:{
+backgroundColor:uiConfig.COLORS.ORANGE},
+
+
+greyBg:{
+backgroundColor:uiConfig.COLORS.SELECTED_GREY},
+
+
+transparentBg:{
+backgroundColor:'transparent'},
+
+
+blueText:{
+color:uiConfig.COLORS.BLUE},
+
+
+orangeText:{
+color:uiConfig.COLORS.ORANGE},
+
+
+whiteText:{
+color:'white'},
+
+
+button:{
+flex:1,
+alignItems:'center'},
+
+
+buttonText:{
+fontFamily:uiConfig.SPECIAL_FONT,
+fontSize:24,
+lineHeight:38,
+backgroundColor:'transparent',
+color:'white'},
+
+
+headerWrap:{
+flex:1,
+alignItems:'center'},
+
+
+headerText:{
+fontSize:18,
+lineHeight:36,
+fontWeight:'500',
+justifyContent:'center',
+color:uiConfig.COLORS.TEXT}});
+
+
+
+
+module.exports = ResultView;
+});
+__d('yarn/app/views/quiz/quizresult.js',["react-native/Libraries/react-native/react-native.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  var React=require('react-native/Libraries/react-native/react-native.js');var 
+
+StyleSheet=
+
+
+
+
+
+
+React.StyleSheet;var View=React.View;var Text=React.Text;var Dimensions=React.Dimensions;var Animated=React.Animated;var Easing=React.Easing;var TouchableWithoutFeedback=React.TouchableWithoutFeedback;
+
+var uiConfig=require('yarn/app/uiconfig.js');var _Dimensions$get=
+Dimensions.get('window');var width=_Dimensions$get.width;var height=_Dimensions$get.height;
+
+var QuizResult=React.createClass({
+
+getDefaultProps:function(){
+return {
+correctWords:0,
+totalWords:1};},
+
+
+
+render:function(){
+var progress=this.props.correctWords / this.props.totalWords * 100;
+
+return (
+React.createElement(View,{style:styles.progressBox},
+React.createElement(View,{style:styles.progressTextWrap},
+React.createElement(Text,{style:styles.text},this.props.correctWords,' of ',this.props.totalWords,' correct')),
+
+React.createElement(ProgressBar,{progress:progress})));}});
+
+
+
+
+
+var ProgressBar=React.createClass({
+
+getDefaultProps:function(){
+return {
+progress:0};},
+
+
+
+getInitialState:function(){
+return {
+flexValue:new Animated.Value(-width * this.props.progress / 100)};},
+
+
+
+componentDidMount:function(){
+setTimeout(this.animateProgressBar,400);},
+
+
+render:function(){
+
+var progressStyle={
+flex:this.props.progress,
+transform:[
+{translateX:this.state.flexValue}]};
+
+
+var endStyle={
+flex:100 - this.props.progress};
+
+
+return (
+React.createElement(View,{style:styles.progressBarWrap},
+React.createElement(Animated.View,{style:[styles.progressBar,progressStyle]}),
+React.createElement(View,{style:[styles.progressBarEnd,endStyle]})));},
+
+
+
+
+animateProgressBar:function(){
+Animated.parallel([
+Animated.timing(
+this.state.flexValue,
+{toValue:0,duration:500})]).
+
+start();}});
+
+
+
+
+var styles=StyleSheet.create({
+
+progressBox:{
+height:uiConfig.TOOLBAR_HEIGHT,
+backgroundColor:'#FFFFFF'},
+
+
+progressTextWrap:{
+flexDirection:'row',
+alignItems:'center',
+flex:1,
+paddingLeft:20},
+
+
+text:{
+color:uiConfig.COLORS.SELECTED_GREY,
+fontSize:uiConfig.PROGRESSBAR_FONT_SIZE,
+lineHeight:uiConfig.PROGRESSBAR_FONT_SIZE + 10,
+fontFamily:uiConfig.SPECIAL_FONT},
+
+
+progressBarWrap:{
+flexDirection:'row',
+backgroundColor:'white',
+height:uiConfig.PROGRESSBAR_HEIGHT},
+
+
+progressBar:{
+backgroundColor:uiConfig.COLORS.GREEN,
+height:uiConfig.PROGRESSBAR_HEIGHT},
+
+
+progressBarEnd:{
+backgroundColor:'white',
+height:uiConfig.PROGRESSBAR_HEIGHT}});
+
+
+
+
+
+module.exports = QuizResult;
 });
 ;require("yarn/index.ios.js");
 //@ sourceMappingURL=/index.ios.map

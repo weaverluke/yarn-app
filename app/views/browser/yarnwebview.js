@@ -12,6 +12,8 @@ var log = require('../../logger/logger');
 var readability = require('node-read');
 var wordHelpers = require('./wordHelpers');
 
+var actions = require('../../actions/actions');
+
 var YARN_API = require('./websiteapi').toString();
 YARN_API = '(' + YARN_API + '())';
 
@@ -129,6 +131,23 @@ var Browser = React.createClass({
 			status: navState.title,
 			loading: navState.loading
 		});
+
+		//function lock() {
+		//	window.yx ? window.yx++ : (window.yx = 1);
+		//	function prevent(ev) {
+		//		console.log('PREVENT:', ev.target, ev);
+		//		if (ev.target && ev.target.tagName.toLowerCase() === 'a') {
+		//			ev.preventDefault();
+		//			ev.stopPropagation();
+		//		}
+		//	}
+		//	document.addEventListener('click', prevent, true);
+		//}
+		//var s = '(' + lock.toString() + '());'
+		//
+		//if (!navState.loading) {
+		//	this.refs[WEBVIEW_REF].evalScript(s);
+		//}
 	},
 
 	requestWebsiteContent: function (shouldInjectYarnApi) {

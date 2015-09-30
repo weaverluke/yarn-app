@@ -323,7 +323,7 @@ module.exports = function () {
 
 		// pick 50% of the longest links
 		var index = Math.floor(Math.random() * links.length * 0.5);
-		location = links[index].getAttribute('href');
+		location = links[index];
 	}
 
 	var lastBodyLength = -1;
@@ -372,6 +372,7 @@ module.exports = function () {
 		});
 	}
 
+	//var log = console.log.bind(console);
 	function log() {
 		var args = [].slice.call(arguments);
 		send('LOG', args);
@@ -398,13 +399,19 @@ module.exports = function () {
 		});
 	}
 
+	// try to prevent universal links
 	function hookLinks() {
-		document.addEventListener('click', function (ev) {
-			if (ev.target && ev.target.tagName === 'A' && ev.target.getAttribute('href')) {
-				ev.preventDefault();
-				location = ev.target.getAttribute('href');
-			}
-		})
+		//document.addEventListener('click', function (ev) {
+		//	if (yarnBridge) {
+		//		if (ev.target && ev.target.tagName.toLowerCase() === 'a' && ev.target.getAttribute('href')) {
+		//			ev.preventDefault();
+		//			ev.stopPropagation();
+		//
+		//			send('REQUEST_URL_CHANGE', ev.target.getAttribute('href'));
+		//			//location = ev.target.getAttribute('href');
+		//		}
+		//	}
+		//}, true);
 	}
 
 	console.log('start! ', location.href, document.readyState, document.documentElement.outerHTML.length);
