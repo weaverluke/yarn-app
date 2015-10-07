@@ -14,6 +14,7 @@ var {
 var QuizResult = require('./quizresult');
 
 var ANIMATION_TIME = 300;
+var SCORE_ANIMATION_TIME = 1500;
 
 var uiConfig = require('../../uiconfig');
 
@@ -36,7 +37,9 @@ var ResultView = React.createClass({
 
 	getInitialState: function () {
 		return {
-			topOffsetValue: new Animated.Value(height - uiConfig.TOOLBAR_HEIGHT)
+			topOffsetValue: new Animated.Value(height - uiConfig.TOOLBAR_HEIGHT),
+			score: 0,
+			levelBackground: uiConfig.COLORS.ORANGE
 		};
 	},
 
@@ -67,7 +70,7 @@ var ResultView = React.createClass({
 						<Text style={[styles.text, styles.blueText]}>Score</Text>
 					</View>
 					<View style={[styles.rowValue, styles.paleBlueBg]}>
-						<Text style={[styles.text, styles.blueText]}>{this.props.score}</Text>
+						<Text style={[styles.text, styles.blueText]}>{this.state.score}</Text>
 					</View>
 				</View>
 
@@ -75,7 +78,9 @@ var ResultView = React.createClass({
 					<View style={styles.rowLabel}>
 						<Text style={[styles.text, styles.orangeText]}>Vocab level</Text>
 					</View>
-					<View style={[styles.rowValue, styles.orangeBg]}>
+					<View style={[styles.rowValue, styles.orangeBg, {
+						backgroundColor: this.state.levelBackground
+					}]}>
 						<Text style={[styles.text, styles.whiteText]}>{this.props.level}</Text>
 					</View>
 				</View>
@@ -102,6 +107,7 @@ var ResultView = React.createClass({
 	componentDidMount: function () {
 		// delay intro animation a bit to make it smooth
 		setTimeout(this.animateIn, 150);
+		setTimeout(this.animateStats, 500);
 	},
 
 	animateIn: function () {
@@ -120,6 +126,106 @@ var ResultView = React.createClass({
 				{ toValue: height, duration: ANIMATION_TIME }
 			)
 		]).start(cb);
+	},
+
+	animateStats: function () {
+		this.animateScore();
+		this.animateLevel();
+	},
+
+	animateScore: function () {
+
+		var startDate = Date.now();
+
+		var next = function () {
+
+			setTimeout(function () {
+				var elapsedTime = Date.now() - startDate;
+				var currentProgress = Math.min(elapsedTime / SCORE_ANIMATION_TIME, 1);
+				var easeValue = ease(currentProgress, elapsedTime, 0, 1, SCORE_ANIMATION_TIME);
+
+				var newScore = Math.round(this.props.score * easeValue);
+				if (this.state.score === newScore) {
+					newScore++;
+				}
+
+				this.setState({
+					score: newScore
+				});
+
+				if (currentProgress !== 1) {
+					next();
+				}
+
+			}.bind(this), 30);
+
+		}.bind(this);
+
+		next();
+	},
+
+	animateLevel: function () {
+
+
+		function animateColor(start, end, progress) {
+			return {
+				r: colorEase(start.r, end.r, progress),
+				g: colorEase(start.g, end.g, progress),
+				b: colorEase(start.b, end.b, progress)
+			};
+		}
+
+		function colorEase(a,b,u) {
+			return parseInt((1-u) * a + u * b);
+		}
+
+		function toCssColor(color) {
+			return 'rgb(' + color.r + ',' + color.g + ',' + color.b + ')';
+		}
+
+		var animationTime = SCORE_ANIMATION_TIME / 4;
+
+		var fade = function (start, end, duration, callback) {
+			var startTime = Date.now();
+
+			var fadeStep = function () {
+				var currentState = Math.min((Date.now() - startTime) / duration, 1);
+				var color = animateColor(start, end, currentState);
+
+				this.setState({
+					levelBackground: toCssColor(color)
+				});
+
+				if (currentState === 1) {
+					callback && callback();
+				}
+				else {
+					setTimeout(fadeStep, 30);
+				}
+			}.bind(this);
+
+			fadeStep();
+
+		}.bind(this);
+
+
+		var color1 = {
+			r: 247,
+			g: 148,
+			b: 30
+		};
+		var color2 = {
+			r: 248,
+			g: 187,
+			b: 43
+		};
+
+		// color1 > color 2 > wait 100ms > color 1
+		setTimeout(function () {
+			fade(color1, color2, animationTime, function() {
+				setTimeout(fade, 100, color2, color1, animationTime);
+			});
+		}, animationTime);
 	},
 
 	hide: function (cb) {
@@ -141,6 +247,11 @@ var Stretch = React.createClass({
 		return <View style={styles.stretch} />;
 	}
 });
+
+// ease out quad
+function ease(x, t, b, c, d) {
+	return -c *(t/=d)*(t-2) + b;
+}
 
 var styles = StyleSheet.create({
 
