@@ -2,18 +2,18 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "yarn-icon.png"
+      "filename" : "yarn-icon.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "yarn-icon-1.png"
+      "filename" : "yarn-icon-1.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "scale" : "3x",
-      "filename" : "yarn-icon-2.png"
+      "filename" : "yarn-icon-2.png",
+      "scale" : "3x"
     }
   ],
   "info" : {

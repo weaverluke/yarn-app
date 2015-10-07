@@ -1429,6 +1429,8 @@ gameState:gameStateStore.GAME_STATES.NOT_STARTED};},
 
 
 
+nextQuestionTimeout:0,
+
 render:function(){
 console.log('render',this.state);
 var bottomBar=this.renderBottomBar();
@@ -1474,6 +1476,7 @@ this.renderResultView()));},
 
 
 onShowDictionary:function(text){
+clearTimeout(this.nextQuestionTimeout);
 DictionaryProxy.showDefinition(text);},
 
 
@@ -1684,6 +1687,7 @@ settingsViewVisible:false});},
 
 
 showNextQuestion:function(){
+clearTimeout(this.nextQuestionTimeout);
 this.setState({
 bottomBar:'wordstrip'});
 
@@ -1754,6 +1758,10 @@ bottomBar = 'wordstrip';}
 
 if(bottomBar === 'wordstrip'){
 wordStripDisabled = currentGameState !== GAME_STATES.WAITING_FOR_ANSWER;}
+
+
+if(currentGameState === GAME_STATES.CORRECT_ANSWER_CHOSEN || currentGameState == GAME_STATES.WRONG_ANSWER_CHOSEN){
+this.nextQuestionTimeout = setTimeout(this.showNextQuestion,2000);}
 
 
 
@@ -52477,7 +52485,7 @@ PALE_BLUE:'rgb(238, 248, 253)',
 PALE_GREEN:'rgb(240, 248, 243)',
 PALE_PINK:'rgb(253, 243, 244)',
 BLUE_BG:'rgba(39, 170, 225, 0.25)',
-ORANGE_BG:'rgba(247, 148, 30, 0.12)'},
+ORANGE_BG:'rgba(247, 148, 30, 0.25)'},
 
 
 BROWSER_BAR_HEIGHT:40,
@@ -77796,17 +77804,11 @@ return;}}
 
 function goToRandomUrl(){
 var links=[].slice.call(document.getElementsByTagName('a'));
-var origin=location.origin;
-links = links.filter(function(link){
-var href=link.getAttribute('href');
+var matchingOrigin=getLinksMatchingCurrentDomain(links);
 
-if(!href || href === location.href){
-return false;}
+links = matchingOrigin.length?matchingOrigin:links;
 
-
-href = href.replace(/\/$/,'');
-return href && href.indexOf(origin) === 0 && href !== origin;}).
-map(function(link){
+links.map(function(link){
 return link.getAttribute('href');});
 
 
@@ -77820,11 +77822,25 @@ var index=Math.floor(Math.random() * 3);
 location = links[index];}
 
 
+function getLinksMatchingCurrentDomain(links){
+var origin=location.origin;
+
+return links.filter(function(link){
+var href=link.getAttribute('href');
+
+if(!href || href === location.href){
+return false;}
+
+
+href = href.replace(/\/$/,'');
+return href && href.indexOf(origin) === 0 && href !== origin;});}
+
+
+
 var lastBodyLength=-1;
 var alreadySent=false;
 
 function sendHtml(){
-console.trace();
 if(alreadySent){
 return;}
 
@@ -79249,7 +79265,7 @@ module.exports = MainBar;
 });
 __d('image!home-icon',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/home-icon.imageset/home-icon.png","uri":"home-icon","width":44,"height":44,"deprecated":true};
 });
-__d('image!yarn-icon',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/yarn-icon.imageset/yarn-icon.png","uri":"yarn-icon","width":50,"height":50,"deprecated":true};
+__d('image!yarn-icon',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/yarn-icon.imageset/yarn-icon.png","uri":"yarn-icon","width":64,"height":64,"deprecated":true};
 });
 __d('yarn/app/views/toast/toast.js',["react-native/Libraries/react-native/react-native.js","Dimensions","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
 
@@ -79964,7 +79980,7 @@ flexDirection:'row'}});
 
 module.exports = Question;
 });
-__d('yarn/app/views/quiz/wordbutton.js',["image!magnifier","image!next","react-native/Libraries/react-native/react-native.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
+__d('yarn/app/views/quiz/wordbutton.js',["image!magnifier","react-native/Libraries/react-native/react-native.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -79997,6 +80013,8 @@ var WordButton=React.createClass({
 
 
 
+
+nextTimeout:0,
 
 render:function(){
 var additionalStyle={
@@ -80063,7 +80081,7 @@ nextButton =
 React.createElement(TouchableWithoutFeedback,{onPress:this.props.onNextPress},
 React.createElement(View,{style:styles.nextIconWrap},
 React.createElement(View,{style:styles.vCenter},
-React.createElement(Image,{source:require('image!next'),style:styles.nextIcon}))));}
+React.createElement(Image,{source:{uri:'next-animated.gif'},style:styles.nextIcon}))));}
 
 
 
@@ -80165,8 +80183,8 @@ flexDirection:'row'},
 
 
 nextIcon:{
-width:30,
-height:30},
+width:34,
+height:34},
 
 
 vCenter:{
@@ -80229,8 +80247,6 @@ module.exports = WordButton;
 });
 __d('image!magnifier',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/magnifier.imageset/magnifier.png","uri":"magnifier","width":44,"height":44,"deprecated":true};
 });
-__d('image!next',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/next.imageset/next.png","uri":"next","width":60,"height":60,"deprecated":true};
-});
 __d('yarn/app/views/quiz/result.js',["react-native/Libraries/react-native/react-native.js","yarn/app/views/quiz/quizresult.js","yarn/app/uiconfig.js","Dimensions"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
@@ -80247,6 +80263,7 @@ React.StyleSheet;var View=React.View;var Text=React.Text;var TouchableWithoutFee
 var QuizResult=require('yarn/app/views/quiz/quizresult.js');
 
 var ANIMATION_TIME=300;
+var SCORE_ANIMATION_TIME=1500;
 
 var uiConfig=require('yarn/app/uiconfig.js');
 
@@ -80269,7 +80286,9 @@ showWordsCount:false};},
 
 getInitialState:function(){
 return {
-topOffsetValue:new Animated.Value(height - uiConfig.TOOLBAR_HEIGHT)};},
+topOffsetValue:new Animated.Value(height - uiConfig.TOOLBAR_HEIGHT),
+score:0,
+levelBackground:uiConfig.COLORS.ORANGE};},
 
 
 
@@ -80300,7 +80319,7 @@ React.createElement(View,{style:styles.rowLabel},
 React.createElement(Text,{style:[styles.text,styles.blueText]},'Score')),
 
 React.createElement(View,{style:[styles.rowValue,styles.paleBlueBg]},
-React.createElement(Text,{style:[styles.text,styles.blueText]},this.props.score))),
+React.createElement(Text,{style:[styles.text,styles.blueText]},this.state.score))),
 
 
 
@@ -80308,7 +80327,9 @@ React.createElement(View,{style:styles.row},
 React.createElement(View,{style:styles.rowLabel},
 React.createElement(Text,{style:[styles.text,styles.orangeText]},'Vocab level')),
 
-React.createElement(View,{style:[styles.rowValue,styles.orangeBg]},
+React.createElement(View,{style:[styles.rowValue,styles.orangeBg,{
+backgroundColor:this.state.levelBackground}]},
+
 React.createElement(Text,{style:[styles.text,styles.whiteText]},this.props.level))),
 
 
@@ -80334,7 +80355,8 @@ React.createElement(Text,{style:styles.buttonText},'Random!'))))));},
 
 componentDidMount:function(){
 
-setTimeout(this.animateIn,150);},
+setTimeout(this.animateIn,150);
+setTimeout(this.animateStats,500);},
 
 
 animateIn:function(){
@@ -80355,6 +80377,106 @@ this.state.topOffsetValue,
 start(cb);},
 
 
+animateStats:function(){
+this.animateScore();
+this.animateLevel();},
+
+
+animateScore:function(){
+
+var startDate=Date.now();
+
+var next=(function(){
+
+setTimeout((function(){
+var elapsedTime=Date.now() - startDate;
+var currentProgress=Math.min(elapsedTime / SCORE_ANIMATION_TIME,1);
+var easeValue=ease(currentProgress,elapsedTime,0,1,SCORE_ANIMATION_TIME);
+
+var newScore=Math.round(this.props.score * easeValue);
+if(this.state.score === newScore){
+newScore++;}
+
+
+this.setState({
+score:newScore});
+
+
+if(currentProgress !== 1){
+next();}}).
+
+
+bind(this),30);}).
+
+bind(this);
+
+next();},
+
+
+animateLevel:function(){
+
+
+function animateColor(start,end,progress){
+return {
+r:colorEase(start.r,end.r,progress),
+g:colorEase(start.g,end.g,progress),
+b:colorEase(start.b,end.b,progress)};}
+
+
+
+function colorEase(a,b,u){
+return parseInt((1 - u) * a + u * b);}
+
+
+function toCssColor(color){
+return 'rgb(' + color.r + ',' + color.g + ',' + color.b + ')';}
+
+
+var animationTime=SCORE_ANIMATION_TIME / 4;
+
+var fade=(function(start,end,duration,callback){
+var startTime=Date.now();
+
+var fadeStep=(function(){
+var currentState=Math.min((Date.now() - startTime) / duration,1);
+var color=animateColor(start,end,currentState);
+
+this.setState({
+levelBackground:toCssColor(color)});
+
+
+if(currentState === 1){
+callback && callback();}else 
+
+{
+setTimeout(fadeStep,30);}}).
+
+bind(this);
+
+fadeStep();}).
+
+bind(this);
+
+
+var color1={
+r:247,
+g:148,
+b:30};
+
+var color2={
+r:248,
+g:187,
+b:43};
+
+
+
+setTimeout(function(){
+fade(color1,color2,animationTime,function(){
+setTimeout(fade,100,color2,color1,animationTime);});},
+
+animationTime);},
+
+
 hide:function(cb){
 return (function(){
 this.animateOut(cb);}).
@@ -80373,6 +80495,11 @@ var Stretch=React.createClass({
 render:function(){
 return React.createElement(View,{style:styles.stretch});}});
 
+
+
+
+function ease(x,t,b,c,d){
+return -c * (t /= d) * (t - 2) + b;}
 
 
 var styles=StyleSheet.create({
