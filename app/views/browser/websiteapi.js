@@ -329,17 +329,11 @@ module.exports = function () {
 
 	function goToRandomUrl() {
 		var links = [].slice.call(document.getElementsByTagName('a'));
-		var origin = location.origin;
-		links = links.filter(function (link) {
-			var href = link.getAttribute('href');
-			// ignore url to this page
-			if (!href || href === location.href) {
-				return false;
-			}
-			// trim trailing slash as location.origin doesn't have it
-			href = href.replace(/\/$/, '');
-			return href && href.indexOf(origin) === 0 && href !== origin;
-		}).map(function (link) {
+		var matchingOrigin = getLinksMatchingCurrentDomain(links);
+
+		links = matchingOrigin.length ? matchingOrigin : links;
+
+		links.map(function (link) {
 			return link.getAttribute('href');
 		});
 
@@ -353,11 +347,25 @@ module.exports = function () {
 		location = links[index];
 	}
 
+	function getLinksMatchingCurrentDomain(links) {
+		var origin = location.origin;
+
+		return links.filter(function (link) {
+			var href = link.getAttribute('href');
+			// ignore url to this page
+			if (!href || href === location.href) {
+				return false;
+			}
+			// trim trailing slash as location.origin doesn't have it
+			href = href.replace(/\/$/, '');
+			return href && href.indexOf(origin) === 0 && href !== origin;
+		});
+	}
+
 	var lastBodyLength = -1;
 	var alreadySent = false;
 
 	function sendHtml() {
-		console.trace();
 		if (alreadySent) {
 			return;
 		}
