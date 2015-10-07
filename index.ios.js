@@ -69,6 +69,8 @@ var yarn = React.createClass({
 		};
 	},
 
+	nextQuestionTimeout: 0,
+
 	render: function () {
 		console.log('render', this.state);
 		var bottomBar = this.renderBottomBar();
@@ -114,6 +116,7 @@ var yarn = React.createClass({
 	},
 
 	onShowDictionary: function (text) {
+		clearTimeout(this.nextQuestionTimeout);
 		DictionaryProxy.showDefinition(text);
 	},
 
@@ -324,6 +327,7 @@ var yarn = React.createClass({
 	},
 
 	showNextQuestion: function () {
+		clearTimeout(this.nextQuestionTimeout);
 		this.setState({
 			bottomBar: 'wordstrip'
 		});
@@ -394,6 +398,10 @@ var yarn = React.createClass({
 
 		if (bottomBar === 'wordstrip') {
 			wordStripDisabled = currentGameState !== GAME_STATES.WAITING_FOR_ANSWER;
+		}
+
+		if (currentGameState === GAME_STATES.CORRECT_ANSWER_CHOSEN || currentGameState == GAME_STATES.WRONG_ANSWER_CHOSEN) {
+			this.nextQuestionTimeout = setTimeout(this.showNextQuestion, 2000);
 		}
 
 		//var popupVisible = currentGameState === GAME_STATES.CORRECT_ANSWER_CHOSEN ||

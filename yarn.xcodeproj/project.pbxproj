@@ -25,6 +25,7 @@
 		615932311B8D183A00918D67 /* DictionaryProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 615932301B8D183A00918D67 /* DictionaryProxy.m */; };
 		6165D9261B7746390011A703 /* BauhausStd-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6165D9241B7746390011A703 /* BauhausStd-Heavy.otf */; };
 		6165D9271B7746390011A703 /* bauhaus-93.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6165D9251B7746390011A703 /* bauhaus-93.ttf */; };
+		61B9BAAA1BC5AE3D00B3D3A8 /* next-animated.gif in Resources */ = {isa = PBXBuildFile; fileRef = 61B9BAA91BC5AE3D00B3D3A8 /* next-animated.gif */; settings = {ASSET_TAGS = (); }; };
 		61D0DCE51BA898CD00664994 /* RCTWebView+WebViewBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 61D0DCE11BA898CD00664994 /* RCTWebView+WebViewBridge.m */; };
 		61D0DCE61BA898CD00664994 /* RCTWebViewManager+WebViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 61D0DCE31BA898CD00664994 /* RCTWebViewManager+WebViewManager.m */; };
 		61D0DCE71BA898CD00664994 /* webview-bridge-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 61D0DCE41BA898CD00664994 /* webview-bridge-script.js */; };
@@ -136,6 +137,7 @@
 		615932301B8D183A00918D67 /* DictionaryProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DictionaryProxy.m; path = iOS/DictionaryProxy.m; sourceTree = "<group>"; };
 		6165D9241B7746390011A703 /* BauhausStd-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "BauhausStd-Heavy.otf"; path = "/Users/mateusz/workspace/weaverdigital/yarn-files/BauhausStd-Heavy.otf"; sourceTree = "<absolute>"; };
 		6165D9251B7746390011A703 /* bauhaus-93.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "bauhaus-93.ttf"; path = "/Users/mateusz/workspace/weaverdigital/yarn-files/bauhaus-93.ttf"; sourceTree = "<absolute>"; };
+		61B9BAA91BC5AE3D00B3D3A8 /* next-animated.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "next-animated.gif"; path = "../../../Downloads/next-animated.gif"; sourceTree = "<group>"; };
 		61D0DCE01BA898CD00664994 /* RCTWebView+WebViewBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTWebView+WebViewBridge.h"; sourceTree = "<group>"; };
 		61D0DCE11BA898CD00664994 /* RCTWebView+WebViewBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTWebView+WebViewBridge.m"; sourceTree = "<group>"; };
 		61D0DCE21BA898CD00664994 /* RCTWebViewManager+WebViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTWebViewManager+WebViewManager.h"; sourceTree = "<group>"; };
@@ -275,6 +277,7 @@
 		6165D9331B7746860011A703 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				61B9BAA91BC5AE3D00B3D3A8 /* next-animated.gif */,
 				61D0DCF21BA8A3AC00664994 /* ss-standard.otf */,
 				6165D9251B7746390011A703 /* bauhaus-93.ttf */,
 				6165D9241B7746390011A703 /* BauhausStd-Heavy.otf */,
@@ -557,6 +560,7 @@
 				6165D9271B7746390011A703 /* bauhaus-93.ttf in Resources */,
 				008F07F31AC5B25A0029DE68 /* main.jsbundle in Resources */,
 				6165D9261B7746390011A703 /* BauhausStd-Heavy.otf in Resources */,
+				61B9BAAA1BC5AE3D00B3D3A8 /* next-animated.gif in Resources */,
 				61D0DCF31BA8A3AC00664994 /* ss-standard.otf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,

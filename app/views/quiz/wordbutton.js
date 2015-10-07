@@ -32,6 +32,8 @@ var WordButton = React.createClass({
 	//	onAction: PropTypes.func.isRequired
 	//},
 
+	nextTimeout: 0,
+
 	render: function () {
 		var additionalStyle = {
 			backgroundColor: this.getColor('background')
@@ -97,7 +99,7 @@ var WordButton = React.createClass({
 				<TouchableWithoutFeedback onPress={this.props.onNextPress}>
 					<View style={styles.nextIconWrap}>
 						<View style={styles.vCenter}>
-							<Image source={require('image!next')} style={styles.nextIcon}/>
+							<Image source={{uri: 'next-animated.gif'}} style={styles.nextIcon}/>
 						</View>
 					</View>
 				</TouchableWithoutFeedback>
@@ -199,8 +201,8 @@ var styles = StyleSheet.create({
 	},
 
 	nextIcon: {
-		width: 30,
-		height: 30
+		width: 34,
+		height: 34
 	},
 
 	vCenter: {
