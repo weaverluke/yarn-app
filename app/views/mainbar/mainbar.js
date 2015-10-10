@@ -117,8 +117,8 @@ var styles = StyleSheet.create({
 	},
 
 	iconCentral: {
-		width: uiConfig.TOOLBAR_ICON_SIZE + 6,
-		height: uiConfig.TOOLBAR_ICON_SIZE + 6
+		width: uiConfig.TOOLBAR_ICON_SIZE + 8,
+		height: uiConfig.TOOLBAR_ICON_SIZE + 8
 	}
 });
 
