@@ -61,6 +61,7 @@ var ResultView = React.createClass({
 				<QuizResult
 					correctWords={this.props.correctWords}
 					totalWords={this.props.totalWords}
+					onAnimationEnd={this.animateStats}
 				/>
 
 				<Spacer />
@@ -107,7 +108,6 @@ var ResultView = React.createClass({
 	componentDidMount: function () {
 		// delay intro animation a bit to make it smooth
 		setTimeout(this.animateIn, 150);
-		setTimeout(this.animateStats, 500);
 	},
 
 	animateIn: function () {
@@ -129,11 +129,12 @@ var ResultView = React.createClass({
 	},
 
 	animateStats: function () {
-		this.animateScore();
-		this.animateLevel();
+		this.animateScore(function () {
+			setTimeout(this.animateLevel, 500);
+		}.bind(this));
 	},
 
-	animateScore: function () {
+	animateScore: function (cb) {
 
 		var startDate = Date.now();
 
@@ -155,6 +156,9 @@ var ResultView = React.createClass({
 
 				if (currentProgress !== 1) {
 					next();
+				}
+				else {
+					cb && cb();
 				}
 
 			}.bind(this), 30);

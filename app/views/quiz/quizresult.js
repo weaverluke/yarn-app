@@ -17,7 +17,8 @@ var QuizResult = React.createClass({
 	getDefaultProps: function () {
 		return {
 			correctWords: 0,
-			totalWords: 1
+			totalWords: 1,
+			onAnimationEnd: function () {}
 		};
 	},
 
@@ -29,7 +30,7 @@ var QuizResult = React.createClass({
 				<View style={styles.progressTextWrap}>
 					<Text style={styles.text}>{this.props.correctWords} of {this.props.totalWords} correct</Text>
 				</View>
-				<ProgressBar progress={progress}/>
+				<ProgressBar progress={progress} onAnimationEnd={this.props.onAnimationEnd}/>
 			</View>
 		);
 	}
@@ -39,7 +40,8 @@ var ProgressBar = React.createClass({
 
 	getDefaultProps: function () {
 		return {
-			progress: 0
+			progress: 0,
+			onAnimationEnd: function () {}
 		};
 	},
 
@@ -79,7 +81,7 @@ var ProgressBar = React.createClass({
 				this.state.flexValue,
 				{ toValue: 0, duration: 500 }
 			)
-		]).start();
+		]).start(this.props.onAnimationEnd);
 	}
 
 });
