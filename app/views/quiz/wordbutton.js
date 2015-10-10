@@ -38,10 +38,11 @@ var WordButton = React.createClass({
 		var additionalStyle = {
 			backgroundColor: this.getColor('background')
 		};
+		var clickCallback = this.props.showDictIcon ? this.onDictIconPressed : this.onButtonPressed;
 		return (
 			<View style={[styles.wrap, additionalStyle]}>
 				{this.renderDictIcon()}
-				<TouchableWithoutFeedback onPress={this.onButtonPressed}>
+				<TouchableWithoutFeedback onPress={clickCallback}>
 					{this.renderButtonContent()}
 				</TouchableWithoutFeedback>
 				{this.renderInfoText()}
@@ -60,13 +61,11 @@ var WordButton = React.createClass({
 		}
 
 		return (
-			<TouchableWithoutFeedback onPress={this.onDictIconPressed}>
-				<View style={styles.dictIconWrap}>
-					<View style={styles.vCenter}>
-						<Image source={require('image!magnifier')} style={styles.dictIcon}/>
-					</View>
+			<View style={styles.dictIconWrap}>
+				<View style={styles.vCenter}>
+					<Image source={require('image!magnifier')} style={styles.dictIcon}/>
 				</View>
-			</TouchableWithoutFeedback>
+			</View>
 		);
 	},
 
