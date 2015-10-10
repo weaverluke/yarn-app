@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "RCTBridge.h"
 
-@interface DictionaryProxy : NSObject <RCTBridgeModule>
 
+@interface DictionaryProxy : NSObject <RCTBridgeModule>
+-(void)call;
 @end

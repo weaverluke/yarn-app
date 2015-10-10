@@ -8,8 +8,13 @@
 
 #import "DictionaryProxy.h"
 #import "RCTBridge.h"
+#import "RCTEventDispatcher.h"
+#import "NativeDictionaryProxy.h"
+
 
 @implementation DictionaryProxy
+  @synthesize bridge = _bridge;
+
   RCT_EXPORT_MODULE()
 
   RCT_EXPORT_METHOD(showDefinition:(NSString *)word) {
@@ -17,9 +22,17 @@
 	UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
 	UIViewController *rootViewController = keyWindow.rootViewController;
   
-	UIReferenceLibraryViewController *referenceLibraryViewController =
-	[[UIReferenceLibraryViewController alloc] initWithTerm:word];
+	NativeDictionaryProxy *referenceLibraryViewController =
+	[[NativeDictionaryProxy alloc] initWithTerm:word];
+	
+	[referenceLibraryViewController registerDictProxy:self];
   
 	[rootViewController presentViewController:referenceLibraryViewController animated:YES completion:nil];
   }
+
+  - (void)call
+  {
+	[self.bridge.eventDispatcher sendAppEventWithName:@"DictionaryHidden" body:@{}];
+  }
+
 @end

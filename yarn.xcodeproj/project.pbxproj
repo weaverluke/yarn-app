@@ -31,6 +31,7 @@
 		61D0DCE71BA898CD00664994 /* webview-bridge-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 61D0DCE41BA898CD00664994 /* webview-bridge-script.js */; };
 		61D0DCF31BA8A3AC00664994 /* ss-standard.otf in Resources */ = {isa = PBXBuildFile; fileRef = 61D0DCF21BA8A3AC00664994 /* ss-standard.otf */; };
 		61F7FAF21BC98BD400F80D2D /* next-anim3s.gif in Resources */ = {isa = PBXBuildFile; fileRef = 61F7FAF11BC98BD400F80D2D /* next-anim3s.gif */; settings = {ASSET_TAGS = (); }; };
+		61F7FAF51BC9A45E00F80D2D /* NativeDictionaryProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7FAF41BC9A45E00F80D2D /* NativeDictionaryProxy.m */; settings = {ASSET_TAGS = (); }; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
 
@@ -146,6 +147,8 @@
 		61D0DCE41BA898CD00664994 /* webview-bridge-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "webview-bridge-script.js"; sourceTree = "<group>"; };
 		61D0DCF21BA8A3AC00664994 /* ss-standard.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ss-standard.otf"; sourceTree = "<group>"; };
 		61F7FAF11BC98BD400F80D2D /* next-anim3s.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "next-anim3s.gif"; path = "../../../Downloads/next-anim3s.gif"; sourceTree = "<group>"; };
+		61F7FAF31BC9A42C00F80D2D /* NativeDictionaryProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NativeDictionaryProxy.h; sourceTree = "<group>"; };
+		61F7FAF41BC9A45E00F80D2D /* NativeDictionaryProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NativeDictionaryProxy.m; path = iOS/NativeDictionaryProxy.m; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -264,6 +267,8 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				6159322F1B8D183A00918D67 /* DictionaryProxy.h */,
 				615932301B8D183A00918D67 /* DictionaryProxy.m */,
+				61F7FAF31BC9A42C00F80D2D /* NativeDictionaryProxy.h */,
+				61F7FAF41BC9A45E00F80D2D /* NativeDictionaryProxy.m */,
 			);
 			name = yarn;
 			sourceTree = "<group>";
@@ -591,6 +596,7 @@
 				615932311B8D183A00918D67 /* DictionaryProxy.m in Sources */,
 				61D0DCE61BA898CD00664994 /* RCTWebViewManager+WebViewManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				61F7FAF51BC9A45E00F80D2D /* NativeDictionaryProxy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
