@@ -2,7 +2,6 @@
 
 var React = require('react-native');
 
-var WordStrip = require('./app/views/wordstrip/wordstrip');
 var Browser = require('./app/views/browser/browser');
 var Popup = require('./app/views/popup/popup');
 var StatusBar = require('./app/views/statusbar/statusbar');
@@ -21,7 +20,9 @@ var userProfileStore = require('./app/stores/userprofilestore');
 var actions = require('./app/actions/actions');
 var log = require('./app/logger/logger');
 
-var BLACKLIST = require('./app/blacklist');
+var WHITELIST = require('./app/whitelist');
+
+var QUESTION_RESULT_TIMEOUT = 3000;
 
 var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
@@ -70,6 +71,7 @@ var yarn = React.createClass({
 	},
 
 	nextQuestionTimeout: 0,
+	showSearchingTimeout: 0,
 
 	render: function () {
 		console.log('render', this.state);
@@ -224,6 +226,7 @@ var yarn = React.createClass({
 			var toastContent = <ToastContent count={gameStateStore.get('pageWords').length} />;
 			return (
 				<Toast
+					fadeInTimeout={600}
 					content={toastContent}
 					onClose={this.hideToast}
 					timeout={2000}
@@ -270,8 +273,8 @@ var yarn = React.createClass({
 		this.refs['mainbar'].animateIn();
 
 		// run api only for allowed websites
-		if (BLACKLIST.indexOf(url) === -1) {
-			setTimeout(function () {
+		if (WHITELIST.doesMatch(url)) {
+			this.showSearchingTimeout = setTimeout(function () {
 				actions.emit(actions.LOOKING_FOR_WORDS);
 			}, 1500);
 		}
@@ -401,7 +404,7 @@ var yarn = React.createClass({
 		}
 
 		if (currentGameState === GAME_STATES.CORRECT_ANSWER_CHOSEN || currentGameState == GAME_STATES.WRONG_ANSWER_CHOSEN) {
-			this.nextQuestionTimeout = setTimeout(this.showNextQuestion, 2000);
+			this.nextQuestionTimeout = setTimeout(this.showNextQuestion, QUESTION_RESULT_TIMEOUT);
 		}
 
 		//var popupVisible = currentGameState === GAME_STATES.CORRECT_ANSWER_CHOSEN ||
@@ -489,6 +492,10 @@ var yarn = React.createClass({
 
 	resetGame: function () {
 		this.refs[BROWSER_REF].unhighlightWords();
+
+		clearTimeout(this.showSearchingTimeout);
+		clearTimeout(this.showSearchingTimeout);
+
 		this.setState({
 			question: [],
 			bottomBar: '',

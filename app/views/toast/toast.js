@@ -23,6 +23,7 @@ var Toast = React.createClass({
 	getDefaultProps: function () {
 		return {
 			content: '',
+			fadeInTimeout: 0,
 			width: uiConfig.TOAST_WIDTH,
 			height: uiConfig.TOAST_HEIGHT,
 			onClose: function () {}
@@ -66,7 +67,8 @@ var Toast = React.createClass({
 	},
 
 	componentDidMount: function () {
-		this.animateIn();
+		console.log('******************* Toast mounted');
+		setTimeout(this.animateIn, this.props.fadeInTimeout);
 	},
 
 	getToastContent: function () {

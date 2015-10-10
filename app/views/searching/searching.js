@@ -9,7 +9,7 @@ var {
 
 var BAR_WIDTH = 18;
 var ANIMATION_TIME = 600;
-var FADE_OUT_TIME = 1000;
+var FADE_OUT_TIME = 500;
 
 var colors = [
 	'rgba(39, 170, 225, 0.3)',

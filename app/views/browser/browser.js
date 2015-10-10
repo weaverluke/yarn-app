@@ -16,6 +16,7 @@ var actions = require('../../actions/actions');
 var log = require('../../logger/logger');
 
 var BLACKLIST = require('../../blacklist');
+var WHITELIST = require('../../whitelist');
 
 var BORDER = '#E7EAEA';
 var BGWASH = 'rgba(255,255,255,0.8)';
@@ -156,7 +157,7 @@ var Browser = React.createClass({
 		});
 
 		// run api only for allowed websites
-		if (BLACKLIST.indexOf(navState.url) === -1) {
+		if (WHITELIST.doesMatch(navState.url)) {
 			this.scheduleApiInject();
 		}
 

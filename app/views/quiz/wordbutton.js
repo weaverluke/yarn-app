@@ -99,7 +99,7 @@ var WordButton = React.createClass({
 				<TouchableWithoutFeedback onPress={this.props.onNextPress}>
 					<View style={styles.nextIconWrap}>
 						<View style={styles.vCenter}>
-							<Image source={{uri: 'next-animated.gif'}} style={styles.nextIcon}/>
+							<Image source={{uri: 'next-anim3s.gif'}} style={styles.nextIcon}/>
 						</View>
 					</View>
 				</TouchableWithoutFeedback>
