@@ -80,7 +80,6 @@ var yarn = React.createClass({
 
 	nextQuestionTimeout: 0,
 	showSearchingTimeout: 0,
-	dictionarySubscription: 0,
 
 	render: function () {
 		console.log('render', this.state);
@@ -129,17 +128,7 @@ var yarn = React.createClass({
 	onShowDictionary: function (text) {
 		clearTimeout(this.nextQuestionTimeout);
 		this.refs.wordstrip.stopTimeoutAnimation();
-		this.dictionarySubscription = NativeAppEventEmitter.addListener(
-			'DictionaryHidden',
-			this.restartNextQuestionTimeout
-		);
 		DictionaryProxy.showDefinition(text);
-	},
-
-	restartNextQuestionTimeout: function () {
-		this.dictionarySubscription.remove();
-		this.nextQuestionTimeout = setTimeout(this.showNextQuestion, QUESTION_RESULT_TIMEOUT);
-		this.refs.wordstrip.startTimeoutAnimation();
 	},
 
 	renderQuizStatusBar: function () {

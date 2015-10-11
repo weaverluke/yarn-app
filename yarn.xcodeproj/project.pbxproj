@@ -32,6 +32,7 @@
 		61F7FAF51BC9A45E00F80D2D /* NativeDictionaryProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7FAF41BC9A45E00F80D2D /* NativeDictionaryProxy.m */; settings = {ASSET_TAGS = (); }; };
 		61F7FAFC1BC9B59D00F80D2D /* next-not-anim.gif in Resources */ = {isa = PBXBuildFile; fileRef = 61F7FAFA1BC9B59D00F80D2D /* next-not-anim.gif */; settings = {ASSET_TAGS = (); }; };
 		61F7FAFD1BC9B59D00F80D2D /* next-anim-3s.gif in Resources */ = {isa = PBXBuildFile; fileRef = 61F7FAFB1BC9B59D00F80D2D /* next-anim-3s.gif */; settings = {ASSET_TAGS = (); }; };
+		61F7FAFF1BCA630900F80D2D /* next-finished.gif in Resources */ = {isa = PBXBuildFile; fileRef = 61F7FAFE1BCA630900F80D2D /* next-finished.gif */; settings = {ASSET_TAGS = (); }; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
 
@@ -149,6 +150,7 @@
 		61F7FAF41BC9A45E00F80D2D /* NativeDictionaryProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NativeDictionaryProxy.m; path = iOS/NativeDictionaryProxy.m; sourceTree = "<group>"; };
 		61F7FAFA1BC9B59D00F80D2D /* next-not-anim.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "next-not-anim.gif"; sourceTree = "<group>"; };
 		61F7FAFB1BC9B59D00F80D2D /* next-anim-3s.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "next-anim-3s.gif"; sourceTree = "<group>"; };
+		61F7FAFE1BCA630900F80D2D /* next-finished.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "next-finished.gif"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -284,6 +286,7 @@
 		6165D9331B7746860011A703 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				61F7FAFE1BCA630900F80D2D /* next-finished.gif */,
 				61F7FAFA1BC9B59D00F80D2D /* next-not-anim.gif */,
 				61F7FAFB1BC9B59D00F80D2D /* next-anim-3s.gif */,
 				61D0DCF21BA8A3AC00664994 /* ss-standard.otf */,
@@ -573,6 +576,7 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				61F7FAFD1BC9B59D00F80D2D /* next-anim-3s.gif in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				61F7FAFF1BCA630900F80D2D /* next-finished.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

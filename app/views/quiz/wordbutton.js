@@ -98,7 +98,7 @@ var WordButton = React.createClass({
 
 	renderQuestionButton: function () {
 		var nextButton;
-		var iconUri = this.state.timeoutAnimationEnabled ? 'next-anim-3s.gif' : 'next-not-anim.gif';
+		var iconUri = this.state.timeoutAnimationEnabled ? 'next-anim-3s.gif' : 'next-finished.gif';
 
 		if (this.props.showDictIcon) {
 			nextButton = (
