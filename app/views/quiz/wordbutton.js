@@ -34,6 +34,12 @@ var WordButton = React.createClass({
 
 	nextTimeout: 0,
 
+	getInitialState: function () {
+		return {
+			timeoutAnimationEnabled: true
+		}
+	},
+
 	render: function () {
 		var additionalStyle = {
 			backgroundColor: this.getColor('background')
@@ -92,13 +98,14 @@ var WordButton = React.createClass({
 
 	renderQuestionButton: function () {
 		var nextButton;
+		var iconUri = this.state.timeoutAnimationEnabled ? 'next-anim-3s.gif' : 'next-not-anim.gif';
 
 		if (this.props.showDictIcon) {
 			nextButton = (
 				<TouchableWithoutFeedback onPress={this.props.onNextPress}>
 					<View style={styles.nextIconWrap}>
 						<View style={styles.vCenter}>
-							<Image source={{uri: 'next-anim3s.gif'}} style={styles.nextIcon}/>
+							<Image source={{uri: iconUri}} style={styles.nextIcon}/>
 						</View>
 					</View>
 				</TouchableWithoutFeedback>
@@ -137,6 +144,18 @@ var WordButton = React.createClass({
 		if (this.props.showDictIcon) {
 			this.props.onDictIconPressed(this.props.text);
 		}
+	},
+
+	stopTimeoutAnimation: function () {
+		this.setState({
+			timeoutAnimationEnabled: false
+		});
+	},
+
+	startTimeoutAnimation: function () {
+		this.setState({
+			timeoutAnimationEnabled: true
+		});
 	}
 });
 

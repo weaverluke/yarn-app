@@ -1,23 +1,18 @@
 #import "NativeDictionaryProxy.h"
-
-//#import "RCTBridge.h"
 #import "RCTEventDispatcher.h"
-//#import "RCTBridgeModule.h"
 
 
 @implementation NativeDictionaryProxy
 
-//@synthesize bridge = _bridge;
-
 - (void)viewDidDisappear:(BOOL)animated
 {
   [super viewDidDisappear:(BOOL)animated];
-  [self.proxy call];
+  [self.bridge.eventDispatcher sendAppEventWithName:@"DictionaryHidden" body:@{}];
 }
 
-- (void)registerDictProxy:(DictionaryProxy*)dp
+- (void)registerBridge:(RCTBridge *)dp
 {
-  self.proxy = dp;
+  self.bridge = dp;
 }
 
 @end

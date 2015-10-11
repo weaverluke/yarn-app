@@ -25,13 +25,13 @@
 		615932311B8D183A00918D67 /* DictionaryProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 615932301B8D183A00918D67 /* DictionaryProxy.m */; };
 		6165D9261B7746390011A703 /* BauhausStd-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6165D9241B7746390011A703 /* BauhausStd-Heavy.otf */; };
 		6165D9271B7746390011A703 /* bauhaus-93.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6165D9251B7746390011A703 /* bauhaus-93.ttf */; };
-		61B9BAAA1BC5AE3D00B3D3A8 /* next-animated.gif in Resources */ = {isa = PBXBuildFile; fileRef = 61B9BAA91BC5AE3D00B3D3A8 /* next-animated.gif */; settings = {ASSET_TAGS = (); }; };
 		61D0DCE51BA898CD00664994 /* RCTWebView+WebViewBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 61D0DCE11BA898CD00664994 /* RCTWebView+WebViewBridge.m */; };
 		61D0DCE61BA898CD00664994 /* RCTWebViewManager+WebViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 61D0DCE31BA898CD00664994 /* RCTWebViewManager+WebViewManager.m */; };
 		61D0DCE71BA898CD00664994 /* webview-bridge-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 61D0DCE41BA898CD00664994 /* webview-bridge-script.js */; };
 		61D0DCF31BA8A3AC00664994 /* ss-standard.otf in Resources */ = {isa = PBXBuildFile; fileRef = 61D0DCF21BA8A3AC00664994 /* ss-standard.otf */; };
-		61F7FAF21BC98BD400F80D2D /* next-anim3s.gif in Resources */ = {isa = PBXBuildFile; fileRef = 61F7FAF11BC98BD400F80D2D /* next-anim3s.gif */; settings = {ASSET_TAGS = (); }; };
 		61F7FAF51BC9A45E00F80D2D /* NativeDictionaryProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7FAF41BC9A45E00F80D2D /* NativeDictionaryProxy.m */; settings = {ASSET_TAGS = (); }; };
+		61F7FAFC1BC9B59D00F80D2D /* next-not-anim.gif in Resources */ = {isa = PBXBuildFile; fileRef = 61F7FAFA1BC9B59D00F80D2D /* next-not-anim.gif */; settings = {ASSET_TAGS = (); }; };
+		61F7FAFD1BC9B59D00F80D2D /* next-anim-3s.gif in Resources */ = {isa = PBXBuildFile; fileRef = 61F7FAFB1BC9B59D00F80D2D /* next-anim-3s.gif */; settings = {ASSET_TAGS = (); }; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
 
@@ -139,16 +139,16 @@
 		615932301B8D183A00918D67 /* DictionaryProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DictionaryProxy.m; path = iOS/DictionaryProxy.m; sourceTree = "<group>"; };
 		6165D9241B7746390011A703 /* BauhausStd-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "BauhausStd-Heavy.otf"; path = "/Users/mateusz/workspace/weaverdigital/yarn-files/BauhausStd-Heavy.otf"; sourceTree = "<absolute>"; };
 		6165D9251B7746390011A703 /* bauhaus-93.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "bauhaus-93.ttf"; path = "/Users/mateusz/workspace/weaverdigital/yarn-files/bauhaus-93.ttf"; sourceTree = "<absolute>"; };
-		61B9BAA91BC5AE3D00B3D3A8 /* next-animated.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "next-animated.gif"; path = "../../../Downloads/next-animated.gif"; sourceTree = "<group>"; };
 		61D0DCE01BA898CD00664994 /* RCTWebView+WebViewBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTWebView+WebViewBridge.h"; sourceTree = "<group>"; };
 		61D0DCE11BA898CD00664994 /* RCTWebView+WebViewBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTWebView+WebViewBridge.m"; sourceTree = "<group>"; };
 		61D0DCE21BA898CD00664994 /* RCTWebViewManager+WebViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTWebViewManager+WebViewManager.h"; sourceTree = "<group>"; };
 		61D0DCE31BA898CD00664994 /* RCTWebViewManager+WebViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTWebViewManager+WebViewManager.m"; sourceTree = "<group>"; };
 		61D0DCE41BA898CD00664994 /* webview-bridge-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "webview-bridge-script.js"; sourceTree = "<group>"; };
 		61D0DCF21BA8A3AC00664994 /* ss-standard.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ss-standard.otf"; sourceTree = "<group>"; };
-		61F7FAF11BC98BD400F80D2D /* next-anim3s.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "next-anim3s.gif"; path = "../../../Downloads/next-anim3s.gif"; sourceTree = "<group>"; };
 		61F7FAF31BC9A42C00F80D2D /* NativeDictionaryProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NativeDictionaryProxy.h; sourceTree = "<group>"; };
 		61F7FAF41BC9A45E00F80D2D /* NativeDictionaryProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NativeDictionaryProxy.m; path = iOS/NativeDictionaryProxy.m; sourceTree = "<group>"; };
+		61F7FAFA1BC9B59D00F80D2D /* next-not-anim.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "next-not-anim.gif"; sourceTree = "<group>"; };
+		61F7FAFB1BC9B59D00F80D2D /* next-anim-3s.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "next-anim-3s.gif"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -284,8 +284,8 @@
 		6165D9331B7746860011A703 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				61F7FAF11BC98BD400F80D2D /* next-anim3s.gif */,
-				61B9BAA91BC5AE3D00B3D3A8 /* next-animated.gif */,
+				61F7FAFA1BC9B59D00F80D2D /* next-not-anim.gif */,
+				61F7FAFB1BC9B59D00F80D2D /* next-anim-3s.gif */,
 				61D0DCF21BA8A3AC00664994 /* ss-standard.otf */,
 				6165D9251B7746390011A703 /* bauhaus-93.ttf */,
 				6165D9241B7746390011A703 /* BauhausStd-Heavy.otf */,
@@ -568,10 +568,10 @@
 				6165D9271B7746390011A703 /* bauhaus-93.ttf in Resources */,
 				008F07F31AC5B25A0029DE68 /* main.jsbundle in Resources */,
 				6165D9261B7746390011A703 /* BauhausStd-Heavy.otf in Resources */,
-				61B9BAAA1BC5AE3D00B3D3A8 /* next-animated.gif in Resources */,
-				61F7FAF21BC98BD400F80D2D /* next-anim3s.gif in Resources */,
+				61F7FAFC1BC9B59D00F80D2D /* next-not-anim.gif in Resources */,
 				61D0DCF31BA8A3AC00664994 /* ss-standard.otf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				61F7FAFD1BC9B59D00F80D2D /* next-anim-3s.gif in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,16 +1,12 @@
 #import <UIKit/UIKit.h>
 
-//#import "RCTBridge.h"
-//#import "RCTBridgeModule.h"
-//@class RCTBridge;
-# import "DictionaryProxy.h"
-//#import "RCTEventDispatcher.h"
+#import "RCTBridge.h"
 
 @interface NativeDictionaryProxy : UIReferenceLibraryViewController
-@property DictionaryProxy *proxy;
-//@property RCTResponseSenderBlock callback;
-//@property (nonatomic, weak) RCTEventDispatcher *bridge;
-- (void)registerDictProxy:(DictionaryProxy*)dp;
+
+@property (nonatomic, weak) RCTBridge *bridge;
+
+- (void)registerBridge:(RCTBridge*)dp;
 
 @end
 

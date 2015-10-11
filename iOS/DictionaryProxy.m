@@ -25,14 +25,11 @@
 	NativeDictionaryProxy *referenceLibraryViewController =
 	[[NativeDictionaryProxy alloc] initWithTerm:word];
 	
-	[referenceLibraryViewController registerDictProxy:self];
+	// send reference to bridge to NativeDictionary Proxy so it can notify react-native app that it has been closed
+	[referenceLibraryViewController registerBridge:self.bridge];
   
 	[rootViewController presentViewController:referenceLibraryViewController animated:YES completion:nil];
   }
 
-  - (void)call
-  {
-	[self.bridge.eventDispatcher sendAppEventWithName:@"DictionaryHidden" body:@{}];
-  }
 
 @end

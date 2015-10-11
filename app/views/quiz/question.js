@@ -67,6 +67,7 @@ var Question = React.createClass({
 					onDictIconPressed={this.onDictIconPressed}
 					text={i === 0 ? word.text : word.definition}
 					type={type}
+					ref={'button-' + i}
 				/>
 			);
 
@@ -101,6 +102,14 @@ var Question = React.createClass({
 			outputWords.push(nextWord);
 		}
 		return outputWords;
+	},
+
+	startTimeoutAnimation: function () {
+		this.refs['button-0'].startTimeoutAnimation();
+	},
+
+	stopTimeoutAnimation: function () {
+		this.refs['button-0'].stopTimeoutAnimation();
 	}
 });
 

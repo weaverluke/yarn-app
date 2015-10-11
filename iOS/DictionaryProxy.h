@@ -11,5 +11,5 @@
 
 
 @interface DictionaryProxy : NSObject <RCTBridgeModule>
--(void)call;
+
 @end
