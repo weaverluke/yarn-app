@@ -112,8 +112,6 @@ var Browser = React.createClass({
 			if (gameStateStore.get('currentWordIndex') === 0) {
 				this.refs[WEBVIEW_REF].setHighlightColor(uiConfig.COLORS.BLUE_BG);
 			}
-			var currentWord = gameStateStore.get('currentWord');
-			this.highlightWord(currentWord.text);
 		}
 	},
 

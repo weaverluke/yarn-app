@@ -208,8 +208,13 @@ var yarn = React.createClass({
 				onNextPress={this.showNextQuestion}
 				onShowDictionary={this.onShowDictionary}
 				words={this.state.question}
+				onAnimateInEnd={this.highlightCurrentWord}
 			/>
 		);
+	},
+
+	highlightCurrentWord: function () {
+		this.refs[BROWSER_REF].highlightWord(gameStateStore.get('currentWord').text);
 	},
 
 	renderMainBar: function () {

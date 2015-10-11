@@ -14,6 +14,17 @@ var BUTTON_TYPES = WordButton.BUTTON_TYPES;
 
 var Question = React.createClass({
 
+	getDefaultProps: function () {
+		return {
+			onAnimateInEnd: function () {}
+		};
+	},
+
+	componentDidMount: function () {
+		// no intro animation yet, so call that when component is mounted
+		setTimeout(this.props.onAnimateInEnd, 100);
+	},
+
 	componentWillReceiveProps: function (newProps) {
 		var wordsWillChange = newProps.words && newProps.words[0] &&
 			this.props.words && this.props.words[0] &&
