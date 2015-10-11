@@ -88,7 +88,7 @@ var ResultView = React.createClass({
 
 				<Stretch />
 
-				<View style={styles.row}>
+				<View style={[styles.row, styles.lastRow]}>
 					<TouchableWithoutFeedback onPress={this.hide(this.props.onDonePressed)}>
 						<View style={[styles.button, styles.greyBg]}>
 							<Text style={styles.buttonText}>Done</Text>
@@ -290,6 +290,10 @@ var styles = StyleSheet.create({
 		alignItems: 'stretch',
 		borderBottomWidth: 1,
 		borderBottomColor: uiConfig.COLORS.MID_GREY
+	},
+
+	lastRow: {
+		borderBottomWidth: 0
 	},
 
 	text: {
