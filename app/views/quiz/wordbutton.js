@@ -58,6 +58,12 @@ var WordButton = React.createClass({
 		);
 	},
 
+	componentWillReceiveProps: function (props) {
+		if (this.props.type === BUTTON_TYPES.QUESTION && this.props.text !== props.text) {
+			this.startTimeoutAnimation();
+		}
+	},
+
 	getColor: function (type) {
 		var colorScheme = BUTTON_COLORS[this.props.type] || BUTTON_COLORS.DEFAULT;
 		return colorScheme[type] || 'red'; // return red if wrong type passed
@@ -149,15 +155,19 @@ var WordButton = React.createClass({
 	},
 
 	stopTimeoutAnimation: function () {
-		this.setState({
-			timeoutAnimationEnabled: false
-		});
+		if (this.state.timeoutAnimationEnabled) {
+			this.setState({
+				timeoutAnimationEnabled: false
+			});
+		}
 	},
 
 	startTimeoutAnimation: function () {
-		this.setState({
-			timeoutAnimationEnabled: true
-		});
+		if (!this.state.timeoutAnimationEnabled) {
+			this.setState({
+				timeoutAnimationEnabled: true
+			});
+		}
 	}
 });
 

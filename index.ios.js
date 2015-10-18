@@ -417,6 +417,12 @@ var yarn = React.createClass({
 			wordStripDisabled = currentGameState !== GAME_STATES.WAITING_FOR_ANSWER;
 		}
 
+		if (currentGameState === GAME_STATES.WAITING_FOR_ANSWER) {
+			setTimeout(function () {
+				this.refs[BROWSER_REF].highlightWord(gameStateStore.get('currentWord').text);
+			}.bind(this, 200));
+		}
+
 		if (currentGameState === GAME_STATES.CORRECT_ANSWER_CHOSEN || currentGameState == GAME_STATES.WRONG_ANSWER_CHOSEN) {
 			this.nextQuestionTimeout = setTimeout(this.showNextQuestion, QUESTION_RESULT_TIMEOUT);
 		}
