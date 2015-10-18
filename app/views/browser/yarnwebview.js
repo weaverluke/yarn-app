@@ -116,6 +116,9 @@ var Browser = React.createClass({
 				case 'SCROLL':
 					this.props.onScroll && this.props.onScroll(msg.data);
 					break;
+
+				case 'NOT_ALLOWED_URL':
+					this.props.onNotAllowedUrl && this.props.onNotAllowedUrl(msg.data);
 			}
 
 		}.bind(this));

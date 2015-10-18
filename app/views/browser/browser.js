@@ -65,6 +65,7 @@ var Browser = React.createClass({
 					onNavigationStateChange={this.onNavigationStateChange}
 					onWordsParsed={this.onWordsParsed}
 					onVisibleWordsChanged={this.onVisibleWordsChanged}
+					onNotAllowedUrl={this.onNotAllowedUrl}
 					onScroll={this.props.onScroll || function () {}}
 				/>
 			</View>
@@ -184,6 +185,10 @@ var Browser = React.createClass({
 			this.refs[WEBVIEW_REF].resetLastParsedContent();
 			this.props.onUrlChange && this.props.onUrlChange(navState.url);
 		}
+	},
+
+	onNotAllowedUrl: function (url) {
+		// todo
 	},
 
 	scheduleApiInject: function () {

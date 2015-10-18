@@ -445,8 +445,29 @@ module.exports = function () {
 		});
 	}
 
+	function getDomain(url) {
+		return url.replace(/x/, '').split('/')[0];
+	}
+
 	// try to prevent universal links
 	function hookLinks() {
+
+		// do not allow to open external links
+		document.addEventListener('click', function (ev) {
+			if (ev.target && ev.target.tagName && ev.target.tagName.toLowerCase() === 'a'
+				&& ev.target.getAttribute('href')) {
+
+				var href = ev.target.getAttribute('href');
+
+				if (href.indexOf('#') !== 0 && getDomain(href) !== getDomain(location.href)) {
+					ev.preventDefault();
+					ev.stopPropagation();
+					send('NOT_ALLOWED_URL', href);
+					return false;
+				}
+			}
+		});
+
 		//document.addEventListener('click', function (ev) {
 		//	if (yarnBridge) {
 		//		if (ev.target && ev.target.tagName.toLowerCase() === 'a' && ev.target.getAttribute('href')) {
