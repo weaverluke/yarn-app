@@ -2,7 +2,7 @@
 
 var React = require('react-native');
 var {
-	TouchableWithoutFeedback,
+	TouchableHighlight,
 	StyleSheet,
 	Text,
 	View,
@@ -47,11 +47,13 @@ var WordButton = React.createClass({
 		var clickCallback = this.props.showDictIcon ? this.onDictIconPressed : this.onButtonPressed;
 		return (
 			<View style={[styles.wrap, additionalStyle]}>
-				{this.renderDictIcon()}
-				<TouchableWithoutFeedback onPress={clickCallback}>
-					{this.renderButtonContent()}
-				</TouchableWithoutFeedback>
-				{this.renderInfoText()}
+				<TouchableHighlight onPress={clickCallback} underlayColor={'rgb(238, 248, 253)'}>
+					<View style={styles.buttonContentWrap}>
+						{this.renderDictIcon()}
+						{this.renderButtonContent()}
+						{this.renderInfoText()}
+					</View>
+				</TouchableHighlight>
 			</View>
 		);
 	},
@@ -102,13 +104,13 @@ var WordButton = React.createClass({
 
 		if (this.props.showDictIcon) {
 			nextButton = (
-				<TouchableWithoutFeedback onPress={this.props.onNextPress}>
+				<TouchableHighlight onPress={this.props.onNextPress}>
 					<View style={styles.nextIconWrap}>
 						<View style={styles.vCenter}>
 							<Image source={{uri: iconUri}} style={styles.nextIcon}/>
 						</View>
 					</View>
-				</TouchableWithoutFeedback>
+				</TouchableHighlight>
 			);
 		}
 
@@ -164,12 +166,16 @@ var styles = StyleSheet.create({
 	wrap: {
 		borderTopWidth: 1,
 		borderTopColor: uiConfig.COLORS.MID_GREY,
-		height: uiConfig.QUIZ_BUTTON_HEIGHT,
-		flexDirection: 'row',
 		alignItems: 'stretch',
+		alignSelf: 'stretch',
 		flex: 1
 	},
 
+	buttonContentWrap: {
+		flexDirection: 'row',
+		flex: 1,
+		height: uiConfig.QUIZ_BUTTON_HEIGHT
+	},
 
 	buttonContent: {
 		flexDirection: 'row',

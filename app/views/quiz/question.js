@@ -85,7 +85,7 @@ var Question = React.createClass({
 		}.bind(this));
 
 		return (
-			<Animated.View>
+			<Animated.View style={styles.wrap}>
 				{words}
 			</Animated.View>
 		);
@@ -125,6 +125,10 @@ var Question = React.createClass({
 });
 
 var styles = StyleSheet.create({
+
+	wrap: {
+		flex: 1
+	},
 
 	toolbar: {
 		backgroundColor: uiConfig.COLORS.SELECTED_GREY,
