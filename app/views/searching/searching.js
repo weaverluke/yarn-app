@@ -157,7 +157,8 @@ var Toast = React.createClass({
 var styles = StyleSheet.create({
 	wrap: {
 		position: 'absolute',
-		top: uiConfig.BROWSER_BAR_HEIGHT,
+		//top: uiConfig.BROWSER_BAR_HEIGHT,
+		top: 20,
 		left: 0,
 		right: 0,
 		bottom: uiConfig.TOOLBAR_HEIGHT,

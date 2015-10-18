@@ -38,6 +38,7 @@ var Browser = React.createClass({
 		return {
 			url: this.props.url,
 			urlInInput: this.props.url,
+			shortUrl: this.cleanupUrl(this.props.url),
 			status: 'No Page Loaded',
 			backButtonEnabled: false,
 			forwardButtonEnabled: false,
@@ -54,32 +55,7 @@ var Browser = React.createClass({
 	render: function () {
 		return (
 			<View style={[styles.container]}>
-				<View style={[styles.addressBarRow]}>
-					<TouchableOpacity onPress={this.goBack}>
-						<View style={this.state.backButtonEnabled ? styles.navButton : styles.disabledButton}>
-							<Text>{'<'}</Text>
-						</View>
-					</TouchableOpacity>
-					<TouchableOpacity onPress={this.goForward}>
-						<View style={this.state.forwardButtonEnabled ? styles.navButton : styles.disabledButton}>
-							<Text>{'>'}</Text>
-						</View>
-					</TouchableOpacity>
-					<TextInput
-						ref={TEXT_INPUT_REF}
-						autoCapitalize="none"
-						value={this.state.urlInInput}
-						onSubmitEditing={this.onSubmitEditing}
-						onChange={this.handleTextInputChange}
-						clearButtonMode="while-editing"
-						style={styles.addressBarTextInput}
-					/>
-					<TouchableOpacity onPress={this.pressGoButton}>
-						<View style={styles.goButton}>
-							<Text>Go!</Text>
-						</View>
-					</TouchableOpacity>
-				</View>
+				{this.renderAddressBar()}
 				<YarnWebView
 					ref={WEBVIEW_REF}
 					style={styles.webView}
@@ -93,6 +69,49 @@ var Browser = React.createClass({
 				/>
 			</View>
 		);
+	},
+
+	renderAddressBar: function () {
+		return (
+			<View style={styles.smallAddressBar}>
+				<Text style={styles.smallAddressBarText}>{this.state.shortUrl}</Text>
+			</View>
+		);
+
+		//return (
+		//	<View style={[styles.addressBarRow]}>
+		//		<TouchableOpacity onPress={this.goBack}>
+		//			<View style={this.state.backButtonEnabled ? styles.navButton : styles.disabledButton}>
+		//				<Text>{'<'}</Text>
+		//			</View>
+		//		</TouchableOpacity>
+		//		<TouchableOpacity onPress={this.goForward}>
+		//			<View style={this.state.forwardButtonEnabled ? styles.navButton : styles.disabledButton}>
+		//				<Text>{'>'}</Text>
+		//			</View>
+		//		</TouchableOpacity>
+		//		<TextInput
+		//			ref={TEXT_INPUT_REF}
+		//			autoCapitalize="none"
+		//			value={this.state.urlInInput}
+		//			onSubmitEditing={this.onSubmitEditing}
+		//			onChange={this.handleTextInputChange}
+		//			clearButtonMode="while-editing"
+		//			style={styles.addressBarTextInput}
+		//		/>
+		//		<TouchableOpacity onPress={this.pressGoButton}>
+		//			<View style={styles.goButton}>
+		//				<Text>Go!</Text>
+		//			</View>
+		//		</TouchableOpacity>
+		//	</View>
+		//);
+	},
+
+	cleanupUrl: function (url) {
+		return url.replace(/^(https?\:\/\/)/,'')
+			.replace(/^(www\.)/,'')
+			.split('/')[0];
 	},
 
 	componentDidMount: function () {
@@ -148,6 +167,7 @@ var Browser = React.createClass({
 		this.setState({
 			backButtonEnabled: navState.canGoBack,
 			forwardButtonEnabled: navState.canGoForward,
+			shortUrl: this.cleanupUrl(navState.url),
 			url: navState.url,
 			status: navState.title,
 			loading: navState.loading,
@@ -277,6 +297,19 @@ var styles = StyleSheet.create({
 	spinner: {
 		width: 20,
 		marginRight: 6
+	},
+
+	smallAddressBar: {
+		height: 20,
+		borderBottomWidth: 1,
+		borderBottomColor: uiConfig.COLORS.MID_GREY
+	},
+
+	smallAddressBarText: {
+		textAlign: 'justify',
+		fontSize: 10,
+		alignSelf: 'center',
+		paddingTop: 3
 	}
 });
 module.exports = Browser;
