@@ -144,7 +144,10 @@ var WordButton = React.createClass({
 
 	onButtonPressed: function () {
 		if (!this.props.showDictIcon) {
-			this.props.onAction(this.props.text, this.props.index);
+			// timeout to make highlight animation working correctly
+			setTimeout(function () {
+				this.props.onAction(this.props.text, this.props.index);
+			}.bind(this), 150);
 		}
 	},
 

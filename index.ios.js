@@ -56,7 +56,7 @@ var HEADER = '#F9FAFB';
 var GAME_STATES = gameStateStore.GAME_STATES;
 
 var BROWSER_REF = 'browser';
-var DEFAULT_URL = 'http://www.theguardian.com/international';
+var DEFAULT_URL = 'http://www.theguardian.com/uk';
 //var DEFAULT_URL = 'http://www.theguardian.com/us-news/2015/sep/13/donald-trump-ben-carson-republican-debate';
 
 var yarn = React.createClass({
@@ -340,13 +340,16 @@ var yarn = React.createClass({
 		}
 	},
 
-	closeResultView: function () {
+	closeResultView: function (suppressBrowseOnToast) {
 		this.setState({
 			bottomBar: '',
 			wordsCountVisible: false
 		});
 		this.refs['mainbar'].animateIn();
-		setTimeout(this.showBrowseOnToast, 300);
+
+		if (suppressBrowseOnToast !== true) {
+			setTimeout(this.showBrowseOnToast, 300);
+		}
 	},
 
 	showBrowseOnToast: function () {
@@ -362,7 +365,7 @@ var yarn = React.createClass({
 	},
 
 	onRandomPagePressed: function () {
-		this.closeResultView();
+		this.closeResultView(true);
 		this.refs[BROWSER_REF].goToRandomUrl();
 	},
 
