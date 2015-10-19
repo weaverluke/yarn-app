@@ -384,7 +384,7 @@ var yarn = React.createClass({
 
 	buyUrlFeaturePressed: function () {
 		console.log('BUY URL FEATURE');
-		this.closeUrlFeaturePopup();
+		//this.closeUrlFeaturePopup();
 	},
 
 	_componentDidMount: function () {

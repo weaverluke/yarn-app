@@ -170,6 +170,7 @@ var ResultView = React.createClass({
 
 	animateLevel: function () {
 
+		// todo: this should be changed to utils.animateColor
 
 		function animateColor(start, end, progress) {
 			return {

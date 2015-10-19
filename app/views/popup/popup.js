@@ -6,6 +6,7 @@ var {
 	WebView,
 	TouchableWithoutFeedback,
 	TouchableHighlight,
+	Animated,
 	Image
 } = React;
 
@@ -14,6 +15,7 @@ var {width, height} = Dimensions.get('window');
 
 var uiConfig = require('../../uiconfig');
 var COLORS = uiConfig.COLORS;
+var utils = require('../../utils');
 
 var POPUP_TYPE = {
 	INFO: 'INFO',
@@ -35,6 +37,16 @@ var Popup = React.createClass({
 		return {
 			type: POPUP_TYPE.ANSWER,
 			arrowRect: {x:0, y:0, width:0, height:0}
+		};
+	},
+
+	getInitialState: function () {
+		return {
+			buttonAnimationFinished: false,
+			buttonText: '£1.69',
+			buttonBgColor: uiConfig.COLORS.BLUE,
+			// used for button width animation
+			buttonWidth: new Animated.Value(50)
 		};
 	},
 
@@ -155,6 +167,11 @@ var Popup = React.createClass({
 		};
 		var arrowLeft = popupWidth/2;// this.computeArrowPosition();
 
+		var buttonStyle = {
+			width: this.state.buttonWidth,
+			backgroundColor: this.state.buttonBgColor
+		};
+
 		return (
 			<View style={[styles.popup, extraStyle]}>
 				<View style={[styles.contentWrap]}>
@@ -168,11 +185,11 @@ var Popup = React.createClass({
 						<Text>favourite webistes</Text>
 					</View>
 					<View style={styles.bottomActionButtonWrap}>
-						<TouchableHighlight onPress={this.props.onSubmit} underlayColor={uiConfig.COLORS.PALE_BLUE}>
-							<View style={styles.actionButton}>
-								<Text style={styles.confirmButtonText}>£1.69</Text>
-							</View>
-						</TouchableHighlight>
+						<TouchableWithoutFeedback onPress={this.onBuyPressed}>
+							<Animated.View style={[styles.actionButton, buttonStyle]}>
+								<Text style={styles.confirmButtonText}>{this.state.buttonText}</Text>
+							</Animated.View>
+						</TouchableWithoutFeedback>
 					</View>
 				</View>
 				<View style={[styles.arrowTop, {left: arrowLeft}]}>
@@ -181,6 +198,45 @@ var Popup = React.createClass({
 		);
 
 	},
+
+	onBuyPressed: function () {
+		var isAlreadyFinished = this.state.buttonAnimationFinished;
+
+		this.setState({
+			buttonAnimationFinished: true
+		});
+
+		var animationTime = 500;
+
+		var startColor = utils.colorToObj(uiConfig.COLORS.BLUE);
+		var finalColor = utils.colorToObj(uiConfig.COLORS.MID_GREY);
+
+		!isAlreadyFinished && setTimeout(function () {
+
+			utils.animateColor({
+				start: startColor,
+				end: finalColor,
+				onChange: function (clr) {
+					this.setState({
+						buttonBgColor: utils.colorToString(clr)
+					});
+				}.bind(this),
+				duration: animationTime,
+				stepTime: 60
+			});
+
+			Animated.timing(
+				this.state.buttonWidth,
+				{ toValue: 130, duration: animationTime }
+			).start(function () {
+				this.setState({
+					buttonText: 'COMING SOON'
+				});
+			}.bind(this));
+
+		}.bind(this), 100);
+	},
+
 
 	computeArrowPosition: function () {
 		return Math.max(this.props.arrowRect.x + this.props.arrowRect.width/2 - ARROW_WIDTH, ARROW_MIN_LEFT);
@@ -333,9 +389,7 @@ var styles = StyleSheet.create({
 	},
 
 	actionButton: {
-		width: 50,
 		height: 25,
-		backgroundColor: COLORS.BLUE,
 		borderRadius: 3
 	},
 
