@@ -1,6 +1,8 @@
 v0.2.15
 - bugfixes for quiz flow
 - read-only browser bar
-- "buy Web Browsing" popup added for tap on read-only and when requesting url from outside of theguardian.com
+- "buy Web Browsing" popup added for tap on read-only browser bar
 - "Browse on..." toast
+- highlight feedback added to word buttons on quiz view
 - timeout after response for quiz question changed to 5s
+- landing page changed to UK
