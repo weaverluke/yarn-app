@@ -74,7 +74,8 @@ var yarn = React.createClass({
 			wordsCountVisible: false,
 			toastShown: false,
 			introToastShown: false,
-			gameState: gameStateStore.GAME_STATES.NOT_STARTED
+			gameState: gameStateStore.GAME_STATES.NOT_STARTED,
+			buyUrlFeaturePopupVisible: false
 		};
 	},
 
@@ -115,6 +116,12 @@ var yarn = React.createClass({
 					type={Popup.POPUP_TYPE.INFO}
 					arrowRect={this.state.firstButtonRect}
 				/>
+				<Popup
+					visible={this.state.buyUrlFeaturePopupVisible}
+					onClose={this.closeUrlFeaturePopup}
+					onSubmit={this.buyUrlFeaturePressed}
+					type={Popup.POPUP_TYPE.BUY_URL_FEATURE}
+					/>
 				{this.renderSettings()}
 				{this.renderQuizStatusBar()}
 				{this.renderSearchingState()}
@@ -359,7 +366,25 @@ var yarn = React.createClass({
 		actions.on(actions.START_GAME, this.hideBottomBar);
 		actions.on(actions.CHANGE_LEVEL, this.onForceChangeLevel);
 		actions.on(actions.SETTINGS_BUTTON_PRESSED, this.showSettings);
+		actions.on(actions.URL_FEATURE_REQUESTED, this.showUrlFeaturePopup);
 		this.onUrlChange(this.state.url);
+	},
+
+	showUrlFeaturePopup: function () {
+		this.setState({
+			buyUrlFeaturePopupVisible: true
+		})
+	},
+
+	closeUrlFeaturePopup: function () {
+		this.setState({
+			buyUrlFeaturePopupVisible: false
+		})
+	},
+
+	buyUrlFeaturePressed: function () {
+		console.log('BUY URL FEATURE');
+		this.closeUrlFeaturePopup();
 	},
 
 	_componentDidMount: function () {

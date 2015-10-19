@@ -6,6 +6,7 @@ var {
 	Text,
 	TextInput,
 	TouchableOpacity,
+	TouchableWithoutFeedback,
 	View,
 	WebView
 } = React;
@@ -74,9 +75,11 @@ var Browser = React.createClass({
 
 	renderAddressBar: function () {
 		return (
-			<View style={styles.smallAddressBar}>
-				<Text style={styles.smallAddressBarText}>{this.state.shortUrl}</Text>
-			</View>
+			<TouchableWithoutFeedback onPress={this.onNotAllowedUrl}>
+				<View style={styles.smallAddressBar}>
+					<Text style={styles.smallAddressBarText}>{this.state.shortUrl}</Text>
+				</View>
+			</TouchableWithoutFeedback>
 		);
 
 		//return (
@@ -188,7 +191,7 @@ var Browser = React.createClass({
 	},
 
 	onNotAllowedUrl: function (url) {
-		// todo
+		actions.emit(actions.URL_FEATURE_REQUESTED);
 	},
 
 	scheduleApiInject: function () {

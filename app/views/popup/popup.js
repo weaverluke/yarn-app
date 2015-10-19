@@ -5,6 +5,7 @@ var {
 	Text,
 	WebView,
 	TouchableWithoutFeedback,
+	TouchableHighlight,
 	Image
 } = React;
 
@@ -16,7 +17,8 @@ var COLORS = uiConfig.COLORS;
 
 var POPUP_TYPE = {
 	INFO: 'INFO',
-	ANSWER: 'ANSWER'
+	ANSWER: 'ANSWER',
+	BUY_URL_FEATURE: 'BUY_URL_FEATURE'
 };
 
 
@@ -48,6 +50,10 @@ var Popup = React.createClass({
 				content = this.renderInfoPopup();
 				break;
 
+			case POPUP_TYPE.BUY_URL_FEATURE:
+				content = this.renderBuyUrlFeaturePopup();
+				break;
+
 			case POPUP_TYPE.ANSWER:
 			default:
 				content = this.renderAnswerPopup();
@@ -55,11 +61,13 @@ var Popup = React.createClass({
 		}
 
 		return (
-			<TouchableWithoutFeedback onPress={this.props.onClose}>
-				<View style={styles.overlay} >
-					{content}
-				</View>
-			</TouchableWithoutFeedback>
+			<View style={styles.wrap}>
+				<TouchableWithoutFeedback onPress={this.props.onClose}>
+					<View style={styles.overlay} >
+					</View>
+				</TouchableWithoutFeedback>
+				{content}
+			</View>
 		);
 	},
 
@@ -137,6 +145,43 @@ var Popup = React.createClass({
 		);
 	},
 
+	renderBuyUrlFeaturePopup: function () {
+		var popupWidth = 200;//(width - 2*POPUP_MARGIN) * 0.6;
+		var extraStyle = {
+			top: 30,
+			width: popupWidth,
+			left: (width-popupWidth)/2,//POPUP_MARGIN,
+			height: 100
+		};
+		var arrowLeft = popupWidth/2;// this.computeArrowPosition();
+
+		return (
+			<View style={[styles.popup, extraStyle]}>
+				<View style={[styles.contentWrap]}>
+					<View>
+						<View style={styles.row}>
+							<Text>Add </Text>
+							<Text style={styles.bold}>Web Browsing </Text>
+							<Text>to</Text>
+						</View>
+						<Text>use Yarn across all your</Text>
+						<Text>favourite webistes</Text>
+					</View>
+					<View style={styles.bottomActionButtonWrap}>
+						<TouchableHighlight onPress={this.props.onSubmit} underlayColor={uiConfig.COLORS.PALE_BLUE}>
+							<View style={styles.actionButton}>
+								<Text style={styles.confirmButtonText}>£1.69</Text>
+							</View>
+						</TouchableHighlight>
+					</View>
+				</View>
+				<View style={[styles.arrowTop, {left: arrowLeft}]}>
+				</View>
+			</View>
+		);
+
+	},
+
 	computeArrowPosition: function () {
 		return Math.max(this.props.arrowRect.x + this.props.arrowRect.width/2 - ARROW_WIDTH, ARROW_MIN_LEFT);
 	},
@@ -150,6 +195,16 @@ var Popup = React.createClass({
 
 
 var styles = StyleSheet.create({
+
+	wrap: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		bottom: 0,
+		right: 0,
+		backgroundColor: 'rgba(0,0,0,0)',
+		flex: 1
+	},
 
 	overlay: {
 		position: 'absolute',
@@ -176,7 +231,7 @@ var styles = StyleSheet.create({
 
 	popup: {
 		position: 'absolute',
-		left: 10,
+		//left: 10,
 		bottom: uiConfig.TOOLBAR_HEIGHT + ARROW_WIDTH/2,
 		flex: 1,
 		backgroundColor: '#FFFFFF',
@@ -238,8 +293,26 @@ var styles = StyleSheet.create({
 		]
 	},
 
+	arrowTop: {
+		position: 'absolute',
+		top: -5,
+		left: 20,
+		width: ARROW_EDGE_WIDTH,
+		height: ARROW_EDGE_WIDTH,
+		backgroundColor: '#FFFFFF',
+		transform: [
+			{
+				rotate: '45deg'
+			}
+		]
+	},
+
 	row: {
 		flexDirection: 'row'
+	},
+
+	bold: {
+		fontWeight: '500'
 	},
 
 	confirmButton: {
@@ -253,8 +326,23 @@ var styles = StyleSheet.create({
 		borderRadius: 3
 	},
 
+	bottomActionButtonWrap: {
+		position: 'absolute',
+		right: 0,
+		bottom: 0
+	},
+
+	actionButton: {
+		width: 50,
+		height: 25,
+		backgroundColor: COLORS.BLUE,
+		borderRadius: 3
+	},
+
 	confirmButtonText: {
-		color: '#FFFFFF'
+		textAlign: 'center',
+		color: '#FFFFFF',
+		marginTop: 4
 	},
 
 	gradientImage: {
