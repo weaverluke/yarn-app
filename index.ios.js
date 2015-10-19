@@ -75,7 +75,8 @@ var yarn = React.createClass({
 			toastShown: false,
 			introToastShown: false,
 			gameState: gameStateStore.GAME_STATES.NOT_STARTED,
-			buyUrlFeaturePopupVisible: false
+			buyUrlFeaturePopupVisible: false,
+			browseOnToastVisible: false
 		};
 	},
 
@@ -126,6 +127,7 @@ var yarn = React.createClass({
 				{this.renderQuizStatusBar()}
 				{this.renderSearchingState()}
 				{this.renderToast()}
+				{this.renderBrowseOnToast()}
 				{this.renderIntroToast()}
 				{this.renderResultView()}
 			</View>
@@ -269,6 +271,19 @@ var yarn = React.createClass({
 		return <View/>;
 	},
 
+	renderBrowseOnToast: function () {
+		if (this.state.browseOnToastVisible) {
+			return (
+				<Toast
+					content={'Browse on...'}
+					onClose={this.hideBrowseOnToast}
+				/>
+			);
+		}
+		return <View/>;
+
+	},
+
 	renderSearchingState: function () {
 		return <SearchingView ref="searching" active={this.state.gameState === GAME_STATES.LOOKING_FOR_WORDS} />;
 	},
@@ -331,6 +346,19 @@ var yarn = React.createClass({
 			wordsCountVisible: false
 		});
 		this.refs['mainbar'].animateIn();
+		setTimeout(this.showBrowseOnToast, 300);
+	},
+
+	showBrowseOnToast: function () {
+		this.setState({
+			browseOnToastVisible: true
+		});
+	},
+
+	hideBrowseOnToast: function () {
+		this.setState({
+			browseOnToastVisible: false
+		});
 	},
 
 	onRandomPagePressed: function () {

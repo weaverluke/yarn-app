@@ -9,7 +9,6 @@ var {
 } = React;
 
 var NavBarLabel = require('./navbarlabel');
-var NavBarButton = require('./navbarbutton');
 var uiConfig = require('../../uiconfig');
 
 var StatusBar = React.createClass({
