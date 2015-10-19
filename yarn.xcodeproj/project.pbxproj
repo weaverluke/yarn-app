@@ -29,6 +29,7 @@
 		61D0DCE61BA898CD00664994 /* RCTWebViewManager+WebViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 61D0DCE31BA898CD00664994 /* RCTWebViewManager+WebViewManager.m */; };
 		61D0DCE71BA898CD00664994 /* webview-bridge-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 61D0DCE41BA898CD00664994 /* webview-bridge-script.js */; };
 		61D0DCF31BA8A3AC00664994 /* ss-standard.otf in Resources */ = {isa = PBXBuildFile; fileRef = 61D0DCF21BA8A3AC00664994 /* ss-standard.otf */; };
+		61D5392E1BD5864700CFC326 /* next-anim-5s.gif in Resources */ = {isa = PBXBuildFile; fileRef = 61D5392D1BD5864700CFC326 /* next-anim-5s.gif */; settings = {ASSET_TAGS = (); }; };
 		61F7FAF51BC9A45E00F80D2D /* NativeDictionaryProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7FAF41BC9A45E00F80D2D /* NativeDictionaryProxy.m */; settings = {ASSET_TAGS = (); }; };
 		61F7FAFC1BC9B59D00F80D2D /* next-not-anim.gif in Resources */ = {isa = PBXBuildFile; fileRef = 61F7FAFA1BC9B59D00F80D2D /* next-not-anim.gif */; settings = {ASSET_TAGS = (); }; };
 		61F7FAFD1BC9B59D00F80D2D /* next-anim-3s.gif in Resources */ = {isa = PBXBuildFile; fileRef = 61F7FAFB1BC9B59D00F80D2D /* next-anim-3s.gif */; settings = {ASSET_TAGS = (); }; };
@@ -146,6 +147,7 @@
 		61D0DCE31BA898CD00664994 /* RCTWebViewManager+WebViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTWebViewManager+WebViewManager.m"; sourceTree = "<group>"; };
 		61D0DCE41BA898CD00664994 /* webview-bridge-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "webview-bridge-script.js"; sourceTree = "<group>"; };
 		61D0DCF21BA8A3AC00664994 /* ss-standard.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ss-standard.otf"; sourceTree = "<group>"; };
+		61D5392D1BD5864700CFC326 /* next-anim-5s.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "next-anim-5s.gif"; sourceTree = "<group>"; };
 		61F7FAF31BC9A42C00F80D2D /* NativeDictionaryProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NativeDictionaryProxy.h; sourceTree = "<group>"; };
 		61F7FAF41BC9A45E00F80D2D /* NativeDictionaryProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NativeDictionaryProxy.m; path = iOS/NativeDictionaryProxy.m; sourceTree = "<group>"; };
 		61F7FAFA1BC9B59D00F80D2D /* next-not-anim.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "next-not-anim.gif"; sourceTree = "<group>"; };
@@ -286,6 +288,7 @@
 		6165D9331B7746860011A703 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				61D5392D1BD5864700CFC326 /* next-anim-5s.gif */,
 				61F7FAFE1BCA630900F80D2D /* next-finished.gif */,
 				61F7FAFA1BC9B59D00F80D2D /* next-not-anim.gif */,
 				61F7FAFB1BC9B59D00F80D2D /* next-anim-3s.gif */,
@@ -571,6 +574,7 @@
 				6165D9271B7746390011A703 /* bauhaus-93.ttf in Resources */,
 				008F07F31AC5B25A0029DE68 /* main.jsbundle in Resources */,
 				6165D9261B7746390011A703 /* BauhausStd-Heavy.otf in Resources */,
+				61D5392E1BD5864700CFC326 /* next-anim-5s.gif in Resources */,
 				61F7FAFC1BC9B59D00F80D2D /* next-not-anim.gif in Resources */,
 				61D0DCF31BA8A3AC00664994 /* ss-standard.otf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,

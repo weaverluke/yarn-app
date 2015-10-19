@@ -22,7 +22,7 @@ var log = require('./app/logger/logger');
 
 var WHITELIST = require('./app/whitelist');
 
-var QUESTION_RESULT_TIMEOUT = 3000;
+var QUESTION_RESULT_TIMEOUT = 5000;
 
 var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
