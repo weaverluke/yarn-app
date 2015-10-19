@@ -1358,7 +1358,7 @@ throw new TypeError(
 
 var index=findIndex.call(this,predicate,context);
 return index === -1?undefined:this[index];}});}})();
-__d('yarn/index.ios.js',["react-native/Libraries/react-native/react-native.js","yarn/app/views/browser/browser.js","yarn/app/views/popup/popup.js","yarn/app/views/statusbar/statusbar.js","yarn/app/views/settings/settings.js","yarn/app/views/mainbar/mainbar.js","yarn/app/views/toast/toast.js","yarn/app/views/toast/wordscounttoastcontent.js","yarn/app/views/searching/searching.js","yarn/app/views/quiz/quizstatusbar.js","yarn/app/views/quiz/question.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js","yarn/app/whitelist.js","Dimensions","NativeModules","yarn/app/views/quiz/result.js"],function(global, require, module, exports) {  'use strict';
+__d('yarn/index.ios.js',["react-native/Libraries/react-native/react-native.js","yarn/app/views/browser/browser.js","yarn/app/views/popup/popup.js","yarn/app/views/statusbar/statusbar.js","yarn/app/views/settings/settings.js","yarn/app/views/mainbar/mainbar.js","yarn/app/views/toast/toast.js","yarn/app/views/toast/wordscounttoastcontent.js","yarn/app/views/searching/searching.js","yarn/app/views/quiz/quizstatusbar.js","yarn/app/views/quiz/question.js","yarn/app/views/quiz/result.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js","yarn/app/whitelist.js","Dimensions","NativeModules"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');
 
@@ -1382,7 +1382,7 @@ var log=require('yarn/app/logger/logger.js');
 
 var WHITELIST=require('yarn/app/whitelist.js');
 
-var QUESTION_RESULT_TIMEOUT=3000;
+var QUESTION_RESULT_TIMEOUT=5000;
 
 var Dimensions=require('Dimensions');var _Dimensions$get=
 Dimensions.get('window');var width=_Dimensions$get.width;var height=_Dimensions$get.height;
@@ -1416,7 +1416,7 @@ var HEADER='#F9FAFB';
 var GAME_STATES=gameStateStore.GAME_STATES;
 
 var BROWSER_REF='browser';
-var DEFAULT_URL='http://www.theguardian.com/international';
+var DEFAULT_URL='http://www.theguardian.com/uk';
 
 
 var yarn=React.createClass({
@@ -1434,7 +1434,9 @@ bottomBar:'',
 wordsCountVisible:false,
 toastShown:false,
 introToastShown:false,
-gameState:gameStateStore.GAME_STATES.NOT_STARTED};},
+gameState:gameStateStore.GAME_STATES.NOT_STARTED,
+buyUrlFeaturePopupVisible:false,
+browseOnToastVisible:false};},
 
 
 
@@ -1475,10 +1477,17 @@ onSubmit:this.closeInitialPopup,
 type:Popup.POPUP_TYPE.INFO,
 arrowRect:this.state.firstButtonRect}),
 
+React.createElement(Popup,{
+visible:this.state.buyUrlFeaturePopupVisible,
+onClose:this.closeUrlFeaturePopup,
+onSubmit:this.buyUrlFeaturePressed,
+type:Popup.POPUP_TYPE.BUY_URL_FEATURE}),
+
 this.renderSettings(),
 this.renderQuizStatusBar(),
 this.renderSearchingState(),
 this.renderToast(),
+this.renderBrowseOnToast(),
 this.renderIntroToast(),
 this.renderResultView()));},
 
@@ -1622,6 +1631,19 @@ onClose:this.hideIntroToast}));}
 return React.createElement(View,null);},
 
 
+renderBrowseOnToast:function(){
+if(this.state.browseOnToastVisible){
+return (
+React.createElement(Toast,{
+content:'Browse on...',
+onClose:this.hideBrowseOnToast}));}
+
+
+
+return React.createElement(View,null);},
+
+
+
 renderSearchingState:function(){
 return React.createElement(SearchingView,{ref:'searching',active:this.state.gameState === GAME_STATES.LOOKING_FOR_WORDS});},
 
@@ -1678,16 +1700,32 @@ this.refs['wordscountbar'].animateOut();}}},
 
 
 
-closeResultView:function(){
+closeResultView:function(suppressBrowseOnToast){
 this.setState({
 bottomBar:'',
 wordsCountVisible:false});
 
-this.refs['mainbar'].animateIn();},
+this.refs['mainbar'].animateIn();
+
+if(suppressBrowseOnToast !== true){
+setTimeout(this.showBrowseOnToast,300);}},
+
+
+
+showBrowseOnToast:function(){
+this.setState({
+browseOnToastVisible:true});},
+
+
+
+hideBrowseOnToast:function(){
+this.setState({
+browseOnToastVisible:false});},
+
 
 
 onRandomPagePressed:function(){
-this.closeResultView();
+this.closeResultView(true);
 this.refs[BROWSER_REF].goToRandomUrl();},
 
 
@@ -1719,7 +1757,25 @@ userProfileStore.addChangeListener(this.onUserProfileChanged);
 actions.on(actions.START_GAME,this.hideBottomBar);
 actions.on(actions.CHANGE_LEVEL,this.onForceChangeLevel);
 actions.on(actions.SETTINGS_BUTTON_PRESSED,this.showSettings);
+actions.on(actions.URL_FEATURE_REQUESTED,this.showUrlFeaturePopup);
 this.onUrlChange(this.state.url);},
+
+
+showUrlFeaturePopup:function(){
+this.setState({
+buyUrlFeaturePopupVisible:true});},
+
+
+
+closeUrlFeaturePopup:function(){
+this.setState({
+buyUrlFeaturePopupVisible:false});},
+
+
+
+buyUrlFeaturePressed:function(){
+console.log('BUY URL FEATURE');},
+
 
 
 _componentDidMount:function(){
@@ -1775,6 +1831,12 @@ bottomBar = 'wordstrip';}
 
 if(bottomBar === 'wordstrip'){
 wordStripDisabled = currentGameState !== GAME_STATES.WAITING_FOR_ANSWER;}
+
+
+if(currentGameState === GAME_STATES.WAITING_FOR_ANSWER){
+setTimeout((function(){
+this.refs[BROWSER_REF].highlightWord(gameStateStore.get('currentWord').text);}).
+bind(this,200));}
 
 
 if(currentGameState === GAME_STATES.CORRECT_ANSWER_CHOSEN || currentGameState == GAME_STATES.WRONG_ANSWER_CHOSEN){
@@ -52359,7 +52421,8 @@ StyleSheet=
 
 
 
-React.StyleSheet;var Text=React.Text;var TextInput=React.TextInput;var TouchableOpacity=React.TouchableOpacity;var View=React.View;var WebView=React.WebView;
+
+React.StyleSheet;var Text=React.Text;var TextInput=React.TextInput;var TouchableOpacity=React.TouchableOpacity;var TouchableWithoutFeedback=React.TouchableWithoutFeedback;var View=React.View;var WebView=React.WebView;
 
 var gameStateStore=require('yarn/app/stores/gamestatestore.js');
 var YarnWebView=require('yarn/app/views/browser/yarnwebview.js');
@@ -52389,6 +52452,7 @@ getInitialState:function(){
 return {
 url:this.props.url,
 urlInInput:this.props.url,
+shortUrl:this.cleanupUrl(this.props.url),
 status:'No Page Loaded',
 backButtonEnabled:false,
 forwardButtonEnabled:false,
@@ -52405,32 +52469,7 @@ urlInInput:event.nativeEvent.text});},
 render:function(){
 return (
 React.createElement(View,{style:[styles.container]},
-React.createElement(View,{style:[styles.addressBarRow]},
-React.createElement(TouchableOpacity,{onPress:this.goBack},
-React.createElement(View,{style:this.state.backButtonEnabled?styles.navButton:styles.disabledButton},
-React.createElement(Text,null,'<'))),
-
-
-React.createElement(TouchableOpacity,{onPress:this.goForward},
-React.createElement(View,{style:this.state.forwardButtonEnabled?styles.navButton:styles.disabledButton},
-React.createElement(Text,null,'>'))),
-
-
-React.createElement(TextInput,{
-ref:TEXT_INPUT_REF,
-autoCapitalize:'none',
-value:this.state.urlInInput,
-onSubmitEditing:this.onSubmitEditing,
-onChange:this.handleTextInputChange,
-clearButtonMode:'while-editing',
-style:styles.addressBarTextInput}),
-
-React.createElement(TouchableOpacity,{onPress:this.pressGoButton},
-React.createElement(View,{style:styles.goButton},
-React.createElement(Text,null,'Go!')))),
-
-
-
+this.renderAddressBar(),
 React.createElement(YarnWebView,{
 ref:WEBVIEW_REF,
 style:styles.webView,
@@ -52440,10 +52479,56 @@ url:this.state.url,
 onNavigationStateChange:this.onNavigationStateChange,
 onWordsParsed:this.onWordsParsed,
 onVisibleWordsChanged:this.onVisibleWordsChanged,
+onNotAllowedUrl:this.onNotAllowedUrl,
 onScroll:this.props.onScroll || function(){}})));},
 
 
 
+
+
+renderAddressBar:function(){
+return (
+React.createElement(TouchableWithoutFeedback,{onPress:this.onNotAllowedUrl},
+React.createElement(View,{style:styles.smallAddressBar},
+React.createElement(Text,{style:styles.smallAddressBarText},this.state.shortUrl))));},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+cleanupUrl:function(url){
+return url.replace(/^(https?\:\/\/)/,'').
+replace(/^(www\.)/,'').
+split('/')[0];},
 
 
 componentDidMount:function(){
@@ -52499,6 +52584,7 @@ onNavigationStateChange:function(navState){
 this.setState({
 backButtonEnabled:navState.canGoBack,
 forwardButtonEnabled:navState.canGoForward,
+shortUrl:this.cleanupUrl(navState.url),
 url:navState.url,
 status:navState.title,
 loading:navState.loading,
@@ -52515,6 +52601,10 @@ this.lastUrl = navState.url;
 this.refs[WEBVIEW_REF].resetLastParsedContent();
 this.props.onUrlChange && this.props.onUrlChange(navState.url);}},
 
+
+
+onNotAllowedUrl:function(url){
+actions.emit(actions.URL_FEATURE_REQUESTED);},
 
 
 scheduleApiInject:function(){
@@ -52627,7 +52717,20 @@ alignSelf:'stretch'},
 
 spinner:{
 width:20,
-marginRight:6}});
+marginRight:6},
+
+
+smallAddressBar:{
+height:20,
+borderBottomWidth:1,
+borderBottomColor:uiConfig.COLORS.MID_GREY},
+
+
+smallAddressBarText:{
+textAlign:'justify',
+fontSize:10,
+alignSelf:'center',
+paddingTop:3}});
 
 
 module.exports = Browser;
@@ -53117,7 +53220,10 @@ break;
 
 case 'SCROLL':
 this.props.onScroll && this.props.onScroll(msg.data);
-break;}}).
+break;
+
+case 'NOT_ALLOWED_URL':
+this.props.onNotAllowedUrl && this.props.onNotAllowedUrl(msg.data);}}).
 
 
 bind(this));},
@@ -76823,7 +76929,8 @@ HOME_BUTTON_PRESSED:'HOME_BUTTON_PRESSED',
 QUIZ_BUTTON_PRESSED:'QUIZ_BUTTON_PRESSED',
 SETTINGS_BUTTON_PRESSED:'SETTINGS_BUTTON_PRESSED',
 
-LOOKING_FOR_WORDS:'LOOKING_FOR_WORDS'};
+LOOKING_FOR_WORDS:'LOOKING_FOR_WORDS',
+URL_FEATURE_REQUESTED:'URL_FEATURE_REQUESTED'};
 });
 __d('yarn/app/helpers/getrandomwords.js',["yarn/words.js"],function(global, require, module, exports) {  var words=Object.keys(require('yarn/words.js'));
 
@@ -77526,8 +77633,29 @@ send('WEBSITE_READY');});}
 
 
 
+function getDomain(url){
+return url.replace(/x/,'').split('/')[0];}
 
-function hookLinks(){}
+
+
+function hookLinks(){
+
+
+document.addEventListener('click',function(ev){
+if(ev.target && ev.target.tagName && ev.target.tagName.toLowerCase() === 'a' && 
+ev.target.getAttribute('href')){
+
+var href=ev.target.getAttribute('href');
+
+if(href.indexOf('#') !== 0 && getDomain(href) !== getDomain(location.href)){
+ev.preventDefault();
+ev.stopPropagation();
+send('NOT_ALLOWED_URL',href);
+return false;}}});}
+
+
+
+
 
 
 
@@ -77613,7 +77741,7 @@ module.exports = {
 regexps:regexps,
 doesMatch:doesMatch};
 });
-__d('yarn/app/views/popup/popup.js',["image!horizontal-gradient","react-native/Libraries/react-native/react-native.js","Dimensions","yarn/app/uiconfig.js"],function(global, require, module, exports) {  var React=require('react-native/Libraries/react-native/react-native.js');var 
+__d('yarn/app/views/popup/popup.js',["image!horizontal-gradient","react-native/Libraries/react-native/react-native.js","Dimensions","yarn/app/uiconfig.js","yarn/app/utils.js"],function(global, require, module, exports) {  var React=require('react-native/Libraries/react-native/react-native.js');var 
 
 StyleSheet=
 
@@ -77621,17 +77749,21 @@ StyleSheet=
 
 
 
-React.StyleSheet;var View=React.View;var Text=React.Text;var WebView=React.WebView;var TouchableWithoutFeedback=React.TouchableWithoutFeedback;var Image=React.Image;
+
+
+React.StyleSheet;var View=React.View;var Text=React.Text;var WebView=React.WebView;var TouchableWithoutFeedback=React.TouchableWithoutFeedback;var TouchableHighlight=React.TouchableHighlight;var Animated=React.Animated;var Image=React.Image;
 
 var Dimensions=require('Dimensions');var _Dimensions$get=
 Dimensions.get('window');var width=_Dimensions$get.width;var height=_Dimensions$get.height;
 
 var uiConfig=require('yarn/app/uiconfig.js');
 var COLORS=uiConfig.COLORS;
+var utils=require('yarn/app/utils.js');
 
 var POPUP_TYPE={
 INFO:'INFO',
-ANSWER:'ANSWER'};
+ANSWER:'ANSWER',
+BUY_URL_FEATURE:'BUY_URL_FEATURE'};
 
 
 
@@ -77651,6 +77783,16 @@ arrowRect:{x:0,y:0,width:0,height:0}};},
 
 
 
+getInitialState:function(){
+return {
+buttonAnimationFinished:false,
+buttonText:'£1.69',
+buttonBgColor:uiConfig.COLORS.BLUE,
+
+buttonWidth:new Animated.Value(50)};},
+
+
+
 render:function(){
 if(!this.props.visible){
 return React.createElement(View,null);}
@@ -77663,6 +77805,10 @@ case POPUP_TYPE.INFO:
 content = this.renderInfoPopup();
 break;
 
+case POPUP_TYPE.BUY_URL_FEATURE:
+content = this.renderBuyUrlFeaturePopup();
+break;
+
 case POPUP_TYPE.ANSWER:
 default:
 content = this.renderAnswerPopup();
@@ -77670,10 +77816,12 @@ break;}
 
 
 return (
+React.createElement(View,{style:styles.wrap},
 React.createElement(TouchableWithoutFeedback,{onPress:this.props.onClose},
-React.createElement(View,{style:styles.overlay},
-content)));},
+React.createElement(View,{style:styles.overlay})),
 
+
+content));},
 
 
 
@@ -77752,6 +77900,87 @@ React.createElement(View,{style:[styles.arrow,{left:arrowLeft}]})));},
 
 
 
+renderBuyUrlFeaturePopup:function(){
+var popupWidth=200;
+var extraStyle={
+top:30,
+width:popupWidth,
+left:(width - popupWidth) / 2,
+height:100};
+
+var arrowLeft=popupWidth / 2;
+
+var buttonStyle={
+width:this.state.buttonWidth,
+backgroundColor:this.state.buttonBgColor};
+
+
+return (
+React.createElement(View,{style:[styles.popup,extraStyle]},
+React.createElement(View,{style:[styles.contentWrap]},
+React.createElement(View,null,
+React.createElement(View,{style:styles.row},
+React.createElement(Text,null,'Add '),
+React.createElement(Text,{style:styles.bold},'Web Browsing '),
+React.createElement(Text,null,'to')),
+
+React.createElement(Text,null,'use Yarn across all your'),
+React.createElement(Text,null,'favourite webistes')),
+
+React.createElement(View,{style:styles.bottomActionButtonWrap},
+React.createElement(TouchableWithoutFeedback,{onPress:this.onBuyPressed},
+React.createElement(Animated.View,{style:[styles.actionButton,buttonStyle]},
+React.createElement(Text,{style:styles.confirmButtonText},this.state.buttonText))))),
+
+
+
+
+React.createElement(View,{style:[styles.arrowTop,{left:arrowLeft}]})));},
+
+
+
+
+
+
+onBuyPressed:function(){
+var isAlreadyFinished=this.state.buttonAnimationFinished;
+
+this.setState({
+buttonAnimationFinished:true});
+
+
+var animationTime=500;
+
+var startColor=utils.colorToObj(uiConfig.COLORS.BLUE);
+var finalColor=utils.colorToObj(uiConfig.COLORS.MID_GREY);
+
+!isAlreadyFinished && setTimeout((function(){
+
+utils.animateColor({
+start:startColor,
+end:finalColor,
+onChange:(function(clr){
+this.setState({
+buttonBgColor:utils.colorToString(clr)});}).
+
+bind(this),
+duration:animationTime,
+stepTime:60});
+
+
+Animated.timing(
+this.state.buttonWidth,
+{toValue:130,duration:animationTime}).
+start((function(){
+this.setState({
+buttonText:'COMING SOON'});}).
+
+bind(this));}).
+
+bind(this),100);},
+
+
+
 computeArrowPosition:function(){
 return Math.max(this.props.arrowRect.x + this.props.arrowRect.width / 2 - ARROW_WIDTH,ARROW_MIN_LEFT);},
 
@@ -77765,6 +77994,16 @@ ev.stopPropagation();}});
 
 
 var styles=StyleSheet.create({
+
+wrap:{
+position:'absolute',
+top:0,
+left:0,
+bottom:0,
+right:0,
+backgroundColor:'rgba(0,0,0,0)',
+flex:1},
+
 
 overlay:{
 position:'absolute',
@@ -77791,7 +78030,7 @@ marginBottom:5},
 
 popup:{
 position:'absolute',
-left:10,
+
 bottom:uiConfig.TOOLBAR_HEIGHT + ARROW_WIDTH / 2,
 flex:1,
 backgroundColor:'#FFFFFF',
@@ -77853,8 +78092,26 @@ rotate:'45deg'}]},
 
 
 
+arrowTop:{
+position:'absolute',
+top:-5,
+left:20,
+width:ARROW_EDGE_WIDTH,
+height:ARROW_EDGE_WIDTH,
+backgroundColor:'#FFFFFF',
+transform:[
+{
+rotate:'45deg'}]},
+
+
+
+
 row:{
 flexDirection:'row'},
+
+
+bold:{
+fontWeight:'500'},
 
 
 confirmButton:{
@@ -77868,8 +78125,21 @@ marginLeft:20,
 borderRadius:3},
 
 
+bottomActionButtonWrap:{
+position:'absolute',
+right:0,
+bottom:0},
+
+
+actionButton:{
+height:25,
+borderRadius:3},
+
+
 confirmButtonText:{
-color:'#FFFFFF'},
+textAlign:'center',
+color:'#FFFFFF',
+marginTop:4},
 
 
 gradientImage:{
@@ -77909,9 +78179,69 @@ Popup.POPUP_TYPE = POPUP_TYPE;
 
 module.exports = Popup;
 });
+__d('yarn/app/utils.js',[],function(global, require, module, exports) {  module.exports = {
+animateColor:animateColor,
+colorToString:colorToString,
+colorToObj:colorToObj};
+
+
+function animateColorStep(start,end,progress){
+return {
+r:colorEase(start.r,end.r,progress),
+g:colorEase(start.g,end.g,progress),
+b:colorEase(start.b,end.b,progress)};}
+
+
+
+function colorEase(a,b,u){
+return parseInt((1 - u) * a + u * b);}
+
+
+function animateColor(conf){
+var start=conf.start;
+var end=conf.end;
+var duration=conf.duration || 500;
+var stepTime=conf.stepTime || 50;
+
+var startTime=Date.now();
+fadeStep();
+
+function fadeStep(){
+var currentProgress=Math.min((Date.now() - startTime) / duration,1);
+var color=animateColorStep(start,end,currentProgress);
+
+conf.onChange(color);
+
+if(currentProgress === 1){
+conf.onFinish && conf.onFinish();}else 
+
+{
+setTimeout(fadeStep,stepTime);}}}
+
+
+
+
+function colorToString(clr){
+var alpha='a' in clr?clr.a:1;
+return 'rgba(' + clr.r + ',' + clr.g + ',' + clr.b + ',' + alpha + ')';}
+
+
+function colorToObj(clr){
+var parts=clr.replace(/rgba?\(/,'').replace(')','').replace(/ /g,'').split(',');
+
+var rgba={
+r:parseInt(parts[0]),
+g:parseInt(parts[1]),
+b:parseInt(parts[2])};
+
+
+rgba.a = parts.length === 4?parseFloat(parts[4]):1;
+
+return rgba;}
+});
 __d('image!horizontal-gradient',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/horizontal-gradient.imageset/horizontal-gradient.png","uri":"horizontal-gradient","width":600,"height":30,"deprecated":true};
 });
-__d('yarn/app/views/statusbar/statusbar.js',["react-native/Libraries/react-native/react-native.js","yarn/app/views/statusbar/navbarlabel.js","yarn/app/views/statusbar/navbarbutton.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
+__d('yarn/app/views/statusbar/statusbar.js',["react-native/Libraries/react-native/react-native.js","yarn/app/views/statusbar/navbarlabel.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -77922,7 +78252,6 @@ StyleSheet=
 React.StyleSheet;var View=React.View;var Text=React.Text;var Animated=React.Animated;
 
 var NavBarLabel=require('yarn/app/views/statusbar/navbarlabel.js');
-var NavBarButton=require('yarn/app/views/statusbar/navbarbutton.js');
 var uiConfig=require('yarn/app/uiconfig.js');
 
 var StatusBar=React.createClass({
@@ -78251,87 +78580,6 @@ text:{}});
 
 
 module.exports = NavBarLabel;
-});
-__d('yarn/app/views/statusbar/navbarbutton.js',["image!settings-icon","image!next-icon","react-native/Libraries/react-native/react-native.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
-
-var React=require('react-native/Libraries/react-native/react-native.js');var 
-
-StyleSheet=
-
-
-
-
-React.StyleSheet;var View=React.View;var Text=React.Text;var TouchableWithoutFeedback=React.TouchableWithoutFeedback;var Image=React.Image;
-
-var uiConfig=require('yarn/app/uiconfig.js');
-
-var NavBarButton=React.createClass({
-
-getDefaultProps:function(){
-return {
-icon:''};},
-
-
-
-getInitialState:function(){
-return {
-height:uiConfig.TOOLBAR_HEIGHT};},
-
-
-
-render:function(){
-var img=this.renderIcon();
-return (
-React.createElement(TouchableWithoutFeedback,{onPress:this.props.onPress},
-React.createElement(View,{style:styles.wrap},
-img)));},
-
-
-
-
-
-renderIcon:function(){
-
-switch(this.props.icon){
-case 'settings':
-return (
-React.createElement(Image,{source:require('image!settings-icon'),style:styles.icon}));
-
-case 'next':
-return (
-React.createElement(Image,{source:require('image!next-icon'),style:styles.icon}));
-
-default:
-return React.createElement(View,null);}}});
-
-
-
-
-var styles=StyleSheet.create({
-wrap:{
-backgroundColor:'#FFFFFF',
-width:uiConfig.TOOLBAR_BUTTON_WIDTH,
-borderLeftWidth:1,
-borderLeftColor:uiConfig.COLORS.MID_GREY,
-alignSelf:'stretch',
-
-alignItems:'center',
-justifyContent:'center'},
-
-
-icon:{
-width:uiConfig.TOOLBAR_ICON_SIZE,
-height:uiConfig.TOOLBAR_ICON_SIZE,
-marginTop:Math.floor((uiConfig.TOOLBAR_HEIGHT - uiConfig.TOOLBAR_ICON_SIZE) / 2)}});
-
-
-
-
-module.exports = NavBarButton;
-});
-__d('image!settings-icon',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/settings-icon.imageset/settings-icon.png","uri":"settings-icon","width":44,"height":44,"deprecated":true};
-});
-__d('image!next-icon',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/next-icon.imageset/next-icon.png","uri":"next-icon","width":44,"height":44,"deprecated":true};
 });
 __d('yarn/app/views/settings/settings.js',["react-native/Libraries/react-native/react-native.js","yarn/app/actions/actions.js","yarn/app/views/settings/googlelanguages.js"],function(global, require, module, exports) {  'use strict';
 
@@ -79007,6 +79255,8 @@ __d('image!home-icon',[],function(global, require, module, exports) {  module.ex
 });
 __d('image!yarn-icon',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/yarn-icon.imageset/yarn-icon.png","uri":"yarn-icon","width":64,"height":64,"deprecated":true};
 });
+__d('image!settings-icon',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/settings-icon.imageset/settings-icon.png","uri":"settings-icon","width":44,"height":44,"deprecated":true};
+});
 __d('yarn/app/views/toast/toast.js',["react-native/Libraries/react-native/react-native.js","Dimensions","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
@@ -79401,7 +79651,8 @@ bind(this),10);}});
 var styles=StyleSheet.create({
 wrap:{
 position:'absolute',
-top:uiConfig.BROWSER_BAR_HEIGHT,
+
+top:20,
 left:0,
 right:0,
 bottom:uiConfig.TOOLBAR_HEIGHT,
@@ -79687,7 +79938,7 @@ ref:'button-' + i}));}).
 bind(this));
 
 return (
-React.createElement(Animated.View,null,
+React.createElement(Animated.View,{style:styles.wrap},
 words));},
 
 
@@ -79728,6 +79979,10 @@ this.refs['button-0'].stopTimeoutAnimation();}});
 
 var styles=StyleSheet.create({
 
+wrap:{
+flex:1},
+
+
 toolbar:{
 backgroundColor:uiConfig.COLORS.SELECTED_GREY,
 flexDirection:'row'},
@@ -79746,13 +80001,13 @@ __d('yarn/app/views/quiz/wordbutton.js',["image!magnifier","react-native/Librari
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
-TouchableWithoutFeedback=
+TouchableHighlight=
 
 
 
 
 
-React.TouchableWithoutFeedback;var StyleSheet=React.StyleSheet;var Text=React.Text;var View=React.View;var Image=React.Image;var PropTypes=React.PropTypes;
+React.TouchableHighlight;var StyleSheet=React.StyleSheet;var Text=React.Text;var View=React.View;var Image=React.Image;var PropTypes=React.PropTypes;
 
 var uiConfig=require('yarn/app/uiconfig.js');
 
@@ -79791,12 +80046,20 @@ backgroundColor:this.getColor('background')};
 var clickCallback=this.props.showDictIcon?this.onDictIconPressed:this.onButtonPressed;
 return (
 React.createElement(View,{style:[styles.wrap,additionalStyle]},
+React.createElement(TouchableHighlight,{onPress:clickCallback,underlayColor:'rgb(238, 248, 253)'},
+React.createElement(View,{style:styles.buttonContentWrap},
 this.renderDictIcon(),
-React.createElement(TouchableWithoutFeedback,{onPress:clickCallback},
-this.renderButtonContent()),
+this.renderButtonContent(),
+this.renderInfoText()))));},
 
-this.renderInfoText()));},
 
+
+
+
+
+componentWillReceiveProps:function(props){
+if(this.props.type === BUTTON_TYPES.QUESTION && this.props.text !== props.text){
+this.startTimeoutAnimation();}},
 
 
 
@@ -79842,11 +80105,11 @@ return this.renderAnswerButton();}},
 
 renderQuestionButton:function(){
 var nextButton;
-var iconUri=this.state.timeoutAnimationEnabled?'next-anim-3s.gif':'next-finished.gif';
+var iconUri=this.state.timeoutAnimationEnabled?'next-anim-5s.gif':'next-finished.gif';
 
 if(this.props.showDictIcon){
 nextButton = 
-React.createElement(TouchableWithoutFeedback,{onPress:this.props.onNextPress},
+React.createElement(TouchableHighlight,{onPress:this.props.onNextPress},
 React.createElement(View,{style:styles.nextIconWrap},
 React.createElement(View,{style:styles.vCenter},
 React.createElement(Image,{source:{uri:iconUri},style:styles.nextIcon}))));}
@@ -79880,7 +80143,10 @@ this.props.text)));},
 
 onButtonPressed:function(){
 if(!this.props.showDictIcon){
-this.props.onAction(this.props.text,this.props.index);}},
+
+setTimeout((function(){
+this.props.onAction(this.props.text,this.props.index);}).
+bind(this),150);}},
 
 
 
@@ -79891,14 +80157,18 @@ this.props.onDictIconPressed(this.props.text);}},
 
 
 stopTimeoutAnimation:function(){
+if(this.state.timeoutAnimationEnabled){
 this.setState({
-timeoutAnimationEnabled:false});},
+timeoutAnimationEnabled:false});}},
+
 
 
 
 startTimeoutAnimation:function(){
+if(!this.state.timeoutAnimationEnabled){
 this.setState({
-timeoutAnimationEnabled:true});}});
+timeoutAnimationEnabled:true});}}});
+
 
 
 
@@ -79908,11 +80178,15 @@ var styles=StyleSheet.create({
 wrap:{
 borderTopWidth:1,
 borderTopColor:uiConfig.COLORS.MID_GREY,
-height:uiConfig.QUIZ_BUTTON_HEIGHT,
-flexDirection:'row',
 alignItems:'stretch',
+alignSelf:'stretch',
 flex:1},
 
+
+buttonContentWrap:{
+flexDirection:'row',
+flex:1,
+height:uiConfig.QUIZ_BUTTON_HEIGHT},
 
 
 buttonContent:{
@@ -80198,6 +80472,7 @@ next();},
 
 
 animateLevel:function(){
+
 
 
 function animateColor(start,end,progress){
