@@ -1416,7 +1416,7 @@ var HEADER='#F9FAFB';
 var GAME_STATES=gameStateStore.GAME_STATES;
 
 var BROWSER_REF='browser';
-var DEFAULT_URL='http://www.theguardian.com/uk';
+var DEFAULT_URL='http://www.theguardian.com/uk-news';
 
 
 var yarn=React.createClass({
@@ -1436,7 +1436,9 @@ toastShown:false,
 introToastShown:false,
 gameState:gameStateStore.GAME_STATES.NOT_STARTED,
 buyUrlFeaturePopupVisible:false,
-browseOnToastVisible:false};},
+browseOnToastVisible:false,
+testYourselfPromptVisible:false,
+testYourselfPromptShown:userProfileStore.get('testYourselfPromptShown')};},
 
 
 
@@ -1489,7 +1491,8 @@ this.renderSearchingState(),
 this.renderToast(),
 this.renderBrowseOnToast(),
 this.renderIntroToast(),
-this.renderResultView()));},
+this.renderResultView(),
+this.renderTestYourselfPrompt()));},
 
 
 
@@ -1648,6 +1651,41 @@ renderSearchingState:function(){
 return React.createElement(SearchingView,{ref:'searching',active:this.state.gameState === GAME_STATES.LOOKING_FOR_WORDS});},
 
 
+renderTestYourselfPrompt:function(){
+if(this.state.testYourselfPromptShown){
+return;}
+
+return (
+React.createElement(Popup,{
+ref:'testYourselfPrompt',
+visible:this.state.testYourselfPromptVisible,
+withoutOverlay:true,
+onSubmit:this.closeTestYourselfPrompt,
+type:Popup.POPUP_TYPE.TEST_YOURSELF_PROMPT}));},
+
+
+
+
+showTestYourselfPrompt:function(){
+!this.state.testYourselfPromptShown && this.setState({
+testYourselfPromptVisible:true});},
+
+
+
+hideTestYourselfPrompt:function(){
+!this.state.testYourselfPromptShown && this.setState({
+testYourselfPromptVisible:false});},
+
+
+
+closeTestYourselfPrompt:function(){
+userProfileStore.set('testYourselfPromptShown',true);
+this.setState({
+testYourselfPromptVisible:false,
+testYourselfPromptShown:true});},
+
+
+
 hideToast:function(){
 this.setState({
 toastShown:true});},
@@ -1687,13 +1725,14 @@ this.setState({
 wordsCountVisible:true});
 
 this.refs['mainbar'].animateOut();
-this.refs['wordscountbar'].animateIn();}else 
+this.refs['wordscountbar'].animateIn(this.showTestYourselfPrompt);}else 
 
 if(this.state.wordsCountVisible && data.y < 10){
 console.log('hide wordscount bar');
 this.setState({
 wordsCountVisible:false});
 
+this.hideTestYourselfPrompt();
 this.refs['mainbar'].animateIn();
 this.refs['wordscountbar'].animateOut();}}},
 
@@ -1922,7 +1961,10 @@ onUserProfileChanged:function(){
 if(this.lang !== userProfileStore.get('language')){
 this.lang = userProfileStore.get('language');
 this.resetGame();
-this.reloadBrowser();}},
+this.reloadBrowser();}
+
+this.setState({
+testYourselfPromptShown:userProfileStore.get('testYourselfPromptShown')});},
 
 
 
@@ -77024,6 +77066,7 @@ language:'pl',
 correctAnswers:0,
 wrongAnswers:0,
 levelStats:[],
+testYourselfPromptShown:false,
 historyLevelValues:[]};
 
 
@@ -77050,7 +77093,8 @@ wrong:0};}}
 
 function set(key,d){
 data[key] = d;
-emitChange();}
+emitChange();
+saveData();}
 
 
 function get(key){
@@ -77136,6 +77180,7 @@ if(parsedData){
 data = parsedData;}
 
 migrate1();
+migrate2();
 
 log({
 message:'user profile loaded',
@@ -77176,6 +77221,12 @@ function migrate1(){
 if(!data.wordsLimit){
 data.wordsLimit = 10;
 saveData();}}
+
+
+
+function migrate2(){
+if(!('testYourselfPromptShown' in data)){
+data.testYourselfPromptShown = false;}}
 
 
 
@@ -77763,7 +77814,8 @@ var utils=require('yarn/app/utils.js');
 var POPUP_TYPE={
 INFO:'INFO',
 ANSWER:'ANSWER',
-BUY_URL_FEATURE:'BUY_URL_FEATURE'};
+BUY_URL_FEATURE:'BUY_URL_FEATURE',
+TEST_YOURSELF_PROMPT:'TEST_YOURSELF_PROMPT'};
 
 
 
@@ -77779,7 +77831,8 @@ var Popup=React.createClass({
 getDefaultProps:function(){
 return {
 type:POPUP_TYPE.ANSWER,
-arrowRect:{x:0,y:0,width:0,height:0}};},
+arrowRect:{x:0,y:0,width:0,height:0},
+withoutOverlay:false};},
 
 
 
@@ -77809,19 +77862,28 @@ case POPUP_TYPE.BUY_URL_FEATURE:
 content = this.renderBuyUrlFeaturePopup();
 break;
 
+case POPUP_TYPE.TEST_YOURSELF_PROMPT:
+content = this.renderTestYourselfPrompt();
+break;
+
 case POPUP_TYPE.ANSWER:
 default:
 content = this.renderAnswerPopup();
 break;}
 
 
+if(this.props.withoutOverlay){
+return content;}else 
+
+{
 return (
 React.createElement(View,{style:styles.wrap},
 React.createElement(TouchableWithoutFeedback,{onPress:this.props.onClose},
 React.createElement(View,{style:styles.overlay})),
 
 
-content));},
+content));}},
+
 
 
 
@@ -77980,6 +78042,45 @@ bind(this));}).
 bind(this),100);},
 
 
+renderTestYourselfPrompt:function(){
+var popupWidth=200;
+var extraStyle={
+width:popupWidth,
+right:POPUP_MARGIN,
+height:60};
+
+var buttonStyle={
+backgroundColor:uiConfig.COLORS.SELECTED_GREY};
+
+var buttonTextStyle={
+fontWeight:'500',
+color:'white'};
+
+
+var arrowLeft=popupWidth - 40;
+
+return (
+React.createElement(View,{style:[styles.popup,extraStyle]},
+React.createElement(TouchableWithoutFeedback,{onPress:this.props.cancelPress},
+React.createElement(View,{style:[styles.contentWrap,styles.row]},
+React.createElement(View,null,
+React.createElement(Text,null,'Test yourself'),
+React.createElement(Text,null,'any time!')),
+
+React.createElement(View,null,
+React.createElement(TouchableWithoutFeedback,{onPress:this.props.onSubmit},
+React.createElement(View,{style:[styles.confirmButton,buttonStyle]},
+React.createElement(Text,{style:[styles.confirmButtonText,buttonTextStyle]},'GOT IT')))))),
+
+
+
+
+
+React.createElement(View,{style:[styles.arrow,{left:arrowLeft}]})));},
+
+
+
+
 
 computeArrowPosition:function(){
 return Math.max(this.props.arrowRect.x + this.props.arrowRect.width / 2 - ARROW_WIDTH,ARROW_MIN_LEFT);},
@@ -78116,7 +78217,6 @@ fontWeight:'500'},
 
 confirmButton:{
 backgroundColor:COLORS.GREEN,
-paddingTop:5,
 paddingBottom:5,
 paddingLeft:15,
 paddingRight:15,
@@ -78352,7 +78452,7 @@ specialFont:true})));},
 
 
 
-animateIn:function(){
+animateIn:function(cb){
 Animated.parallel([
 Animated.timing(
 this.state.opacityValue,
@@ -78362,10 +78462,10 @@ Animated.timing(
 this.state.marginTopValue,
 {toValue:0})]).
 
-start();},
+start(cb);},
 
 
-animateOut:function(){
+animateOut:function(cb){
 Animated.parallel([
 Animated.timing(
 this.state.opacityValue,
@@ -78375,7 +78475,7 @@ Animated.timing(
 this.state.marginTopValue,
 {toValue:uiConfig.TOOLBAR_ANIMATION_OFFSET})]).
 
-start();}});
+start(cb);}});
 
 
 
@@ -79125,7 +79225,7 @@ var languagesData={
 
 module.exports = languagesData.data.languages;
 });
-__d('yarn/app/views/mainbar/mainbar.js',["image!home-icon","image!yarn-icon","image!settings-icon","react-native/Libraries/react-native/react-native.js","Dimensions","yarn/app/actions/actions.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
+__d('yarn/app/views/mainbar/mainbar.js',["image!yarn-icon","image!settings-icon","react-native/Libraries/react-native/react-native.js","Dimensions","yarn/app/actions/actions.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -79160,11 +79260,7 @@ transform:[
 
 opacity:this.state.opacityValue}]},
 
-React.createElement(View,{style:styles.buttonWrap},
-React.createElement(TouchableWithoutFeedback,{onPress:this.onHomePressed},
-React.createElement(Image,{source:require('image!home-icon'),style:styles.icon}))),
-
-
+React.createElement(View,{style:styles.spacer}),
 React.createElement(View,{style:styles.buttonWrap},
 React.createElement(TouchableWithoutFeedback,{onPress:this.onQuizPressed},
 React.createElement(Image,{source:require('image!yarn-icon'),style:styles.iconCentral}))),
@@ -79172,9 +79268,10 @@ React.createElement(Image,{source:require('image!yarn-icon'),style:styles.iconCe
 
 React.createElement(View,{style:styles.buttonWrap},
 React.createElement(TouchableWithoutFeedback,{onPress:this.onSettingsPressed},
-React.createElement(Image,{source:require('image!settings-icon'),style:styles.icon})))));},
+React.createElement(Image,{source:require('image!settings-icon'),style:styles.icon}))),
 
 
+React.createElement(View,{style:styles.spacer})));},
 
 
 
@@ -79183,7 +79280,7 @@ componentDidMount:function(){
 this.animateIn();},
 
 
-animateIn:function(){
+animateIn:function(cb){
 Animated.parallel([
 Animated.timing(
 this.state.opacityValue,
@@ -79193,10 +79290,10 @@ Animated.timing(
 this.state.marginTopValue,
 {toValue:0})]).
 
-start();},
+start(cb);},
 
 
-animateOut:function(){
+animateOut:function(cb){
 Animated.parallel([
 Animated.timing(
 this.state.opacityValue,
@@ -79206,11 +79303,8 @@ Animated.timing(
 this.state.marginTopValue,
 {toValue:uiConfig.TOOLBAR_ANIMATION_OFFSET})]).
 
-start();},
+start(cb);},
 
-
-onHomePressed:function(){
-actions.emit(actions.HOME_BUTTON_PRESSED);},
 
 onQuizPressed:function(){
 actions.emit(actions.QUIZ_BUTTON_PRESSED);},
@@ -79233,7 +79327,7 @@ borderTopColor:uiConfig.COLORS.MID_GREY},
 
 
 buttonWrap:{
-flex:1,
+flex:2,
 alignItems:'center',
 justifyContent:'center'},
 
@@ -79245,13 +79339,15 @@ height:uiConfig.TOOLBAR_ICON_SIZE},
 
 iconCentral:{
 width:uiConfig.TOOLBAR_ICON_SIZE + 8,
-height:uiConfig.TOOLBAR_ICON_SIZE + 8}});
+height:uiConfig.TOOLBAR_ICON_SIZE + 8},
+
+
+spacer:{
+flex:1}});
 
 
 
 module.exports = MainBar;
-});
-__d('image!home-icon',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/home-icon.imageset/home-icon.png","uri":"home-icon","width":44,"height":44,"deprecated":true};
 });
 __d('image!yarn-icon',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/yarn-icon.imageset/yarn-icon.png","uri":"yarn-icon","width":64,"height":64,"deprecated":true};
 });
@@ -79980,7 +80076,14 @@ this.refs['button-0'].stopTimeoutAnimation();}});
 var styles=StyleSheet.create({
 
 wrap:{
-flex:1},
+flex:1,
+shadowColor:'#000000',
+shadowOffset:{
+width:0,
+height:-1},
+
+shadowOpacity:0.3,
+shadowRadius:1},
 
 
 toolbar:{
