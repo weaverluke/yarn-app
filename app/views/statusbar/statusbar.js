@@ -109,7 +109,7 @@ var StatusBar = React.createClass({
 		);
 	},
 
-	animateIn: function () {
+	animateIn: function (cb) {
 		Animated.parallel([
 			Animated.timing(
 				this.state.opacityValue,
@@ -119,10 +119,10 @@ var StatusBar = React.createClass({
 				this.state.marginTopValue,
 				{ toValue: 0 }
 			)
-		]).start();
+		]).start(cb);
 	},
 
-	animateOut: function () {
+	animateOut: function (cb) {
 		Animated.parallel([
 			Animated.timing(
 				this.state.opacityValue,
@@ -132,7 +132,7 @@ var StatusBar = React.createClass({
 				this.state.marginTopValue,
 				{ toValue: uiConfig.TOOLBAR_ANIMATION_OFFSET }
 			)
-		]).start();
+		]).start(cb);
 	}
 });
 

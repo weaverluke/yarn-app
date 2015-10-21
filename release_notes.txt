@@ -1,5 +1,8 @@
 v0.2.16
 - landing page changed to theguardian.com/uk-news
+- add shadow above quiz view
+- remove home icon from main toolbar
+- "Test yourself any time" prompt added
 
 v0.2.15
 - bugfixes for quiz flow

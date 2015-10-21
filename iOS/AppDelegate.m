@@ -34,8 +34,8 @@
 
   
   // point to localhost here
-  jsCodeLocation = [NSURL URLWithString:@"http://192.168.1.123:8081/index.ios.bundle"];
-//  jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle"];
+//  jsCodeLocation = [NSURL URLWithString:@"http://192.168.1.123:8081/index.ios.bundle"];
+  jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle"];
 
   /**
    * OPTION 2

@@ -76,7 +76,9 @@ var yarn = React.createClass({
 			introToastShown: false,
 			gameState: gameStateStore.GAME_STATES.NOT_STARTED,
 			buyUrlFeaturePopupVisible: false,
-			browseOnToastVisible: false
+			browseOnToastVisible: false,
+			testYourselfPromptVisible: false,
+			testYourselfPromptShown: userProfileStore.get('testYourselfPromptShown')
 		};
 	},
 
@@ -130,6 +132,7 @@ var yarn = React.createClass({
 				{this.renderBrowseOnToast()}
 				{this.renderIntroToast()}
 				{this.renderResultView()}
+				{this.renderTestYourselfPrompt()}
 			</View>
 		);
 	},
@@ -288,6 +291,41 @@ var yarn = React.createClass({
 		return <SearchingView ref="searching" active={this.state.gameState === GAME_STATES.LOOKING_FOR_WORDS} />;
 	},
 
+	renderTestYourselfPrompt: function () {
+		if (this.state.testYourselfPromptShown) {
+			return;
+		}
+		return (
+			<Popup
+				ref='testYourselfPrompt'
+				visible={this.state.testYourselfPromptVisible}
+				withoutOverlay={true}
+				onSubmit={this.closeTestYourselfPrompt}
+				type={Popup.POPUP_TYPE.TEST_YOURSELF_PROMPT}
+			/>
+		);
+	},
+
+	showTestYourselfPrompt: function () {
+		!this.state.testYourselfPromptShown && this.setState({
+			testYourselfPromptVisible: true
+		});
+	},
+
+	hideTestYourselfPrompt: function () {
+		!this.state.testYourselfPromptShown && this.setState({
+			testYourselfPromptVisible: false
+		});
+	},
+
+	closeTestYourselfPrompt: function () {
+		userProfileStore.set('testYourselfPromptShown', true);
+		this.setState({
+			testYourselfPromptVisible: false,
+			testYourselfPromptShown: true
+		});
+	},
+
 	hideToast: function () {
 		this.setState({
 			toastShown: true
@@ -327,13 +365,14 @@ var yarn = React.createClass({
 					wordsCountVisible: true
 				});
 				this.refs['mainbar'].animateOut();
-				this.refs['wordscountbar'].animateIn();
+				this.refs['wordscountbar'].animateIn(this.showTestYourselfPrompt);
 			}
 			else if (this.state.wordsCountVisible && data.y < 10) {
 				console.log('hide wordscount bar');
 				this.setState({
 					wordsCountVisible: false
 				});
+				this.hideTestYourselfPrompt();
 				this.refs['mainbar'].animateIn();
 				this.refs['wordscountbar'].animateOut();
 			}
@@ -564,6 +603,9 @@ var yarn = React.createClass({
 			this.resetGame();
 			this.reloadBrowser();
 		}
+		this.setState({
+			testYourselfPromptShown: userProfileStore.get('testYourselfPromptShown')
+		});
 	},
 
 	resetGame: function () {

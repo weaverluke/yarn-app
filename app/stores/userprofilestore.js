@@ -19,6 +19,7 @@ var data = {
 	correctAnswers: 0,
 	wrongAnswers: 0,
 	levelStats: [],
+	testYourselfPromptShown: false,
 	historyLevelValues: []
 };
 
@@ -46,6 +47,7 @@ function initLevelStats() {
 function set(key, d) {
 	data[key] = d;
 	emitChange();
+	saveData();
 }
 
 function get(key) {
@@ -131,6 +133,7 @@ function loadData(key) {
 				data = parsedData;
 			}
 			migrate1();
+			migrate2();
 
 			log({
 				message: 'user profile loaded',
@@ -171,6 +174,12 @@ function migrate1() {
 	if (!data.wordsLimit) {
 		data.wordsLimit = 10;
 		saveData();
+	}
+}
+
+function migrate2() {
+	if (!('testYourselfPromptShown' in data)) {
+		data.testYourselfPromptShown = false;
 	}
 }
 

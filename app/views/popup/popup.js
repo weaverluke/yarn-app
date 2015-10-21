@@ -20,7 +20,8 @@ var utils = require('../../utils');
 var POPUP_TYPE = {
 	INFO: 'INFO',
 	ANSWER: 'ANSWER',
-	BUY_URL_FEATURE: 'BUY_URL_FEATURE'
+	BUY_URL_FEATURE: 'BUY_URL_FEATURE',
+	TEST_YOURSELF_PROMPT: 'TEST_YOURSELF_PROMPT'
 };
 
 
@@ -36,7 +37,8 @@ var Popup = React.createClass({
 	getDefaultProps: function () {
 		return {
 			type: POPUP_TYPE.ANSWER,
-			arrowRect: {x:0, y:0, width:0, height:0}
+			arrowRect: {x:0, y:0, width:0, height:0},
+			withoutOverlay: false
 		};
 	},
 
@@ -66,21 +68,30 @@ var Popup = React.createClass({
 				content = this.renderBuyUrlFeaturePopup();
 				break;
 
+			case POPUP_TYPE.TEST_YOURSELF_PROMPT:
+				content = this.renderTestYourselfPrompt();
+				break;
+
 			case POPUP_TYPE.ANSWER:
 			default:
 				content = this.renderAnswerPopup();
 				break;
 		}
 
-		return (
-			<View style={styles.wrap}>
-				<TouchableWithoutFeedback onPress={this.props.onClose}>
-					<View style={styles.overlay} >
-					</View>
-				</TouchableWithoutFeedback>
+		if (this.props.withoutOverlay) {
+			return content;
+		}
+		else {
+			return (
+				<View style={styles.wrap}>
+					<TouchableWithoutFeedback onPress={this.props.onClose}>
+						<View style={styles.overlay} >
+						</View>
+					</TouchableWithoutFeedback>
 				{content}
-			</View>
-		);
+				</View>
+			);
+		}
 	},
 
 	renderInfoPopup: function () {
@@ -237,6 +248,45 @@ var Popup = React.createClass({
 		}.bind(this), 100);
 	},
 
+	renderTestYourselfPrompt: function () {
+		var popupWidth = 200;
+		var extraStyle = {
+			width: popupWidth,
+			right: POPUP_MARGIN,
+			height: 60
+		};
+		var buttonStyle = {
+			backgroundColor: uiConfig.COLORS.SELECTED_GREY
+		};
+		var buttonTextStyle = {
+			fontWeight: '500',
+			color: 'white'
+		};
+
+		var arrowLeft = popupWidth - 40;
+
+		return (
+			<View style={[styles.popup, extraStyle]}>
+				<TouchableWithoutFeedback onPress={this.props.cancelPress}>
+					<View style={[styles.contentWrap, styles.row]}>
+						<View>
+							<Text>Test yourself</Text>
+							<Text>any time!</Text>
+						</View>
+						<View>
+							<TouchableWithoutFeedback onPress={this.props.onSubmit}>
+								<View style={[styles.confirmButton, buttonStyle]}>
+									<Text style={[styles.confirmButtonText, buttonTextStyle]}>GOT IT</Text>
+								</View>
+							</TouchableWithoutFeedback>
+						</View>
+					</View>
+				</TouchableWithoutFeedback>
+				<View style={[styles.arrow, {left: arrowLeft}]}>
+				</View>
+			</View>
+		);
+	},
 
 	computeArrowPosition: function () {
 		return Math.max(this.props.arrowRect.x + this.props.arrowRect.width/2 - ARROW_WIDTH, ARROW_MIN_LEFT);
@@ -373,7 +423,6 @@ var styles = StyleSheet.create({
 
 	confirmButton: {
 		backgroundColor: COLORS.GREEN,
-		paddingTop: 5,
 		paddingBottom: 5,
 		paddingLeft: 15,
 		paddingRight: 15,
@@ -426,7 +475,7 @@ var styles = StyleSheet.create({
 	},
 
 	dictionaryText: {
-		color: '#FFFFFF',
+		color: '#FFFFFF'
 		//fontSize: 15,
 	}
 
