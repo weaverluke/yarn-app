@@ -127,7 +127,14 @@ var Question = React.createClass({
 var styles = StyleSheet.create({
 
 	wrap: {
-		flex: 1
+		flex: 1,
+		shadowColor: '#000000',
+		shadowOffset: {
+			width: 0,
+			height: -1
+		},
+		shadowOpacity: 0.3,
+		shadowRadius: 1,
 	},
 
 	toolbar: {
