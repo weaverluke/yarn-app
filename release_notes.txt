@@ -1,3 +1,6 @@
+v0.2.16
+- landing page changed to theguardian.com/uk-news
+
 v0.2.15
 - bugfixes for quiz flow
 - read-only browser bar

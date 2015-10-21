@@ -56,7 +56,7 @@ var HEADER = '#F9FAFB';
 var GAME_STATES = gameStateStore.GAME_STATES;
 
 var BROWSER_REF = 'browser';
-var DEFAULT_URL = 'http://www.theguardian.com/uk';
+var DEFAULT_URL = 'http://www.theguardian.com/uk-news';
 //var DEFAULT_URL = 'http://www.theguardian.com/us-news/2015/sep/13/donald-trump-ben-carson-republican-debate';
 
 var yarn = React.createClass({
