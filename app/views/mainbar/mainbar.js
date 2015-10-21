@@ -33,11 +33,7 @@ var MainBar = React.createClass({
 				],
 				opacity: this.state.opacityValue
 			}]}>
-				<View style={styles.buttonWrap}>
-					<TouchableWithoutFeedback onPress={this.onHomePressed}>
-						<Image source={require('image!home-icon')} style={styles.icon}/>
-					</TouchableWithoutFeedback>
-				</View>
+				<View style={styles.spacer} />
 				<View style={styles.buttonWrap}>
 					<TouchableWithoutFeedback onPress={this.onQuizPressed}>
 						<Image source={require('image!yarn-icon')} style={styles.iconCentral}/>
@@ -48,6 +44,7 @@ var MainBar = React.createClass({
 						<Image source={require('image!settings-icon')} style={styles.icon}/>
 					</TouchableWithoutFeedback>
 				</View>
+				<View style={styles.spacer} />
 			</Animated.View>
 		);
 	},
@@ -82,9 +79,6 @@ var MainBar = React.createClass({
 		]).start();
 	},
 
-	onHomePressed: function () {
-		actions.emit(actions.HOME_BUTTON_PRESSED);
-	},
 	onQuizPressed: function () {
 		actions.emit(actions.QUIZ_BUTTON_PRESSED);
 	},
@@ -106,7 +100,7 @@ var styles = StyleSheet.create({
 	},
 
 	buttonWrap: {
-		flex: 1,
+		flex: 2,
 		alignItems: 'center',
 		justifyContent: 'center'
 	},
@@ -119,6 +113,10 @@ var styles = StyleSheet.create({
 	iconCentral: {
 		width: uiConfig.TOOLBAR_ICON_SIZE + 8,
 		height: uiConfig.TOOLBAR_ICON_SIZE + 8
+	},
+
+	spacer: {
+		flex: 1
 	}
 });
 
