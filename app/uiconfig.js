@@ -8,6 +8,7 @@ module.exports = {
 		BLUE: 'rgb(39, 170, 225)',
 		TEXT: 'rgb(65, 64, 66)',
 		ORANGE: 'rgb(247, 148, 30)',
+		LIGHT_ORANGE: 'rgb(248, 187, 43)',
 		RED: 'rgb(223, 28, 36)',
 		PALE_BLUE: 'rgb(238, 248, 253)',
 		PALE_GREEN: 'rgb(240, 248, 243)',

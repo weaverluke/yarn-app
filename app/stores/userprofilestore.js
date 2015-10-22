@@ -72,7 +72,6 @@ function updateLevelStats(level, correct) {
 		data.wrongAnswers++;
 	}
 
-	updateUserLevel();
 	saveData();
 	emitChange();
 }
@@ -114,6 +113,9 @@ function updateUserLevel() {
 	}
 
 	data.historyLevelValues.push(data.level);
+
+	saveData();
+	emitChange();
 }
 
 function saveData() {
@@ -188,5 +190,6 @@ module.exports = {
 	get: get,
 	set: set,
 	updateLevelStats: updateLevelStats,
+	updateUserLevel: updateUserLevel,
 	setUserLevel: setUserLevel
 };

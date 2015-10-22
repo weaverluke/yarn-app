@@ -17,6 +17,7 @@ var ANIMATION_TIME = 300;
 var SCORE_ANIMATION_TIME = 1500;
 
 var uiConfig = require('../../uiconfig');
+var utils = require('../../utils');
 
 var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
@@ -29,6 +30,7 @@ var ResultView = React.createClass({
 			totalWords: 0,
 			onDonePressed: function () {},
 			onRandomPressed: function () {},
+			animateLevel: false,
 			level: 0,
 			score: 0,
 			showWordsCount: false
@@ -39,6 +41,7 @@ var ResultView = React.createClass({
 		return {
 			topOffsetValue: new Animated.Value(height - uiConfig.TOOLBAR_HEIGHT),
 			score: 0,
+			level: 0,
 			levelBackground: uiConfig.COLORS.ORANGE
 		};
 	},
@@ -82,7 +85,7 @@ var ResultView = React.createClass({
 					<View style={[styles.rowValue, styles.orangeBg, {
 						backgroundColor: this.state.levelBackground
 					}]}>
-						<Text style={[styles.text, styles.whiteText]}>{this.props.level}</Text>
+						<Text style={[styles.text, styles.whiteText]}>{this.state.level}</Text>
 					</View>
 				</View>
 
@@ -135,102 +138,69 @@ var ResultView = React.createClass({
 	},
 
 	animateScore: function (cb) {
-
-		var startDate = Date.now();
-
-		var next = function () {
-
-			setTimeout(function () {
-				var elapsedTime = Date.now() - startDate;
-				var currentProgress = Math.min(elapsedTime / SCORE_ANIMATION_TIME, 1);
-				var easeValue = ease(currentProgress, elapsedTime, 0, 1, SCORE_ANIMATION_TIME);
-
-				var newScore = Math.round(this.props.score * easeValue);
-				if (this.state.score === newScore) {
-					newScore++;
-				}
-
+		utils.animateNumber({
+			start: 0,
+			end: this.props.score,
+			duration: SCORE_ANIMATION_TIME,
+			onChange: function (val) {
 				this.setState({
-					score: newScore
+					score: val
 				});
-
-				if (currentProgress !== 1) {
-					next();
-				}
-				else {
-					cb && cb();
-				}
-
-			}.bind(this), 30);
-
-		}.bind(this);
-
-		next();
+			}.bind(this),
+			onFinish: cb
+		});
 	},
 
 	animateLevel: function () {
-
-		// todo: this should be changed to utils.animateColor
-
-		function animateColor(start, end, progress) {
-			return {
-				r: colorEase(start.r, end.r, progress),
-				g: colorEase(start.g, end.g, progress),
-				b: colorEase(start.b, end.b, progress)
-			};
+		if (!this.props.animateLevel) {
+			this.setState({
+				level: this.props.level
+			});
 		}
-
-		function colorEase(a,b,u) {
-			return parseInt((1-u) * a + u * b);
+		else {
+			this.animateLevelNumber(this.animateLevelBackground);
 		}
+	},
 
-		function toCssColor(color) {
-			return 'rgb(' + color.r + ',' + color.g + ',' + color.b + ')';
-		}
-
-		var animationTime = SCORE_ANIMATION_TIME / 4;
-
-		var fade = function (start, end, duration, callback) {
-			var startTime = Date.now();
-
-			var fadeStep = function () {
-				var currentState = Math.min((Date.now() - startTime) / duration, 1);
-				var color = animateColor(start, end, currentState);
-
+	animateLevelNumber: function (cb) {
+		utils.animateNumber({
+			start: 0,
+			end: this.props.level,
+			duration: SCORE_ANIMATION_TIME,
+			onChange: function (val) {
 				this.setState({
-					levelBackground: toCssColor(color)
+					level: val
+				});
+			}.bind(this),
+			onFinish: cb
+		});
+	},
+
+	animateLevelBackground: function () {
+		var startColor = utils.colorToObj(uiConfig.COLORS.ORANGE);
+		var endColor = utils.colorToObj(uiConfig.COLORS.LIGHT_ORANGE);
+		utils.animateColor({
+			start: startColor,
+			end: endColor,
+			duration: SCORE_ANIMATION_TIME/4,
+			onChange: function (color) {
+
+			}.bind(this),
+			onFinish: function () {
+
+				utils.animateColor({
+					start: endColor,
+					end: startColor,
+					duration: SCORE_ANIMATION_TIME/4,
+					onChange: function (color) {
+						this.setState({
+							levelBackground: utils.colorToString(color)
+						});
+					}.bind(this)
 				});
 
-				if (currentState === 1) {
-					callback && callback();
-				}
-				else {
-					setTimeout(fadeStep, 30);
-				}
-			}.bind(this);
-
-			fadeStep();
-
-		}.bind(this);
-
-
-		var color1 = {
-			r: 247,
-			g: 148,
-			b: 30
-		};
-		var color2 = {
-			r: 248,
-			g: 187,
-			b: 43
-		};
-
-		// color1 > color 2 > wait 100ms > color 1
-		setTimeout(function () {
-			fade(color1, color2, animationTime, function() {
-				setTimeout(fade, 100, color2, color1, animationTime);
-			});
-		}, animationTime);
+			}.bind(this)
+		});
 	},
 
 	hide: function (cb) {
@@ -252,11 +222,6 @@ var Stretch = React.createClass({
 		return <View style={styles.stretch} />;
 	}
 });
-
-// ease out quad
-function ease(x, t, b, c, d) {
-	return -c *(t/=d)*(t-2) + b;
-}
 
 var styles = StyleSheet.create({
 

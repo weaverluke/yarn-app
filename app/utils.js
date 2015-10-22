@@ -1,8 +1,9 @@
 module.exports = {
 	animateColor: animateColor,
 	colorToString: colorToString,
-	colorToObj: colorToObj
-};
+	colorToObj: colorToObj,
+	animateNumber: animateNumber
+}
 
 function animateColorStep(start, end, progress) {
 	return {
@@ -57,4 +58,44 @@ function colorToObj(clr) {
 	rgba.a = parts.length === 4 ? parseFloat(parts[4]) : 1;
 
 	return rgba;
+}
+
+function animateNumber(conf) {
+	var startDate = Date.now();
+	var previousValue = conf.start;
+	conf.ease || (conf.ease = numberEase);
+	conf.stepTime || (conf.stepTime = 30);
+
+	next();
+
+	function next() {
+
+		setTimeout(function () {
+			var elapsedTime = Date.now() - startDate;
+			var currentProgress = Math.min(elapsedTime / conf.duration, 1);
+			var easeValue = conf.ease(currentProgress, elapsedTime, 0, 1, conf.duration);
+
+			var newValue = Math.round(conf.start + (conf.end - conf.start) * easeValue);
+
+			if (previousValue === newValue && newValue < conf.end) {
+				newValue++;
+			}
+			previousValue = newValue;
+
+			conf.onChange(newValue);
+
+			if (currentProgress !== 1) {
+				next();
+			}
+			else {
+				conf.onFinish && conf.onFinish();
+			}
+
+		}, conf.stepTime);
+	}
+}
+
+// ease out quad
+function numberEase(x, t, b, c, d) {
+	return -c *(t/=d)*(t-2) + b;
 }

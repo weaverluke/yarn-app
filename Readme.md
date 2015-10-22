@@ -1,5 +1,8 @@
+##Release notes
+
 v0.2.17
 - disable dictionary icon for words that have no definition in dictionary
+- animate user level (both background and numerals) only when it has changed
 
 v0.2.16
 - landing page changed to theguardian.com/uk-news

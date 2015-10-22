@@ -187,11 +187,16 @@ var yarn = React.createClass({
 			return <View/>;
 		}
 
+		var levelStats = userProfileStore.get('historyLevelValues');
+		var levelHasChanged = levelStats[levelStats.length - 1] !== levelStats[levelStats.length - 2];
+		console.log('LEVEL HAS CHANGED', levelHasChanged, ' score:', gameStateStore.get('score'));
+
 		return (
 			<ResultView
 				correctWords={gameStateStore.get('correct')}
 				totalWords={gameStateStore.get('pageWords').length}
 				level={userProfileStore.get('level')}
+				animateLevel={levelHasChanged}
 				score={userProfileStore.get('score')}
 				onDonePressed={this.closeResultView}
 				onRandomPressed={this.onRandomPagePressed}
@@ -423,6 +428,7 @@ var yarn = React.createClass({
 	},
 
 	showNextQuestion: function () {
+		console.log('SHOW NEXT QUESTION');
 		clearTimeout(this.nextQuestionTimeout);
 		this.setState({
 			bottomBar: 'wordstrip'

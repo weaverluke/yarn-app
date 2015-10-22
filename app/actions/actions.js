@@ -198,6 +198,10 @@ function onWordPressed(word) {
 		console.log('wrong + 1', gameStateStore.get('wrong'));
 	}
 
+	if (gameStateStore.get('currentWordIndex') === gameStateStore.get('pageWords').length - 1) {
+		userProfileStore.updateUserLevel();
+	}
+
 	var question = gameStateStore.get('currentQuestion');
 	// mark selected word
 	question.forEach(function (wordDef) {
