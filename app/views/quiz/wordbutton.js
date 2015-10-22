@@ -27,6 +27,7 @@ var WordButton = React.createClass({
 	//	index: PropTypes.number.isRequired,
 	//	type: PropTypes.oneOf(Object.keys(BUTTON_TYPES)).isRequired,
 	//	showDictIcon: PropTypes.bool.isRequired,
+	//	hasDictionaryDefinition: PropTypes.bool.isRequired,
 	//	text: PropTypes.text.isRequired,
 	//	onDictIconPress: PropTypes.func.isRequired,
 	//	onAction: PropTypes.func.isRequired
@@ -74,10 +75,14 @@ var WordButton = React.createClass({
 			return (<View style={styles.leftSpace}></View>);
 		}
 
+		var opacity = {
+			opacity: this.props.hasDictionaryDefinition ? 1 : 0.3
+		};
+
 		return (
 			<View style={styles.dictIconWrap}>
 				<View style={styles.vCenter}>
-					<Image source={require('image!magnifier')} style={styles.dictIcon}/>
+					<Image source={require('image!magnifier')} style={[styles.dictIcon, opacity]}/>
 				</View>
 			</View>
 		);
@@ -153,7 +158,7 @@ var WordButton = React.createClass({
 
 	onDictIconPressed: function () {
 		if (this.props.showDictIcon) {
-			this.props.onDictIconPressed(this.props.text);
+			this.props.onDictIconPressed(this.props.text, this.props.hasDictionaryDefinition);
 		}
 	},
 

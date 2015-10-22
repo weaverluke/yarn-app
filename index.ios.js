@@ -137,10 +137,12 @@ var yarn = React.createClass({
 		);
 	},
 
-	onShowDictionary: function (text) {
+	onShowDictionary: function (text, hasDictionaryDefinition) {
 		clearTimeout(this.nextQuestionTimeout);
 		this.refs.wordstrip.stopTimeoutAnimation();
-		DictionaryProxy.showDefinition(text);
+		if (hasDictionaryDefinition) {
+			DictionaryProxy.showDefinition(text);
+		}
 	},
 
 	renderQuizStatusBar: function () {

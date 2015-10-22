@@ -31,5 +31,14 @@
 	[rootViewController presentViewController:referenceLibraryViewController animated:YES completion:nil];
   }
 
+//RCT_EXPORT_METHOD((BOOL)dictionaryHasDefinitionForTerm:(NSString *)word) {
+//  return [UIReferenceLibraryViewController dictionaryHasDefinitionForTerm:word];
+//}
+
+RCT_EXPORT_METHOD(dictionaryHasDefinitionForTerm:(NSString *)word callback:(RCTResponseSenderBlock)callback)
+{
+  callback(@[@([UIReferenceLibraryViewController dictionaryHasDefinitionForTerm:word])]);
+}
+
 
 @end

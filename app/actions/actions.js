@@ -17,6 +17,10 @@ var {
 	AsyncStorage
 } = React;
 
+var {
+	DictionaryProxy
+} = require('NativeModules');
+
 var GAME_STATES = gameStateStore.GAME_STATES;
 
 Object.keys(actions).forEach(function (action) {
@@ -114,7 +118,18 @@ function preloadWord(pageWord) {
 					});
 
 					question[0].target = true;
-					resolve(question);
+
+					// check if there are definitions in native dictionary
+					var checkedWords = 0;
+					question.forEach(function (word, index) {
+						DictionaryProxy.dictionaryHasDefinitionForTerm(index === 0 ? word.text : word.definition,
+							function (resp) {
+							word.hasDictionaryDefinition = resp;
+							if (++checkedWords === question.length) {
+								resolve(question);
+							}
+						});
+					});
 				})
 				.catch(function (ex) {
 					// show error screen

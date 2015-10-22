@@ -77,6 +77,7 @@ var Question = React.createClass({
 					onNextPress={this.props.onNextPress}
 					onDictIconPressed={this.onDictIconPressed}
 					text={i === 0 ? word.text : word.definition}
+					hasDictionaryDefinition={word.hasDictionaryDefinition}
 					type={type}
 					ref={'button-' + i}
 				/>

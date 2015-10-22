@@ -1,3 +1,6 @@
+v0.2.17
+- disable dictionary icon for words that have no definition in dictionary
+
 v0.2.16
 - landing page changed to theguardian.com/uk-news
 - add shadow above quiz view
