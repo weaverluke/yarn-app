@@ -23,6 +23,8 @@ var {
 
 var GAME_STATES = gameStateStore.GAME_STATES;
 
+var CHECK_DICT_DEFINITIONS = false;
+
 Object.keys(actions).forEach(function (action) {
 	bus[action] = actions[action];
 });
@@ -82,6 +84,8 @@ function onStartGame() {
 	gameStateStore.pause(true);
 	gameStateStore.set('pageWords', gameStateStore.get('visitedPageWords'));
 	gameStateStore.pause(false);
+	userProfileStore.set('previousScore', userProfileStore.get('score'));
+
 	bus.emit(actions.SHOW_NEXT_QUESTION);
 	log({
 		message: 'start game',
@@ -102,6 +106,7 @@ function preloadWord(pageWord) {
 	var wordsToTranslate = getRandomWords(gameStateStore.get('randomWordsCount'));
 	wordsToTranslate.unshift(pageWord);
 
+	console.log('preloading word', pageWord);
 	var promise = new Promise(function (resolve, reject) {
 
 		// delay fetching by random amount of time so yarn doesn't trigger too many requests at once
@@ -109,6 +114,7 @@ function preloadWord(pageWord) {
 
 			googleTranslate.translateWords(wordsToTranslate, 'en', userProfileStore.get('language'))
 				.then(function (translatedWords) {
+					console.log('translations loaded', pageWord, Date.now());
 					//console.log('translated words', translatedWords);
 					var question = translatedWords.data.translations.map(function (translatedWord, index) {
 						return {
@@ -119,17 +125,28 @@ function preloadWord(pageWord) {
 
 					question[0].target = true;
 
-					// check if there are definitions in native dictionary
-					var checkedWords = 0;
-					question.forEach(function (word, index) {
-						DictionaryProxy.dictionaryHasDefinitionForTerm(index === 0 ? word.text : word.definition,
-							function (resp) {
-							word.hasDictionaryDefinition = resp;
-							if (++checkedWords === question.length) {
-								resolve(question);
-							}
+					if (CHECK_DICT_DEFINITIONS) {
+						// check if there are definitions in native dictionary
+						var checkedWords = 0;
+						question.forEach(function (word, index) {
+							var start = Date.now();
+							console.log('check dict definition', word)
+							DictionaryProxy.dictionaryHasDefinitionForTerm(index === 0 ? word.text : word.definition,
+								function (resp) {
+									console.log('check dict definition, end', word, Date.now() - start);
+									word.hasDictionaryDefinition = resp;
+									if (++checkedWords === question.length) {
+										console.log('word preloaded', pageWord, Date.now(), question);
+										resolve(question);
+									}
+								});
 						});
-					});
+					} else {
+						question.forEach(function (word) {
+							word.hasDictionaryDefinition = true;
+						});
+						resolve(question);
+					}
 				})
 				.catch(function (ex) {
 					// show error screen

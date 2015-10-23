@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -10,13 +11,17 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="BPj-zF-JWt">
-                    <rect key="frame" x="68" y="61" width="345" height="358"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="full-logo" translatesAutoresizingMaskIntoConstraints="NO" id="BPj-zF-JWt">
+                    <rect key="frame" x="118" y="115" width="268" height="249"/>
+                    <animations/>
                 </imageView>
             </subviews>
+            <animations/>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="centerX" secondItem="BPj-zF-JWt" secondAttribute="centerX" constant="-0.5" id="DMb-b0-w1o"/>
+                <constraint firstItem="BPj-zF-JWt" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="Obq-T2-sbS"/>
+                <constraint firstItem="BPj-zF-JWt" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="q7V-7K-yqG"/>
                 <constraint firstAttribute="centerY" secondItem="BPj-zF-JWt" secondAttribute="centerY" id="xGw-7a-ZV9"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
@@ -25,6 +30,6 @@
         </view>
     </objects>
     <resources>
-        <image name="logo" width="404" height="239"/>
+        <image name="full-logo" width="470" height="140"/>
     </resources>
 </document>

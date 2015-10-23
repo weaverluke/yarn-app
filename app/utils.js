@@ -77,14 +77,16 @@ function animateNumber(conf) {
 
 			var newValue = Math.round(conf.start + (conf.end - conf.start) * easeValue);
 
-			if (previousValue === newValue && newValue < conf.end) {
+			// do not repeat values
+			if (newValue <= previousValue && newValue < conf.end) {
 				newValue++;
 			}
 			previousValue = newValue;
 
+			//console.log('animate number, newValue', newValue);
 			conf.onChange(newValue);
 
-			if (currentProgress !== 1) {
+			if (currentProgress !== 1 && newValue !== conf.end) {
 				next();
 			}
 			else {

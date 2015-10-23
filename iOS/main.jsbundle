@@ -1497,10 +1497,12 @@ this.renderTestYourselfPrompt()));},
 
 
 
-onShowDictionary:function(text){
+onShowDictionary:function(text,hasDictionaryDefinition){
 clearTimeout(this.nextQuestionTimeout);
 this.refs.wordstrip.stopTimeoutAnimation();
-DictionaryProxy.showDefinition(text);},
+if(hasDictionaryDefinition){
+DictionaryProxy.showDefinition(text);}},
+
 
 
 renderQuizStatusBar:function(){
@@ -1545,11 +1547,16 @@ if(this.state.bottomBar !== 'result'){
 return React.createElement(View,null);}
 
 
+var levelStats=userProfileStore.get('historyLevelValues');
+var levelHasChanged=levelStats[levelStats.length - 1] !== levelStats[levelStats.length - 2];
+console.log('LEVEL HAS CHANGED',levelHasChanged,' score:',gameStateStore.get('score'));
+
 return (
 React.createElement(ResultView,{
 correctWords:gameStateStore.get('correct'),
 totalWords:gameStateStore.get('pageWords').length,
 level:userProfileStore.get('level'),
+animateLevel:levelHasChanged,
 score:userProfileStore.get('score'),
 onDonePressed:this.closeResultView,
 onRandomPressed:this.onRandomPagePressed}));},
@@ -1781,6 +1788,7 @@ settingsViewVisible:false});},
 
 
 showNextQuestion:function(){
+console.log('SHOW NEXT QUESTION');
 clearTimeout(this.nextQuestionTimeout);
 this.setState({
 bottomBar:'wordstrip'});
@@ -76726,7 +76734,7 @@ return word !== '';});
 
 return words;};
 });
-__d('yarn/app/actions/actions.js',["events/events.js","yarn/app/actions/actiontypes.js","yarn/app/helpers/getrandomwords.js","yarn/app/helpers/googletranslate.js","yarn/app/helpers/collins.js","yarn/app/logger/logger.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/words.js","react-native/Libraries/react-native/react-native.js"],function(global, require, module, exports) {  var Events=require('events/events.js');
+__d('yarn/app/actions/actions.js',["events/events.js","yarn/app/actions/actiontypes.js","yarn/app/helpers/getrandomwords.js","yarn/app/helpers/googletranslate.js","yarn/app/helpers/collins.js","yarn/app/logger/logger.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/words.js","react-native/Libraries/react-native/react-native.js","NativeModules"],function(global, require, module, exports) {  var Events=require('events/events.js');
 var bus=new Events.EventEmitter();
 var actions=require('yarn/app/actions/actiontypes.js');
 
@@ -76743,7 +76751,11 @@ var words=require('yarn/words.js');
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
 AsyncStorage=
-React.AsyncStorage;
+React.AsyncStorage;var _require=
+
+
+
+require('NativeModules');var DictionaryProxy=_require.DictionaryProxy;
 
 var GAME_STATES=gameStateStore.GAME_STATES;
 
@@ -76842,7 +76854,18 @@ definition:translatedWord.translatedText};});
 
 
 question[0].target = true;
-resolve(question);}).
+
+
+var checkedWords=0;
+question.forEach(function(word,index){
+DictionaryProxy.dictionaryHasDefinitionForTerm(index === 0?word.text:word.definition,
+function(resp){
+word.hasDictionaryDefinition = resp;
+if(++checkedWords === question.length){
+resolve(question);}});});}).
+
+
+
 
 catch(function(ex){
 
@@ -76909,6 +76932,10 @@ gameStateStore.set('wrong',gameStateStore.get('wrong') + 1);
 gameStateStore.set('currentState',GAME_STATES.WRONG_ANSWER_CHOSEN);
 userProfileStore.updateLevelStats(levelOfCurrentWord,false);
 console.log('wrong + 1',gameStateStore.get('wrong'));}
+
+
+if(gameStateStore.get('currentWordIndex') === gameStateStore.get('pageWords').length - 1){
+userProfileStore.updateUserLevel();}
 
 
 var question=gameStateStore.get('currentQuestion');
@@ -77119,7 +77146,6 @@ data.levelStats[level].wrong++;
 data.wrongAnswers++;}
 
 
-updateUserLevel();
 saveData();
 emitChange();}
 
@@ -77160,7 +77186,10 @@ if(totalAnswers > 60 && data.range == 20){
 data.range = 15;}
 
 
-data.historyLevelValues.push(data.level);}
+data.historyLevelValues.push(data.level);
+
+saveData();
+emitChange();}
 
 
 function saveData(){
@@ -77235,6 +77264,7 @@ addChangeListener:addChangeListener,
 get:get,
 set:set,
 updateLevelStats:updateLevelStats,
+updateUserLevel:updateUserLevel,
 setUserLevel:setUserLevel};
 });
 __d('yarn/app/views/browser/websiteapi.js',[],function(global, require, module, exports) {  module.exports = function(){
@@ -77742,6 +77772,7 @@ GREEN:'rgb(65, 172, 96)',
 BLUE:'rgb(39, 170, 225)',
 TEXT:'rgb(65, 64, 66)',
 ORANGE:'rgb(247, 148, 30)',
+LIGHT_ORANGE:'rgb(248, 187, 43)',
 RED:'rgb(223, 28, 36)',
 PALE_BLUE:'rgb(238, 248, 253)',
 PALE_GREEN:'rgb(240, 248, 243)',
@@ -78282,7 +78313,8 @@ module.exports = Popup;
 __d('yarn/app/utils.js',[],function(global, require, module, exports) {  module.exports = {
 animateColor:animateColor,
 colorToString:colorToString,
-colorToObj:colorToObj};
+colorToObj:colorToObj,
+animateNumber:animateNumber};
 
 
 function animateColorStep(start,end,progress){
@@ -78338,6 +78370,46 @@ b:parseInt(parts[2])};
 rgba.a = parts.length === 4?parseFloat(parts[4]):1;
 
 return rgba;}
+
+
+function animateNumber(conf){
+var startDate=Date.now();
+var previousValue=conf.start;
+conf.ease || (conf.ease = numberEase);
+conf.stepTime || (conf.stepTime = 30);
+
+next();
+
+function next(){
+
+setTimeout(function(){
+var elapsedTime=Date.now() - startDate;
+var currentProgress=Math.min(elapsedTime / conf.duration,1);
+var easeValue=conf.ease(currentProgress,elapsedTime,0,1,conf.duration);
+
+var newValue=Math.round(conf.start + (conf.end - conf.start) * easeValue);
+
+if(previousValue === newValue && newValue < conf.end){
+newValue++;}
+
+previousValue = newValue;
+
+conf.onChange(newValue);
+
+if(currentProgress !== 1){
+next();}else 
+
+{
+conf.onFinish && conf.onFinish();}},
+
+
+conf.stepTime);}}
+
+
+
+
+function numberEase(x,t,b,c,d){
+return -c * (t /= d) * (t - 2) + b;}
 });
 __d('image!horizontal-gradient',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/horizontal-gradient.imageset/horizontal-gradient.png","uri":"horizontal-gradient","width":600,"height":30,"deprecated":true};
 });
@@ -80026,6 +80098,7 @@ onAction:this.props.type !== BUTTON_TYPES.QUESTION?this.props.onAction:function(
 onNextPress:this.props.onNextPress,
 onDictIconPressed:this.onDictIconPressed,
 text:i === 0?word.text:word.definition,
+hasDictionaryDefinition:word.hasDictionaryDefinition,
 type:type,
 ref:'button-' + i}));}).
 
@@ -80134,6 +80207,7 @@ var WordButton=React.createClass({
 
 
 
+
 nextTimeout:0,
 
 getInitialState:function(){
@@ -80176,10 +80250,14 @@ if(!this.props.showDictIcon){
 return React.createElement(View,{style:styles.leftSpace});}
 
 
+var opacity={
+opacity:this.props.hasDictionaryDefinition?1:0.3};
+
+
 return (
 React.createElement(View,{style:styles.dictIconWrap},
 React.createElement(View,{style:styles.vCenter},
-React.createElement(Image,{source:require('image!magnifier'),style:styles.dictIcon}))));},
+React.createElement(Image,{source:require('image!magnifier'),style:[styles.dictIcon,opacity]}))));},
 
 
 
@@ -80255,7 +80333,7 @@ bind(this),150);}},
 
 onDictIconPressed:function(){
 if(this.props.showDictIcon){
-this.props.onDictIconPressed(this.props.text);}},
+this.props.onDictIconPressed(this.props.text,this.props.hasDictionaryDefinition);}},
 
 
 
@@ -80404,7 +80482,7 @@ module.exports = WordButton;
 });
 __d('image!magnifier',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/magnifier.imageset/magnifier.png","uri":"magnifier","width":44,"height":44,"deprecated":true};
 });
-__d('yarn/app/views/quiz/result.js',["react-native/Libraries/react-native/react-native.js","yarn/app/views/quiz/quizresult.js","yarn/app/uiconfig.js","Dimensions"],function(global, require, module, exports) {  'use strict';
+__d('yarn/app/views/quiz/result.js',["react-native/Libraries/react-native/react-native.js","yarn/app/views/quiz/quizresult.js","yarn/app/uiconfig.js","yarn/app/utils.js","Dimensions"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -80423,6 +80501,7 @@ var ANIMATION_TIME=300;
 var SCORE_ANIMATION_TIME=1500;
 
 var uiConfig=require('yarn/app/uiconfig.js');
+var utils=require('yarn/app/utils.js');
 
 var Dimensions=require('Dimensions');var _Dimensions$get=
 Dimensions.get('window');var width=_Dimensions$get.width;var height=_Dimensions$get.height;
@@ -80435,6 +80514,7 @@ correctWords:0,
 totalWords:0,
 onDonePressed:function(){},
 onRandomPressed:function(){},
+animateLevel:false,
 level:0,
 score:0,
 showWordsCount:false};},
@@ -80445,6 +80525,7 @@ getInitialState:function(){
 return {
 topOffsetValue:new Animated.Value(height - uiConfig.TOOLBAR_HEIGHT),
 score:0,
+level:0,
 levelBackground:uiConfig.COLORS.ORANGE};},
 
 
@@ -80488,7 +80569,7 @@ React.createElement(Text,{style:[styles.text,styles.orangeText]},'Vocab level'))
 React.createElement(View,{style:[styles.rowValue,styles.orangeBg,{
 backgroundColor:this.state.levelBackground}]},
 
-React.createElement(Text,{style:[styles.text,styles.whiteText]},this.props.level))),
+React.createElement(Text,{style:[styles.text,styles.whiteText]},this.state.level))),
 
 
 
@@ -80541,102 +80622,69 @@ bind(this));},
 
 
 animateScore:function(cb){
-
-var startDate=Date.now();
-
-var next=(function(){
-
-setTimeout((function(){
-var elapsedTime=Date.now() - startDate;
-var currentProgress=Math.min(elapsedTime / SCORE_ANIMATION_TIME,1);
-var easeValue=ease(currentProgress,elapsedTime,0,1,SCORE_ANIMATION_TIME);
-
-var newScore=Math.round(this.props.score * easeValue);
-if(this.state.score === newScore){
-newScore++;}
-
-
+utils.animateNumber({
+start:0,
+end:this.props.score,
+duration:SCORE_ANIMATION_TIME,
+onChange:(function(val){
 this.setState({
-score:newScore});
+score:val});}).
 
+bind(this),
+onFinish:cb});},
 
-if(currentProgress !== 1){
-next();}else 
-
-{
-cb && cb();}}).
-
-
-bind(this),30);}).
-
-bind(this);
-
-next();},
 
 
 animateLevel:function(){
-
-
-
-function animateColor(start,end,progress){
-return {
-r:colorEase(start.r,end.r,progress),
-g:colorEase(start.g,end.g,progress),
-b:colorEase(start.b,end.b,progress)};}
-
-
-
-function colorEase(a,b,u){
-return parseInt((1 - u) * a + u * b);}
-
-
-function toCssColor(color){
-return 'rgb(' + color.r + ',' + color.g + ',' + color.b + ')';}
-
-
-var animationTime=SCORE_ANIMATION_TIME / 4;
-
-var fade=(function(start,end,duration,callback){
-var startTime=Date.now();
-
-var fadeStep=(function(){
-var currentState=Math.min((Date.now() - startTime) / duration,1);
-var color=animateColor(start,end,currentState);
-
+if(!this.props.animateLevel){
 this.setState({
-levelBackground:toCssColor(color)});
+level:this.props.level});}else 
 
-
-if(currentState === 1){
-callback && callback();}else 
 
 {
-setTimeout(fadeStep,30);}}).
-
-bind(this);
-
-fadeStep();}).
-
-bind(this);
-
-
-var color1={
-r:247,
-g:148,
-b:30};
-
-var color2={
-r:248,
-g:187,
-b:43};
+this.animateLevelNumber(this.animateLevelBackground);}},
 
 
 
-setTimeout(function(){
-fade(color1,color2,animationTime,function(){
-setTimeout(fade,100,color2,color1,animationTime);});},
+animateLevelNumber:function(cb){
+utils.animateNumber({
+start:0,
+end:this.props.level,
+duration:SCORE_ANIMATION_TIME,
+onChange:(function(val){
+this.setState({
+level:val});}).
 
-animationTime);},
+bind(this),
+onFinish:cb});},
+
+
+
+animateLevelBackground:function(){
+var startColor=utils.colorToObj(uiConfig.COLORS.ORANGE);
+var endColor=utils.colorToObj(uiConfig.COLORS.LIGHT_ORANGE);
+utils.animateColor({
+start:startColor,
+end:endColor,
+duration:SCORE_ANIMATION_TIME / 4,
+onChange:(function(color){}).
+
+bind(this),
+onFinish:(function(){
+
+utils.animateColor({
+start:endColor,
+end:startColor,
+duration:SCORE_ANIMATION_TIME / 4,
+onChange:(function(color){
+this.setState({
+levelBackground:utils.colorToString(color)});}).
+
+bind(this)});}).
+
+
+bind(this)});},
+
 
 
 hide:function(cb){
@@ -80657,11 +80705,6 @@ var Stretch=React.createClass({
 render:function(){
 return React.createElement(View,{style:styles.stretch});}});
 
-
-
-
-function ease(x,t,b,c,d){
-return -c * (t /= d) * (t - 2) + b;}
 
 
 var styles=StyleSheet.create({

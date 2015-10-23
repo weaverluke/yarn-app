@@ -3,6 +3,7 @@
 var React = require('react-native');
 var {
 	TouchableHighlight,
+	TouchableWithoutFeedback,
 	StyleSheet,
 	Text,
 	View,
@@ -42,21 +43,37 @@ var WordButton = React.createClass({
 	},
 
 	render: function () {
+
+		var content = (
+			<View style={styles.buttonContentWrap}>
+				{this.renderDictIcon()}
+				{this.renderButtonContent()}
+				{this.renderInfoText()}
+			</View>
+		);
+
+		return this.renderWrap(content);
+	},
+
+	renderWrap: function (content) {
 		var additionalStyle = {
 			backgroundColor: this.getColor('background')
 		};
 		var clickCallback = this.props.showDictIcon ? this.onDictIconPressed : this.onButtonPressed;
+		var touchableWrap;
+
+		// if we should show dictionary icon, but there's no dictionary definition then we don't show tap highlight
+		if (this.props.showDictIcon && !this.props.hasDictionaryDefinition) {
+			touchableWrap = <TouchableWithoutFeedback onPress={clickCallback}>{content}</TouchableWithoutFeedback>;
+		}
+		else {
+			touchableWrap = <TouchableHighlight onPress={clickCallback} underlayColor={uiConfig.COLORS.PALE_BLUE}>
+				{content}
+			</TouchableHighlight>
+		}
 		return (
-			<View style={[styles.wrap, additionalStyle]}>
-				<TouchableHighlight onPress={clickCallback} underlayColor={'rgb(238, 248, 253)'}>
-					<View style={styles.buttonContentWrap}>
-						{this.renderDictIcon()}
-						{this.renderButtonContent()}
-						{this.renderInfoText()}
-					</View>
-				</TouchableHighlight>
-			</View>
-		);
+			<View style={[styles.wrap, additionalStyle]}>{touchableWrap}</View>
+		)
 	},
 
 	componentWillReceiveProps: function (props) {

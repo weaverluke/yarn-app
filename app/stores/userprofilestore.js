@@ -12,13 +12,14 @@ var {
 
 var data = {
 	wordsLimit: 10,
-	level: 0,
+	level: 50,
 	range: 40,
 	score: 0,
 	language: 'pl',
 	correctAnswers: 0,
 	wrongAnswers: 0,
 	levelStats: [],
+	previousScore: 0,
 	testYourselfPromptShown: false,
 	historyLevelValues: []
 };
@@ -134,8 +135,10 @@ function loadData(key) {
 			if (parsedData) {
 				data = parsedData;
 			}
+
 			migrate1();
 			migrate2();
+			migrate3();
 
 			log({
 				message: 'user profile loaded',
@@ -182,6 +185,12 @@ function migrate1() {
 function migrate2() {
 	if (!('testYourselfPromptShown' in data)) {
 		data.testYourselfPromptShown = false;
+	}
+}
+
+function migrate3() {
+	if (!data.previousScore) {
+		data.previousScore = 0;
 	}
 }
 

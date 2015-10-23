@@ -30,9 +30,10 @@ var ResultView = React.createClass({
 			totalWords: 0,
 			onDonePressed: function () {},
 			onRandomPressed: function () {},
-			animateLevel: false,
 			level: 0,
+			previousLevel: 0,
 			score: 0,
+			previousScore: 0,
 			showWordsCount: false
 		};
 	},
@@ -40,8 +41,8 @@ var ResultView = React.createClass({
 	getInitialState: function () {
 		return {
 			topOffsetValue: new Animated.Value(height - uiConfig.TOOLBAR_HEIGHT),
-			score: 0,
-			level: 0,
+			score: this.props.score === this.props.previousScore ? this.props.score : this.props.previousScore,
+			level: this.props.level === this.props.previousLevel ? this.props.level : this.props.previousLevel,
 			levelBackground: uiConfig.COLORS.ORANGE
 		};
 	},
@@ -138,33 +139,34 @@ var ResultView = React.createClass({
 	},
 
 	animateScore: function (cb) {
-		utils.animateNumber({
-			start: 0,
-			end: this.props.score,
-			duration: SCORE_ANIMATION_TIME,
-			onChange: function (val) {
-				this.setState({
-					score: val
-				});
-			}.bind(this),
-			onFinish: cb
-		});
-	},
-
-	animateLevel: function () {
-		if (!this.props.animateLevel) {
-			this.setState({
-				level: this.props.level
+		if (this.props.score !== this.props.previousScore) {
+			utils.animateNumber({
+				start: this.props.previousScore,
+				end: this.props.score,
+				duration: SCORE_ANIMATION_TIME,
+				onChange: function (val) {
+					this.setState({
+						score: val
+					});
+				}.bind(this),
+				onFinish: cb
 			});
 		}
 		else {
+			cb();
+		}
+	},
+
+	animateLevel: function () {
+		// do not animate level if it hasn't changed
+		if (this.props.leve !== this.props.previousLevel) {
 			this.animateLevelNumber(this.animateLevelBackground);
 		}
 	},
 
 	animateLevelNumber: function (cb) {
 		utils.animateNumber({
-			start: 0,
+			start: this.props.previousLevel,
 			end: this.props.level,
 			duration: SCORE_ANIMATION_TIME,
 			onChange: function (val) {
