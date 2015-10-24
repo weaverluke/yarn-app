@@ -15,7 +15,8 @@ var NavBarButton = React.createClass({
 
 	getDefaultProps: function () {
 		return {
-			icon: ''
+			icon: '',
+			backgroundColor: 'white'
 		};
 	},
 
@@ -27,9 +28,12 @@ var NavBarButton = React.createClass({
 
 	render: function () {
 		var img = this.renderIcon();
+		var additionalStyle = {
+			backgroundColor: this.props.backgroundColor
+		};
 		return (
 			<TouchableWithoutFeedback onPress={this.props.onPress}>
-				<View style={styles.wrap}>
+				<View style={[styles.wrap, additionalStyle]}>
 					{img}
 				</View>
 			</TouchableWithoutFeedback>
@@ -45,7 +49,7 @@ var NavBarButton = React.createClass({
 				);
 			case 'next':
 				return (
-					<Image source={require('image!next-icon')} style={styles.icon}/>
+					<Image source={{uri: 'next-finished.gif'}} style={styles.bigIcon}/>
 				);
 			default:
 				return (<View />);
@@ -69,6 +73,12 @@ var styles = StyleSheet.create({
 		width: uiConfig.TOOLBAR_ICON_SIZE,
 		height: uiConfig.TOOLBAR_ICON_SIZE,
 		marginTop: Math.floor((uiConfig.TOOLBAR_HEIGHT - uiConfig.TOOLBAR_ICON_SIZE) / 2)
+	},
+
+	bigIcon: {
+		width: uiConfig.TOOLBAR_BIG_ICON_SIZE,
+		height: uiConfig.TOOLBAR_BIG_ICON_SIZE,
+		marginTop: Math.floor((uiConfig.TOOLBAR_HEIGHT - uiConfig.TOOLBAR_BIG_ICON_SIZE) / 6)
 	}
 });
 

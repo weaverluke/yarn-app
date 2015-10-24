@@ -9,6 +9,7 @@ var {
 } = React;
 
 var NavBarLabel = require('./navbarlabel');
+var NavBarButton = require('./navbarbutton');
 var uiConfig = require('../../uiconfig');
 
 var StatusBar = React.createClass({
@@ -35,7 +36,7 @@ var StatusBar = React.createClass({
 		};
 	},
 
-	render: function () {
+	_render: function () {
 		var items = this.props.showWordsCount ? this.renderWordsCount() : this.renderStats();
 
 		return (
@@ -49,6 +50,28 @@ var StatusBar = React.createClass({
 				<NavBarLabel
 					onPress={this.props.onNextPress}
 					texts={[{text: this.props.nextText, color: '#FFFFFF'}]}
+					backgroundColor={uiConfig.COLORS.BLUE}
+					style={styles.nextButton}
+				/>
+			</Animated.View>
+		);
+	},
+
+	render: function () {
+		var items = this.props.showWordsCount ? this.renderWordsCount() : this.renderStats();
+
+		return (
+			<Animated.View style={[styles.wrap, {
+				transform: [
+					{ translateY: this.state.marginTopValue }
+				],
+				opacity: this.state.opacityValue
+			}]}>
+				{items}
+				<NavBarButton
+					onPress={this.props.onNextPress}
+					//texts={[{text: this.props.nextText, color: '#FFFFFF'}]}
+					icon='next'
 					backgroundColor={uiConfig.COLORS.BLUE}
 					style={styles.nextButton}
 				/>
