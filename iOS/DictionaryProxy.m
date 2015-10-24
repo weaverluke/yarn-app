@@ -35,10 +35,10 @@
 //  return [UIReferenceLibraryViewController dictionaryHasDefinitionForTerm:word];
 //}
 
-RCT_EXPORT_METHOD(dictionaryHasDefinitionForTerm:(NSString *)word callback:(RCTResponseSenderBlock)callback)
-{
-  callback(@[@([UIReferenceLibraryViewController dictionaryHasDefinitionForTerm:word])]);
-}
+//RCT_EXPORT_METHOD(dictionaryHasDefinitionForTerm:(NSString *)word callback:(RCTResponseSenderBlock)callback)
+//{
+//  callback(@[@([UIReferenceLibraryViewController dictionaryHasDefinitionForTerm:word])]);
+//}
 
 
 @end

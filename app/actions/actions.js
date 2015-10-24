@@ -17,9 +17,9 @@ var {
 	AsyncStorage
 } = React;
 
-var {
-	DictionaryProxy
-} = require('NativeModules');
+//var {
+//	DictionaryProxy
+//} = require('NativeModules');
 
 var GAME_STATES = gameStateStore.GAME_STATES;
 
@@ -127,20 +127,20 @@ function preloadWord(pageWord) {
 
 					if (CHECK_DICT_DEFINITIONS) {
 						// check if there are definitions in native dictionary
-						var checkedWords = 0;
-						question.forEach(function (word, index) {
-							var start = Date.now();
-							console.log('check dict definition', word)
-							DictionaryProxy.dictionaryHasDefinitionForTerm(index === 0 ? word.text : word.definition,
-								function (resp) {
-									console.log('check dict definition, end', word, Date.now() - start);
-									word.hasDictionaryDefinition = resp;
-									if (++checkedWords === question.length) {
-										console.log('word preloaded', pageWord, Date.now(), question);
-										resolve(question);
-									}
-								});
-						});
+						//var checkedWords = 0;
+						//question.forEach(function (word, index) {
+						//	var start = Date.now();
+						//	console.log('check dict definition', word)
+						//	DictionaryProxy.dictionaryHasDefinitionForTerm(index === 0 ? word.text : word.definition,
+						//		function (resp) {
+						//			console.log('check dict definition, end', word, Date.now() - start);
+						//			word.hasDictionaryDefinition = resp;
+						//			if (++checkedWords === question.length) {
+						//				console.log('word preloaded', pageWord, Date.now(), question);
+						//				resolve(question);
+						//			}
+						//		});
+						//});
 					} else {
 						question.forEach(function (word) {
 							word.hasDictionaryDefinition = true;

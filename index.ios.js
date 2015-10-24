@@ -140,9 +140,9 @@ var yarn = React.createClass({
 	onShowDictionary: function (text, hasDictionaryDefinition) {
 		clearTimeout(this.nextQuestionTimeout);
 		this.refs.wordstrip.stopTimeoutAnimation();
-		if (hasDictionaryDefinition) {
+		//if (hasDictionaryDefinition) {
 			DictionaryProxy.showDefinition(text);
-		}
+		//}
 	},
 
 	renderQuizStatusBar: function () {
