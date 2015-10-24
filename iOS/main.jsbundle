@@ -1500,8 +1500,8 @@ this.renderTestYourselfPrompt()));},
 onShowDictionary:function(text,hasDictionaryDefinition){
 clearTimeout(this.nextQuestionTimeout);
 this.refs.wordstrip.stopTimeoutAnimation();
-if(hasDictionaryDefinition){
-DictionaryProxy.showDefinition(text);}},
+
+DictionaryProxy.showDefinition(text);},
 
 
 
@@ -1546,18 +1546,19 @@ renderResultView:function(){
 if(this.state.bottomBar !== 'result'){
 return React.createElement(View,null);}
 
-
 var levelStats=userProfileStore.get('historyLevelValues');
-var levelHasChanged=levelStats[levelStats.length - 1] !== levelStats[levelStats.length - 2];
-console.log('LEVEL HAS CHANGED',levelHasChanged,' score:',gameStateStore.get('score'));
+
+console.log('LEVEL ',levelStats[levelStats.length - 2],levelStats[levelStats.length - 1],
+userProfileStore.get('score'),userProfileStore.get('previousScore'));
 
 return (
 React.createElement(ResultView,{
 correctWords:gameStateStore.get('correct'),
 totalWords:gameStateStore.get('pageWords').length,
 level:userProfileStore.get('level'),
-animateLevel:levelHasChanged,
+previousLevel:levelStats[levelStats.length - 1],
 score:userProfileStore.get('score'),
+previousScore:userProfileStore.get('previousScore'),
 onDonePressed:this.closeResultView,
 onRandomPressed:this.onRandomPagePressed}));},
 
@@ -76695,7 +76696,7 @@ var extractedWords=splitGluedTogetherWords(textContent);
 
 return getWordsInRange(extractedWords,rangeStart,rangeStop);}};
 });
-__d('yarn/words.js',[],function(global, require, module, exports) {  module.exports = {"suits":41,"wages":41,"opposed":41,"bullet":41,"visiting":41,"gloves":41,"sin":41,"examined":41,"productivity":41,"links":41,"barrel":41,"objective":41,"steam":41,"israelis":41,"lighting":41,"regard":41,"cruise":41,"tomato":41,"rage":41,"mill":41,"progressive":41,"demonstrated":41,"ta":41,"cafe":41,"billions":41,"enjoying":41,"deeper":41,"organizational":41,"trunk":41,"blanket":41,"bucks":41,"chase":41,"grain":41,"existed":41,"terrific":41,"creativity":41,"sang":41,"revealing":41,"willingness":41,"broadcast":41,"instances":41,"indication":41,"russians":41,"react":41,"advantages":41,"negotiate":41,"railroad":41,"recipes":41,"shorter":41,"seniors":41,"helicopter":41,"potato":41,"heroes":41,"consequently":41,"duties":41,"assuming":41,"sheep":41,"steep":41,"courtroom":41,"compromise":41,"checked":41,"bloody":41,"upstairs":41,"cave":41,"cooperative":41,"consequence":41,"christianity":41,"compelling":41,"employer":41,"exotic":41,"elevator":41,"publications":41,"waist":41,"pasta":41,"pet":41,"understands":41,"isolation":41,"rivers":41,"slid":41,"thanksgiving":41,"complained":41,"alarm":41,"defending":41,"kick":41,"wage":41,"variation":41,"panic":41,"mechanisms":41,"reception":41,"innovation":41,"checks":41,"persian":41,"romance":41,"teenage":41,"placing":41,"correlation":41,"counselor":41,"uh":41,"wears":41,"upset":41,"metropolitan":41,"vertical":41,"fixed":41,"reportedly":41,"obligation":41,"intentions":41,"barn":41,"featuring":41,"literacy":41,"cocaine":41,"realm":41,"custody":41,"patch":41,"lightning":42,"coaching":42,"germans":42,"reflected":42,"appointed":42,"reserve":42,"strangers":42,"mobile":42,"drops":42,"professors":42,"implemented":42,"tours":42,"wrist":42,"vessels":42,"slaves":42,"engaging":42,"portfolio":42,"partially":42,"inn":42,"tribe":42,"likewise":42,"tapes":42,"awake":42,"astronomers":42,"deadline":42,"shelf":42,"alike":42,"backyard":42,"conspiracy":42,"preliminary":42,"sidewalk":42,"grabs":42,"aggression":42,"coordinator":42,"trauma":42,"specialists":42,"mentally":42,"assumed":42,"purse":42,"economies":42,"supportive":42,"costly":42,"someday":42,"studios":42,"planets":42,"stimulus":42,"drank":42,"liability":42,"withdrawal":42,"forgive":42,"economist":42,"spray":42,"lens":42,"nursing":42,"toilet":42,"slavery":42,"journalism":42,"surveillance":42,"bath":42,"snapped":42,"columnist":42,"waved":42,"architect":42,"activist":42,"workshop":42,"announcer":42,"faint":42,"openly":42,"painter":42,"mining":42,"symbols":42,"acquisition":42,"jurors":42,"noting":42,"castle":42,"citizenship":42,"input":42,"unfair":42,"survived":42,"blond":42,"airplane":42,"considers":42,"fever":42,"closest":42,"meantime":42,"analyze":42,"declaration":42,"loyalty":42,"codes":42,"seeks":42,"conducting":42,"maintained":42,"two-thirds":42,"adolescent":42,"cubs":42,"informed":42,"vitamin":42,"eagle":42,"placement":42,"recommended":42,"economists":42,"origins":42,"poems":42,"paths":42,"remembering":42,"spoon":42,"devastating":42,"acquire":42,"graduates":42,"practicing":42,"solely":42,"scent":42,"demonstration":42,"proceed":42,"fighters":42,"alley":42,"tide":42,"stares":42,"depressed":42,"happily":42,"continent":42,"criminals":42,"graduation":42,"estimate":42,"removal":42,"charter":42,"publicity":42,"lion":43,"liquid":43,"politician":43,"voluntary":43,"pump":43,"transformed":43,"acquired":43,"snake":43,"considerably":43,"brutal":43,"emotionally":43,"canal":43,"rocket":43,"deliberately":43,"investing":43,"consistency":43,"strictly":43,"sovereignty":43,"encounter":43,"boring":43,"rang":43,"arranged":43,"removing":43,"elbow":43,"empirical":43,"rubber":43,"toes":43,"inherent":43,"travelers":43,"vessel":43,"advocacy":43,"accent":43,"strongest":43,"facilitate":43,"finishing":43,"bull":43,"rack":43,"strain":43,"chill":43,"till":43,"conclude":43,"overseas":43,"sticking":43,"metaphor":43,"irony":43,"zero":43,"awkward":43,"laying":43,"translation":43,"fool":43,"exercises":43,"packages":43,"planted":43,"privately":43,"beneficial":43,"fog":43,"transit":43,"wagon":43,"beard":43,"dense":43,"affordable":43,"transform":43,"speculation":43,"guides":43,"attacking":43,"administrator":43,"spinning":43,"foster":43,"neat":43,"one-third":43,"traits":43,"pretend":43,"density":43,"trout":43,"nationwide":43,"franchise":43,"radar":43,"alpha":43,"upcoming":43,"tenure":43,"tribes":43,"skilled":43,"carrier":43,"fake":43,"pills":43,"grin":43,"troubled":43,"affecting":43,"liver":43,"flash":43,"parenting":43,"inmates":43,"refuge":43,"execution":43,"terribly":43,"construct":43,"silently":43,"casualties":43,"explicitly":43,"sofa":43,"masses":43,"electoral":43,"comparisons":43,"duck":43,"grandchildren":43,"ironically":43,"socks":43,"grove":43,"factories":43,"committees":43,"inappropriate":43,"landed":43,"observer":43,"wounds":43,"viable":43,"autumn":43,"nails":43,"cope":43,"statue":43,"damaged":43,"kidding":43,"clever":43,"injured":43,"digging":43,"decides":43,"brass":43,"lawsuits":43,"salaries":43,"attraction":43,"imperial":43,"tracking":43,"calm":43,"seldom":43,"bride":43,"grandma":44,"arise":44,"galaxies":44,"egyptian":44,"smelled":44,"dealt":44,"unclear":44,"aboard":44,"prisoner":44,"alien":44,"cord":44,"parish":44,"sometime":44,"scattered":44,"boost":44,"medieval":44,"tune":44,"stole":44,"sectors":44,"ounces":44,"inclusion":44,"strengths":44,"imagery":44,"confrontation":44,"indicators":44,"owe":44,"abruptly":44,"marriages":44,"lamp":44,"fatigue":44,"addiction":44,"prosperity":44,"rolls":44,"buses":44,"astronomy":44,"poles":44,"humanitarian":44,"roses":44,"passionate":44,"curtain":44,"twenty-five":44,"shirts":44,"sacrifice":44,"dull":44,"occurring":44,"morality":44,"dessert":44,"replacing":44,"beast":44,"geographic":44,"playoff":44,"litigation":44,"tray":44,"scouts":44,"acknowledged":44,"infections":44,"disputes":44,"retire":44,"organ":44,"intend":44,"founding":44,"loses":44,"mushrooms":44,"pencil":44,"convenience":44,"artifacts":44,"assessing":44,"fits":44,"implies":44,"realities":44,"broth":44,"greenhouse":44,"screens":44,"underground":44,"lone":44,"testify":44,"lesser":44,"yelling":44,"cans":44,"challenged":44,"modeling":44,"motivated":44,"linear":44,"downstairs":44,"composed":44,"legislators":44,"skinny":44,"palms":44,"clarity":44,"ethnicity":44,"protesters":44,"appearing":44,"locate":44,"squad":44,"operators":44,"prospective":44,"lime":44,"pushes":44,"fancy":44,"boot":44,"saints":44,"healthcare":44,"damp":44,"suspension":44,"feared":44,"lasted":44,"testified":44,"lid":44,"epidemic":44,"incorporate":44,"extending":44,"champagne":44,"exports":44,"workshops":44,"comic":44,"endangered":44,"stretching":44,"abandon":44,"wrap":44,"ego":44,"eagles":44,"obligations":44,"diary":44,"asset":44,"matching":44,"identities":44,"attempted":44,"trap":44,"urgent":44,"sponsored":44,"sympathetic":44,"rally":44,"mobility":44,"orthodox":44,"descriptions":45,"catalog":45,"monument":45,"spin":45,"counted":45,"ink":45,"fried":45,"withdraw":45,"theaters":45,"needle":45,"presenting":45,"businessman":45,"announce":45,"refugee":45,"reservation":45,"enforce":45,"imports":45,"swear":45,"peaks":45,"wool":45,"contexts":45,"urging":45,"pots":45,"persuade":45,"widow":45,"profitable":45,"organisms":45,"optimism":45,"stored":45,"rushed":45,"optional":45,"frightening":45,"financially":45,"lean":45,"redskins":45,"hometown":45,"slim":45,"appealing":45,"diameter":45,"favorites":45,"concentrations":45,"locals":45,"convincing":45,"stakes":45,"touchdown":45,"embarrassing":45,"handled":45,"dioxide":45,"fundamentally":45,"inaudible":45,"socialist":45,"swinging":45,"invested":45,"rocky":45,"absent":45,"hiring":45,"fishermen":45,"despair":45,"scout":45,"loudly":45,"nazi":45,"salvation":45,"ma'am":45,"aloud":45,"ribs":45,"histories":45,"dual":45,"affection":45,"listeners":45,"charts":45,"recommends":45,"emergence":45,"instructors":45,"hood":45,"buddy":45,"breeding":45,"jurisdiction":45,"caribbean":45,"chasing":45,"cookie":45,"charging":45,"vivid":45,"facial":45,"judging":45,"ecology":45,"magical":45,"ally":45,"rigid":45,"candles":45,"lit":45,"footage":45,"dam":45,"hierarchy":45,"charm":45,"thirteen":45,"starters":45,"robot":45,"performers":45,"fuck":45,"containers":45,"motives":45,"soy":45,"delivering":45,"manual":45,"undoubtedly":45,"sphere":45,"hatred":45,"classified":45,"leans":45,"meanings":45,"mentor":45,"stack":45,"ironic":45,"aftermath":45,"afterwards":45,"wolves":45,"nitrogen":45,"converted":45,"spotlight":45,"biography":45,"oversight":45,"tuition":45,"ashamed":45,"portraits":45,"kilometers":45,"citing":45,"recognizes":45,"landmark":45,"flags":45,"subjective":45,"bureaucracy":45,"convey":45,"acknowledges":45,"episodes":45,"all-star":45,"lighter":46,"warrior":46,"exam":46,"compost":46,"thoughtful":46,"email":46,"rabbi":46,"servants":46,"revival":46,"commanders":46,"foreigners":46,"deficits":46,"documented":46,"completing":46,"newest":46,"invention":46,"talents":46,"graves":46,"lowered":46,"cracks":46,"declining":46,"medications":46,"lacks":46,"warehouse":46,"choir":46,"ward":46,"costume":46,"neatly":46,"religions":46,"appetite":46,"shotgun":46,"governmental":46,"trains":46,"worrying":46,"phenomena":46,"quoted":46,"aviation":46,"adapt":46,"blocking":46,"swept":46,"detection":46,"expressing":46,"interpreted":46,"gestures":46,"cathedral":46,"subway":46,"requested":46,"credits":46,"molecules":46,"bored":46,"bridges":46,"certainty":46,"motive":46,"parallel":46,"adjusted":46,"vendors":46,"freeze":46,"archives":46,"freezing":46,"outrage":46,"correspondence":46,"amateur":46,"tub":46,"feathers":46,"wallet":46,"wires":46,"chapel":46,"muttered":46,"qualified":46,"testament":46,"thorough":46,"kings":46,"praying":46,"large-scale":46,"standardized":46,"kills":46,"globalization":46,"pioneer":46,"governance":46,"comparative":46,"exhausted":46,"offenders":46,"glove":46,"co-host":46,"dismissed":46,"interpretations":46,"volumes":46,"memo":46,"ignorance":46,"spy":46,"erosion":46,"cousins":46,"pin":46,"emphasizes":46,"achievements":46,"backup":46,"pressing":46,"slipping":46,"segments":46,"meter":46,"fuels":46,"primitive":46,"confession":46,"lied":46,"lineup":46,"dug":46,"creator":46,"nonsense":46,"pigs":46,"loads":46,"successes":46,"teaspoons":46,"gaps":46,"assassination":46,"arctic":46,"kindergarten":46,"african-americans":46,"certification":46,"intriguing":46,"fictional":46,"retention":46,"adventures":46,"negotiation":46,"reply":46,"wrestling":46,"fights":46,"matrix":46,"picnic":46,"split":46,"sank":46,"consisted":46,"shield":46,"span":46,"partnerships":46,"unaware":46,"boil":46,"galleries":46,"brazilian":46,"manuscript":46,"broadly":46,"marginal":46,"pounding":46,"maple":46,"rubbed":46,"tolerate":46,"workforce":46,"methodology":46,"halls":46,"analyzing":46,"pets":46,"miniature":46,"sporting":46,"donor":46,"dancer":47,"circus":47,"kissing":47,"wiped":47,"fountain":47,"criterion":47,"wary":47,"crisp":47,"inhabitants":47,"fox":47,"sack":47,"tuned":47,"altar":47,"asthma":47,"excluded":47,"fireplace":47,"exploded":47,"hesitated":47,"louder":47,"leap":47,"margins":47,"shaft":47,"predators":47,"purchases":47,"adverse":47,"penalties":47,"linguistic":47,"solidarity":47,"marital":47,"slot":47,"cheating":47,"seventeen":47,"elk":47,"mainland":47,"shark":47,"exile":47,"flooding":47,"sunshine":47,"velvet":47,"dreaming":47,"diagnostic":47,"sundays":47,"entities":47,"mathematical":47,"obsession":47,"bald":47,"graduated":47,"foam":47,"abundant":47,"lengthy":47,"usage":47,"exceed":47,"prone":47,"glorious":47,"keyboard":47,"confronted":47,"lobbying":47,"scholarly":47,"hurry":47,"patches":47,"lengths":47,"sensible":47,"straightforward":47,"premise":47,"coats":47,"provincial":47,"notorious":47,"commodity":47,"targeting":47,"lamb":47,"odor":47,"posted":47,"confined":47,"lazy":47,"tense":47,"proudly":47,"arrow":47,"trembling":47,"pros":47,"hut":47,"environmentalists":47,"admiral":47,"evaluated":47,"taller":47,"sophomore":47,"anticipation":47,"randomly":47,"generic":47,"insane":47,"lowering":47,"relates":47,"flashed":47,"sustained":47,"portrayed":47,"bankers":47,"sue":47,"piles":47,"pa":47,"justification":47,"efficiently":47,"resemble":47,"develops":47,"antibiotics":47,"rendered":47,"reverse":47,"oddly":47,"combining":47,"interfere":47,"endure":47,"standpoint":47,"urge":47,"narratives":47,"motions":47,"launching":47,"africans":47,"communal":47,"calculations":47,"bachelor":47,"merchants":47,"naive":47,"conditioning":47,"architects":47,"wandering":47,"resentment":47,"biodiversity":47,"blades":47,"vigorous":47,"mornings":47,"builders":47,"blinked":47,"restructuring":47,"cycling":47,"pretending":47,"racist":47,"albums":47,"recruited":47,"mound":47,"rebel":47,"five-year":47,"tastes":47,"detected":47,"snakes":47,"sensors":47,"candle":47,"corresponding":47,"dot":47,"assured":47,"madness":47,"coral":47,"embargo":47,"poised":47,"appropriately":47,"servant":47,"anthropology":47,"hands-on":47,"compounds":47,"seas":47,"muddy":47,"bee":47,"peeled":47,"saddle":47,"nominated":48,"clearing":48,"sanctuary":48,"cloves":48,"towels":48,"speeds":48,"slopes":48,"desires":48,"trio":48,"pumpkin":48,"patrons":48,"morally":48,"mixing":48,"appointments":48,"idiot":48,"playground":48,"microphone":48,"seafood":48,"basics":48,"offspring":48,"arose":48,"ghosts":48,"recordings":48,"sip":48,"exhibitions":48,"warns":48,"announcing":48,"thigh":48,"evidently":48,"predicting":48,"schemes":48,"deployed":48,"stereotypes":48,"genuinely":48,"climbs":48,"wishes":48,"colonies":48,"resign":48,"nod":48,"edited":48,"proliferation":48,"syrian":48,"wonders":48,"sights":48,"raid":48,"eats":48,"brow":48,"squash":48,"unacceptable":48,"waitress":48,"atoms":48,"gosh":48,"reunion":48,"continuity":48,"bolt":48,"comeback":48,"mister":48,"liberties":48,"flown":48,"intersection":48,"predicts":48,"roster":48,"radically":48,"interim":48,"unpleasant":48,"concessions":48,"rider":48,"herd":48,"washed":48,"patriots":48,"grains":48,"convictions":48,"touchdowns":48,"transplant":48,"representations":48,"illegally":48,"poses":48,"ventures":48,"clarify":48,"axis":48,"wetlands":48,"rides":48,"pitching":48,"certificate":48,"stark":48,"privileged":48,"cedar":48,"cherry":48,"niche":48,"obtaining":48,"fading":48,"gardening":48,"maturity":48,"imaginary":48,"fold":48,"respiratory":48,"hemisphere":48,"grandpa":48,"discoveries":48,"restored":48,"relieved":48,"diesel":48,"pricing":48,"documentation":48,"admissions":48,"disappearance":48,"bilateral":48,"elites":48,"grapes":48,"explorer":48,"rude":48,"sturdy":48,"volatile":48,"attach":48,"ibid":48,"guardian":48,"granite":48,"negro":48,"lobbyists":48,"genetically":48,"delivers":48,"telescopes":48,"societal":48,"scare":48,"ash":48,"contributor":48,"decorated":48,"rests":48,"secondly":48,"finals":48,"pesticides":48,"supporter":48,"flows":48,"deposits":48,"probation":48,"charitable":48,"hurried":48,"performer":48,"territorial":48,"resolutions":48,"arc":48,"lush":48,"whiskey":48,"pending":48,"vaguely":48,"peered":48,"pervasive":48,"crosses":48,"accompany":48,"turf":48,"whisper":48,"witnessed":48,"prestige":48,"reliance":48,"spelling":48,"quantitative":48,"whisk":48,"rifles":48,"compensate":48,"abortions":48,"threatens":48,"calmly":48,"casting":48,"schooling":48,"gradual":48,"listing":48,"robbery":48,"incomplete":48,"probable":48,"pads":48,"prevalent":48,"freeway":48,"missionary":48,"thinly":48,"gauge":49,"infected":49,"restraint":49,"batter":49,"projected":49,"cereal":49,"policymakers":49,"babe":49,"coconut":49,"neglect":49,"chooses":49,"sculptures":49,"positioned":49,"solitary":49,"verse":49,"rugged":49,"diplomats":49,"ammunition":49,"adjusting":49,"shelters":49,"overview":49,"accomplishment":49,"delayed":49,"buffalo":49,"advises":49,"armored":49,"highways":49,"sleek":49,"bothered":49,"falcons":49,"high-profile":49,"greed":49,"postal":49,"float":49,"premiums":49,"monitors":49,"migrants":49,"hawks":49,"chess":49,"desktop":49,"committing":49,"easiest":49,"coherent":49,"bullying":49,"devotion":49,"tapped":49,"susceptible":49,"priced":49,"all-time":49,"persistence":49,"campaigning":49,"nodding":49,"presentations":49,"disappointing":49,"unwanted":49,"sailors":49,"infinite":49,"supplements":49,"linebacker":49,"backdrop":49,"spider":49,"sleeves":49,"initiated":49,"horns":49,"polling":49,"oaks":49,"nowadays":49,"seller":49,"knot":49,"scarf":49,"knives":49,"natives":49,"pastry":49,"cozy":49,"temptation":49,"fantasies":49,"premature":49,"noises":49,"penny":49,"aims":49,"halt":49,"demise":49,"fascination":49,"amusement":49,"exploit":49,"manners":49,"genocide":49,"recruit":49,"loneliness":49,"scarce":49,"reluctantly":49,"newsletter":49,"nut":49,"motorcycle":49,"compelled":49,"windshield":49,"worms":49,"wax":49,"bout":49,"understandable":49,"strains":49,"deepest":49,"backpack":49,"govern":49,"innovations":49,"altitude":49,"charities":49,"singles":49,"steroids":49,"hazards":49,"burst":49,"averaging":49,"spectacle":49,"heated":49,"high-speed":49,"hay":49,"lamps":49,"sprawling":49,"cabbage":49,"abusive":49,"ingredient":49,"emphasizing":49,"sins":49,"hose":49,"warrant":49,"binding":49,"objections":49,"someplace":49,"philosopher":49,"paragraph":49,"maximize":49,"situated":49,"reds":49,"flaws":49,"repetition":49,"seals":49,"pops":49,"deserved":49,"medals":49,"kin":49,"accepts":49,"seating":49,"weaker":49,"peasant":49,"mortgages":49,"shaken":49,"slides":49,"costumes":49,"novelist":49,"boxer":49,"fort":49,"trustees":49,"high-quality":49,"mastery":49,"rhetorical":49,"upright":49,"squares":49,"seized":49,"crap":49,"negotiating":49,"sneak":49,"rumor":49,"energetic":49,"airborne":49,"thief":49,"guaranteed":49,"residual":49,"apparatus":49,"underway":49,"stuffed":49,"chancellor":49,"pillows":49,"luggage":49,"dubbed":49,"cite":49,"smarter":49,"unified":49,"scratch":49,"periodically":49,"serbian":49,"listens":49,"lipstick":49,"distinctions":49,"richer":49,"characterize":49,"earrings":49,"infrared":49,"freezer":49,"openness":49,"simulation":49,"cliffs":49,"affluent":49,"rams":49,"travels":49,"logo":49,"goddess":49,"reservoir":49,"imagining":49,"brighter":50,"focal":50,"tactic":50,"secrecy":50,"sensed":50,"apt":50,"graceful":50,"sober":50,"cynical":50,"undercover":50,"visibility":50,"slightest":50,"theorists":50,"culinary":50,"vitamins":50,"catastrophe":50,"elimination":50,"bending":50,"restless":50,"timely":50,"prose":50,"readiness":50,"ants":50,"daunting":50,"separating":50,"proceeded":50,"compiled":50,"breathed":50,"palette":50,"terrace":50,"knowledgeable":50,"dangling":50,"spicy":50,"genetics":50,"civilized":50,"nephew":50,"arbitrary":50,"sliding":50,"cables":50,"cracking":50,"sketch":50,"retrieved":50,"disbelief":50,"sacks":50,"acknowledging":50,"skirts":50,"defeated":50,"grounded":50,"reactor":50,"interrogation":50,"interrupted":50,"graduating":50,"disturbed":50,"surveyed":50,"eighty":50,"extraordinarily":50,"arises":50,"curls":50,"assemble":50,"packaging":50,"low-fat":50,"trademark":50,"yep":50,"savvy":50,"massacre":50,"mercury":50,"thyme":50,"mid":50,"sleepy":50,"genome":50,"stripes":50,"contradictory":50,"employs":50,"astronauts":50,"fuzzy":50,"guided":50,"stubborn":50,"right-wing":50,"hugged":50,"elder":50,"tract":50,"attendant":50,"celery":50,"cubic":50,"respectable":50,"ruin":50,"vocational":50,"interstate":50,"selections":50,"generates":50,"discretion":50,"saturdays":50,"fences":50,"venue":50,"generating":50,"portray":50,"expressive":50,"battling":50,"habitats":50,"mandates":50,"dreamed":50,"torso":50,"brightest":50,"loading":50,"topped":50,"wicked":50,"render":50,"loser":50,"prevail":50,"desperation":50,"paradox":50,"scar":50,"peach":50,"transfers":50,"prosperous":50,"printer":50,"beers":50,"demons":50,"entrepreneur":50,"cone":50,"sickness":50,"durable":50,"black-and-white":50,"tenth":50,"vampire":50,"quilt":50,"feminism":50,"modify":50,"flock":50,"tumors":50,"labeled":50,"specializes":50,"alarming":50,"roadside":50,"objection":50,"upscale":50,"chop":50,"crawling":50,"speculate":50,"doomed":50,"tossing":50,"vastly":50,"monkeys":50,"defended":50,"baron":50,"cheering":50,"preparations":50,"landlord":50,"cruising":50,"strawberry":50,"lasts":50,"nineteen":50,"nude":50,"diminish":50,"retrieve":50,"moonlight":50,"offenses":50,"rhythms":50,"coyote":50,"intentionally":50,"obey":50,"incorporating":50,"slippery":50,"stimulation":50,"factions":50,"bumps":50,"richest":50,"challenger":50,"sweep":50,"reminiscent":50,"vest":50,"scottish":50,"chambers":50,"haitian":50,"calculation":50,"professionally":50,"condom":50,"drilling":50,"battalion":50,"vein":50,"literal":50,"cohort":50,"institutes":51,"episcopal":51,"revised":51,"animation":51,"scandals":51,"proceeds":51,"takeover":51,"thieves":51,"exhibits":51,"pinch":51,"slower":51,"sponsor":51,"spice":51,"builder":51,"starving":51,"mesh":51,"sherry":51,"betrayal":51,"ambiguity":51,"commanding":51,"planner":51,"exclaimed":51,"stressed":51,"medium-high":51,"believers":51,"sovereign":51,"frequencies":51,"long-distance":51,"volleyball":51,"mutually":51,"hatch":51,"aquatic":51,"summers":51,"fiery":51,"traveler":51,"stellar":51,"tattoo":51,"calf":51,"navigation":51,"arrogant":51,"sic":51,"appreciated":51,"folds":51,"remedy":51,"eh":51,"limiting":51,"swelling":51,"blaming":51,"onstage":51,"circumstance":51,"wartime":51,"particle":51,"browns":51,"striped":51,"donate":51,"reign":51,"heavens":51,"dominican":51,"greeted":51,"miracles":51,"confessed":51,"violently":51,"breed":51,"poker":51,"fortunes":51,"commented":51,"firearms":51,"chemotherapy":51,"editing":51,"batch":51,"agreeing":51,"orderly":51,"alumni":51,"foul":51,"all-purpose":51,"knots":51,"ragged":51,"diets":51,"prepares":51,"longing":51,"stimuli":51,"bounced":51,"compression":51,"predator":51,"pearl":51,"cease":51,"vodka":51,"unsure":51,"licenses":51,"sparkling":51,"celebrated":51,"fabrics":51,"wardrobe":51,"compassionate":51,"excuses":51,"stretches":51,"scan":51,"beginnings":51,"cutter":51,"gourmet":51,"articulate":51,"dinosaur":51,"lateral":51,"teachings":51,"bookstore":51,"headnote":51,"accustomed":51,"swirling":51,"weeping":51,"consist":51,"strategist":51,"disruptive":51,"temperament":51,"supplier":51,"rods":51,"drift":51,"danish":51,"ignores":51,"statutes":51,"haze":51,"glamorous":51,"electron":51,"employing":51,"pivotal":51,"server":51,"exhaustion":51,"premises":51,"indoors":51,"marrying":51,"modernity":51,"pretended":51,"irresponsible":51,"sixties":51,"initiation":51,"remnants":51,"licensing":51,"neon":51,"spike":51,"protections":51,"hopeless":51,"disadvantage":51,"commodities":51,"kidnapping":51,"secured":51,"ripped":51,"guessed":51,"dime":51,"hillside":51,"roofs":51,"contradiction":51,"democracies":51,"geometry":51,"saves":51,"rivalry":51,"handles":51,"unconstitutional":51,"generosity":51,"imitation":51,"mentors":51,"specially":51,"iq":51,"hindu":51,"screams":51,"imaginative":51,"allegiance":51,"olives":51,"recalling":51,"grassroots":51,"predictors":51,"venues":51,"peanuts":51,"strawberries":51,"indifference":51,"acre":51,"pub":51,"capturing":51,"scenery":51,"turnout":51,"elect":51,"anatomy":51,"fats":51,"vacations":51,"beats":51,"fines":51,"depicting":51,"deeds":51,"automobiles":51,"crunch":51,"sucking":51,"crooked":51,"spears":51,"detainees":51,"praised":51,"frank":51,"moderately":51,"posing":51,"transitions":51,"invasive":51,"criticizing":51,"tunes":51,"sealed":51,"narrowly":52,"rebuilding":52,"jeopardy":52,"qualifications":52,"cosmos":52,"tighten":52,"sued":52,"soothing":52,"cosmetic":52,"declares":52,"seminary":52,"peel":52,"devastated":52,"advertisements":52,"rested":52,"distinctly":52,"meaningless":52,"causal":52,"modernization":52,"displaying":52,"strap":52,"fitting":52,"transitional":52,"filters":52,"whip":52,"high-end":52,"announces":52,"playful":52,"monks":52,"statues":52,"accelerate":52,"guild":52,"shone":52,"hesitation":52,"arrows":52,"loaf":52,"advocating":52,"dive":52,"whereby":52,"complementary":52,"treaties":52,"laborers":52,"rotten":52,"integrating":52,"snacks":52,"heightened":52,"thanked":52,"stump":52,"tsunami":52,"fisherman":52,"supernatural":52,"deceased":52,"skins":52,"sentimental":52,"fracture":52,"stabilize":52,"torch":52,"preservice":52,"thou":52,"improper":52,"marched":52,"low-cost":52,"admired":52,"oblivious":52,"irrational":52,"clubhouse":52,"annoyed":52,"predecessors":52,"gardener":52,"tempting":52,"loft":52,"persona":52,"irregular":52,"litter":52,"downward":52,"advertisers":52,"monumental":52,"blended":52,"nylon":52,"garment":52,"nationals":52,"iranians":52,"heartbeat":52,"impending":52,"nightmares":52,"feat":52,"lutheran":52,"stern":52,"overlapping":52,"dictate":52,"ribbons":52,"liable":52,"polo":52,"restrictive":52,"texans":52,"plug":52,"long-standing":52,"splash":52,"unfinished":52,"procession":52,"hype":52,"chuck":52,"indefinitely":52,"disagreed":52,"noticeable":52,"oversees":52,"one-time":52,"supplement":52,"decker":52,"utilized":52,"retailer":52,"girlfriends":52,"gel":52,"revelations":52,"electrons":52,"ominous":52,"resonance":52,"rankings":52,"discard":52,"concede":52,"wastes":52,"sprang":52,"swam":52,"believer":52,"jewel":52,"seriousness":52,"desserts":52,"workouts":52,"grasses":52,"glared":52,"revive":52,"mandated":52,"pensions":52,"resembled":52,"shovel":52,"outskirts":52,"tackles":52,"damned":52,"trunks":52,"sunk":52,"bunker":52,"clips":52,"sipping":52,"buffet":52,"farewell":52,"zest":52,"vitality":52,"tasty":52,"unfolding":52,"threads":52,"retrospect":52,"protagonist":52,"upheld":52,"accessed":52,"introductory":52,"bitterness":52,"haul":52,"decision-making":52,"alas":52,"inflammation":52,"filthy":52,"bounce":52,"benefited":52,"yacht":52,"trim":52,"theologians":52,"insert":52,"detectors":52,"condo":52,"soak":52,"canadians":52,"horrific":52,"overlook":52,"owning":52,"cruelty":52,"asparagus":52,"reassuring":52,"paperback":52,"rip":52,"spins":52,"twenties":52,"drastically":52,"apron":52,"sacrifices":52,"confidentiality":52,"accumulation":52,"clicked":52,"disadvantaged":52,"outward":52,"anguish":52,"cough":52,"catfish":52,"demeanor":52,"dizzy":52,"submarine":52,"citrus":52,"thinner":52,"majesty":52,"airways":52,"don":52,"exhaust":52,"underwater":52,"pals":52,"quoting":52,"amazingly":52,"inaccurate":52,"makeshift":52,"ponds":52,"first-time":53,"reactors":53,"containment":53,"indicted":53,"roared":53,"acquisitions":53,"manufactured":53,"therapies":53,"contentious":53,"vase":53,"trader":53,"noodles":53,"reproduce":53,"three-quarters":53,"sibling":53,"covert":53,"mixer":53,"pianist":53,"captures":53,"fronts":53,"influx":53,"rails":53,"undergone":53,"frying":53,"centerpiece":53,"transmitted":53,"nun":53,"freshwater":53,"aerobic":53,"retrospective":53,"arbitration":53,"kitchens":53,"intently":53,"plumbing":53,"aerospace":53,"rescued":53,"internally":53,"exploding":53,"raining":53,"organizer":53,"bore":53,"unchanged":53,"offset":53,"spit":53,"congestion":53,"pluralism":53,"asbestos":53,"scratching":53,"stirred":53,"devils":53,"leaks":53,"ceramics":53,"impaired":53,"discounts":53,"richness":53,"attracts":53,"librarian":53,"minced":53,"bowed":53,"raids":53,"sewing":53,"finishes":53,"lest":53,"competencies":53,"railway":53,"arranging":53,"scramble":53,"tan":53,"gig":53,"composting":53,"splitting":53,"bracelet":53,"rabbits":53,"scanned":53,"butcher":53,"exemption":53,"commissioned":53,"gin":53,"spurs":53,"stain":53,"flats":53,"devastation":53,"brutality":53,"induce":53,"flashes":53,"cooks":53,"nightly":53,"rag":53,"weaken":53,"enhancement":53,"greatness":53,"opposes":53,"cleaner":53,"academically":53,"dynasty":53,"assortment":53,"jointly":53,"pneumonia":53,"balloons":53,"resisted":53,"deregulation":53,"handkerchief":53,"pioneering":53,"separates":53,"curly":53,"assign":53,"rig":53,"kaiser":53,"postseason":53,"designation":53,"fallout":53,"sophistication":53,"irresistible":53,"socialization":53,"dealings":53,"tattoos":53,"concession":53,"novice":53,"awoke":53,"award-winning":53,"protesting":53,"turbine":53,"on-site":53,"pounded":53,"burgers":53,"algorithm":53,"tremendously":53,"depict":53,"judaism":53,"shortcomings":53,"precautions":53,"unite":53,"loosen":53,"maverick":53,"diced":53,"caffeine":53,"calculating":53,"signatures":53,"stray":53,"equilibrium":53,"foreground":53,"persuaded":53,"fingernails":53,"barefoot":53,"deprivation":53,"dangerously":53,"anthropologists":53,"dysfunction":53,"plead":53,"ripping":53,"enjoyable":53,"inner-city":53,"embryos":53,"homosexuals":53,"processed":53,"greeks":53,"benches":53,"hints":53,"choking":53,"tumbling":53,"spiral":53,"tester":53,"wisely":53,"fools":53,"staple":53,"startled":53,"barracks":53,"evidenced":53,"destinations":53,"articulated":53,"italians":53,"oriental":53,"precinct":53,"upgrade":53,"atrocities":53,"outgoing":53,"metabolism":53,"brushes":53,"hauling":53,"slows":53,"predictive":53,"leaped":53,"romans":53,"purchasing":53,"optics":53,"attracting":53,"spokesperson":53,"affiliate":53,"brisk":53,"specifications":53,"bedtime":53,"meats":53,"mafia":53,"stall":53,"exchanged":53,"shivering":53,"extinct":53,"contemplating":53,"robes":53,"incorporates":53,"indonesian":53,"borrowed":53,"solemn":53,"ex-wife":53,"martian":53,"bluff":53,"beverage":53,"tolerant":53,"obstruction":53,"jagged":53,"gripped":53,"subsidiary":53,"displacement":53,"raging":53,"sweetness":54,"creditors":54,"resisting":54,"microscope":54,"dread":54,"nausea":54,"linger":54,"bloc":54,"motivations":54,"reelection":54,"flap":54,"flooded":54,"muted":54,"expanse":54,"cultivation":54,"clumsy":54,"psychologically":54,"hurdles":54,"reassure":54,"clerks":54,"gloom":54,"fueled":54,"joked":54,"wiring":54,"inadvertently":54,"traction":54,"proclaimed":54,"attribute":54,"carving":54,"weddings":54,"perjury":54,"puppet":54,"marsh":54,"excel":54,"breadth":54,"recurring":54,"hypertension":54,"poked":54,"jerk":54,"processors":54,"signaled":54,"subsidy":54,"steaks":54,"victimization":54,"capitals":54,"sting":54,"ceilings":54,"oriented":54,"melting":54,"needy":54,"commute":54,"looming":54,"deed":54,"fingerprints":54,"woes":54,"hikes":54,"directory":54,"deploy":54,"collects":54,"statutory":54,"dads":54,"rusty":54,"draped":54,"scrape":54,"conceive":54,"rosemary":54,"evolving":54,"pharmacy":54,"enforcing":54,"unofficial":54,"sesame":54,"scouting":54,"descended":54,"canon":54,"one-on-one":54,"rustic":54,"exterior":54,"legion":54,"frost":54,"doubted":54,"sipped":54,"drown":54,"ranchers":54,"candid":54,"hardship":54,"applaud":54,"peeling":54,"pillars":54,"protestants":54,"adrenaline":54,"humility":54,"unreasonable":54,"holistic":54,"leaping":54,"emptiness":54,"racially":54,"kneeling":54,"knob":54,"statistic":54,"sediment":54,"interviewer":54,"trailed":54,"self-confidence":54,"landowners":54,"tavern":54,"malpractice":54,"shareholder":54,"nests":54,"floated":54,"comics":54,"memoirs":54,"vault":54,"twenty-first":54,"tofu":54,"powerless":54,"congregations":54,"atom":54,"needless":54,"ruthless":54,"installations":54,"merge":54,"diners":54,"unthinkable":54,"exploratory":54,"comrades":54,"figs":54,"sprint":54,"contemplate":54,"centralized":54,"coercion":54,"granny":54,"bathing":54,"biomass":54,"gothic":54,"three-day":54,"rectangular":54,"dwell":54,"accusation":54,"misunderstanding":54,"skyline":54,"acculturation":54,"cushion":54,"odyssey":54,"advisors":54,"nanny":54,"pens":54,"gunman":54,"bully":54,"yielding":54,"robotic":54,"baths":54,"enforced":54,"two-way":54,"taxation":54,"equals":54,"willingly":54,"steals":54,"misguided":54,"powdered":54,"bearded":54,"converting":54,"specimen":54,"accumulate":54,"exodus":54,"attentive":54,"surfing":54,"broadcasts":54,"subtly":54,"eclectic":54,"aroma":54,"hawk":54,"dysfunctional":54,"squirrel":54,"registry":54,"pancakes":54,"bind":54,"conspicuous":54,"horrors":54,"slap":54,"dove":54,"apiece":54,"ensures":54,"radiant":54,"attainment":54,"beasts":54,"plentiful":54,"thirties":54,"fishes":54,"decor":54,"timeless":54,"zip":54,"wallpaper":54,"lighthouse":54,"prop":54,"diaries":54,"clutch":54,"imbalance":54,"speculative":54,"occupying":54,"spiders":54,"enhances":54,"kinda":54,"diploma":54,"socket":54,"pacing":54,"coyotes":54,"sidelines":54,"geometric":54,"indulge":54,"distortion":54,"somber":54,"quotes":54,"logistics":54,"groaned":54,"transcript":54,"shattered":54,"menace":54,"cohesion":54,"hip-hop":54,"ventilation":54,"inclination":54,"pictured":54,"heavyweight":54,"co-founder":54,"plainly":54,"sanitation":54,"flung":54,"dared":54,"switching":54,"uniformed":54,"backcountry":54,"fostering":55,"iconic":55,"jihad":55,"unnatural":55,"abstraction":55,"good-bye":55,"embodied":55,"constituted":55,"trailers":55,"stale":55,"subordinate":55,"trendy":55,"homers":55,"slippers":55,"sparked":55,"starvation":55,"assorted":55,"runaway":55,"explorers":55,"bathtub":55,"coordinated":55,"mortar":55,"eggplant":55,"visibly":55,"convergence":55,"regrets":55,"festive":55,"chimney":55,"lunches":55,"forgiven":55,"beetle":55,"osteoporosis":55,"gamma":55,"unconventional":55,"shuts":55,"signaling":55,"imprisoned":55,"overseeing":55,"nodes":55,"alcoholic":55,"fossils":55,"nightclub":55,"newcomer":55,"hamburger":55,"forge":55,"neural":55,"toasted":55,"addictive":55,"molecule":55,"mural":55,"cost-effective":55,"garrison":55,"tending":55,"grouping":55,"seductive":55,"invitations":55,"checklist":55,"doubles":55,"unintended":55,"treadmill":55,"pastors":55,"abide":55,"hospice":55,"chicks":55,"denim":55,"community-based":55,"counters":55,"nebula":55,"sane":55,"golfer":55,"bicycles":55,"enzymes":55,"dilemmas":55,"depiction":55,"manure":55,"markedly":55,"incompetent":55,"outdated":55,"unification":55,"tug":55,"monarchy":55,"unavailable":55,"acknowledgment":55,"barber":55,"memorandum":55,"easing":55,"unpaid":55,"emergencies":55,"contextual":55,"palpable":55,"mobilize":55,"squarely":55,"barred":55,"shivered":55,"artifact":55,"apologies":55,"spies":55,"fumes":55,"nonstick":55,"decorate":55,"torque":55,"manuscripts":55,"mobilization":55,"reinforcing":55,"secretaries":55,"cynicism":55,"homelessness":55,"grassy":55,"patronage":55,"corrected":55,"brittle":55,"two-hour":55,"blaze":55,"hungarian":55,"invaded":55,"downstream":55,"pedagogical":55,"incremental":55,"witnessing":55,"pathogens":55,"poisonous":55,"carnival":55,"forbid":55,"bloom":55,"accessibility":55,"savage":55,"coordinates":55,"pedal":55,"wept":55,"invaluable":55,"advertisement":55,"marxist":55,"homage":55,"tenor":55,"subsistence":55,"illusions":55,"undertaking":55,"imprisonment":55,"ghetto":55,"serene":55,"distributions":55,"anthem":55,"fledgling":55,"reap":55,"controllers":55,"obedience":55,"forestry":55,"paralysis":55,"depart":55,"angular":55,"hilarious":55,"proportional":55,"relational":55,"glaze":55,"intrusion":55,"stylist":55,"horizons":55,"unfairly":55,"overhaul":55,"discs":55,"humorous":55,"brutally":55,"broaden":55,"mimic":55,"sluggish":55,"competency":55,"seventeenth":55,"faulty":55,"appropriation":55,"distributing":55,"bland":55,"explodes":55,"slump":55,"sniffed":55,"betrayed":55,"colder":55,"undecided":55,"compose":55,"sensual":55,"catalogs":55,"muster":55,"decreasing":55,"groom":55,"handicapped":55,"margarine":55,"civilizations":55,"swallowing":55,"triumphant":55,"discontent":55,"flourish":55,"collaborate":55,"breathtaking":55,"accumulated":55,"stroked":55,"discourses":55,"earthly":55,"widen":55,"fragmented":55,"escort":55,"fungi":55,"dissolved":55,"stabilization":55,"scanner":55,"improvisation":55,"witty":55,"patriarchal":55,"heirs":55,"precarious":55,"gathers":55,"thee":55,"cling":55,"attributable":55,"cape":55,"chased":55,"docks":55,"anecdotal":55,"beverages":55,"mole":55,"blessings":55,"light-years":55,"seizure":55,"behaving":55,"billionaire":55,"interceptions":55,"extraction":55,"mariners":55,"documenting":55,"cocktails":55,"portal":55,"bedding":55,"highs":55,"nearing":55,"staffer":55,"self-defense":55,"grouped":55,"receptionist":55,"zinc":55,"shrug":55,"ape":55,"wagons":56,"sixteenth":56,"compromises":56,"rites":56,"halves":56,"prehistoric":56,"disproportionately":56,"buds":56,"decks":56,"guarding":56,"skeptics":56,"illuminate":56,"remorse":56,"nominal":56,"attends":56,"qualifying":56,"skipping":56,"objectivity":56,"crammed":56,"euro":56,"coworkers":56,"enthusiasts":56,"leapt":56,"quaint":56,"frowning":56,"favoring":56,"scoop":56,"bison":56,"municipalities":56,"recollection":56,"yugoslav":56,"wrinkled":56,"brows":56,"toxins":56,"villain":56,"garments":56,"understandably":56,"encompasses":56,"fixture":56,"wipes":56,"constituencies":56,"rouge":56,"crushing":56,"vogue":56,"anew":56,"gal":56,"behaviour":56,"conserve":56,"multivariate":56,"stylistic":56,"turbines":56,"viability":56,"clicks":56,"self-interest":56,"plank":56,"herring":56,"perverse":56,"adversaries":56,"crate":56,"detecting":56,"warranty":56,"juries":56,"sparse":56,"callers":56,"binary":56,"westerners":56,"upbringing":56,"reviewers":56,"dominating":56,"orthodoxy":56,"brilliantly":56,"clinicians":56,"bathrooms":56,"walnuts":56,"bullpen":56,"zeal":56,"life-threatening":56,"churning":56,"orbits":56,"commenting":56,"complexion":56,"evokes":56,"dryer":56,"humiliating":56,"snapshot":56,"neurons":56,"circulating":56,"nationalists":56,"moderates":56,"recurrent":56,"hysteria":56,"casket":56,"manageable":56,"apprehension":56,"delicately":56,"watchers":56,"constrained":56,"cadets":56,"seams":56,"cones":56,"bipolar":56,"pageant":56,"onboard":56,"shortstop":56,"expelled":56,"perch":56,"billed":56,"surrounds":56,"pictorial":56,"presumption":56,"youngster":56,"parchment":56,"resides":56,"amateurs":56,"trustee":56,"bikini":56,"glucose":56,"twentieth-century":56,"oscars":56,"paranoia":56,"notwithstanding":56,"hum":56,"viewpoints":56,"bypass":56,"disgusted":56,"perpetrators":56,"murdering":56,"stalls":56,"fry":56,"forcefully":56,"hovered":56,"creepy":56,"tenet":56,"taiwanese":56,"rosy":56,"roaring":56,"notation":56,"assisted":56,"shave":56,"austrian":56,"blasting":56,"raisins":56,"excluding":56,"sails":56,"blinding":56,"continents":56,"mother-in-law":56,"small-town":56,"clientele":56,"unreliable":56,"cartel":56,"sociological":56,"parishes":56,"backstage":56,"implying":56,"after-school":56,"hepatitis":56,"typing":56,"darkest":56,"transient":56,"tedious":56,"real-time":56,"leafy":56,"awaits":56,"envelopes":56,"repay":56,"pipelines":56,"real-world":56,"conceivable":56,"stains":56,"semiconductor":56,"footprints":56,"cushions":56,"reimbursement":56,"lingered":56,"quicker":56,"lore":56,"consolation":56,"avocado":56,"quitting":56,"switches":56,"dolphin":56,"ecstatic":56,"happiest":56,"vocation":56,"wedges":56,"eruption":56,"oasis":56,"cheerfully":56,"professionalism":56,"x-rays":56,"donkey":56,"divergent":56,"mosques":56,"dye":56,"cyberspace":56,"ambivalent":56,"unveiled":56,"funerals":56,"mastered":56,"slogans":56,"thursdays":56,"savior":56,"wraps":56,"informant":56,"possessing":56,"owls":56,"soles":56,"plutonium":56,"gadgets":56,"overboard":56,"restraints":56,"freeing":56,"intrusive":56,"corresponds":56,"arabian":56,"prejudices":56,"biting":56,"grueling":56,"hues":56,"miner":56,"mammoth":56,"capitalize":56,"orphanage":56,"spiritually":56,"broadcasters":56,"upheaval":56,"distributors":56,"cleaners":56,"surveying":56,"intervening":56,"unprotected":56,"hideous":56,"pencils":56,"self-reported":56,"reacts":56,"backers":56,"liberating":56,"reeling":56,"articulation":56,"interrupting":56,"creed":56,"huddled":56,"franchises":56,"festivities":56,"gritty":56,"simulate":56,"contestants":56,"gowns":56,"titanium":56,"boarded":56,"wealthiest":56,"woodlands":56,"worldview":56,"longstanding":56,"orbiting":56,"sucks":56,"chestnut":56,"boasted":56,"petite":56,"hallways":56,"anxieties":56,"outfielder":56,"flickering":56,"indices":56,"programme":56,"newsroom":56,"gunshot":57,"lasers":57,"multiculturalism":57,"cricket":57,"baltic":57,"reorganization":57,"nonfiction":57,"righteous":57,"parachute":57,"asteroids":57,"clerical":57,"cross-cultural":57,"leukemia":57,"moderation":57,"contraception":57,"halftime":57,"argentine":57,"discarded":57,"boast":57,"treasurer":57,"diaspora":57,"ludicrous":57,"deadlines":57,"alternately":57,"hopelessly":57,"bitten":57,"vinaigrette":57,"occupants":57,"bourbon":57,"spear":57,"sped":57,"optimum":57,"underscores":57,"repercussions":57,"token":57,"excesses":57,"eyeing":57,"rulings":57,"reasoned":57,"watchdog":57,"astonished":57,"squid":57,"baggy":57,"empirically":57,"rebound":57,"casts":57,"notified":57,"commuters":57,"ethos":57,"hearth":57,"bred":57,"vans":57,"deterrence":57,"filmed":57,"grievances":57,"elevators":57,"gladly":57,"betray":57,"assassin":57,"hides":57,"attrition":57,"stressing":57,"adultery":57,"lent":57,"variant":57,"winked":57,"lords":57,"edit":57,"ghostly":57,"concurrent":57,"sincerity":57,"dominion":57,"exchanging":57,"arsenic":57,"algorithms":57,"inject":57,"barked":57,"enclosure":57,"ale":57,"menacing":57,"defective":57,"unnamed":57,"uncanny":57,"drugstore":57,"surged":57,"knocks":57,"blasted":57,"eminent":57,"gland":57,"adjoining":57,"shipment":57,"giddy":57,"align":57,"spills":57,"situational":57,"wavelengths":57,"propensity":57,"coloring":57,"mare":57,"leftovers":57,"policing":57,"afloat":57,"stench":57,"strolled":57,"mythical":57,"scholastic":57,"californians":57,"doorstep":57,"axe":57,"budding":57,"legislator":57,"mistakenly":57,"refining":57,"infinity":57,"usher":57,"typewriter":57,"tackling":57,"sweeps":57,"secretary-general":57,"embarrass":57,"abusing":57,"postoperative":57,"goggles":57,"ripple":57,"demolition":57,"blinds":57,"singled":57,"first-year":57,"goofy":57,"evacuate":57,"frosting":57,"departing":57,"flagship":57,"blockade":57,"chrome":57,"tenuous":57,"stripping":57,"formative":57,"uniformly":57,"detachment":57,"rapper":57,"freak":57,"contemplation":57,"oats":57,"economical":57,"climates":57,"cheeses":57,"bumper":57,"portraying":57,"distributor":57,"homer":57,"shuffling":57,"convertible":57,"assertive":57,"incumbents":57,"murderous":57,"glued":57,"endemic":57,"underscore":57,"diverted":57,"barley":57,"squadron":57,"stony":57,"rooting":57,"overturn":57,"fairway":57,"small-scale":57,"captains":57,"postsecondary":57,"realms":57,"contra":57,"unfolds":57,"mediator":57,"attained":57,"rocker":57,"wade":57,"refine":57,"arrivals":57,"countdown":57,"knowingly":57,"improperly":57,"horrified":57,"bogus":57,"ketchup":57,"self-control":57,"harassed":57,"shooters":57,"urgently":57,"predominant":57,"prognosis":57,"semifinals":57,"jumper":57,"distractions":57,"tabloid":57,"malignant":57,"inspirational":57,"hostilities":57,"intruder":57,"imaginable":57,"imposition":57,"diaper":57,"adamant":57,"vertically":57,"vigilant":57,"sporadic":57,"trimmings":57,"splashing":57,"kettle":57,"stroll":57,"punches":57,"reconstruct":57,"strolling":57,"cutbacks":57,"medically":57,"diagrams":57,"app":57,"illumination":57,"shiites":57,"silvery":57,"freestyle":57,"puddle":57,"bead":57,"iphone":57,"beaver":57,"subdued":57,"headphones":57,"fend":57,"taps":57,"ultrasound":57,"full-scale":57,"handheld":57,"peek":57,"non-profit":57,"muttering":57,"linkages":57,"migrate":57,"dimly":57,"cigars":57,"stormed":57,"solids":57,"retribution":57,"nigger":57,"thrift":57,"picturesque":57,"relativity":57,"revolver":57,"bundles":57,"objected":57,"airtight":57,"cervical":57,"hammering":57,"contagious":57,"lilies":57,"postpone":57,"forecasting":57,"participatory":57,"acquitted":57,"hesitates":57,"clapped":57,"schoolchildren":57,"preferential":57,"reassurance":57,"volatility":57,"fruitful":57,"artificially":57,"fluent":57,"flashy":57,"patriarch":57,"crafted":57,"flaming":57,"deliveries":57,"powerhouse":58,"fuller":58,"landscaping":58,"logos":58,"rover":58,"clapping":58,"setbacks":58,"cutoff":58,"murals":58,"bumping":58,"shards":58,"stocked":58,"flick":58,"footnote":58,"fungal":58,"philosophies":58,"tilt":58,"vents":58,"worrisome":58,"cocked":58,"caravan":58,"carnage":58,"glee":58,"foreseeable":58,"tart":58,"fashioned":58,"interruption":58,"infidelity":58,"sweatshirt":58,"throats":58,"pedestrians":58,"penchant":58,"galactic":58,"spoil":58,"depletion":58,"snug":58,"helium":58,"interplay":58,"suitcases":58,"safari":58,"haitians":58,"aforementioned":58,"authorize":58,"blush":58,"overriding":58,"widows":58,"spawning":58,"starve":58,"uniqueness":58,"occupancy":58,"alaskan":58,"evidence-based":58,"engages":58,"headset":58,"tibetan":58,"protracted":58,"unmarked":58,"entitlements":58,"milieu":58,"weekdays":58,"convict":58,"haunting":58,"boating":58,"grading":58,"spaniards":58,"entourage":58,"extremist":58,"walkway":58,"coincide":58,"darted":58,"generational":58,"greetings":58,"welsh":58,"mm":58,"unravel":58,"transforms":58,"tripod":58,"smartest":58,"pancake":58,"antisocial":58,"immersion":58,"embodies":58,"beacon":58,"agonizing":58,"condemning":58,"spoons":58,"mischief":58,"panties":58,"somali":58,"substitution":58,"populace":58,"lagoon":58,"wherein":58,"sandstone":58,"stinging":58,"coached":58,"curl":58,"waiver":58,"scares":58,"landfills":58,"collapsing":58,"reproduced":58,"minivan":58,"stormy":58,"tornadoes":58,"airing":58,"ambush":58,"citations":58,"relocate":58,"molding":58,"diagnoses":58,"distracting":58,"suspiciously":58,"hunted":58,"affiliates":58,"weekday":58,"saloon":58,"lifeless":58,"literate":58,"flanked":58,"mussels":58,"staffs":58,"inquired":58,"wink":58,"incense":58,"harshly":58,"trickle":58,"chewed":58,"over-the-counter":58,"caretaker":58,"narrowing":58,"battleground":58,"venetian":58,"grasped":58,"funnel":58,"rectangle":58,"meticulously":58,"sprawl":58,"chore":58,"seaside":58,"dichotomy":58,"caterpillar":58,"dumps":58,"antiquity":58,"bargains":58,"thyroid":58,"teased":58,"hind":58,"paddle":58,"co-op":58,"sway":58,"dissolution":58,"momentary":58,"lag":58,"nuggets":58,"abduction":58,"concluding":58,"residences":58,"atm":58,"prematurely":58,"prized":58,"cons":58,"flattering":58,"modesty":58,"minimizing":58,"skulls":58,"whiff":58,"underside":58,"emit":58,"explanatory":58,"pistons":58,"recounted":58,"vibrations":58,"acorn":58,"hacking":58,"hens":58,"hurrying":58,"elective":58,"jaguars":58,"ethnically":58,"swell":58,"twenty-seven":58,"prickly":58,"inflicted":58,"countered":58,"buyout":58,"chests":58,"estimating":58,"winery":58,"slash":58,"flared":58,"sunken":58,"solemnly":58,"spirited":58,"fatalities":58,"exhausting":58,"critiques":58,"sparkle":58,"incompetence":58,"unfavorable":58,"albanian":58,"engineered":58,"compounded":58,"spores":58,"grenades":58,"deportation":58,"fashions":58,"back-to-back":58,"laptops":58,"flourished":58,"parity":58,"precincts":58,"labyrinth":58,"grass-roots":58,"smashed":58,"longed":58,"cures":58,"kitten":58,"irritating":58,"markings":58,"administering":58,"psychotherapy":58,"pitfalls":58,"quantify":58,"fiberglass":58,"suppressed":58,"excursion":58,"observational":58,"spam":58,"swirled":58,"suspense":58,"substituting":58,"disposed":58,"tango":58,"sanctioned":58,"hooves":58,"paved":58,"alcoholics":58,"unfolded":58,"outs":58,"piping":58,"wry":58,"nobility":58,"renal":58,"leaked":58,"scarves":58,"dotted":58,"grapefruit":58,"enigmatic":58,"sexism":58,"feeble":58,"insults":58,"shortfall":58,"panther":58,"insulting":58,"almighty":58,"polio":58,"oftentimes":58,"dew":58,"chute":58,"aspire":58,"austerity":58,"issuing":58,"drawbacks":58,"biographies":58,"camaraderie":58,"paces":58,"flare":58,"groundbreaking":58,"aloft":58,"magnets":58,"cafes":58,"walker":58,"smoother":58,"naughty":58,"outcry":58,"prophetic":58,"coupling":58,"tally":58,"supernova":58,"stronghold":58,"voiced":58,"spying":58,"grossly":58,"stagnant":58,"lineman":58,"cornmeal":58,"excitedly":59,"psychoanalysis":59,"rudimentary":59,"anti-abortion":59,"millionaires":59,"filings":59,"requisite":59,"promoter":59,"reversing":59,"glitter":59,"cinematic":59,"slashing":59,"burying":59,"neutron":59,"latex":59,"withhold":59,"fastball":59,"gasp":59,"enclave":59,"afforded":59,"firewood":59,"housewives":59,"simmering":59,"facilitated":59,"takeoff":59,"plume":59,"corporal":59,"sect":59,"quintessential":59,"dreamy":59,"paradoxical":59,"maize":59,"tufts":59,"balsamic":59,"unwillingness":59,"microorganisms":59,"throbbing":59,"emblem":59,"bunkers":59,"disarray":59,"grins":59,"housewife":59,"oblivion":59,"moaned":59,"eighteenth-century":59,"outlining":59,"combo":59,"redevelopment":59,"discouraging":59,"axes":59,"cranes":59,"hinder":59,"aggregate":59,"sheen":59,"briefs":59,"feud":59,"single-family":59,"cunning":59,"browned":59,"awaited":59,"trance":59,"decisively":59,"ark":59,"adversely":59,"anecdotes":59,"subgroups":59,"correlate":59,"melon":59,"boils":59,"faculties":59,"steamy":59,"blurted":59,"absentee":59,"flushed":59,"faucet":59,"specialization":59,"fateful":59,"napkins":59,"heterogeneous":59,"birch":59,"sprinkled":59,"beginners":59,"perpetrator":59,"denounced":59,"behold":59,"gangster":59,"dismantle":59,"refinement":59,"vow":59,"cosmology":59,"indistinguishable":59,"aroused":59,"beltway":59,"submarines":59,"faithfully":59,"purposeful":59,"calculus":59,"watchful":59,"preschoolers":59,"converge":59,"sewn":59,"triangular":59,"hormonal":59,"redefine":59,"spawned":59,"composure":59,"prodigy":59,"mountainous":59,"subordinates":59,"tactile":59,"tipping":59,"virtuous":59,"barge":59,"presiding":59,"pang":59,"bounded":59,"stabbing":59,"vice-president":59,"photons":59,"fined":59,"chandelier":59,"heyday":59,"gi":59,"eyepiece":59,"messiah":59,"designate":59,"metropolis":59,"waxed":59,"leases":59,"horizontally":59,"bungalow":59,"savor":59,"traitor":59,"veal":59,"post-cold":59,"shrank":59,"chronically":59,"faiths":59,"cosmopolitan":59,"revived":59,"montage":59,"leased":59,"punishing":59,"foreigner":59,"harden":59,"mammal":59,"encompassing":59,"exemptions":59,"accumulating":59,"manually":59,"exhilarating":59,"shortest":59,"braids":59,"front-page":59,"yearning":59,"drafting":59,"inseparable":59,"motioned":59,"pup":59,"layered":59,"publicist":59,"moderator":59,"crumble":59,"overtly":59,"subpoena":59,"jailed":59,"warrants":59,"gripping":59,"nah":59,"hogs":59,"selectively":59,"determinants":59,"parted":59,"wad":59,"white-collar":59,"coincided":59,"beak":59,"entrenched":59,"butts":59,"scorn":59,"haste":59,"tragically":59,"liquids":59,"caramel":59,"arisen":59,"speculated":59,"cashmere":59,"pharmacist":59,"heed":59,"undue":59,"sucker":59,"checkpoint":59,"morgue":59,"posttest":59,"thirty-two":59,"hinge":59,"polarization":59,"arduous":59,"waged":59,"mused":59,"fins":59,"dizzying":59,"jargon":59,"deficient":59,"fingerprint":59,"erode":59,"colossal":59,"transmitter":59,"spoiled":59,"cracker":59,"bloodstream":59,"rims":59,"thanking":59,"unilaterally":59,"coupons":59,"five-year-old":59,"conversational":59,"epistemological":59,"goodies":59,"rigor":59,"sagging":59,"reunited":59,"irreversible":59,"healer":59,"mozzarella":59,"fright":59,"sighting":59,"tumultuous":59,"wanders":59,"stitches":59,"workable":59,"hamstring":59,"undertook":59,"marvel":59,"punishments":59,"cornstarch":59,"distressed":59,"begs":59,"warm-up":59,"dart":59,"entirety":59,"creatively":59,"full-blown":59,"mascara":59,"persuading":59,"legions":59,"pious":59,"ravine":59,"intifada":59,"canvases":59,"confronts":59,"baker":59,"hijackers":59,"televisions":59,"tractors":59,"discursive":59,"rattle":59,"domestically":59,"mania":59,"hiv-positive":59,"momentous":59,"grown-ups":59,"cobra":59,"thwart":59,"inset":59,"compatibility":59,"orchid":59,"summarizes":59,"chocolates":59,"slabs":59,"autograph":59,"racers":59,"searing":59,"dependable":59,"pep":59,"mmm":59,"left-handed":59,"eagerness":59,"budgetary":59,"cessation":59,"egregious":59,"wits":59,"craftsman":59,"sloping":59,"permissible":59,"swarm":59,"trajectories":59,"downfall":59,"carcass":59,"arcade":59,"erect":59,"gratification":59,"groupings":59,"steward":59,"albanians":59,"serenity":59,"bribery":59,"materialism":59,"effortlessly":59,"wasteful":59,"deliberation":59,"attribution":59,"successors":59,"distortions":59,"berry":59,"lesion":59,"six-year":59,"wading":59,"acreage":59,"monsieur":59};
+__d('yarn/words.js',[],function(global, require, module, exports) {  module.exports = {"the":1,"and":1,"of":1,"a":1,"in":1,"to":1,"i":1,"it":1,"is":1,"that":1,"for":1,"you":1,"was":1,"he":1,"with":1,"on":1,"'s":1,"at":1,"this":1,"they":1,"be":1,"are":1,"have":1,"we":1,"his":1,"but":1,"from":1,"not":1,"n't":1,"she":1,"by":1,"or":1,"do":1,"an":1,"as":1,"had":1,"what":1,"were":1,"their":1,"all":1,"has":1,"who":1,"her":1,"my":1,"if":1,"would":1,"said":1,"about":1,"can":1,"up":1,"been":1,"so":1,"there":1,"one":1,"will":1,"me":1,"just":1,"people":1,"when":1,"which":1,"them":1,"him":1,"did":1,"out":1,"your":1,"some":1,"into":1,"know":1,"time":1,"could":1,"now":1,"than":1,"like":1,"'":1,"think":1,"how":1,"then":1,"other":1,"our":1,"its":1,"these":1,"get":1,"two":1,"says":1,"going":1,"also":1,"first":1,"years":1,"because":1,"new":1,"well":1,"more":1,"see":1,"no":1,"here":1,"way":1,"very":1,"many":1,"those":1,"only":1,"back":1,"go":1,"say":1,"us":2,"even":2,"good":2,"make":2,"through":2,"any":2,"down":3,"want":3,"does":3,"may":3,"after":3,"year":3,"should":3,"over":3,"still":4,"world":4,"last":4,"take":4,"day":4,"too":4,"life":4,"really":5,"man":5,"three":5,"between":5,"never":5,"something":5,"being":5,"much":5,"school":6,"president":6,"another":6,"own":6,"why":6,"right":6,"while":6,"most":6,"things":6,"state":6,"same":6,"come":6,"children":6,"house":6,"every":7,"where":7,"american":7,"might":7,"women":7,"again":7,"such":7,"against":7,"percent":7,"few":8,"each":8,"students":8,"family":8,"look":8,"during":8,"work":8,"thing":8,"off":8,"today":8,"great":8,"big":8,"always":8,"old":8,"next":8,"high":9,"came":9,"government":9,"city":9,"before":9,"got":9,"lot":9,"part":9,"without":9,"night":9,"find":9,"country":9,"place":9,"tell":9,"must":9,"national":9,"need":9,"money":9,"different":9,"under":9,"yes":9,"went":9,"water":10,"war":10,"men":10,"small":10,"ca":10,"mean":10,"made":10,"though":10,"room":10,"mother":10,"group":10,"four":10,"took":10,"little":10,"system":10,"days":10,"black":10,"give":10,"both":10,"away":11,"number":11,"around":11,"until":11,"fact":11,"important":11,"woman":11,"case":11,"political":11,"times":11,"doing":11,"let":11,"head":11,"since":11,"often":11,"among":11,"home":11,"however":11,"hand":11,"million":11,"point":11,"help":11,"social":11,"ever":11,"keep":11,"yet":11,"father":11,"week":11,"health":11,"long":11,"sure":11,"business":11,"use":12,"feel":12,"kind":12,"young":12,"company":12,"eyes":12,"power":12,"university":12,"almost":12,"done":12,"information":12,"best":12,"five":12,"later":12,"nothing":12,"once":12,"side":12,"ago":12,"white":12,"thought":12,"real":12,"end":12,"news":12,"program":12,"several":12,"believe":12,"whether":12,"knew":12,"told":12,"research":12,"public":12,"story":12,"together":12,"anything":12,"problem":12,"education":12,"question":12,"trying":12,"making":13,"looking":13,"least":13,"already":13,"center":13,"table":13,"large":13,"having":13,"called":13,"child":13,"morning":13,"getting":13,"seen":13,"study":13,"put":13,"job":13,"yeah":13,"within":13,"face":13,"history":13,"maybe":13,"saw":13,"wanted":13,"community":13,"others":13,"asked":13,"actually":13,"across":13,"found":13,"himself":13,"enough":13,"including":14,"oh":14,"far":14,"although":14,"law":14,"toward":14,"coming":14,"everything":14,"team":14,"working":14,"book":14,"area":14,"second":14,"air":14,"body":14,"able":14,"door":14,"music":14,"months":14,"office":14,"talk":14,"human":14,"person":14,"began":14,"minutes":14,"saying":14,"parents":14,"used":14,"probably":14,"name":14,"line":14,"car":14,"game":14,"kids":14,"using":14,"makes":14,"someone":14,"try":14,"court":14,"course":15,"food":15,"behind":15,"care":15,"am":15,"problems":15,"local":15,"looked":15,"call":15,"process":15,"members":15,"ask":15,"former":15,"sense":15,"moment":15,"six":15,"street":15,"talking":15,"age":15,"economic":15,"idea":15,"else":15,"party":15,"college":15,"police":15,"hours":15,"thank":15,"felt":15,"bad":16,"words":16,"early":16,"major":16,"taking":16,"along":16,"hands":16,"perhaps":16,"better":16,"according":16,"possible":16,"military":16,"sometimes":16,"development":16,"whole":16,"themselves":16,"understand":16,"comes":16,"hear":16,"issue":16,"death":16,"service":16,"art":16,"free":16,"federal":16,"given":16,"control":16,"taken":16,"friends":16,"international":16,"finally":16,"become":16,"live":16,"data":16,"security":16,"feet":16,"groups":16,"policy":16,"general":16,"show":16,"true":16,"became":16,"started":17,"seems":17,"order":17,"gave":17,"level":17,"voice":17,"especially":17,"heart":17,"wife":17,"remember":17,"everyone":17,"full":17,"hard":17,"known":17,"special":17,"oil":17,"market":17,"play":17,"department":17,"season":17,"questions":17,"turned":17,"bring":17,"role":17,"church":17,"issues":17,"whose":17,"gone":17,"experience":17,"photo":17,"building":17,"color":17,"seemed":17,"based":17,"reason":17,"programs":17,"half":17,"start":17,"director":17,"recent":17,"support":17,"mind":17,"society":17,"town":18,"companies":18,"itself":18,"provide":18,"student":18,"north":18,"hair":18,"quite":18,"looks":18,"leave":18,"road":18,"space":18,"word":18,"schools":18,"pay":18,"americans":18,"son":18,"per":18,"studies":18,"guy":18,"teachers":18,"class":18,"open":18,"ways":18,"red":18,"personal":18,"certain":18,"third":18,"weeks":18,"love":18,"wo":18,"either":18,"field":18,"clear":18};
 });
 __d('yarn/app/views/browser/splitGluedTogetherWords.js',[],function(global, require, module, exports) {  var splitCharacters=['"','.',';','?',',','”',')',':','!','“','(','/','*'];
 
@@ -76734,7 +76735,7 @@ return word !== '';});
 
 return words;};
 });
-__d('yarn/app/actions/actions.js',["events/events.js","yarn/app/actions/actiontypes.js","yarn/app/helpers/getrandomwords.js","yarn/app/helpers/googletranslate.js","yarn/app/helpers/collins.js","yarn/app/logger/logger.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/words.js","react-native/Libraries/react-native/react-native.js","NativeModules"],function(global, require, module, exports) {  var Events=require('events/events.js');
+__d('yarn/app/actions/actions.js',["events/events.js","yarn/app/actions/actiontypes.js","yarn/app/helpers/getrandomwords.js","yarn/app/helpers/googletranslate.js","yarn/app/helpers/collins.js","yarn/app/logger/logger.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/words.js","react-native/Libraries/react-native/react-native.js"],function(global, require, module, exports) {  var Events=require('events/events.js');
 var bus=new Events.EventEmitter();
 var actions=require('yarn/app/actions/actiontypes.js');
 
@@ -76751,13 +76752,15 @@ var words=require('yarn/words.js');
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
 AsyncStorage=
-React.AsyncStorage;var _require=
+React.AsyncStorage;
 
 
 
-require('NativeModules');var DictionaryProxy=_require.DictionaryProxy;
+
 
 var GAME_STATES=gameStateStore.GAME_STATES;
+
+var CHECK_DICT_DEFINITIONS=false;
 
 Object.keys(actions).forEach(function(action){
 bus[action] = actions[action];});
@@ -76818,6 +76821,8 @@ function onStartGame(){
 gameStateStore.pause(true);
 gameStateStore.set('pageWords',gameStateStore.get('visitedPageWords'));
 gameStateStore.pause(false);
+userProfileStore.set('previousScore',userProfileStore.get('score'));
+
 bus.emit(actions.SHOW_NEXT_QUESTION);
 log({
 message:'start game',
@@ -76838,6 +76843,7 @@ function preloadWord(pageWord){
 var wordsToTranslate=getRandomWords(gameStateStore.get('randomWordsCount'));
 wordsToTranslate.unshift(pageWord);
 
+console.log('preloading word',pageWord);
 var promise=new Promise(function(resolve,reject){
 
 
@@ -76845,6 +76851,7 @@ setTimeout(function(){
 
 googleTranslate.translateWords(wordsToTranslate,'en',userProfileStore.get('language')).
 then(function(translatedWords){
+console.log('translations loaded',pageWord,Date.now());
 
 var question=translatedWords.data.translations.map(function(translatedWord,index){
 return {
@@ -76855,16 +76862,27 @@ definition:translatedWord.translatedText};});
 
 question[0].target = true;
 
-
-var checkedWords=0;
-question.forEach(function(word,index){
-DictionaryProxy.dictionaryHasDefinitionForTerm(index === 0?word.text:word.definition,
-function(resp){
-word.hasDictionaryDefinition = resp;
-if(++checkedWords === question.length){
-resolve(question);}});});}).
+if(CHECK_DICT_DEFINITIONS){}else 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+{
+question.forEach(function(word){
+word.hasDictionaryDefinition = true;});
+
+resolve(question);}}).
 
 
 catch(function(ex){
@@ -77086,13 +77104,14 @@ React.AsyncStorage;
 
 var data={
 wordsLimit:10,
-level:0,
+level:50,
 range:40,
 score:0,
 language:'pl',
 correctAnswers:0,
 wrongAnswers:0,
 levelStats:[],
+previousScore:0,
 testYourselfPromptShown:false,
 historyLevelValues:[]};
 
@@ -77208,8 +77227,10 @@ var parsedData=JSON.parse(stats);
 if(parsedData){
 data = parsedData;}
 
+
 migrate1();
 migrate2();
+migrate3();
 
 log({
 message:'user profile loaded',
@@ -77256,6 +77277,12 @@ saveData();}}
 function migrate2(){
 if(!('testYourselfPromptShown' in data)){
 data.testYourselfPromptShown = false;}}
+
+
+
+function migrate3(){
+if(!data.previousScore){
+data.previousScore = 0;}}
 
 
 
@@ -77790,6 +77817,7 @@ TOAST_WIDTH:275,
 WORDBUTTON_PADDING:14,
 TOOLBAR_FONT_SIZE:14,
 TOOLBAR_ICON_SIZE:22,
+TOOLBAR_BIG_ICON_SIZE:36,
 PROGRESSBAR_FONT_SIZE:24,
 PROGRESSBAR_HEIGHT:6,
 TOOLBAR_BUTTON_WIDTH:70,
@@ -78389,14 +78417,16 @@ var easeValue=conf.ease(currentProgress,elapsedTime,0,1,conf.duration);
 
 var newValue=Math.round(conf.start + (conf.end - conf.start) * easeValue);
 
-if(previousValue === newValue && newValue < conf.end){
+
+if(newValue <= previousValue && newValue < conf.end){
 newValue++;}
 
 previousValue = newValue;
 
+
 conf.onChange(newValue);
 
-if(currentProgress !== 1){
+if(currentProgress !== 1 && newValue !== conf.end){
 next();}else 
 
 {
@@ -78413,7 +78443,7 @@ return -c * (t /= d) * (t - 2) + b;}
 });
 __d('image!horizontal-gradient',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/horizontal-gradient.imageset/horizontal-gradient.png","uri":"horizontal-gradient","width":600,"height":30,"deprecated":true};
 });
-__d('yarn/app/views/statusbar/statusbar.js',["react-native/Libraries/react-native/react-native.js","yarn/app/views/statusbar/navbarlabel.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
+__d('yarn/app/views/statusbar/statusbar.js',["react-native/Libraries/react-native/react-native.js","yarn/app/views/statusbar/navbarlabel.js","yarn/app/views/statusbar/navbarbutton.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -78424,6 +78454,7 @@ StyleSheet=
 React.StyleSheet;var View=React.View;var Text=React.Text;var Animated=React.Animated;
 
 var NavBarLabel=require('yarn/app/views/statusbar/navbarlabel.js');
+var NavBarButton=require('yarn/app/views/statusbar/navbarbutton.js');
 var uiConfig=require('yarn/app/uiconfig.js');
 
 var StatusBar=React.createClass({
@@ -78450,7 +78481,7 @@ marginTopValue:new Animated.Value(this.props.startHidden?uiConfig.TOOLBAR_ANIMAT
 
 
 
-render:function(){
+_render:function(){
 var items=this.props.showWordsCount?this.renderWordsCount():this.renderStats();
 
 return (
@@ -78464,6 +78495,28 @@ items,
 React.createElement(NavBarLabel,{
 onPress:this.props.onNextPress,
 texts:[{text:this.props.nextText,color:'#FFFFFF'}],
+backgroundColor:uiConfig.COLORS.BLUE,
+style:styles.nextButton})));},
+
+
+
+
+
+render:function(){
+var items=this.props.showWordsCount?this.renderWordsCount():this.renderStats();
+
+return (
+React.createElement(Animated.View,{style:[styles.wrap,{
+transform:[
+{translateY:this.state.marginTopValue}],
+
+opacity:this.state.opacityValue}]},
+
+items,
+React.createElement(NavBarButton,{
+onPress:this.props.onNextPress,
+
+icon:'next',
 backgroundColor:uiConfig.COLORS.BLUE,
 style:styles.nextButton})));},
 
@@ -78752,6 +78805,95 @@ text:{}});
 
 
 module.exports = NavBarLabel;
+});
+__d('yarn/app/views/statusbar/navbarbutton.js',["image!settings-icon","react-native/Libraries/react-native/react-native.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
+
+var React=require('react-native/Libraries/react-native/react-native.js');var 
+
+StyleSheet=
+
+
+
+
+React.StyleSheet;var View=React.View;var Text=React.Text;var TouchableWithoutFeedback=React.TouchableWithoutFeedback;var Image=React.Image;
+
+var uiConfig=require('yarn/app/uiconfig.js');
+
+var NavBarButton=React.createClass({
+
+getDefaultProps:function(){
+return {
+icon:'',
+backgroundColor:'white'};},
+
+
+
+getInitialState:function(){
+return {
+height:uiConfig.TOOLBAR_HEIGHT};},
+
+
+
+render:function(){
+var img=this.renderIcon();
+var additionalStyle={
+backgroundColor:this.props.backgroundColor};
+
+return (
+React.createElement(TouchableWithoutFeedback,{onPress:this.props.onPress},
+React.createElement(View,{style:[styles.wrap,additionalStyle]},
+img)));},
+
+
+
+
+
+renderIcon:function(){
+
+switch(this.props.icon){
+case 'settings':
+return (
+React.createElement(Image,{source:require('image!settings-icon'),style:styles.icon}));
+
+case 'next':
+return (
+React.createElement(Image,{source:{uri:'next-finished.gif'},style:styles.bigIcon}));
+
+default:
+return React.createElement(View,null);}}});
+
+
+
+
+var styles=StyleSheet.create({
+wrap:{
+backgroundColor:'#FFFFFF',
+width:uiConfig.TOOLBAR_BUTTON_WIDTH,
+borderLeftWidth:1,
+borderLeftColor:uiConfig.COLORS.MID_GREY,
+alignSelf:'stretch',
+
+alignItems:'center',
+justifyContent:'center'},
+
+
+icon:{
+width:uiConfig.TOOLBAR_ICON_SIZE,
+height:uiConfig.TOOLBAR_ICON_SIZE,
+marginTop:Math.floor((uiConfig.TOOLBAR_HEIGHT - uiConfig.TOOLBAR_ICON_SIZE) / 2)},
+
+
+bigIcon:{
+width:uiConfig.TOOLBAR_BIG_ICON_SIZE,
+height:uiConfig.TOOLBAR_BIG_ICON_SIZE,
+marginTop:Math.floor((uiConfig.TOOLBAR_HEIGHT - uiConfig.TOOLBAR_BIG_ICON_SIZE) / 6)}});
+
+
+
+
+module.exports = NavBarButton;
+});
+__d('image!settings-icon',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/settings-icon.imageset/settings-icon.png","uri":"settings-icon","width":44,"height":44,"deprecated":true};
 });
 __d('yarn/app/views/settings/settings.js',["react-native/Libraries/react-native/react-native.js","yarn/app/actions/actions.js","yarn/app/views/settings/googlelanguages.js"],function(global, require, module, exports) {  'use strict';
 
@@ -79422,8 +79564,6 @@ flex:1}});
 module.exports = MainBar;
 });
 __d('image!yarn-icon',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/yarn-icon.imageset/yarn-icon.png","uri":"yarn-icon","width":64,"height":64,"deprecated":true};
-});
-__d('image!settings-icon',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/settings-icon.imageset/settings-icon.png","uri":"settings-icon","width":44,"height":44,"deprecated":true};
 });
 __d('yarn/app/views/toast/toast.js',["react-native/Libraries/react-native/react-native.js","Dimensions","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
 
@@ -80183,7 +80323,8 @@ TouchableHighlight=
 
 
 
-React.TouchableHighlight;var StyleSheet=React.StyleSheet;var Text=React.Text;var View=React.View;var Image=React.Image;var PropTypes=React.PropTypes;
+
+React.TouchableHighlight;var TouchableWithoutFeedback=React.TouchableWithoutFeedback;var StyleSheet=React.StyleSheet;var Text=React.Text;var View=React.View;var Image=React.Image;var PropTypes=React.PropTypes;
 
 var uiConfig=require('yarn/app/uiconfig.js');
 
@@ -80251,7 +80392,9 @@ return React.createElement(View,{style:styles.leftSpace});}
 
 
 var opacity={
-opacity:this.props.hasDictionaryDefinition?1:0.3};
+
+
+opacity:1};
 
 
 return (
@@ -80514,9 +80657,10 @@ correctWords:0,
 totalWords:0,
 onDonePressed:function(){},
 onRandomPressed:function(){},
-animateLevel:false,
 level:0,
+previousLevel:0,
 score:0,
+previousScore:0,
 showWordsCount:false};},
 
 
@@ -80524,8 +80668,8 @@ showWordsCount:false};},
 getInitialState:function(){
 return {
 topOffsetValue:new Animated.Value(height - uiConfig.TOOLBAR_HEIGHT),
-score:0,
-level:0,
+score:this.props.score === this.props.previousScore?this.props.score:this.props.previousScore,
+level:this.props.level === this.props.previousLevel?this.props.level:this.props.previousLevel,
 levelBackground:uiConfig.COLORS.ORANGE};},
 
 
@@ -80622,8 +80766,9 @@ bind(this));},
 
 
 animateScore:function(cb){
+if(this.props.score !== this.props.previousScore){
 utils.animateNumber({
-start:0,
+start:this.props.previousScore,
 end:this.props.score,
 duration:SCORE_ANIMATION_TIME,
 onChange:(function(val){
@@ -80631,24 +80776,24 @@ this.setState({
 score:val});}).
 
 bind(this),
-onFinish:cb});},
+onFinish:cb});}else 
+
+
+{
+cb();}},
 
 
 
 animateLevel:function(){
-if(!this.props.animateLevel){
-this.setState({
-level:this.props.level});}else 
 
-
-{
+if(this.props.leve !== this.props.previousLevel){
 this.animateLevelNumber(this.animateLevelBackground);}},
 
 
 
 animateLevelNumber:function(cb){
 utils.animateNumber({
-start:0,
+start:this.props.previousLevel,
 end:this.props.level,
 duration:SCORE_ANIMATION_TIME,
 onChange:(function(val){
