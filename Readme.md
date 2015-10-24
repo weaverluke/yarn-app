@@ -1,5 +1,11 @@
 ##Release notes
 
+v0.2.18
+- splash screen changed
+- checking for dictionary definition disabled
+- "Test me!" button changed
+- animations on result screen improved
+
 v0.2.17
 - disable dictionary icon for words that have no definition in dictionary
 - animate user level (both background and numerals) only when it has changed

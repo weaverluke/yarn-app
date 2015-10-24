@@ -76664,7 +76664,7 @@ return {name:name,value:val.replace(rCRLF,'\r\n')};}}}).
 
 get();};
 });
-__d('yarn/app/views/browser/wordHelpers.js',["yarn/words.js","yarn/app/views/browser/splitGluedTogetherWords.js"],function(global, require, module, exports) {  var words=require('yarn/words.js');
+__d('yarn/app/views/browser/wordHelpers.js',["yarn/app/views/browser/splitGluedTogetherWords.js","yarn/words.js"],function(global, require, module, exports) {  var words=require('yarn/words.js');
 var splitGluedTogetherWords=require('yarn/app/views/browser/splitGluedTogetherWords.js');
 
 function getWordsInRange(articleWords,start,stop){
@@ -76735,7 +76735,7 @@ return word !== '';});
 
 return words;};
 });
-__d('yarn/app/actions/actions.js',["events/events.js","yarn/app/actions/actiontypes.js","yarn/app/helpers/getrandomwords.js","yarn/app/helpers/googletranslate.js","yarn/app/helpers/collins.js","yarn/app/logger/logger.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/words.js","react-native/Libraries/react-native/react-native.js"],function(global, require, module, exports) {  var Events=require('events/events.js');
+__d('yarn/app/actions/actions.js',["events/events.js","yarn/app/actions/actiontypes.js","yarn/app/helpers/getrandomwords.js","yarn/app/helpers/googletranslate.js","yarn/app/helpers/collins.js","yarn/app/logger/logger.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","react-native/Libraries/react-native/react-native.js","yarn/words.js"],function(global, require, module, exports) {  var Events=require('events/events.js');
 var bus=new Events.EventEmitter();
 var actions=require('yarn/app/actions/actiontypes.js');
 
