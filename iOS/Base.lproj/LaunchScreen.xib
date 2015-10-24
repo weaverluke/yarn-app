@@ -11,18 +11,16 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="full-logo" translatesAutoresizingMaskIntoConstraints="NO" id="BPj-zF-JWt">
-                    <rect key="frame" x="118" y="115" width="268" height="249"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="logo-200.png" translatesAutoresizingMaskIntoConstraints="NO" id="wSV-bO-gIz">
+                    <rect key="frame" x="162" y="217" width="156" height="45"/>
                     <animations/>
                 </imageView>
             </subviews>
             <animations/>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstAttribute="centerX" secondItem="BPj-zF-JWt" secondAttribute="centerX" constant="-0.5" id="DMb-b0-w1o"/>
-                <constraint firstItem="BPj-zF-JWt" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="Obq-T2-sbS"/>
-                <constraint firstItem="BPj-zF-JWt" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="q7V-7K-yqG"/>
-                <constraint firstAttribute="centerY" secondItem="BPj-zF-JWt" secondAttribute="centerY" id="xGw-7a-ZV9"/>
+                <constraint firstItem="wSV-bO-gIz" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="d0C-Ad-rA2"/>
+                <constraint firstItem="wSV-bO-gIz" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="nwB-wS-rN0"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -30,6 +28,6 @@
         </view>
     </objects>
     <resources>
-        <image name="full-logo" width="470" height="140"/>
+        <image name="logo-200.png" width="200" height="60"/>
     </resources>
 </document>
