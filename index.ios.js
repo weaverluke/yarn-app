@@ -14,6 +14,7 @@ var SearchingView = require('./app/views/searching/searching');
 var QuizStatusBar = require('./app/views/quiz/quizstatusbar');
 var QuestionView = require('./app/views/quiz/question');
 var ResultView = require('./app/views/quiz/result');
+var IntroView = require('./app/views/intro/intro');
 
 var gameStateStore = require('./app/stores/gamestatestore');
 var userProfileStore = require('./app/stores/userprofilestore');
@@ -78,7 +79,9 @@ var yarn = React.createClass({
 			buyUrlFeaturePopupVisible: false,
 			browseOnToastVisible: false,
 			testYourselfPromptVisible: false,
-			testYourselfPromptShown: userProfileStore.get('testYourselfPromptShown')
+			testYourselfPromptShown: userProfileStore.get('testYourselfPromptShown'),
+			// start with true, and when user profile is loaded then this flag will be set correctly in onUserProfileChanged
+			introScreenShown: true
 		};
 	},
 
@@ -133,6 +136,7 @@ var yarn = React.createClass({
 				{this.renderIntroToast()}
 				{this.renderResultView()}
 				{this.renderTestYourselfPrompt()}
+				{this.renderIntroScreen()}
 			</View>
 		);
 	},
@@ -312,6 +316,20 @@ var yarn = React.createClass({
 				type={Popup.POPUP_TYPE.TEST_YOURSELF_PROMPT}
 			/>
 		);
+	},
+
+	renderIntroScreen: function () {
+		if (this.state.introScreenShown) {
+			return;
+		}
+		return <IntroView lang={userProfileStore.get('language')} onSubmit={this.onIntroScreenSubmit} />;
+	},
+
+	onIntroScreenSubmit: function () {
+		this.setState({
+			introScreenShown: true
+		});
+		userProfileStore.set('introScreenShown', true);
 	},
 
 	showTestYourselfPrompt: function () {
@@ -613,7 +631,8 @@ var yarn = React.createClass({
 			this.reloadBrowser();
 		}
 		this.setState({
-			testYourselfPromptShown: userProfileStore.get('testYourselfPromptShown')
+			testYourselfPromptShown: userProfileStore.get('testYourselfPromptShown'),
+			introScreenShown: userProfileStore.get('introScreenShown')
 		});
 	},
 

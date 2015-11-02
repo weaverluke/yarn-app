@@ -21,6 +21,7 @@ var data = {
 	levelStats: [],
 	previousScore: 0,
 	testYourselfPromptShown: false,
+	introScreenShown: false,
 	historyLevelValues: []
 };
 
