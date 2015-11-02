@@ -81,7 +81,9 @@ var yarn = React.createClass({
 			testYourselfPromptVisible: false,
 			testYourselfPromptShown: userProfileStore.get('testYourselfPromptShown'),
 			// start with true, and when user profile is loaded then this flag will be set correctly in onUserProfileChanged
-			introScreenShown: true
+			introScreenShown: true,
+			// is first word preloaded (translations are ready and we can start the test)
+			firstWordReady: false
 		};
 	},
 
@@ -214,7 +216,7 @@ var yarn = React.createClass({
 		return (
 			<StatusBar
 				ref='wordscountbar'
-				nextText='Test me!'
+				nextButtonDisabled={!this.state.firstWordReady}
 				onNextPress={actions.emit.bind(actions, actions.START_GAME)}
 				showWordsCount={true}
 				wordsCount={gameStateStore.get('visitedPageWords').length}
@@ -310,7 +312,7 @@ var yarn = React.createClass({
 		return (
 			<Popup
 				ref='testYourselfPrompt'
-				visible={this.state.testYourselfPromptVisible}
+				visible={this.state.testYourselfPromptVisible && this.state.firstWordReady && this.state.bottomBar === 'wordscount'}
 				withoutOverlay={true}
 				onSubmit={this.closeTestYourselfPrompt}
 				type={Popup.POPUP_TYPE.TEST_YOURSELF_PROMPT}
@@ -368,7 +370,8 @@ var yarn = React.createClass({
 		actions.emit(actions.RESET);
 		this.setState({
 			wordsCountVisible: false,
-			toastShown: false
+			toastShown: false,
+			translationsReady: false
 		});
 		this.refs['mainbar'].animateIn();
 
@@ -568,6 +571,7 @@ var yarn = React.createClass({
 		var initialPopupVisible = false;
 
 		this.setState({
+			firstWordReady: gameStateStore.get('firstWordReady'),
 			question: gameStateStore.get('currentQuestion'),
 			gameState: currentGameState,
 			wordStripDisabled: wordStripDisabled,

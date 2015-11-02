@@ -22,6 +22,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		6115B31C1BE8197400394618 /* next-disabled.gif in Resources */ = {isa = PBXBuildFile; fileRef = 6115B31B1BE8197400394618 /* next-disabled.gif */; };
 		615932311B8D183A00918D67 /* DictionaryProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 615932301B8D183A00918D67 /* DictionaryProxy.m */; };
 		6165D9261B7746390011A703 /* BauhausStd-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6165D9241B7746390011A703 /* BauhausStd-Heavy.otf */; };
 		6165D9271B7746390011A703 /* bauhaus-93.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6165D9251B7746390011A703 /* bauhaus-93.ttf */; };
@@ -144,6 +145,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = iOS/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = iOS/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		6115B31B1BE8197400394618 /* next-disabled.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "next-disabled.gif"; sourceTree = "<group>"; };
 		6159322F1B8D183A00918D67 /* DictionaryProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DictionaryProxy.h; path = iOS/DictionaryProxy.h; sourceTree = "<group>"; };
 		615932301B8D183A00918D67 /* DictionaryProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DictionaryProxy.m; path = iOS/DictionaryProxy.m; sourceTree = "<group>"; };
 		6165D9241B7746390011A703 /* BauhausStd-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "BauhausStd-Heavy.otf"; path = "/Users/mateusz/workspace/weaverdigital/yarn-files/BauhausStd-Heavy.otf"; sourceTree = "<absolute>"; };
@@ -302,6 +304,7 @@
 		6165D9331B7746860011A703 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6115B31B1BE8197400394618 /* next-disabled.gif */,
 				61CB3C111BE80147003319BC /* guardian-content.png */,
 				61CB3C121BE80147003319BC /* guardian-top.png */,
 				61DA01381BDEC7C700E64BE6 /* intro_1.png */,
@@ -597,6 +600,7 @@
 				6165D9271B7746390011A703 /* bauhaus-93.ttf in Resources */,
 				61CB3C141BE80147003319BC /* guardian-top.png in Resources */,
 				008F07F31AC5B25A0029DE68 /* main.jsbundle in Resources */,
+				6115B31C1BE8197400394618 /* next-disabled.gif in Resources */,
 				6165D9261B7746390011A703 /* BauhausStd-Heavy.otf in Resources */,
 				61D5392E1BD5864700CFC326 /* next-anim-5s.gif in Resources */,
 				61F7FAFC1BC9B59D00F80D2D /* next-not-anim.gif in Resources */,

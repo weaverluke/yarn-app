@@ -274,11 +274,11 @@ var Popup = React.createClass({
 							<Text>any time!</Text>
 						</View>
 						<View>
-							<TouchableWithoutFeedback onPress={this.props.onSubmit}>
+							<TouchableHighlight onPress={this.props.onSubmit} underlayColor={uiConfig.COLORS.SELECTED_GREY_DIM}>
 								<View style={[styles.confirmButton, buttonStyle]}>
 									<Text style={[styles.confirmButtonText, buttonTextStyle]}>GOT IT</Text>
 								</View>
-							</TouchableWithoutFeedback>
+							</TouchableHighlight>
 						</View>
 					</View>
 				</TouchableWithoutFeedback>

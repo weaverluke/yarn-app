@@ -24,6 +24,7 @@ var StatusBar = React.createClass({
 			showWordsCount: false,
 			wordsCount: 0,
 			startHidden: false,
+			nextButtonDisabled: false,
 			onNextPress: function () {}
 		};
 	},
@@ -34,27 +35,6 @@ var StatusBar = React.createClass({
 			opacityValue: new Animated.Value(this.props.startHidden ? 0 : 1),
 			marginTopValue: new Animated.Value(this.props.startHidden ? uiConfig.TOOLBAR_ANIMATION_OFFSET : 0)
 		};
-	},
-
-	_render: function () {
-		var items = this.props.showWordsCount ? this.renderWordsCount() : this.renderStats();
-
-		return (
-			<Animated.View style={[styles.wrap, {
-				transform: [
-					{ translateY: this.state.marginTopValue }
-				],
-				opacity: this.state.opacityValue
-			}]}>
-				{items}
-				<NavBarLabel
-					onPress={this.props.onNextPress}
-					texts={[{text: this.props.nextText, color: '#FFFFFF'}]}
-					backgroundColor={uiConfig.COLORS.BLUE}
-					style={styles.nextButton}
-				/>
-			</Animated.View>
-		);
 	},
 
 	render: function () {
@@ -70,8 +50,8 @@ var StatusBar = React.createClass({
 				{items}
 				<NavBarButton
 					onPress={this.props.onNextPress}
-					//texts={[{text: this.props.nextText, color: '#FFFFFF'}]}
 					icon='next'
+					disabled={this.props.nextButtonDisabled}
 					backgroundColor={uiConfig.COLORS.BLUE}
 					style={styles.nextButton}
 				/>

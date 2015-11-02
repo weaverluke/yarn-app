@@ -100,6 +100,11 @@ function preloadWords() {
 			preloadedWords[visited[i]] = preloadWord(visited[i]);
 		}
 	}
+
+	// notify about first preloaded word
+	preloadedWords[visited[0]].then(function () {
+		gameStateStore.set('firstWordReady', true);
+	});
 }
 
 function preloadWord(pageWord) {

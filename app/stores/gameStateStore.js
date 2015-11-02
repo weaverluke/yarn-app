@@ -24,8 +24,9 @@ var initialData = {
 	currentState: GAME_STATES.NOT_STARTED,
 	correct: 0,
 	wrong: 0,
-	finished: false
-};
+	finished: false,
+	firstWordReady: false
+}
 
 var data = JSON.parse(JSON.stringify(initialData));
 var listenersPaused = false;

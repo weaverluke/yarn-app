@@ -70,7 +70,7 @@ var MainBar = React.createClass({
 					<Image source={{uri: 'intro_3.png'}} style={[styles.wideImage, styles.bottomImage]} />
 				</View>
 
-				<TouchableHighlight onPress={this.onActionButtonPress}>
+				<TouchableHighlight onPress={this.onActionButtonPress} underlayColor={uiConfig.COLORS.BLUE_DIM}>
 					<View style={styles.actionButton}>
 						<Text style={styles.actionButtonText}>Go</Text>
 					</View>

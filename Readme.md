@@ -1,5 +1,11 @@
 ##Release notes
 
+v0.2.19
+- added onboarding screen
+- improved buttons design
+- added lock for "Test me" button so it doesn't work until translations for first word are downloaded
+- fixed bugs with popups (e.g. close some popups when view changes)
+
 v0.2.18
 - splash screen changed
 - checking for dictionary definition disabled
