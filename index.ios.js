@@ -22,6 +22,7 @@ var gameStateStore = require('./app/stores/gamestatestore');
 var userProfileStore = require('./app/stores/userprofilestore');
 var actions = require('./app/actions/actions');
 var log = require('./app/logger/logger');
+var uiConfig = require('./app/uiconfig');
 
 var WHITELIST = require('./app/whitelist');
 
@@ -212,14 +213,22 @@ var yarn = React.createClass({
 			<ResultView
 				correctWords={gameStateStore.get('correct')}
 				totalWords={gameStateStore.get('pageWords').length}
-				level={userProfileStore.get('level')}
-				previousLevel={levelStats[levelStats.length - 1]}
+				level={Math.min(userProfileStore.get('level'), uiConfig.MAX_VOCAB_LEVEL)}
+				previousLevel={Math.min(levelStats[levelStats.length - 1], uiConfig.MAX_VOCAB_LEVEL)}
 				score={userProfileStore.get('score')}
 				previousScore={userProfileStore.get('previousScore')}
 				onDonePressed={this.closeResultView}
 				onRandomPressed={this.onRandomPagePressed}
+				buyVocabLevelShown={userProfileStore.get('buyVocabLevelShown')}
+				buyVocabLevelPressed={userProfileStore.get('buyVocabLevelPressed')}
+				onBuyVocabLevelPressed={this.onBuyVocabLevelPressed}
 			/>
 		);
+	},
+
+	onBuyVocabLevelPressed: function () {
+		userProfileStore.set('buyVocabLevelPressed', true);
+		userProfileStore.set('buyVocabLevelShown', true);
 	},
 
 	renderInfoBar: function () {

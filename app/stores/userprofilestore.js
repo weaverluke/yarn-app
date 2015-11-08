@@ -11,7 +11,6 @@ var {
 } = React;
 
 var INITIAL_LEVEL = 50;
-var MAX_LEVEL = 60;
 
 var initialLanguageStats = {
 	wordsLimit: 10,
@@ -26,9 +25,13 @@ var initialLanguageStats = {
 };
 
 var data = {
+	dataVersion: 2,
 	language: 'pl',
 	testYourselfPromptShown: false,
+
 	introScreenShown: false,
+	buyVocabLevelShown: false,
+	buyVocabLevelPressed: false,
 
 	quiz: {
 		pl: JSON.parse(JSON.stringify(initialLanguageStats))
@@ -42,13 +45,17 @@ var data = {
 //	range: 10,
 //	score: 350,
 //	language: 'pl',
-//	correctAnswers: 0,
-//	wrongAnswers: 0,
+//	correctAnswers: 100,
+//	wrongAnswers: 30,
 //	levelStats: [],
-//	previousScore: 0,
+//	previousScore: 120,
 //	testYourselfPromptShown: false,
 //	introScreenShown: false,
-//	historyLevelValues: []
+//	historyLevelValues: [50, 51, 53, 55]
+//};
+//// dev mode override
+//var getLangData = function () {
+//	return data;
 //};
 
 var PERSISTENCE_KEY = '@yarn:userProfileStore';
@@ -58,7 +65,7 @@ init();
 function init() {
 	initLevelStats();
 	// reset :D
-	saveData();
+	//saveData();
 
 	loadData();
 }
@@ -74,7 +81,7 @@ function initLevelStats() {
 	}
 }
 
-function set(key, d) {
+function set(key, value) {
 	// change language - special case
 	if (key === 'language') {
 		return setLanguage(key);
@@ -84,13 +91,13 @@ function set(key, d) {
 
 	// try to set on top level
 	if (data.hasOwnProperty(key)) {
-		data[key] = d;
+		data[key] = value;
 		changed = true;
 	}
 
 	// if top level has no such key then try to change current language
 	else if (getLangData().hasOwnProperty(key)) {
-		setLangData()[key] = d;
+		setLangData(key, value);
 		changed = true;
 	}
 
@@ -192,10 +199,7 @@ function updateUserLevel() {
 		}
 	}
 
-	var newLevel = parseInt(sum / max * 100);
-	newLevel = Math.min(MAX_LEVEL, newLevel);
-
-	langData.level = newLevel;
+	langData.level = parseInt(sum / max * 100);
 	console.log('New user level:', langData.level);
 
 	// range update - after first 50 words shrink range to 30
@@ -228,15 +232,25 @@ function loadData() {
 		.getItem(PERSISTENCE_KEY)
 		.then(function (stats) {
 			var parsedData = JSON.parse(stats);
+
+			// if this is current version of data structure then load it
 			if (parsedData) {
-				data = parsedData;
-				console.log('parsed data', parsedData);
+				if (parsedData.version == 2) {
+					data = parsedData;
+					console.log('parsed data', parsedData);
+				}
+				// if this is old version, then ignore it and overwrite with new one (but keep language)
+				else {
+					data.language = parsedData.language;
+					saveData();
+				}
 			}
 
-			migrate1();
-			migrate2();
-			migrate3();
-			migrate4();
+			//migrate1();
+			//migrate2();
+			//migrate3();
+			//migrate4();
+			//migrate5();
 			console.log('data after migration:', data);
 
 			log({
@@ -327,6 +341,15 @@ function migrate4() {
 	}
 
 	saveData();
+}
+
+function migrate5() {
+	if (!('buyVocabLevelShown' in data)) {
+		data.buyVocabLevelShown = false;
+	}
+	if (!('buyVocabLevelPressed' in data)) {
+		data.buyVocabLevelPressed = false;
+	}
 }
 
 module.exports = {

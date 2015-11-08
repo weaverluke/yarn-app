@@ -12,6 +12,7 @@ var {
 } = React;
 
 var QuizResult = require('./quizresult');
+var Popup = require('../popup/popup');
 
 var ANIMATION_TIME = 300;
 var SCORE_ANIMATION_TIME = 1500;
@@ -30,11 +31,14 @@ var ResultView = React.createClass({
 			totalWords: 0,
 			onDonePressed: function () {},
 			onRandomPressed: function () {},
+			onBuyVocabLevelPressed: function () {},
 			level: 0,
 			previousLevel: 0,
 			score: 0,
 			previousScore: 0,
-			showWordsCount: false
+			showWordsCount: false,
+			buyVocabLevelShown: false,
+			buyVocabLevelPressed: false
 		};
 	},
 
@@ -43,7 +47,8 @@ var ResultView = React.createClass({
 			topOffsetValue: new Animated.Value(height - uiConfig.TOOLBAR_HEIGHT),
 			score: this.props.score === this.props.previousScore ? this.props.score : this.props.previousScore,
 			level: this.props.level === this.props.previousLevel ? this.props.level : this.props.previousLevel,
-			levelBackground: uiConfig.COLORS.ORANGE
+			levelBackground: uiConfig.COLORS.ORANGE,
+			buyVocabLevelPopupVisible: this.props.buyVocabLevelShown
 		};
 	},
 
@@ -105,6 +110,14 @@ var ResultView = React.createClass({
 					</TouchableWithoutFeedback>
 				</View>
 
+				<Popup
+					visible={this.state.buyVocabLevelPopupVisible}
+					type={Popup.POPUP_TYPE.BUY_VOCAB_LEVEL}
+					withoutOverlay={true}
+					buyButtonInFinalState={this.props.buyVocabLevelPressed}
+					onBuyPressed={this.props.onBuyVocabLevelPressed}
+				/>
+
 			</Animated.View>
 		);
 	},
@@ -112,6 +125,7 @@ var ResultView = React.createClass({
 	componentDidMount: function () {
 		// delay intro animation a bit to make it smooth
 		setTimeout(this.animateIn, 150);
+		this.showBuyVocabLevelPopup();
 	},
 
 	animateIn: function () {
@@ -160,7 +174,10 @@ var ResultView = React.createClass({
 	animateLevel: function () {
 		// do not animate level if it hasn't changed
 		if (this.props.level !== this.props.previousLevel) {
-			this.animateLevelNumber(this.animateLevelBackground);
+			this.animateLevelNumber(this.animateLevelBackground.bind(this, this.showBuyVocabLevelPopup));
+		}
+		else {
+			this.showBuyVocabLevelPopup();
 		}
 	},
 
@@ -180,7 +197,7 @@ var ResultView = React.createClass({
 		});
 	},
 
-	animateLevelBackground: function () {
+	animateLevelBackground: function (cb) {
 		var startColor = utils.colorToObj(uiConfig.COLORS.ORANGE);
 		var endColor = utils.colorToObj(uiConfig.COLORS.LIGHT_ORANGE);
 		utils.animateColor({
@@ -200,7 +217,8 @@ var ResultView = React.createClass({
 						this.setState({
 							levelBackground: utils.colorToString(color)
 						});
-					}.bind(this)
+					}.bind(this),
+					onFinish: cb
 				});
 
 			}.bind(this)
@@ -211,6 +229,22 @@ var ResultView = React.createClass({
 		return function () {
 			this.animateOut(cb)
 		}.bind(this);
+	},
+
+	showBuyVocabLevelPopup: function () {
+		if (this.props.level === uiConfig.MAX_VOCAB_LEVEL) {
+
+			this.setState({
+				levelBackground: uiConfig.COLORS.RED,
+				level: uiConfig.MAX_VOCAB_LEVEL + '+'
+			});
+
+			setTimeout(function () {
+				this.setState({
+					buyVocabLevelPopupVisible: true
+				});
+			}.bind(this), 2500);
+		}
 	}
 
 });

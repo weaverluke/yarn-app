@@ -21,7 +21,8 @@ var POPUP_TYPE = {
 	INFO: 'INFO',
 	ANSWER: 'ANSWER',
 	BUY_URL_FEATURE: 'BUY_URL_FEATURE',
-	TEST_YOURSELF_PROMPT: 'TEST_YOURSELF_PROMPT'
+	TEST_YOURSELF_PROMPT: 'TEST_YOURSELF_PROMPT',
+	BUY_VOCAB_LEVEL: 'BUY_VOCAB_LEVEL'
 };
 
 
@@ -38,11 +39,22 @@ var Popup = React.createClass({
 		return {
 			type: POPUP_TYPE.ANSWER,
 			arrowRect: {x:0, y:0, width:0, height:0},
-			withoutOverlay: false
+			withoutOverlay: false,
+			buyButtonInFinalState: false
 		};
 	},
 
 	getInitialState: function () {
+		if (this.props.buyButtonInFinalState) {
+			return {
+				buttonAnimationFinished: true,
+				buttonText: 'COMING SOON',
+				buttonBgColor: uiConfig.COLORS.MID_GREY,
+				// used for button width animation
+				buttonWidth: new Animated.Value(130)
+			};
+		}
+
 		return {
 			buttonAnimationFinished: false,
 			buttonText: '£1.69',
@@ -50,6 +62,7 @@ var Popup = React.createClass({
 			// used for button width animation
 			buttonWidth: new Animated.Value(50)
 		};
+
 	},
 
 	render: function () {
@@ -66,6 +79,10 @@ var Popup = React.createClass({
 
 			case POPUP_TYPE.BUY_URL_FEATURE:
 				content = this.renderBuyUrlFeaturePopup();
+				break;
+
+			case POPUP_TYPE.BUY_VOCAB_LEVEL:
+				content = this.renderBuyVocabLevelPopup();
 				break;
 
 			case POPUP_TYPE.TEST_YOURSELF_PROMPT:
@@ -194,6 +211,48 @@ var Popup = React.createClass({
 						</View>
 						<Text>use Yarn across all your</Text>
 						<Text>favourite webistes</Text>
+					</View>
+					<View style={styles.bottomActionButtonWrap}>
+						<TouchableWithoutFeedback onPress={this.onBuyPressed}>
+							<Animated.View style={[styles.actionButton, buttonStyle]}>
+								<Text style={styles.confirmButtonText}>{this.state.buttonText}</Text>
+							</Animated.View>
+						</TouchableWithoutFeedback>
+					</View>
+				</View>
+				<View style={[styles.arrowTop, {left: arrowLeft}]}>
+				</View>
+			</View>
+		);
+
+	},
+
+	renderBuyVocabLevelPopup: function () {
+		var popupWidth = 200;//(width - 2*POPUP_MARGIN) * 0.6;
+		var extraStyle = {
+			top: 260,
+			width: popupWidth,
+			right: 10,
+			height: 100
+		};
+		var arrowLeft = popupWidth - 40;// this.computeArrowPosition();
+
+		var buttonStyle = {
+			width: this.state.buttonWidth,
+			backgroundColor: this.state.buttonBgColor
+		};
+
+		return (
+			<View style={[styles.popup, extraStyle]}>
+				<View style={[styles.contentWrap]}>
+					<View>
+						<View style={styles.row}>
+							<Text>Add </Text>
+							<Text style={styles.bold}>Advanced Vocab </Text>
+							<Text>to</Text>
+						</View>
+						<Text>test yourself on 63,241</Text>
+						<Text>more difficult words!</Text>
 					</View>
 					<View style={styles.bottomActionButtonWrap}>
 						<TouchableWithoutFeedback onPress={this.onBuyPressed}>

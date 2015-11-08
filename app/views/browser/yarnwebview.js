@@ -194,7 +194,7 @@ var Browser = React.createClass({
 			}
 			this.lastParsedContent = contentToParse;
 			var range = this.props.userRange;
-			var level = this.props.userLevel || 50;
+			var level = Math.min(this.props.userLevel || 50, uiConfig.MAX_VOCAB_LEVEL);
 			var words = wordHelpers.extractWordsFromArticle(contentToParse, level - range, level + range);
 
 			var attempts = 0;

@@ -1,5 +1,11 @@
 ##Release notes
 
+v0.2.20
+- settings view
+- new data structure - storing stats for each language separately
+- limit vocab level to 60
+- network error view connected to web view errors as well as quiz logic (e.g. when translations can't be fetched)
+
 v0.2.19
 - added onboarding screen
 - improved buttons design
