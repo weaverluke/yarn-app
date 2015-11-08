@@ -13,17 +13,12 @@ var {
 	PickerItemIOS
 } = React;
 
-// see https://github.com/facebook/react-native/issues/3228
-var PICKER_WIDTH = 320;
-
-var GuardianInfoView = require('./guardian');
-
 var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
 
 var actions = require('../../actions/actions');
 var uiConfig = require('../../uiconfig');
-var languages = require('../settings/googlelanguages');
+var LangPicker = require('../langpicker/langpicker');
 
 var MainBar = React.createClass({
 
@@ -45,29 +40,24 @@ var MainBar = React.createClass({
 				opacity: this.state.opacityValue
 			}]}>
 				<View style={styles.topImageBox}>
-					<Image source={{uri: 'intro_1.png'}} style={[styles.wideImage, styles.topImage]} />
+					<Image source={{uri: 'intro_1.png'}} style={styles.wideImage} />
 				</View>
 
-				<TouchableWithoutFeedback onPress={this.showGuardianInfoView}>
+				<TouchableWithoutFeedback onPress={this.requestGuardianInfoView}>
 					<View style={styles.guardianInfoButton}>
 					</View>
 				</TouchableWithoutFeedback>
 
 				<View style={styles.logoBox}>
-					<Image source={{uri: 'intro_2.png'}} style={[styles.wideImage, styles.logo]} />
+					<Image source={{uri: 'intro_2.png'}} style={styles.wideImage} />
 				</View>
 
-				<View style={styles.langPicker}>
-					<PickerIOS
-						selectedValue={this.state.lang}
-						onValueChange={this.onLanguageChange}
-					>
-						{this.renderLangs()}
-					</PickerIOS>
+				<View>
+					<LangPicker lang={this.state.lang} onLanguageChange={this.onLanguageChange} />
 				</View>
 
 				<View style={styles.bottomImageBox}>
-					<Image source={{uri: 'intro_3.png'}} style={[styles.wideImage, styles.bottomImage]} />
+					<Image source={{uri: 'intro_3.png'}} style={styles.wideImage} />
 				</View>
 
 				<TouchableHighlight onPress={this.onActionButtonPress} underlayColor={uiConfig.COLORS.BLUE_DIM}>
@@ -76,18 +66,8 @@ var MainBar = React.createClass({
 					</View>
 				</TouchableHighlight>
 
-				{this.renderGuardianInfoView()}
-
 			</Animated.View>
 		);
-	},
-
-	renderGuardianInfoView: function () {
-		if (this.state.guardianInfoViewVisible) {
-			return (
-				<GuardianInfoView onClose={this.hideGuardianInfoView} />
-			)
-		}
 	},
 
 	componentDidMount: function () {
@@ -120,20 +100,8 @@ var MainBar = React.createClass({
 		]).start(cb);
 	},
 
-	renderLangs: function () {
-		var items = languages.map(function (lang) {
-			var langName = lang.name;
-			var langCode = lang.language;
-			return (
-				<PickerItemIOS
-					type={1}
-					key={langCode}
-					value={langCode}
-					label={langName}
-				/>
-			);
-		});
-		return items;
+	requestGuardianInfoView: function () {
+		actions.emit(actions.GUARDIAN_INFO_REQUESTED);
 	},
 
 	onActionButtonPress: function () {
@@ -144,18 +112,6 @@ var MainBar = React.createClass({
 	onLanguageChange: function (lang) {
 		this.setState({
 			lang: lang
-		});
-	},
-
-	showGuardianInfoView: function () {
-		this.setState({
-			guardianInfoViewVisible: true
-		});
-	},
-
-	hideGuardianInfoView: function () {
-		this.setState({
-			guardianInfoViewVisible: false
 		});
 	}
 
@@ -194,34 +150,8 @@ var styles = StyleSheet.create({
 		backgroundColor: uiConfig.COLORS.MID_GREY
 	},
 
-	topImageAlign: {
-		//flex: 1,
-		//width: width,
-		//overflow: 'visible',
-		//borderWidth: 2,
-		//borderColor: 'red'
-	},
-
-	topImage: {
-	},
-
 	logoBox: {
-		//backgroundColor: 'blue',
 		flex: 1
-	},
-
-	logo: {
-
-	},
-
-
-	langPicker: {
-		// it's impossible to center PickerIOS (https://github.com/facebook/react-native/issues/3228)
-		// so we compute left margin manually
-		marginLeft: width/2 - PICKER_WIDTH/2
-	},
-
-	picker: {
 	},
 
 	spacer: {
@@ -229,12 +159,7 @@ var styles = StyleSheet.create({
 	},
 
 	bottomImageBox: {
-		//backgroundColor: 'red',
 		flex: 2
-	},
-
-	bottomImage: {
-
 	},
 
 	actionButton: {

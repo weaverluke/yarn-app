@@ -25,7 +25,20 @@ var MainBar = React.createClass({
 		};
 	},
 
+	getDefaultProps: function () {
+		return {
+			activeIcon: 'browse'
+		}
+	},
+
 	render: function () {
+		// images from xcassets must be passed with whole name to require(), so we can't precompute image name and
+		// pass it later to require()
+		var icons = {
+			browse: this.isIconActive('browse') ? require('image!browse-icon-active') : require('image!browse-icon'),
+			settings: this.isIconActive('settings') ? require('image!settings-icon-active') : require('image!settings-icon')
+		};
+
 		return (
 			<Animated.View style={[styles.wrap, {
 				transform: [
@@ -35,18 +48,26 @@ var MainBar = React.createClass({
 			}]}>
 				<View style={styles.spacer} />
 				<View style={styles.buttonWrap}>
-					<TouchableWithoutFeedback onPress={this.onQuizPressed}>
-						<Image source={require('image!yarn-icon')} style={styles.iconCentral}/>
+					<TouchableWithoutFeedback onPress={this.onBrowsePressed}>
+						<Image
+							source={icons.browse}
+							style={styles.iconCentral}/>
 					</TouchableWithoutFeedback>
 				</View>
 				<View style={styles.buttonWrap}>
 					<TouchableWithoutFeedback onPress={this.onSettingsPressed}>
-						<Image source={require('image!settings-icon')} style={styles.icon}/>
+						<Image
+							source={icons.settings}
+							style={styles.icon}/>
 					</TouchableWithoutFeedback>
 				</View>
 				<View style={styles.spacer} />
 			</Animated.View>
 		);
+	},
+
+	isIconActive: function (icon) {
+		return this.props.activeIcon === icon;
 	},
 
 	componentDidMount: function () {
@@ -79,9 +100,10 @@ var MainBar = React.createClass({
 		]).start(cb);
 	},
 
-	onQuizPressed: function () {
-		actions.emit(actions.QUIZ_BUTTON_PRESSED);
+	onBrowsePressed: function () {
+		actions.emit(actions.BROWSE_BUTTON_PRESSED);
 	},
+
 	onSettingsPressed: function () {
 		actions.emit(actions.SETTINGS_BUTTON_PRESSED);
 	}

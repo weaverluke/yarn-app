@@ -51,7 +51,7 @@ var Guardian = React.createClass({
 				</View>
 
 				<View style={styles.contentImageBox}>
-					<Image source={{uri: 'guardian-content.png'}} style={[styles.wideImage, styles.contentImage]} />
+					<Image source={{uri: 'guardian-content.png'}} style={[styles.wideImage]} />
 				</View>
 
 			</Animated.View>

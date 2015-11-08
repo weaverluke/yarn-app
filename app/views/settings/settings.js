@@ -5,161 +5,146 @@ var {
 	StyleSheet,
 	View,
 	Text,
+	TouchableWithoutFeedback,
+	TouchableHighlight,
+	Image,
+	Animated,
 	PickerIOS,
-	PickerItemIOS,
-	TouchableWithoutFeedback
+	PickerItemIOS
 } = React;
 
+var ANIMATION_TIME = 300;
+
+var Dimensions = require('Dimensions');
+var {width, height} = Dimensions.get('window');
+
 var actions = require('../../actions/actions');
-var languages = require('./googlelanguages');
+var uiConfig = require('../../uiconfig');
+var LangPicker = require('../langpicker/langpicker');
 
-//var languages = {
-//	pl: {
-//		name: 'Polish'
-//	},
-//	de: {
-//		name: 'German'
-//	},
-//	es: {
-//		name: 'Spanish'
-//	},
-//	ja: {
-//		name: 'Japanese'
-//	}
-//};
-
-var Settings = React.createClass({
-
-	getDefaultProps: function () {
-		return {
-			onClose: function () {}
-		};
-	},
+var MainBar = React.createClass({
 
 	getInitialState: function () {
 		return {
-			lang: this.props.initialLang,
-			level: this.props.initialLevel
-		}
+			opacityValue: new Animated.Value(0),
+			marginTopValue: new Animated.Value(0),
+			lang: this.props.lang,
+			guardianInfoViewVisible: false,
+			visible: this.props.visible
+		};
 	},
 
 	render: function () {
 		return (
-			<View style={styles.overlay}>
-				<View style={styles.content}>
-					<Text>Language:</Text>
-					<PickerIOS
-						selectedValue={this.state.lang}
-						onValueChange={this.onLanguageChange}
-					>
-						{this.renderLangs()}
-					</PickerIOS>
-
-					<View style={styles.level}>
-						<Text style={styles.levelLabel}>User level:</Text>
-						<Text style={styles.levelValue}>
-							{this.state.level}
-						</Text>
-						<TouchableWithoutFeedback onPress={this.incrementLevel}>
-							<Text style={styles.levelChangeButton}> + </Text>
-						</TouchableWithoutFeedback>
-						<TouchableWithoutFeedback onPress={this.decrementLevel}>
-							<Text style={styles.levelChangeButton}> - </Text>
-						</TouchableWithoutFeedback>
-					</View>
-
-					<TouchableWithoutFeedback onPress={this.onClose}>
-						<Text>Tap here to close</Text>
-					</TouchableWithoutFeedback>
+			<Animated.View style={[styles.wrap, {
+				transform: [
+					{ translateY: this.state.marginTopValue }
+				],
+				opacity: this.state.opacityValue
+			}]}>
+				<View style={styles.topImageBox}>
+					<Image source={{uri: 'intro_1.png'}} style={[styles.wideImage]} />
 				</View>
-			</View>
+
+				<TouchableWithoutFeedback onPress={this.requestGuardianInfoView}>
+					<View style={styles.guardianInfoButton}>
+					</View>
+				</TouchableWithoutFeedback>
+
+				<LangPicker lang={this.state.lang} onLanguageChange={this.onLanguageChange} />
+
+			</Animated.View>
 		);
 	},
 
+	componentDidMount: function () {
+		this.state.visible && this.animateIn();
+	},
+
+	componentWillReceiveProps: function (newProps) {
+		if (this.props.visible === newProps.visible) {
+			return;
+		}
+		newProps.visible ? this.animateIn() : this.animateOut();
+
+		if (!newProps.visible && this.props.lang !== this.state.lang) {
+			actions.emit(actions.CHANGE_LANG, this.state.lang);
+		}
+	},
+
+	animateIn: function (cb) {
+		Animated.parallel([
+			Animated.timing(
+				this.state.opacityValue,
+				{ toValue: 1, duration: ANIMATION_TIME }
+			),
+			Animated.timing(
+				this.state.marginTopValue,
+				{ toValue: 0, duration: ANIMATION_TIME }
+			)
+		]).start(cb);
+	},
+
+	animateOut: function (cb) {
+		Animated.parallel([
+			Animated.timing(
+				this.state.opacityValue,
+				{ toValue: 0, duration: ANIMATION_TIME }
+			)
+			//Animated.timing(
+			//	this.state.marginTopValue,
+			//	{ toValue: height }
+			//)
+		]).start(cb);
+	},
+
+
 	onLanguageChange: function (lang) {
-		console.log('Chosen lang: ', lang);
 		this.setState({
 			lang: lang
 		});
 	},
 
-	incrementLevel: function () {
-		this.setState({
-			level: Math.min(this.state.level + 1, 100)
-		});
-	},
-	decrementLevel: function () {
-		this.setState({
-			level: Math.max(this.state.level - 1, 1)
-		});
+	requestGuardianInfoView: function () {
+		actions.emit(actions.GUARDIAN_INFO_REQUESTED);
 	},
 
-	renderLangs: function () {
-		var items = languages.map(function (lang) {
-			var langName = lang.name;
-			var langCode = lang.language;
-			return (
-				<PickerItemIOS
-					type={1}
-					key={langCode}
-					value={langCode}
-					label={langName}
-				/>
-			);
-		});
-		return items;
-	},
-
-	onClose: function () {
-		if (this.props.initialLang !== this.state.lang) {
-			actions.emit(actions.CHANGE_LANG, this.state.lang);
-		}
-		if (this.props.initialLevel !== this.state.level) {
-			actions.emit(actions.CHANGE_LEVEL, this.state.level);
-		}
-		this.props.onClose();
+	hide: function (cb) {
+		this.animateOut(cb);
 	}
 });
 
 var styles = StyleSheet.create({
 
-	overlay: {
+	wrap: {
+		width: width,
+		height: height - uiConfig.TOOLBAR_HEIGHT,
 		position: 'absolute',
-		top: 0,
-		left: 0,
-		bottom: 0,
-		right: 0,
-		backgroundColor: 'rgba(0,0,0,0.75)',
-		flex: 1
+		top: 0
 	},
 
-	content: {
-		backgroundColor: '#FFFFFF',
-		margin: 10,
-		padding: 10,
-		borderRadius: 3
+	guardianInfoButton: {
+		position: 'absolute',
+		top: 15,
+		right: 10,
+		width: 40,
+		height: 40,
+		borderRadius: 20,
+		backgroundColor: 'transparent'
 	},
 
-	level: {
+	wideImage: {
 		flex: 1,
-		flexDirection: 'row'
+		resizeMode: Image.resizeMode.contain
 	},
 
-	levelLabel: {
-		flex: 4
-	},
-
-	levelValue: {
-		flex: 3
-	},
-
-	levelChangeButton: {
-		flex: 1,
-		fontSize: 20,
-		textAlign: 'center'
+	topImageBox: {
+		justifyContent: 'flex-start',
+		overflow: 'visible',
+		height: 70,
+		backgroundColor: uiConfig.COLORS.MID_GREY
 	}
 
 });
 
-
-module.exports = Settings;
+module.exports = MainBar;

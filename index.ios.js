@@ -10,6 +10,7 @@ var MainBar = require('./app/views/mainbar/mainbar');
 var Toast = require('./app/views/toast/toast');
 var ToastContent = require('./app/views/toast/wordscounttoastcontent');
 var SearchingView = require('./app/views/searching/searching');
+var GuardianInfoView = require('./app/views/guardianinfo/guardianinfo');
 
 var QuizStatusBar = require('./app/views/quiz/quizstatusbar');
 var QuestionView = require('./app/views/quiz/question');
@@ -82,8 +83,9 @@ var yarn = React.createClass({
 			testYourselfPromptShown: userProfileStore.get('testYourselfPromptShown'),
 			// start with true, and when user profile is loaded then this flag will be set correctly in onUserProfileChanged
 			introScreenShown: true,
-			// is first word preloaded (translations are ready and we can start the test)
-			firstWordReady: false
+			// is first word preloaded? (translations are ready and we can start the test)
+			firstWordReady: false,
+			guardianInfoViewVisible: false
 		};
 	},
 
@@ -104,6 +106,7 @@ var yarn = React.createClass({
 					onUrlChange={this.onUrlChange}
 					onScroll={this.onBrowserScroll}
 				/>
+				{this.renderSettings()}
 				<View style={styles.bottomBarWrap}>
 					{this.renderMainBar()}
 					{bottomBar}
@@ -130,7 +133,6 @@ var yarn = React.createClass({
 					onSubmit={this.buyUrlFeaturePressed}
 					type={Popup.POPUP_TYPE.BUY_URL_FEATURE}
 					/>
-				{this.renderSettings()}
 				{this.renderQuizStatusBar()}
 				{this.renderSearchingState()}
 				{this.renderToast()}
@@ -139,6 +141,7 @@ var yarn = React.createClass({
 				{this.renderResultView()}
 				{this.renderTestYourselfPrompt()}
 				{this.renderIntroScreen()}
+				{this.renderGuardianInfoView()}
 			</View>
 		);
 	},
@@ -244,19 +247,20 @@ var yarn = React.createClass({
 	},
 
 	renderMainBar: function () {
-		return (<MainBar ref="mainbar"/>);
+		return (
+			<MainBar
+				ref='mainbar'
+				activeIcon={this.state.settingsViewVisible ? 'settings' : 'browse'}
+			/>
+		);
 	},
 
 	renderSettings: function () {
-		if (!this.state.settingsViewVisible) {
-			return (<View />);
-		}
-
 		return (
 			<Settings
-				onClose={this.closeSettingsView}
-				initialLevel={userProfileStore.get('level')}
-				initialLang={userProfileStore.get('language')}
+				ref='settings'
+				visible={this.state.settingsViewVisible}
+				lang={userProfileStore.get('language')}
 			/>
 		);
 	},
@@ -386,7 +390,6 @@ var yarn = React.createClass({
 	},
 
 	onBrowserScroll: function (data) {
-		console.log('browser scroll', data);
 		if (this.state.bottomBar === 'wordscount') {
 			if (!this.state.wordsCountVisible && data.y > 10) {
 				console.log('show wordscount bar');
@@ -443,10 +446,11 @@ var yarn = React.createClass({
 		});
 	},
 
-	closeSettingsView: function () {
+	hideSettings: function () {
 		this.setState({
 			settingsViewVisible: false
 		});
+		this.refs['settings'].hide();
 	},
 
 	showNextQuestion: function () {
@@ -458,6 +462,26 @@ var yarn = React.createClass({
 		actions.emit(actions.SHOW_NEXT_QUESTION);
 	},
 
+	renderGuardianInfoView: function () {
+		if (this.state.guardianInfoViewVisible) {
+			return (
+				<GuardianInfoView onClose={this.hideGuardianInfoView} />
+			)
+		}
+	},
+
+	showGuardianInfoView: function () {
+		this.setState({
+			guardianInfoViewVisible: true
+		});
+	},
+
+	hideGuardianInfoView: function () {
+		this.setState({
+			guardianInfoViewVisible: false
+		});
+	},
+
 	componentDidMount: function () {
 		this.lang = userProfileStore.get('language');
 
@@ -466,7 +490,10 @@ var yarn = React.createClass({
 		actions.on(actions.START_GAME, this.hideBottomBar);
 		actions.on(actions.CHANGE_LEVEL, this.onForceChangeLevel);
 		actions.on(actions.SETTINGS_BUTTON_PRESSED, this.showSettings);
+		actions.on(actions.BROWSE_BUTTON_PRESSED, this.hideSettings);
 		actions.on(actions.URL_FEATURE_REQUESTED, this.showUrlFeaturePopup);
+		actions.on(actions.GUARDIAN_INFO_REQUESTED, this.showGuardianInfoView);
+
 		this.onUrlChange(this.state.url);
 	},
 
