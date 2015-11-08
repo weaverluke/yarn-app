@@ -55,7 +55,6 @@ var LangPicker = React.createClass({
 			var langCode = lang.language;
 			return (
 				<PickerItemIOS
-					type={1}
 					key={langCode}
 					value={langCode}
 					label={langName}

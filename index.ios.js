@@ -11,6 +11,7 @@ var Toast = require('./app/views/toast/toast');
 var ToastContent = require('./app/views/toast/wordscounttoastcontent');
 var SearchingView = require('./app/views/searching/searching');
 var GuardianInfoView = require('./app/views/guardianinfo/guardianinfo');
+var NetworkErrorView = require('./app/views/networkerror/networkerror');
 
 var QuizStatusBar = require('./app/views/quiz/quizstatusbar');
 var QuestionView = require('./app/views/quiz/question');
@@ -85,7 +86,8 @@ var yarn = React.createClass({
 			introScreenShown: true,
 			// is first word preloaded? (translations are ready and we can start the test)
 			firstWordReady: false,
-			guardianInfoViewVisible: false
+			guardianInfoViewVisible: false,
+			networkErrorViewVisible: false
 		};
 	},
 
@@ -95,6 +97,11 @@ var yarn = React.createClass({
 	render: function () {
 		console.log('render', this.state);
 		var bottomBar = this.renderBottomBar();
+
+		console.log('------------------------------------------------------------------');
+		console.log('level', userProfileStore.get('level'));
+		console.log('range', userProfileStore.get('range'));
+		console.log('------------------------------------------------------------------');
 
 		return (
 			<View style={[styles.container]}>
@@ -142,6 +149,7 @@ var yarn = React.createClass({
 				{this.renderTestYourselfPrompt()}
 				{this.renderIntroScreen()}
 				{this.renderGuardianInfoView()}
+				{this.renderNetworkErrorView()}
 			</View>
 		);
 	},
@@ -482,6 +490,28 @@ var yarn = React.createClass({
 		});
 	},
 
+	renderNetworkErrorView: function () {
+		if (this.state.networkErrorViewVisible) {
+			return (
+				<NetworkErrorView onClose={this.hideNetworkErrorView} />
+			)
+		}
+	},
+
+	showNetworkErrorView: function () {
+		this.setState({
+			networkErrorViewVisible: true
+		});
+	},
+
+	hideNetworkErrorView: function () {
+		this.refs[BROWSER_REF].reload();
+
+		this.setState({
+			networkErrorViewVisible: false
+		});
+	},
+
 	componentDidMount: function () {
 		this.lang = userProfileStore.get('language');
 
@@ -493,6 +523,7 @@ var yarn = React.createClass({
 		actions.on(actions.BROWSE_BUTTON_PRESSED, this.hideSettings);
 		actions.on(actions.URL_FEATURE_REQUESTED, this.showUrlFeaturePopup);
 		actions.on(actions.GUARDIAN_INFO_REQUESTED, this.showGuardianInfoView);
+		actions.on(actions.NETWORK_ERROR_OCCURRED, this.showNetworkErrorView);
 
 		this.onUrlChange(this.state.url);
 	},

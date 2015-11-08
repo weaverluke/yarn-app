@@ -58,7 +58,7 @@ init();
 function init() {
 	initLevelStats();
 	// reset :D
-	//saveData();
+	saveData();
 
 	loadData();
 }
@@ -75,6 +75,11 @@ function initLevelStats() {
 }
 
 function set(key, d) {
+	// change language - special case
+	if (key === 'language') {
+		return setLanguage(key);
+	}
+
 	var changed = false;
 
 	// try to set on top level
@@ -93,6 +98,21 @@ function set(key, d) {
 		emitChange();
 		saveData();
 	}
+}
+
+function setLanguage(lang) {
+	if (data.language === lang) {
+		return;
+	}
+
+	data.language = lang;
+	if (!data.quiz[lang]) {
+		data.quiz[lang] = JSON.parse(JSON.stringify(initialLanguageStats));
+	}
+
+	initLevelStats();
+
+	emitChange();
 }
 
 function get(key) {
@@ -217,7 +237,7 @@ function loadData() {
 			migrate2();
 			migrate3();
 			migrate4();
-			console.log('data aafter migration:', data);
+			console.log('data after migration:', data);
 
 			log({
 				message: 'user profile loaded',
@@ -282,7 +302,7 @@ function migrate3() {
 // change database structure - store results for each language
 function migrate4() {
 	// migration already done
-	if (!('wordsLimit' in data)) {
+	if (!('level' in data)) {
 		return;
 	}
 
@@ -305,6 +325,8 @@ function migrate4() {
 		langData[propsToRewrite[i]] = data[propsToRewrite[i]];
 		delete data[propsToRewrite[i]];
 	}
+
+	saveData();
 }
 
 module.exports = {

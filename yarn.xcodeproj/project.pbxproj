@@ -27,6 +27,7 @@
 		6165D9261B7746390011A703 /* BauhausStd-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6165D9241B7746390011A703 /* BauhausStd-Heavy.otf */; };
 		6165D9271B7746390011A703 /* bauhaus-93.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6165D9251B7746390011A703 /* bauhaus-93.ttf */; };
 		619094D61BDB8162000EA17C /* logo-200.png in Resources */ = {isa = PBXBuildFile; fileRef = 619094D51BDB8162000EA17C /* logo-200.png */; };
+		61B6DF201BEFD7E500F333EC /* network-error.png in Resources */ = {isa = PBXBuildFile; fileRef = 61B6DF1F1BEFD7E500F333EC /* network-error.png */; };
 		61CB3C131BE80147003319BC /* guardian-content.png in Resources */ = {isa = PBXBuildFile; fileRef = 61CB3C111BE80147003319BC /* guardian-content.png */; };
 		61CB3C141BE80147003319BC /* guardian-top.png in Resources */ = {isa = PBXBuildFile; fileRef = 61CB3C121BE80147003319BC /* guardian-top.png */; };
 		61D0DCE51BA898CD00664994 /* RCTWebView+WebViewBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 61D0DCE11BA898CD00664994 /* RCTWebView+WebViewBridge.m */; };
@@ -151,6 +152,7 @@
 		6165D9241B7746390011A703 /* BauhausStd-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "BauhausStd-Heavy.otf"; path = "/Users/mateusz/workspace/weaverdigital/yarn-files/BauhausStd-Heavy.otf"; sourceTree = "<absolute>"; };
 		6165D9251B7746390011A703 /* bauhaus-93.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "bauhaus-93.ttf"; path = "/Users/mateusz/workspace/weaverdigital/yarn-files/bauhaus-93.ttf"; sourceTree = "<absolute>"; };
 		619094D51BDB8162000EA17C /* logo-200.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-200.png"; sourceTree = "<group>"; };
+		61B6DF1F1BEFD7E500F333EC /* network-error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "network-error.png"; sourceTree = "<group>"; };
 		61CB3C111BE80147003319BC /* guardian-content.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "guardian-content.png"; sourceTree = "<group>"; };
 		61CB3C121BE80147003319BC /* guardian-top.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "guardian-top.png"; sourceTree = "<group>"; };
 		61D0DCE01BA898CD00664994 /* RCTWebView+WebViewBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTWebView+WebViewBridge.h"; sourceTree = "<group>"; };
@@ -304,6 +306,7 @@
 		6165D9331B7746860011A703 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				61B6DF1F1BEFD7E500F333EC /* network-error.png */,
 				6115B31B1BE8197400394618 /* next-disabled.gif */,
 				61CB3C111BE80147003319BC /* guardian-content.png */,
 				61CB3C121BE80147003319BC /* guardian-top.png */,
@@ -599,6 +602,7 @@
 				61CB3C131BE80147003319BC /* guardian-content.png in Resources */,
 				6165D9271B7746390011A703 /* bauhaus-93.ttf in Resources */,
 				61CB3C141BE80147003319BC /* guardian-top.png in Resources */,
+				61B6DF201BEFD7E500F333EC /* network-error.png in Resources */,
 				008F07F31AC5B25A0029DE68 /* main.jsbundle in Resources */,
 				6115B31C1BE8197400394618 /* next-disabled.gif in Resources */,
 				6165D9261B7746390011A703 /* BauhausStd-Heavy.otf in Resources */,

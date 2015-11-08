@@ -156,6 +156,7 @@ function preloadWord(pageWord) {
 				.catch(function (ex) {
 					// show error screen
 					console.error('Can not translate words:', ex);
+					bus.emit(actions.NETWORK_ERROR_OCCURRED);
 					reject();
 				});
 

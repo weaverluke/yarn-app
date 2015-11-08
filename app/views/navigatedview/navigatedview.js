@@ -122,7 +122,7 @@ var NavigatedView = React.createClass({
 			return (
 				<TouchableHighlight onPress={this.createHideHandler(this.onActionButtonPress)} underlayColor={uiConfig.COLORS.BLUE_DIM}>
 					<View style={styles.actionButton}>
-						<Text style={styles.actionButtonText}>Go</Text>
+						<Text style={styles.actionButtonText}>{this.props.actionText}</Text>
 					</View>
 				</TouchableHighlight>
 			);
@@ -238,6 +238,20 @@ var styles = StyleSheet.create({
 
 	spacer: {
 		flex: 1
+	},
+
+	actionButton: {
+		height: uiConfig.TOOLBAR_HEIGHT,
+		backgroundColor: uiConfig.COLORS.BLUE
+	},
+
+	actionButtonText: {
+		textAlign: 'center',
+		alignSelf: 'stretch',
+		fontFamily: uiConfig.SPECIAL_FONT,
+		fontSize: uiConfig.WORD_BUTTON_QUESTION_TEXT_SIZE,
+		color: 'white',
+		paddingTop: 7
 	}
 
 });

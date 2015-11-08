@@ -71,6 +71,9 @@ var Browser = React.createClass({
 				javaScriptEnabledAndroid={true}
 				onNavigationStateChange={this.onNavigationStateChange}
 				startInLoadingState={true}
+				renderError={function () {
+					actions.emit(actions.NETWORK_ERROR_OCCURRED)
+				}}
 			/>
 		);
 	},
