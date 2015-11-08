@@ -10,20 +10,46 @@ var {
 	AsyncStorage
 } = React;
 
-var data = {
+var INITIAL_LEVEL = 50;
+var MAX_LEVEL = 60;
+
+var initialLanguageStats = {
 	wordsLimit: 10,
-	level: 50,
+	level: INITIAL_LEVEL,
 	range: 40,
 	score: 0,
-	language: 'pl',
 	correctAnswers: 0,
 	wrongAnswers: 0,
 	levelStats: [],
 	previousScore: 0,
+	historyLevelValues: [INITIAL_LEVEL]
+};
+
+var data = {
+	language: 'pl',
 	testYourselfPromptShown: false,
 	introScreenShown: false,
-	historyLevelValues: []
+
+	quiz: {
+		pl: JSON.parse(JSON.stringify(initialLanguageStats))
+	}
 };
+
+// old data stats
+//var data = {
+//	wordsLimit: 10,
+//	level: 55,
+//	range: 10,
+//	score: 350,
+//	language: 'pl',
+//	correctAnswers: 0,
+//	wrongAnswers: 0,
+//	levelStats: [],
+//	previousScore: 0,
+//	testYourselfPromptShown: false,
+//	introScreenShown: false,
+//	historyLevelValues: []
+//};
 
 var PERSISTENCE_KEY = '@yarn:userProfileStore';
 
@@ -38,8 +64,10 @@ function init() {
 }
 
 function initLevelStats() {
+	var landData = getLangData();
+
 	for (var i = 0; i < 100; i++) {
-		data.levelStats[i] = {
+		landData.levelStats[i] = {
 			correct: 0,
 			wrong: 0
 		};
@@ -47,13 +75,47 @@ function initLevelStats() {
 }
 
 function set(key, d) {
-	data[key] = d;
-	emitChange();
-	saveData();
+	var changed = false;
+
+	// try to set on top level
+	if (data.hasOwnProperty(key)) {
+		data[key] = d;
+		changed = true;
+	}
+
+	// if top level has no such key then try to change current language
+	else if (getLangData().hasOwnProperty(key)) {
+		setLangData()[key] = d;
+		changed = true;
+	}
+
+	if (changed) {
+		emitChange();
+		saveData();
+	}
 }
 
 function get(key) {
-	return data[key];
+	// try to return top level value
+	if (data.hasOwnProperty(key)) {
+		return data[key];
+	}
+
+	// check if current language has such property, if so then return it
+	if (getLangData().hasOwnProperty(key)) {
+		return getLangData(key);
+	}
+}
+
+function getLangData(key) {
+	if (typeof key === 'undefined') {
+		return data.quiz && data.quiz[data.language];
+	}
+	return data.quiz[data.language][key];
+}
+
+function setLangData(key, value) {
+	getLangData()[key] = value;
 }
 
 function emitChange() {
@@ -65,13 +127,22 @@ function addChangeListener(listener) {
 }
 
 function updateLevelStats(level, correct) {
+	var langData = getLangData();
+
+	if (!langData.levelStats[level]) {
+		langData.levelStats[level] = {
+			correct: 0,
+			wrong: 0
+		};
+	}
+
 	if (correct) {
-		data.levelStats[level].correct++;
-		data.correctAnswers++;
-		data.score = data.correctAnswers * 10;
+		langData.levelStats[level].correct++;
+		langData.correctAnswers++;
+		langData.score = langData.correctAnswers * 10;
 	} else {
-		data.levelStats[level].wrong++;
-		data.wrongAnswers++;
+		langData.levelStats[level].wrong++;
+		langData.wrongAnswers++;
 	}
 
 	saveData();
@@ -79,7 +150,8 @@ function updateLevelStats(level, correct) {
 }
 
 function updateUserLevel() {
-	var totalAnswers = data.correctAnswers + data.wrongAnswers;
+	var langData = getLangData();
+	var totalAnswers = langData.correctAnswers + langData.wrongAnswers;
 	// we have to have at least 20 words to compute level
 	if (totalAnswers < 20) {
 		console.log('Cannot compute user level yet');
@@ -89,9 +161,9 @@ function updateUserLevel() {
 	var sum = 0;
 	var max = 0;
 
-	for (var i = 0, len = data.levelStats.length; i < len; i++) {
+	for (var i = 0, len = langData.levelStats.length; i < len; i++) {
 		// level must have any entries to be included into computations
-		var lvl = data.levelStats[i];
+		var lvl = langData.levelStats[i];
 		var weight = (100 - i) * 0.9;
 
 		if (lvl.correct || lvl.wrong) {
@@ -100,21 +172,24 @@ function updateUserLevel() {
 		}
 	}
 
-	data.level = parseInt(sum / max * 100);
-	console.log('New user level:', data.level);
+	var newLevel = parseInt(sum / max * 100);
+	newLevel = Math.min(MAX_LEVEL, newLevel);
+
+	langData.level = newLevel;
+	console.log('New user level:', langData.level);
 
 	// range update - after first 50 words shrink range to 30
-	if (totalAnswers > 20 && data.range == 40) {
-		data.range = 30;
+	if (totalAnswers > 20 && langData.range == 40) {
+		langData.range = 30;
 	}
-	else if (totalAnswers > 40 && data.range == 30) {
-		data.range = 20;
+	else if (totalAnswers > 40 && langData.range == 30) {
+		langData.range = 20;
 	}
-	else if (totalAnswers > 60 && data.range == 20) {
-		data.range = 15;
+	else if (totalAnswers > 60 && langData.range == 20) {
+		langData.range = 15;
 	}
 
-	data.historyLevelValues.push(data.level);
+	langData.historyLevelValues.push(langData.level);
 
 	saveData();
 	emitChange();
@@ -128,18 +203,21 @@ function saveData() {
 		.done();
 }
 
-function loadData(key) {
+function loadData() {
 	AsyncStorage
 		.getItem(PERSISTENCE_KEY)
 		.then(function (stats) {
 			var parsedData = JSON.parse(stats);
 			if (parsedData) {
 				data = parsedData;
+				console.log('parsed data', parsedData);
 			}
 
 			migrate1();
 			migrate2();
 			migrate3();
+			migrate4();
+			console.log('data aafter migration:', data);
 
 			log({
 				message: 'user profile loaded',
@@ -157,7 +235,9 @@ function loadData(key) {
  * @param level
  */
 function setUserLevel(level) {
-	if (level === data.level) {
+	var langData = getLangData();
+
+	if (level === langData.level) {
 		return;
 	}
 
@@ -165,16 +245,20 @@ function setUserLevel(level) {
 		message: 'Setting user level',
 		level: level
 	});
-	data.correctAnswers = 0;
-	data.wrongAnswers = 0;
-	data.level = level;
-	data.range = 40;
-	data.levelStats = [];
-	data.historyLevelValues = [];
+	langData.correctAnswers = 0;
+	langData.wrongAnswers = 0;
+	langData.level = level;
+	langData.range = 40;
+	langData.levelStats = [];
+	langData.historyLevelValues = [];
+
 	initLevelStats();
 	saveData();
 	emitChange();
 }
+
+
+
 
 function migrate1() {
 	if (!data.wordsLimit) {
@@ -195,6 +279,34 @@ function migrate3() {
 	}
 }
 
+// change database structure - store results for each language
+function migrate4() {
+	// migration already done
+	if (!('wordsLimit' in data)) {
+		return;
+	}
+
+	var propsToRewrite = [
+		'wordsLimit',
+		'level',
+		'range',
+		'score',
+		'correctAnswers',
+		'wrongAnswers',
+		'previousScore',
+		'historyLevelValues',
+		'levelStats'
+	];
+	data.quiz = {};
+
+	var langData = data.quiz[data.language] = {};
+
+	for (var i = 0; i < propsToRewrite.length; i++) {
+		langData[propsToRewrite[i]] = data[propsToRewrite[i]];
+		delete data[propsToRewrite[i]];
+	}
+}
+
 module.exports = {
 	addChangeListener: addChangeListener,
 	get: get,
@@ -203,3 +315,4 @@ module.exports = {
 	updateUserLevel: updateUserLevel,
 	setUserLevel: setUserLevel
 };
+

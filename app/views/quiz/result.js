@@ -159,12 +159,14 @@ var ResultView = React.createClass({
 
 	animateLevel: function () {
 		// do not animate level if it hasn't changed
-		if (this.props.leve !== this.props.previousLevel) {
+		if (this.props.level !== this.props.previousLevel) {
 			this.animateLevelNumber(this.animateLevelBackground);
 		}
 	},
 
 	animateLevelNumber: function (cb) {
+		console.log('ANIMATE LEVEL NUMBER', this.props.previousLevel, this.props.level);
+
 		utils.animateNumber({
 			start: this.props.previousLevel,
 			end: this.props.level,
