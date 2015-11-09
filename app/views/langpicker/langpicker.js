@@ -49,6 +49,10 @@ var LangPicker = React.createClass({
 		this.props.onLanguageChange && this.props.onLanguageChange(lang);
 	},
 
+	componentWillReceiveProps: function (props) {
+		this.setState({lang: props.lang});
+	},
+
 	renderLangs: function () {
 		var items = languages.map(function (lang) {
 			var langName = lang.name;

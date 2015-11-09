@@ -8,9 +8,7 @@ var {
 	TouchableWithoutFeedback,
 	TouchableHighlight,
 	Image,
-	Animated,
-	PickerIOS,
-	PickerItemIOS
+	Animated
 } = React;
 
 var Dimensions = require('Dimensions');

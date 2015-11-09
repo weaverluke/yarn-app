@@ -39,7 +39,7 @@ init();
 function init() {
 	initLevelStats();
 	// reset :D
-	saveData();
+	//saveData();
 
 	loadData();
 }

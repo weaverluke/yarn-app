@@ -67,8 +67,19 @@ var MainBar = React.createClass({
 		}
 		newProps.visible ? this.animateIn() : this.animateOut();
 
-		if (!newProps.visible && this.props.lang !== this.state.lang) {
-			actions.emit(actions.CHANGE_LANG, this.state.lang);
+		// we're changing from hidden to visible so we're updating currently set language
+		if (!this.props.visible && newProps.visible) {
+			this.animateIn();
+			this.setState({lang: newProps.lang});
+		}
+
+		// change from visible to hidden
+		else if (this.props.visible && !newProps.visible) {
+			this.animateOut();
+			// lang has changed
+			if (this.props.lang !== this.state.lang) {
+				actions.emit(actions.CHANGE_LANG, this.state.lang);
+			}
 		}
 	},
 
