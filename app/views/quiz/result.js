@@ -125,7 +125,6 @@ var ResultView = React.createClass({
 	componentDidMount: function () {
 		// delay intro animation a bit to make it smooth
 		setTimeout(this.animateIn, 150);
-		this.showBuyVocabLevelPopup();
 	},
 
 	animateIn: function () {

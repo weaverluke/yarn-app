@@ -1358,7 +1358,7 @@ throw new TypeError(
 
 var index=findIndex.call(this,predicate,context);
 return index === -1?undefined:this[index];}});}})();
-__d('yarn/index.ios.js',["react-native/Libraries/react-native/react-native.js","yarn/app/views/browser/browser.js","yarn/app/views/popup/popup.js","yarn/app/views/statusbar/statusbar.js","yarn/app/views/settings/settings.js","yarn/app/views/mainbar/mainbar.js","yarn/app/views/toast/toast.js","yarn/app/views/toast/wordscounttoastcontent.js","yarn/app/views/searching/searching.js","yarn/app/views/guardianinfo/guardianinfo.js","yarn/app/views/networkerror/networkerror.js","yarn/app/views/quiz/quizstatusbar.js","yarn/app/views/quiz/question.js","yarn/app/views/quiz/result.js","yarn/app/views/intro/intro.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js","yarn/app/uiconfig.js","yarn/app/whitelist.js","Dimensions","NativeModules"],function(global, require, module, exports) {  'use strict';
+__d('yarn/index.ios.js',["react-native/Libraries/react-native/react-native.js","yarn/app/views/browser/browser.js","yarn/app/views/popup/popup.js","yarn/app/views/statusbar/statusbar.js","yarn/app/views/settings/settings.js","yarn/app/views/mainbar/mainbar.js","yarn/app/views/toast/toast.js","yarn/app/views/toast/wordscounttoastcontent.js","yarn/app/views/searching/searching.js","yarn/app/views/guardianinfo/guardianinfo.js","yarn/app/views/networkerror/networkerror.js","yarn/app/views/quiz/quizstatusbar.js","yarn/app/views/quiz/question.js","yarn/app/views/intro/intro.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js","yarn/app/uiconfig.js","yarn/app/whitelist.js","Dimensions","NativeModules","yarn/app/views/quiz/result.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');
 
@@ -77207,18 +77207,6 @@ React.AsyncStorage;
 
 var INITIAL_LEVEL=50;
 
-var initialLanguageStats={
-wordsLimit:10,
-level:INITIAL_LEVEL,
-range:40,
-score:0,
-correctAnswers:0,
-wrongAnswers:0,
-levelStats:[],
-previousScore:0,
-historyLevelValues:[INITIAL_LEVEL]};
-
-
 var data={
 dataVersion:2,
 language:'pl',
@@ -77228,29 +77216,15 @@ introScreenShown:false,
 buyVocabLevelShown:false,
 buyVocabLevelPressed:false,
 
-quiz:{
-pl:JSON.parse(JSON.stringify(initialLanguageStats))}};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+wordsLimit:10,
+level:INITIAL_LEVEL,
+range:40,
+score:0,
+correctAnswers:0,
+wrongAnswers:0,
+levelStats:[],
+previousScore:0,
+historyLevelValues:[INITIAL_LEVEL]};
 
 
 var PERSISTENCE_KEY='@yarn:userProfileStore';
@@ -77266,10 +77240,8 @@ loadData();}
 
 
 function initLevelStats(){
-var landData=getLangData();
-
 for(var i=0;i < 100;i++) {
-landData.levelStats[i] = {
+data.levelStats[i] = {
 correct:0,
 wrong:0};}}
 
@@ -77277,56 +77249,13 @@ wrong:0};}}
 
 
 function set(key,value){
-
-if(key === 'language'){
-return setLanguage(key);}
-
-
-var changed=false;
-
-
-if(data.hasOwnProperty(key)){
 data[key] = value;
-changed = true;}else 
-
-
-
-if(getLangData().hasOwnProperty(key)){
-setLangData(key,value);
-changed = true;}
-
-
-if(changed){
 emitChange();
-saveData();}}
-
-
-
-function setLanguage(lang){
-if(data.language === lang){
-return;}
-
-
-data.language = lang;
-if(!data.quiz[lang]){
-data.quiz[lang] = JSON.parse(JSON.stringify(initialLanguageStats));}
-
-
-initLevelStats();
-
-emitChange();}
+saveData();}
 
 
 function get(key){
-
-if(data.hasOwnProperty(key)){
 return data[key];}
-
-
-
-if(getLangData().hasOwnProperty(key)){
-return getLangData(key);}}
-
 
 
 function getLangData(key){
@@ -77349,22 +77278,14 @@ eventEmitter.on(CHANGE_EVENT,listener);}
 
 
 function updateLevelStats(level,correct){
-var langData=getLangData();
-
-if(!langData.levelStats[level]){
-langData.levelStats[level] = {
-correct:0,
-wrong:0};}
-
-
 
 if(correct){
-langData.levelStats[level].correct++;
-langData.correctAnswers++;
-langData.score = langData.correctAnswers * 10;}else 
+data.levelStats[level].correct++;
+data.correctAnswers++;
+data.score = data.correctAnswers * 10;}else 
 {
-langData.levelStats[level].wrong++;
-langData.wrongAnswers++;}
+data.levelStats[level].wrong++;
+data.wrongAnswers++;}
 
 
 saveData();
@@ -77372,8 +77293,7 @@ emitChange();}
 
 
 function updateUserLevel(){
-var langData=getLangData();
-var totalAnswers=langData.correctAnswers + langData.wrongAnswers;
+var totalAnswers=data.correctAnswers + data.wrongAnswers;
 
 if(totalAnswers < 20){
 console.log('Cannot compute user level yet');
@@ -77383,9 +77303,9 @@ return;}
 var sum=0;
 var max=0;
 
-for(var i=0,len=langData.levelStats.length;i < len;i++) {
+for(var i=0,len=data.levelStats.length;i < len;i++) {
 
-var lvl=langData.levelStats[i];
+var lvl=data.levelStats[i];
 var weight=(100 - i) * 0.9;
 
 if(lvl.correct || lvl.wrong){
@@ -77394,21 +77314,21 @@ max += (i + 1) * weight;}}
 
 
 
-langData.level = parseInt(sum / max * 100);
-console.log('New user level:',langData.level);
+data.level = parseInt(sum / max * 100);
+console.log('New user level:',data.level);
 
 
-if(totalAnswers > 20 && langData.range == 40){
-langData.range = 30;}else 
+if(totalAnswers > 20 && data.range == 40){
+data.range = 30;}else 
 
-if(totalAnswers > 40 && langData.range == 30){
-langData.range = 20;}else 
+if(totalAnswers > 40 && data.range == 30){
+data.range = 20;}else 
 
-if(totalAnswers > 60 && langData.range == 20){
-langData.range = 15;}
+if(totalAnswers > 60 && data.range == 20){
+data.range = 15;}
 
 
-langData.historyLevelValues.push(langData.level);
+data.historyLevelValues.push(data.level);
 
 saveData();
 emitChange();}
@@ -77430,22 +77350,16 @@ var parsedData=JSON.parse(stats);
 
 
 if(parsedData){
-if(parsedData.version == 2){
 data = parsedData;
-console.log('parsed data',parsedData);}else 
+console.log('parsed data',parsedData);}
 
 
-{
-data.language = parsedData.language;
-saveData();}}
+migrate1();
+migrate2();
+migrate3();
 
 
-
-
-
-
-
-
+migrate5();
 console.log('data after migration:',data);
 
 log({
@@ -79271,8 +79185,19 @@ return;}
 
 newProps.visible?this.animateIn():this.animateOut();
 
-if(!newProps.visible && this.props.lang !== this.state.lang){
-actions.emit(actions.CHANGE_LANG,this.state.lang);}},
+
+if(!this.props.visible && newProps.visible){
+this.animateIn();
+this.setState({lang:newProps.lang});}else 
+
+
+
+if(this.props.visible && !newProps.visible){
+this.animateOut();
+
+if(this.props.lang !== this.state.lang){
+actions.emit(actions.CHANGE_LANG,this.state.lang);}}},
+
 
 
 
@@ -79402,6 +79327,10 @@ this.setState({
 lang:lang});
 
 this.props.onLanguageChange && this.props.onLanguageChange(lang);},
+
+
+componentWillReceiveProps:function(props){
+this.setState({lang:props.lang});},
 
 
 renderLangs:function(){
@@ -81573,8 +81502,7 @@ onBuyPressed:this.props.onBuyVocabLevelPressed})));},
 
 componentDidMount:function(){
 
-setTimeout(this.animateIn,150);
-this.showBuyVocabLevelPopup();},
+setTimeout(this.animateIn,150);},
 
 
 animateIn:function(){
@@ -81969,9 +81897,7 @@ StyleSheet=
 
 
 
-
-
-React.StyleSheet;var View=React.View;var Text=React.Text;var TouchableWithoutFeedback=React.TouchableWithoutFeedback;var TouchableHighlight=React.TouchableHighlight;var Image=React.Image;var Animated=React.Animated;var PickerIOS=React.PickerIOS;var PickerItemIOS=React.PickerItemIOS;
+React.StyleSheet;var View=React.View;var Text=React.Text;var TouchableWithoutFeedback=React.TouchableWithoutFeedback;var TouchableHighlight=React.TouchableHighlight;var Image=React.Image;var Animated=React.Animated;
 
 var Dimensions=require('Dimensions');var _Dimensions$get=
 Dimensions.get('window');var width=_Dimensions$get.width;var height=_Dimensions$get.height;

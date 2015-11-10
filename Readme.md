@@ -1,5 +1,8 @@
 ##Release notes
 
+v0.2.21
+- various bugfixes
+
 v0.2.20
 - settings view
 - new data structure - storing stats for each language separately
