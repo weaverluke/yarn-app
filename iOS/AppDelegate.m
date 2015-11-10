@@ -34,7 +34,7 @@
 
   
   // point to localhost here
-  jsCodeLocation = [NSURL URLWithString:@"http://192.168.1.123:8081/index.ios.bundle"];
+//  jsCodeLocation = [NSURL URLWithString:@"http://192.168.1.123:8081/index.ios.bundle"];
 //  jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle"];
 
   /**
@@ -47,7 +47,7 @@
    * see http://facebook.github.io/react-native/docs/runningondevice.html
    */
 
-//   jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+   jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation

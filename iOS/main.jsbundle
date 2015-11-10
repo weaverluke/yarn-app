@@ -1358,7 +1358,7 @@ throw new TypeError(
 
 var index=findIndex.call(this,predicate,context);
 return index === -1?undefined:this[index];}});}})();
-__d('yarn/index.ios.js',["react-native/Libraries/react-native/react-native.js","yarn/app/views/browser/browser.js","yarn/app/views/popup/popup.js","yarn/app/views/statusbar/statusbar.js","yarn/app/views/settings/settings.js","yarn/app/views/mainbar/mainbar.js","yarn/app/views/toast/toast.js","yarn/app/views/toast/wordscounttoastcontent.js","yarn/app/views/searching/searching.js","yarn/app/views/guardianinfo/guardianinfo.js","yarn/app/views/networkerror/networkerror.js","yarn/app/views/quiz/quizstatusbar.js","yarn/app/views/quiz/question.js","yarn/app/views/intro/intro.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js","yarn/app/uiconfig.js","yarn/app/whitelist.js","Dimensions","NativeModules","yarn/app/views/quiz/result.js"],function(global, require, module, exports) {  'use strict';
+__d('yarn/index.ios.js',["react-native/Libraries/react-native/react-native.js","yarn/app/views/browser/browser.js","yarn/app/views/popup/popup.js","yarn/app/views/statusbar/statusbar.js","yarn/app/views/settings/settings.js","yarn/app/views/mainbar/mainbar.js","yarn/app/views/toast/toast.js","yarn/app/views/toast/wordscounttoastcontent.js","yarn/app/views/searching/searching.js","yarn/app/views/guardianinfo/guardianinfo.js","yarn/app/views/networkerror/networkerror.js","yarn/app/views/quiz/quizstatusbar.js","yarn/app/views/quiz/question.js","yarn/app/views/quiz/result.js","yarn/app/views/intro/intro.js","yarn/app/stores/gamestatestore.js","yarn/app/stores/userprofilestore.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js","yarn/app/uiconfig.js","yarn/app/whitelist.js","Dimensions","NativeModules"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');
 
@@ -1565,16 +1565,15 @@ if(this.state.bottomBar !== 'result'){
 return React.createElement(View,null);}
 
 var levelStats=userProfileStore.get('historyLevelValues');
-
-console.log('LEVEL ',levelStats[levelStats.length - 2],levelStats[levelStats.length - 1],
-userProfileStore.get('score'),userProfileStore.get('previousScore'));
+console.log('RESULTS: level:',Math.min(userProfileStore.get('level'),uiConfig.MAX_VOCAB_LEVEL),
+', prevLevel:',Math.min(levelStats[levelStats.length - 2],uiConfig.MAX_VOCAB_LEVEL));
 
 return (
 React.createElement(ResultView,{
 correctWords:gameStateStore.get('correct'),
 totalWords:gameStateStore.get('pageWords').length,
 level:Math.min(userProfileStore.get('level'),uiConfig.MAX_VOCAB_LEVEL),
-previousLevel:Math.min(levelStats[levelStats.length - 1],uiConfig.MAX_VOCAB_LEVEL),
+previousLevel:Math.min(levelStats[levelStats.length - 2],uiConfig.MAX_VOCAB_LEVEL),
 score:userProfileStore.get('score'),
 previousScore:userProfileStore.get('previousScore'),
 onDonePressed:this.closeResultView,
@@ -1600,7 +1599,8 @@ nextButtonDisabled:!this.state.firstWordReady,
 onNextPress:actions.emit.bind(actions,actions.START_GAME),
 showWordsCount:true,
 wordsCount:gameStateStore.get('visitedPageWords').length,
-startHidden:true}));},
+startHidden:true,
+onRandomPressed:this.onRandomPagePressed}));},
 
 
 
@@ -1627,7 +1627,8 @@ renderMainBar:function(){
 return (
 React.createElement(MainBar,{
 ref:'mainbar',
-activeIcon:this.state.settingsViewVisible?'settings':'browse'}));},
+activeIcon:this.state.settingsViewVisible?'settings':'browse',
+onRandomPressed:this.onRandomPagePressed}));},
 
 
 
@@ -1813,7 +1814,9 @@ browseOnToastVisible:false});},
 
 
 onRandomPagePressed:function(){
-this.closeResultView(true);
+if(this.state.bottomBar === 'result'){
+this.closeResultView(true);}
+
 this.refs[BROWSER_REF].goToRandomUrl();},
 
 
@@ -52552,7 +52555,7 @@ Object.keys(componentOrElement));}
 
 module.exports = findDOMNode;
 });
-__d('yarn/app/views/browser/browser.js',["react-native/Libraries/react-native/react-native.js","yarn/app/stores/gamestatestore.js","yarn/app/views/browser/yarnwebview.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js","yarn/app/blacklist.js","yarn/app/whitelist.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
+__d('yarn/app/views/browser/browser.js',["react-native/Libraries/react-native/react-native.js","yarn/app/stores/gamestatestore.js","yarn/app/views/browser/yarnwebview.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -52569,9 +52572,6 @@ var gameStateStore=require('yarn/app/stores/gamestatestore.js');
 var YarnWebView=require('yarn/app/views/browser/yarnwebview.js');
 var actions=require('yarn/app/actions/actions.js');
 var log=require('yarn/app/logger/logger.js');
-
-var BLACKLIST=require('yarn/app/blacklist.js');
-var WHITELIST=require('yarn/app/whitelist.js');
 
 var BORDER='#E7EAEA';
 var BGWASH='rgba(255,255,255,0.8)';
@@ -52733,8 +52733,8 @@ urlInInput:navState.url});
 
 
 
-if(WHITELIST.doesMatch(navState.url)){
-this.scheduleApiInject();}
+
+this.scheduleApiInject();
 
 
 if(navState.url !== this.lastUrl){
@@ -53245,7 +53245,7 @@ return typeof arg === 'object' && arg !== null;}
 function isUndefined(arg){
 return arg === void 0;}
 });
-__d('yarn/app/views/browser/yarnwebview.js',["react-native/Libraries/react-native/react-native.js","react-native-webview-bridge/jsx/WebViewBridge.js","yarn/app/logger/logger.js","node-read/index.js","yarn/app/views/browser/wordHelpers.js","yarn/app/actions/actions.js","yarn/app/views/browser/websiteapi.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
+__d('yarn/app/views/browser/yarnwebview.js',["react-native/Libraries/react-native/react-native.js","react-native-webview-bridge/jsx/WebViewBridge.js","yarn/app/whitelist.js","yarn/app/logger/logger.js","node-read/index.js","yarn/app/views/browser/wordHelpers.js","yarn/app/actions/actions.js","yarn/app/views/browser/websiteapi.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -53254,6 +53254,7 @@ StyleSheet=
 React.StyleSheet;var WebView=React.WebView;
 
 var WebViewBridge=require('react-native-webview-bridge/jsx/WebViewBridge.js');
+var WHITELIST=require('yarn/app/whitelist.js');
 
 var log=require('yarn/app/logger/logger.js');
 var readability=require('node-read/index.js');
@@ -53354,8 +53355,11 @@ console.log.apply(console,args);
 break;
 
 case 'WEBSITE_READY':
+
+if(WHITELIST.doesMatch(this.state.url)){
 this.setHighlightColor(uiConfig.COLORS.ORANGE_BG);
-this.requestWebsiteContent();
+this.requestWebsiteContent();}
+
 break;
 
 case 'WORDS':
@@ -53636,6 +53640,22 @@ _this3.handlerId = 0;});}}]);return WebViewBridge;})(WebView);
 
 
 module.exports = WebViewBridge;
+});
+__d('yarn/app/whitelist.js',[],function(global, require, module, exports) {  var regexps=[
+
+/.*\/\d{4}\/.*/];
+
+
+
+function doesMatch(url){
+return regexps.some(function(rx){
+return rx.test(url);});}
+
+
+
+module.exports = {
+regexps:regexps,
+doesMatch:doesMatch};
 });
 __d('yarn/app/logger/logger.js',[],function(global, require, module, exports) {  'use strict';
 
@@ -77205,11 +77225,11 @@ var React=require('react-native/Libraries/react-native/react-native.js');var
 AsyncStorage=
 React.AsyncStorage;
 
-var INITIAL_LEVEL=50;
+var INITIAL_LEVEL=30;
 
 var data={
 dataVersion:2,
-language:'pl',
+language:'',
 testYourselfPromptShown:false,
 
 introScreenShown:false,
@@ -77218,7 +77238,7 @@ buyVocabLevelPressed:false,
 
 wordsLimit:10,
 level:INITIAL_LEVEL,
-range:40,
+range:25,
 score:0,
 correctAnswers:0,
 wrongAnswers:0,
@@ -77295,7 +77315,7 @@ emitChange();}
 function updateUserLevel(){
 var totalAnswers=data.correctAnswers + data.wrongAnswers;
 
-if(totalAnswers < 20){
+if(totalAnswers < 8){
 console.log('Cannot compute user level yet');
 return;}
 
@@ -77318,13 +77338,13 @@ data.level = parseInt(sum / max * 100);
 console.log('New user level:',data.level);
 
 
-if(totalAnswers > 20 && data.range == 40){
-data.range = 30;}else 
-
-if(totalAnswers > 40 && data.range == 30){
+if(totalAnswers > 10 && data.range == 25){
 data.range = 20;}else 
 
-if(totalAnswers > 60 && data.range == 20){
+if(totalAnswers > 20 && data.range == 20){
+data.range = 18;}else 
+
+if(totalAnswers > 30 && data.range == 18){
 data.range = 15;}
 
 
@@ -77804,18 +77824,29 @@ var matchingOrigin=getLinksMatchingCurrentDomain(links);
 
 links = matchingOrigin.length?matchingOrigin:links;
 
-links.map(function(link){
-return link.getAttribute('href');});
+links = links.map(function(link){
+return link.getAttribute('href');}).
+map(function(href){
+
+
+return href.replace(/#.*/,'');});
+
+
+var unique=[];
+for(var i=0;i < links.length;i++) {
+if(unique.indexOf(links[i]) === -1){
+unique.push(links[i]);}}
 
 
 
-links.sort(function(a,b){
+
+unique.sort(function(a,b){
 return b.length - a.length;});
 
 
 
-var index=Math.floor(Math.random() * 3);
-location = links[index];}
+var index=Math.floor(Math.random() * unique.length * 0.3);
+location = unique[index];}
 
 
 function getLinksMatchingCurrentDomain(links){
@@ -77890,6 +77921,7 @@ send('SCROLL',{x:window.scrollX,y:window.scrollY});},
 
 
 function log(){
+return;
 var args=[].slice.call(arguments);
 send('LOG',args);}
 
@@ -78008,29 +78040,6 @@ WORD_BUTTON_ANSWER_TEXT_SIZE:18,
 QUIZ_BUTTON_HEIGHT:50,
 
 MAX_VOCAB_LEVEL:60};
-});
-__d('yarn/app/blacklist.js',[],function(global, require, module, exports) {  module.exports.urls = [
-'http://www.theguardian.com/',
-'http://www.theguardian.com/uk',
-'http://www.theguardian.com/uk-news',
-'http://www.theguardian.com/world',
-'http://www.theguardian.com/international'];
-});
-__d('yarn/app/whitelist.js',[],function(global, require, module, exports) {  var regexps=[
-
-/.*\/\d{4}\/.*/];
-
-
-
-function doesMatch(url){
-return regexps.some(function(rx){
-return rx.test(url);});}
-
-
-
-module.exports = {
-regexps:regexps,
-doesMatch:doesMatch};
 });
 __d('yarn/app/views/popup/popup.js',["image!horizontal-gradient","react-native/Libraries/react-native/react-native.js","Dimensions","yarn/app/uiconfig.js","yarn/app/utils.js"],function(global, require, module, exports) {  var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -78732,6 +78741,13 @@ transform:[
 
 opacity:this.state.opacityValue}]},
 
+React.createElement(View,{style:styles.randomButton},
+React.createElement(NavBarButton,{
+icon:'random',
+onPress:this.props.onRandomPressed,
+backgroundColor:uiConfig.COLORS.LIGHT_GREY})),
+
+
 items,
 React.createElement(NavBarButton,{
 onPress:this.props.onNextPress,
@@ -78855,15 +78871,17 @@ var styles=StyleSheet.create({
 wrap:{
 borderTopWidth:1,
 borderTopColor:uiConfig.COLORS.MID_GREY,
-height:uiConfig.TOOLBAR_HEIGHT - uiConfig.PROGRESSBAR_HEIGHT + 1,
+height:uiConfig.TOOLBAR_HEIGHT,
 flexDirection:'row',
-alignItems:'stretch'},
+alignItems:'stretch',
+backgroundColor:'white'},
 
 
 contentWrap:{
 flex:1,
 flexDirection:'row',
-alignItems:'stretch'},
+alignItems:'stretch',
+backgroundColor:'transparent'},
 
 
 progressTextWrap:{
@@ -78930,7 +78948,18 @@ backgroundColor:'#FFFFFF'},
 wordsCountCenterV:{
 flex:1,
 flexDirection:'row',
-alignItems:'center'}});
+alignItems:'center'},
+
+
+randomButton:{
+marginRight:3,
+shadowColor:'#000000',
+shadowOffset:{
+width:2,
+height:0},
+
+shadowOpacity:0.5,
+shadowRadius:1}});
 
 
 
@@ -79026,7 +79055,7 @@ text:{}});
 
 module.exports = NavBarLabel;
 });
-__d('yarn/app/views/statusbar/navbarbutton.js',["image!settings-icon","react-native/Libraries/react-native/react-native.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
+__d('yarn/app/views/statusbar/navbarbutton.js',["image!settings-icon","image!random-icon","react-native/Libraries/react-native/react-native.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -79035,7 +79064,7 @@ StyleSheet=
 
 
 
-React.StyleSheet;var View=React.View;var Text=React.Text;var TouchableWithoutFeedback=React.TouchableWithoutFeedback;var Image=React.Image;
+React.StyleSheet;var View=React.View;var Text=React.Text;var TouchableHighlight=React.TouchableHighlight;var Image=React.Image;
 
 var uiConfig=require('yarn/app/uiconfig.js');
 
@@ -79060,7 +79089,7 @@ var additionalStyle={
 backgroundColor:this.props.disabled?uiConfig.COLORS.MID_GREY:this.props.backgroundColor};
 
 return (
-React.createElement(TouchableWithoutFeedback,{onPress:this.props.disabled?function(){}:this.props.onPress},
+React.createElement(TouchableHighlight,{onPress:this.props.disabled?function(){}:this.props.onPress},
 React.createElement(View,{style:[styles.wrap,additionalStyle]},
 img)));},
 
@@ -79080,6 +79109,10 @@ var imgUri=this.props.disabled?'next-disabled.gif':'next-finished.gif';
 return (
 React.createElement(Image,{source:{uri:imgUri},style:styles.bigIcon}));
 
+case 'random':
+return (
+React.createElement(Image,{source:require('image!random-icon'),style:styles.randomIcon}));
+
 default:
 return React.createElement(View,null);}}});
 
@@ -79090,6 +79123,7 @@ var styles=StyleSheet.create({
 wrap:{
 backgroundColor:'#FFFFFF',
 width:uiConfig.TOOLBAR_BUTTON_WIDTH,
+height:uiConfig.TOOLBAR_HEIGHT,
 borderLeftWidth:1,
 borderLeftColor:uiConfig.COLORS.MID_GREY,
 alignSelf:'stretch',
@@ -79106,8 +79140,12 @@ marginTop:Math.floor((uiConfig.TOOLBAR_HEIGHT - uiConfig.TOOLBAR_ICON_SIZE) / 2)
 
 bigIcon:{
 width:uiConfig.TOOLBAR_BIG_ICON_SIZE,
-height:uiConfig.TOOLBAR_BIG_ICON_SIZE,
-marginTop:Math.floor((uiConfig.TOOLBAR_HEIGHT - uiConfig.TOOLBAR_BIG_ICON_SIZE) / 7)}});
+height:uiConfig.TOOLBAR_BIG_ICON_SIZE},
+
+
+randomIcon:{
+width:uiConfig.TOOLBAR_ICON_SIZE + 8,
+height:uiConfig.TOOLBAR_ICON_SIZE + 8}});
 
 
 
@@ -79115,6 +79153,8 @@ marginTop:Math.floor((uiConfig.TOOLBAR_HEIGHT - uiConfig.TOOLBAR_BIG_ICON_SIZE) 
 module.exports = NavBarButton;
 });
 __d('image!settings-icon',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/settings-icon.imageset/settings-icon.png","uri":"settings-icon","width":44,"height":44,"deprecated":true};
+});
+__d('image!random-icon',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/random-icon.imageset/random-icon.png","uri":"random-icon","width":44,"height":44,"deprecated":true};
 });
 __d('yarn/app/views/settings/settings.js',["react-native/Libraries/react-native/react-native.js","Dimensions","yarn/app/actions/actions.js","yarn/app/uiconfig.js","yarn/app/views/langpicker/langpicker.js"],function(global, require, module, exports) {  'use strict';
 
@@ -79744,7 +79784,7 @@ var languagesData={
 
 module.exports = languagesData.data.languages;
 });
-__d('yarn/app/views/mainbar/mainbar.js',["image!browse-icon-active","image!browse-icon","image!settings-icon-active","image!settings-icon","react-native/Libraries/react-native/react-native.js","Dimensions","yarn/app/actions/actions.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
+__d('yarn/app/views/mainbar/mainbar.js',["image!browse-icon-active","image!browse-icon","image!settings-icon-active","image!settings-icon","react-native/Libraries/react-native/react-native.js","Dimensions","yarn/app/actions/actions.js","yarn/app/uiconfig.js","yarn/app/views/statusbar/navbarbutton.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -79762,6 +79802,8 @@ Dimensions.get('window');var width=_Dimensions$get.width;var height=_Dimensions$
 var actions=require('yarn/app/actions/actions.js');
 var uiConfig=require('yarn/app/uiconfig.js');
 
+var NavBarButton=require('yarn/app/views/statusbar/navbarbutton.js');
+
 var MainBar=React.createClass({
 
 getInitialState:function(){
@@ -79773,7 +79815,8 @@ marginTopValue:new Animated.Value(uiConfig.TOOLBAR_ANIMATION_OFFSET)};},
 
 getDefaultProps:function(){
 return {
-activeIcon:'browse'};},
+activeIcon:'browse',
+onRandomPressed:function(){}};},
 
 
 
@@ -79807,7 +79850,14 @@ source:icons.settings,
 style:styles.icon}))),
 
 
-React.createElement(View,{style:styles.spacer})));},
+React.createElement(View,{style:styles.spacer}),
+React.createElement(View,{style:styles.randomButton},
+React.createElement(NavBarButton,{
+icon:'random',
+onPress:this.props.onRandomPressed,
+backgroundColor:uiConfig.COLORS.LIGHT_GREY}))));},
+
+
 
 
 
@@ -79884,7 +79934,21 @@ height:uiConfig.TOOLBAR_ICON_SIZE + 8},
 
 
 spacer:{
-flex:1}});
+flex:2},
+
+
+randomButton:{
+position:'absolute',
+left:0,
+flex:1,
+
+shadowColor:'#000000',
+shadowOffset:{
+width:2,
+height:0},
+
+shadowOpacity:0.5,
+shadowRadius:1}});
 
 
 
@@ -81376,7 +81440,7 @@ module.exports = WordButton;
 });
 __d('image!magnifier',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/magnifier.imageset/magnifier.png","uri":"magnifier","width":44,"height":44,"deprecated":true};
 });
-__d('yarn/app/views/quiz/result.js',["react-native/Libraries/react-native/react-native.js","yarn/app/views/quiz/quizresult.js","yarn/app/views/popup/popup.js","yarn/app/uiconfig.js","yarn/app/utils.js","Dimensions"],function(global, require, module, exports) {  'use strict';
+__d('yarn/app/views/quiz/result.js',["image!random-white-icon","react-native/Libraries/react-native/react-native.js","yarn/app/views/quiz/quizresult.js","yarn/app/views/popup/popup.js","yarn/app/uiconfig.js","yarn/app/utils.js","Dimensions"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -81482,7 +81546,8 @@ React.createElement(Text,{style:styles.buttonText},'Done'))),
 
 
 React.createElement(TouchableWithoutFeedback,{onPress:this.hide(this.props.onRandomPressed)},
-React.createElement(View,{style:[styles.button,styles.blueBg]},
+React.createElement(View,{style:[styles.button,styles.blueBg,styles.buttonWithImage]},
+React.createElement(Image,{source:require('image!random-white-icon'),style:styles.randomIcon}),
 React.createElement(Text,{style:styles.buttonText},'Random!')))),
 
 
@@ -81749,8 +81814,19 @@ fontSize:18,
 lineHeight:36,
 fontWeight:'500',
 justifyContent:'center',
-color:uiConfig.COLORS.TEXT}});
+color:uiConfig.COLORS.TEXT},
 
+
+buttonWithImage:{
+flexDirection:'row',
+justifyContent:'center'},
+
+
+randomIcon:{
+width:uiConfig.TOOLBAR_ICON_SIZE + 8,
+height:uiConfig.TOOLBAR_ICON_SIZE + 8,
+marginRight:10,
+marginBottom:-4}});
 
 
 
@@ -81885,6 +81961,8 @@ height:uiConfig.PROGRESSBAR_HEIGHT}});
 
 
 module.exports = QuizResult;
+});
+__d('image!random-white-icon',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/mateusz/workspace/weaverdigital/yarn/iOS/Images.xcassets/random-white-icon.imageset/random-white-icon.png","uri":"random-white-icon","width":44,"height":44,"deprecated":true};
 });
 __d('yarn/app/views/intro/intro.js',["react-native/Libraries/react-native/react-native.js","Dimensions","yarn/app/actions/actions.js","yarn/app/uiconfig.js","yarn/app/views/langpicker/langpicker.js"],function(global, require, module, exports) {  'use strict';
 

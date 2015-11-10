@@ -1,5 +1,10 @@
 ##Release notes
 
+v0.2.22
+- various bugfixes
+- added "Random" buttons across the app
+- initial vocab level changed to 30
+
 v0.2.21
 - various bugfixes
 
