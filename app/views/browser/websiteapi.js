@@ -333,18 +333,29 @@ module.exports = function () {
 
 		links = matchingOrigin.length ? matchingOrigin : links;
 
-		links.map(function (link) {
+		links = links.map(function (link) {
 			return link.getAttribute('href');
+		}).map(function (href) {
+			// remove hashes from the end. It works for the guardian but might be problematic for sites
+			// with navigation implemented via hashes
+			return href.replace(/#.*/, '');
 		});
 
+		var unique = [];
+		for (var i = 0; i < links.length; i++) {
+			if (unique.indexOf(links[i]) === -1) {
+				unique.push(links[i]);
+			}
+		}
+
 		// sort from the longest to the shortest
-		links.sort(function (a, b) {
+		unique.sort(function (a, b) {
 			return b.length - a.length;
 		});
 
-		// pick 50% of the longest links
-		var index = Math.floor(Math.random() * 3);
-		location = links[index];
+		// pick 30% of the longest links
+		var index = Math.floor(Math.random() * unique.length*0.3);
+		location = unique[index];
 	}
 
 	function getLinksMatchingCurrentDomain(links) {
@@ -419,6 +430,7 @@ module.exports = function () {
 
 	//var log = console.log.bind(console);
 	function log() {
+		return;
 		var args = [].slice.call(arguments);
 		send('LOG', args);
 	}

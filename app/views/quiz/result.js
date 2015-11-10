@@ -104,7 +104,8 @@ var ResultView = React.createClass({
 						</View>
 					</TouchableWithoutFeedback>
 					<TouchableWithoutFeedback onPress={this.hide(this.props.onRandomPressed)}>
-						<View style={[styles.button, styles.blueBg]}>
+						<View style={[styles.button, styles.blueBg, styles.buttonWithImage]}>
+							<Image source={require('image!random-white-icon')} style={styles.randomIcon}/>
 							<Text style={styles.buttonText}>Random!</Text>
 						</View>
 					</TouchableWithoutFeedback>
@@ -372,8 +373,19 @@ var styles = StyleSheet.create({
 		fontWeight: '500',
 		justifyContent: 'center',
 		color: uiConfig.COLORS.TEXT
-	}
+	},
 
+	buttonWithImage: {
+		flexDirection: 'row',
+		justifyContent: 'center'
+	},
+
+	randomIcon: {
+		width: uiConfig.TOOLBAR_ICON_SIZE + 8,
+		height: uiConfig.TOOLBAR_ICON_SIZE + 8,
+		marginRight: 10,
+		marginBottom: -4
+	}
 });
 
 module.exports = ResultView;

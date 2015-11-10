@@ -7,6 +7,7 @@ var {
 } = React;
 
 var WebViewBridge = require('react-native-webview-bridge');
+var WHITELIST = require('../../whitelist');
 
 var log = require('../../logger/logger');
 var readability = require('node-read');
@@ -107,8 +108,11 @@ var Browser = React.createClass({
 					break;
 
 				case 'WEBSITE_READY':
-					this.setHighlightColor(uiConfig.COLORS.ORANGE_BG);
-					this.requestWebsiteContent();
+					// run api only for allowed websites
+					if (WHITELIST.doesMatch(this.state.url)) {
+						this.setHighlightColor(uiConfig.COLORS.ORANGE_BG);
+						this.requestWebsiteContent();
+					}
 					break;
 
 				case 'WORDS':

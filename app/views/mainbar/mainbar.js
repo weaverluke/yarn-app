@@ -16,6 +16,8 @@ var {width, height} = Dimensions.get('window');
 var actions = require('../../actions/actions');
 var uiConfig = require('../../uiconfig');
 
+var NavBarButton = require('../statusbar/navbarbutton');
+
 var MainBar = React.createClass({
 
 	getInitialState: function () {
@@ -27,7 +29,8 @@ var MainBar = React.createClass({
 
 	getDefaultProps: function () {
 		return {
-			activeIcon: 'browse'
+			activeIcon: 'browse',
+			onRandomPressed: function () {}
 		}
 	},
 
@@ -62,6 +65,13 @@ var MainBar = React.createClass({
 					</TouchableWithoutFeedback>
 				</View>
 				<View style={styles.spacer} />
+				<View style={styles.randomButton}>
+					<NavBarButton
+						icon={'random'}
+						onPress={this.props.onRandomPressed}
+						backgroundColor={uiConfig.COLORS.LIGHT_GREY}
+					/>
+				</View>
 			</Animated.View>
 		);
 	},
@@ -138,7 +148,21 @@ var styles = StyleSheet.create({
 	},
 
 	spacer: {
-		flex: 1
+		flex: 2
+	},
+
+	randomButton: {
+		position: 'absolute',
+		left: 0,
+		flex: 1,
+
+		shadowColor: '#000000',
+		shadowOffset: {
+			width: 2,
+			height: 0
+		},
+		shadowOpacity: 0.5,
+		shadowRadius: 1
 	}
 });
 

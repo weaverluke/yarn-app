@@ -241,6 +241,7 @@ var yarn = React.createClass({
 				showWordsCount={true}
 				wordsCount={gameStateStore.get('visitedPageWords').length}
 				startHidden={true}
+				onRandomPressed={this.onRandomPagePressed}
 			/>
 		);
 	},
@@ -268,6 +269,7 @@ var yarn = React.createClass({
 			<MainBar
 				ref='mainbar'
 				activeIcon={this.state.settingsViewVisible ? 'settings' : 'browse'}
+				onRandomPressed={this.onRandomPagePressed}
 			/>
 		);
 	},
@@ -453,7 +455,9 @@ var yarn = React.createClass({
 	},
 
 	onRandomPagePressed: function () {
-		this.closeResultView(true);
+		if (this.state.bottomBar === 'result') {
+			this.closeResultView(true);
+		}
 		this.refs[BROWSER_REF].goToRandomUrl();
 	},
 

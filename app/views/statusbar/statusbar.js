@@ -47,6 +47,13 @@ var StatusBar = React.createClass({
 				],
 				opacity: this.state.opacityValue
 			}]}>
+				<View style={styles.randomButton}>
+					<NavBarButton
+						icon={'random'}
+						onPress={this.props.onRandomPressed}
+						backgroundColor={uiConfig.COLORS.LIGHT_GREY}
+					/>
+				</View>
 				{items}
 				<NavBarButton
 					onPress={this.props.onNextPress}
@@ -170,15 +177,17 @@ var styles = StyleSheet.create({
 	wrap: {
 		borderTopWidth: 1,
 		borderTopColor: uiConfig.COLORS.MID_GREY,
-		height: uiConfig.TOOLBAR_HEIGHT - uiConfig.PROGRESSBAR_HEIGHT + 1, // 1 for border
+		height: uiConfig.TOOLBAR_HEIGHT,
 		flexDirection: 'row',
-		alignItems: 'stretch'
+		alignItems: 'stretch',
+		backgroundColor: 'white'
 	},
 
 	contentWrap: {
 		flex: 1,
 		flexDirection: 'row',
-		alignItems: 'stretch'
+		alignItems: 'stretch',
+		backgroundColor: 'transparent'
 	},
 
 	progressTextWrap: {
@@ -246,6 +255,17 @@ var styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'row',
 		alignItems: 'center'
+	},
+
+	randomButton: {
+		marginRight: 3, // so shadow is visible
+		shadowColor: '#000000',
+		shadowOffset: {
+			width: 2,
+			height: 0
+		},
+		shadowOpacity: 0.5,
+		shadowRadius: 1
 	}
 
 });
