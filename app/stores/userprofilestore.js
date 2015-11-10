@@ -14,7 +14,7 @@ var INITIAL_LEVEL = 30;
 
 var data = {
 	dataVersion: 2,
-	language: 'pl',
+	language: '',
 	testYourselfPromptShown: false,
 
 	introScreenShown: false,
@@ -23,7 +23,7 @@ var data = {
 
 	wordsLimit: 10,
 	level: INITIAL_LEVEL,
-	range: 40,
+	range: 25,
 	score: 0,
 	correctAnswers: 0,
 	wrongAnswers: 0,

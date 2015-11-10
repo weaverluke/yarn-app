@@ -205,16 +205,15 @@ var yarn = React.createClass({
 			return <View/>;
 		}
 		var levelStats = userProfileStore.get('historyLevelValues');
-
-		console.log('LEVEL ', levelStats[levelStats.length -2], levelStats[levelStats.length -1],
-			userProfileStore.get('score'), userProfileStore.get('previousScore'));
+		console.log('RESULTS: level:', Math.min(userProfileStore.get('level'), uiConfig.MAX_VOCAB_LEVEL),
+			', prevLevel:', Math.min(levelStats[levelStats.length - 2], uiConfig.MAX_VOCAB_LEVEL));
 
 		return (
 			<ResultView
 				correctWords={gameStateStore.get('correct')}
 				totalWords={gameStateStore.get('pageWords').length}
 				level={Math.min(userProfileStore.get('level'), uiConfig.MAX_VOCAB_LEVEL)}
-				previousLevel={Math.min(levelStats[levelStats.length - 1], uiConfig.MAX_VOCAB_LEVEL)}
+				previousLevel={Math.min(levelStats[levelStats.length - 2], uiConfig.MAX_VOCAB_LEVEL)}
 				score={userProfileStore.get('score')}
 				previousScore={userProfileStore.get('previousScore')}
 				onDonePressed={this.closeResultView}
