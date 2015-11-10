@@ -10,7 +10,7 @@ var {
 	AsyncStorage
 } = React;
 
-var INITIAL_LEVEL = 50;
+var INITIAL_LEVEL = 30;
 
 var data = {
 	dataVersion: 2,
@@ -100,7 +100,7 @@ function updateLevelStats(level, correct) {
 function updateUserLevel() {
 	var totalAnswers = data.correctAnswers + data.wrongAnswers;
 	// we have to have at least 20 words to compute level
-	if (totalAnswers < 20) {
+	if (totalAnswers < 8) {
 		console.log('Cannot compute user level yet');
 		return;
 	}
@@ -123,13 +123,13 @@ function updateUserLevel() {
 	console.log('New user level:', data.level);
 
 	// range update - after first 50 words shrink range to 30
-	if (totalAnswers > 20 && data.range == 40) {
-		data.range = 30;
-	}
-	else if (totalAnswers > 40 && data.range == 30) {
+	if (totalAnswers > 10 && data.range == 25) { // previously 20, 40 and 30
 		data.range = 20;
 	}
-	else if (totalAnswers > 60 && data.range == 20) {
+	else if (totalAnswers > 20 && data.range == 20) { // previously 40, 30 and 20
+		data.range = 18;
+	}
+	else if (totalAnswers > 30 && data.range == 18) { // previously 60, 20 and 15
 		data.range = 15;
 	}
 
