@@ -1466,6 +1466,7 @@ console.log('------------------------------------------------------------------'
 
 return (
 React.createElement(View,{style:[styles.container]},
+React.createElement(View,{style:styles.content},
 React.createElement(Browser,{
 ref:BROWSER_REF,
 url:this.state.url,
@@ -1510,7 +1511,8 @@ this.renderResultView(),
 this.renderTestYourselfPrompt(),
 this.renderIntroScreen(),
 this.renderGuardianInfoView(),
-this.renderNetworkErrorView()));},
+this.renderNetworkErrorView())));},
+
 
 
 
@@ -1568,12 +1570,14 @@ var levelStats=userProfileStore.get('historyLevelValues');
 console.log('RESULTS: level:',Math.min(userProfileStore.get('level'),uiConfig.MAX_VOCAB_LEVEL),
 ', prevLevel:',Math.min(levelStats[levelStats.length - 2],uiConfig.MAX_VOCAB_LEVEL));
 
+var previousLevel=levelStats.length > 1?levelStats[levelStats.length - 2]:levelStats[0];
+
 return (
 React.createElement(ResultView,{
 correctWords:gameStateStore.get('correct'),
 totalWords:gameStateStore.get('pageWords').length,
 level:Math.min(userProfileStore.get('level'),uiConfig.MAX_VOCAB_LEVEL),
-previousLevel:Math.min(levelStats[levelStats.length - 2],uiConfig.MAX_VOCAB_LEVEL),
+previousLevel:Math.min(previousLevel,uiConfig.MAX_VOCAB_LEVEL),
 score:userProfileStore.get('score'),
 previousScore:userProfileStore.get('previousScore'),
 onDonePressed:this.closeResultView,
@@ -1877,11 +1881,13 @@ networkErrorViewVisible:true});},
 
 
 hideNetworkErrorView:function(){
-this.refs[BROWSER_REF].reload();
-
 this.setState({
-networkErrorViewVisible:false});},
+networkErrorViewVisible:false});
 
+
+setTimeout((function(){
+this.refs[BROWSER_REF].reload();}).
+bind(this),2000);},
 
 
 componentDidMount:function(){
@@ -1896,6 +1902,7 @@ actions.on(actions.BROWSE_BUTTON_PRESSED,this.hideSettings);
 actions.on(actions.URL_FEATURE_REQUESTED,this.showUrlFeaturePopup);
 actions.on(actions.GUARDIAN_INFO_REQUESTED,this.showGuardianInfoView);
 actions.on(actions.NETWORK_ERROR_OCCURRED,this.showNetworkErrorView);
+actions.on(actions.TRY_AGAIN,this.hideNetworkErrorView);
 
 this.onUrlChange(this.state.url);},
 
@@ -2099,6 +2106,11 @@ var styles=StyleSheet.create({
 container:{
 flex:1,
 backgroundColor:HEADER},
+
+
+content:{
+marginTop:uiConfig.IOS_STATUSBAR_HEIGHT,
+flex:1},
 
 
 bottomBarWrap:{}});
@@ -52555,7 +52567,7 @@ Object.keys(componentOrElement));}
 
 module.exports = findDOMNode;
 });
-__d('yarn/app/views/browser/browser.js',["react-native/Libraries/react-native/react-native.js","yarn/app/stores/gamestatestore.js","yarn/app/views/browser/yarnwebview.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
+__d('yarn/app/views/browser/browser.js',["react-native/Libraries/react-native/react-native.js","yarn/app/stores/gamestatestore.js","yarn/app/actions/actions.js","yarn/app/logger/logger.js","yarn/app/uiconfig.js","yarn/app/views/browser/yarnwebview.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
@@ -53245,16 +53257,19 @@ return typeof arg === 'object' && arg !== null;}
 function isUndefined(arg){
 return arg === void 0;}
 });
-__d('yarn/app/views/browser/yarnwebview.js',["react-native/Libraries/react-native/react-native.js","react-native-webview-bridge/jsx/WebViewBridge.js","yarn/app/whitelist.js","yarn/app/logger/logger.js","node-read/index.js","yarn/app/views/browser/wordHelpers.js","yarn/app/actions/actions.js","yarn/app/views/browser/websiteapi.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
+__d('yarn/app/views/browser/yarnwebview.js',["react-native/Libraries/react-native/react-native.js","react-native-webview-bridge/jsx/WebViewBridge.js","yarn/app/whitelist.js","yarn/app/helpers/networkstatus.js","yarn/app/logger/logger.js","node-read/index.js","yarn/app/views/browser/wordHelpers.js","yarn/app/actions/actions.js","yarn/app/views/browser/websiteapi.js","yarn/app/uiconfig.js"],function(global, require, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js');var 
 
 StyleSheet=
 
-React.StyleSheet;var WebView=React.WebView;
+
+
+React.StyleSheet;var WebView=React.WebView;var View=React.View;var Text=React.Text;
 
 var WebViewBridge=require('react-native-webview-bridge/jsx/WebViewBridge.js');
 var WHITELIST=require('yarn/app/whitelist.js');
+var NetworkStatus=require('yarn/app/helpers/networkstatus.js');
 
 var log=require('yarn/app/logger/logger.js');
 var readability=require('node-read/index.js');
@@ -53319,14 +53334,22 @@ url:this.state.url,
 javaScriptEnabledAndroid:true,
 onNavigationStateChange:this.onNavigationStateChange,
 startInLoadingState:true,
+onRenderError:this.onLoadingError,
+onLoadingError:this.onLoadingError,
 renderError:function(){
-actions.emit(actions.NETWORK_ERROR_OCCURRED);}}));},
+actions.emit(actions.NETWORK_ERROR_OCCURRED);
+return React.createElement(View,null,React.createElement(Text,null,'Network error'));}}));},
 
 
 
 
 
 componentDidMount:function(){
+
+actions.on(actions.TRY_AGAIN,(function(){
+setTimeout(this.reload,2000);}).
+bind(this));
+
 this.refs[WEBVIEW_REF].onMessage((function(message){
 var msg=decodeMessage(message);
 
@@ -53376,6 +53399,10 @@ this.props.onNotAllowedUrl && this.props.onNotAllowedUrl(msg.data);}}).
 
 
 bind(this));},
+
+
+onLoadingError:function(){
+actions.emit(actions.NETWORK_ERROR_OCCURRED);},
 
 
 onNavigationStateChange:function(navState){
@@ -53490,15 +53517,15 @@ this.sendCommand('STOP_SCROLL_TRACKING');},
 
 
 goBack:function(){
-this.refs[WEBVIEW_REF].goBack();},
+this.isNetworkOk() && this.refs[WEBVIEW_REF].goBack();},
 
 
 goForward:function(){
-this.refs[WEBVIEW_REF].goForward();},
+this.isNetworkOk() && this.refs[WEBVIEW_REF].goForward();},
 
 
 reload:function(){
-this.refs[WEBVIEW_REF].reload();},
+this.isNetworkOk() && this.refs[WEBVIEW_REF].reload();},
 
 
 highlightWord:function(word){
@@ -53522,7 +53549,17 @@ this.sendCommand('SET_HIGHLIGHT_COLOR',color);},
 
 
 goToRandomUrl:function(){
-this.sendCommand('GO_TO_RANDOM_URL');}});
+this.isNetworkOk() && this.sendCommand('GO_TO_RANDOM_URL');},
+
+
+isNetworkOk:function(){
+if(NetworkStatus.isOk()){
+return true;}else 
+
+{
+actions.emit(actions.NETWORK_ERROR_OCCURRED);
+return false;}}});
+
 
 
 
@@ -53656,6 +53693,32 @@ return rx.test(url);});}
 module.exports = {
 regexps:regexps,
 doesMatch:doesMatch};
+});
+__d('yarn/app/helpers/networkstatus.js',["react-native/Libraries/react-native/react-native.js"],function(global, require, module, exports) {  'use strict';
+
+var React=require('react-native/Libraries/react-native/react-native.js');var 
+
+NetInfo=
+React.NetInfo;
+
+
+module.exports = (function(){
+
+var status={
+isConnected:true};
+
+
+NetInfo.isConnected.fetch().done(function(isConnected){
+status.isConnected = isConnected;});
+
+
+NetInfo.isConnected.addEventListener('change',function(isConnected){
+status.isConnected = isConnected;});
+
+
+return {
+isOk:function(){
+return status.isConnected;}};})();
 });
 __d('yarn/app/logger/logger.js',[],function(global, require, module, exports) {  'use strict';
 
@@ -76963,14 +77026,16 @@ var wordsToTranslate=getRandomWords(gameStateStore.get('randomWordsCount'));
 wordsToTranslate.unshift(pageWord);
 
 console.log('preloading word',pageWord);
+
 var promise=new Promise(function(resolve,reject){
 
 
 setTimeout(function(){
 
+var startDate=Date.now();
 googleTranslate.translateWords(wordsToTranslate,'en',userProfileStore.get('language')).
 then(function(translatedWords){
-console.log('translations loaded',pageWord,Date.now());
+console.log('translations loaded',pageWord,Date.now() - startDate);
 
 var question=translatedWords.data.translations.map(function(translatedWord,index){
 return {
@@ -77007,11 +77072,10 @@ resolve(question);}}).
 catch(function(ex){
 
 console.error('Can not translate words:',ex);
-bus.emit(actions.NETWORK_ERROR_OCCURRED);
 reject();});},
 
 
-Math.random() * 500 + 500);});
+Math.random() * 400 + 100);});
 
 
 
@@ -77140,7 +77204,8 @@ LOOKING_FOR_WORDS:'LOOKING_FOR_WORDS',
 URL_FEATURE_REQUESTED:'URL_FEATURE_REQUESTED',
 GUARDIAN_INFO_REQUESTED:'GUARDIAN_INFO_REQUESTED',
 
-NETWORK_ERROR_OCCURRED:'NETWORK_ERROR_OCCURRED'};
+NETWORK_ERROR_OCCURRED:'NETWORK_ERROR_OCCURRED',
+TRY_AGAIN:'TRY_AGAIN'};
 });
 __d('yarn/app/helpers/getrandomwords.js',["yarn/words.js"],function(global, require, module, exports) {  var words=Object.keys(require('yarn/words.js'));
 
@@ -77155,15 +77220,24 @@ results.push(words[index]);}
 
 return results;};
 });
-__d('yarn/app/helpers/googletranslate.js',[],function(global, require, module, exports) {  var API_KEY='AIzaSyDAjHprVDfX_6z2fAs6Vf03g2sOfEiTogs';
+__d('yarn/app/helpers/googletranslate.js',["yarn/app/actions/actions.js","yarn/app/helpers/networkstatus.js"],function(global, require, module, exports) {  var API_KEY='AIzaSyDAjHprVDfX_6z2fAs6Vf03g2sOfEiTogs';
 var BASE_URL='https://www.googleapis.com/language/translate/v2?key=' + API_KEY;
+var actions=require('yarn/app/actions/actions.js');
+var NetworkStatus=require('yarn/app/helpers/networkstatus.js');
 
 function translateWords(words,fromLang,toLang,callback){
 if(!Array.isArray(words)){
 words = [words];}
 
+if(!NetworkStatus.isOk()){
+actions.trigger(actions.NETWORK_ERROR_OCCURRED);
+return Promise.resolve([]);}
+
 
 return fetch(createUrl(words,fromLang,toLang)).
+catch(function(){
+actions.trigger(actions.NETWORK_ERROR_OCCURRED);}).
+
 then(function(response){
 return response.text();}).
 
@@ -78038,6 +78112,7 @@ QUESTION_TARGET_BUTTON_TEXT_SIZE:30,
 WORD_BUTTON_QUESTION_TEXT_SIZE:30,
 WORD_BUTTON_ANSWER_TEXT_SIZE:18,
 QUIZ_BUTTON_HEIGHT:50,
+IOS_STATUSBAR_HEIGHT:20,
 
 MAX_VOCAB_LEVEL:60};
 });
@@ -79287,7 +79362,7 @@ var styles=StyleSheet.create({
 
 wrap:{
 width:width,
-height:height - uiConfig.TOOLBAR_HEIGHT,
+height:height - uiConfig.TOOLBAR_HEIGHT - uiConfig.IOS_STATUSBAR_HEIGHT,
 position:'absolute',
 top:0},
 
@@ -80637,7 +80712,7 @@ var styles=StyleSheet.create({
 
 wrap:{
 width:width,
-height:height,
+height:height - uiConfig.IOS_STATUSBAR_HEIGHT,
 position:'absolute',
 top:0,
 flex:1,
@@ -82085,7 +82160,7 @@ var styles=StyleSheet.create({
 
 wrap:{
 width:width,
-height:height,
+height:height - uiConfig.IOS_STATUSBAR_HEIGHT,
 position:'absolute',
 top:0,
 backgroundColor:uiConfig.COLORS.INTRO_BG,

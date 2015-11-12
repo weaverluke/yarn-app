@@ -119,7 +119,7 @@ var styles = StyleSheet.create({
 
 	wrap: {
 		width: width,
-		height: height,
+		height: height - uiConfig.IOS_STATUSBAR_HEIGHT,
 		position: 'absolute',
 		top: 0,
 		backgroundColor: uiConfig.COLORS.INTRO_BG,

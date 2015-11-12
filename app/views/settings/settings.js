@@ -129,7 +129,7 @@ var styles = StyleSheet.create({
 
 	wrap: {
 		width: width,
-		height: height - uiConfig.TOOLBAR_HEIGHT,
+		height: height - uiConfig.TOOLBAR_HEIGHT - uiConfig.IOS_STATUSBAR_HEIGHT,
 		position: 'absolute',
 		top: 0
 	},

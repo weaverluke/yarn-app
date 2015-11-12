@@ -112,14 +112,16 @@ function preloadWord(pageWord) {
 	wordsToTranslate.unshift(pageWord);
 
 	console.log('preloading word', pageWord);
+
 	var promise = new Promise(function (resolve, reject) {
 
 		// delay fetching by random amount of time so yarn doesn't trigger too many requests at once
 		setTimeout(function () {
 
+			var startDate = Date.now();
 			googleTranslate.translateWords(wordsToTranslate, 'en', userProfileStore.get('language'))
 				.then(function (translatedWords) {
-					console.log('translations loaded', pageWord, Date.now());
+					console.log('translations loaded', pageWord, Date.now() - startDate);
 					//console.log('translated words', translatedWords);
 					var question = translatedWords.data.translations.map(function (translatedWord, index) {
 						return {
@@ -156,11 +158,10 @@ function preloadWord(pageWord) {
 				.catch(function (ex) {
 					// show error screen
 					console.error('Can not translate words:', ex);
-					bus.emit(actions.NETWORK_ERROR_OCCURRED);
 					reject();
 				});
 
-		}, Math.random() * 500 + 500);
+		}, Math.random() * 400 + 100);
 
 	});
 

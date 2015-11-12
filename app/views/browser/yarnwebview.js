@@ -3,11 +3,14 @@
 var React = require('react-native');
 var {
 	StyleSheet,
-	WebView
+	WebView,
+	View,
+	Text
 } = React;
 
 var WebViewBridge = require('react-native-webview-bridge');
 var WHITELIST = require('../../whitelist');
+var NetworkStatus = require('../../helpers/networkstatus');
 
 var log = require('../../logger/logger');
 var readability = require('node-read');
@@ -72,14 +75,22 @@ var Browser = React.createClass({
 				javaScriptEnabledAndroid={true}
 				onNavigationStateChange={this.onNavigationStateChange}
 				startInLoadingState={true}
+				onRenderError={this.onLoadingError}
+				onLoadingError={this.onLoadingError}
 				renderError={function () {
-					actions.emit(actions.NETWORK_ERROR_OCCURRED)
+					actions.emit(actions.NETWORK_ERROR_OCCURRED);
+					return <View><Text>Network error</Text></View>;
 				}}
 			/>
 		);
 	},
 
 	componentDidMount: function () {
+
+		actions.on(actions.TRY_AGAIN, function () {
+			setTimeout(this.reload, 2000);
+		}.bind(this));
+
 		this.refs[WEBVIEW_REF].onMessage(function (message) {
 			var msg = decodeMessage(message);
 
@@ -129,6 +140,10 @@ var Browser = React.createClass({
 			}
 
 		}.bind(this));
+	},
+
+	onLoadingError: function () {
+		actions.emit(actions.NETWORK_ERROR_OCCURRED);
 	},
 
 	onNavigationStateChange: function (navState) {
@@ -243,15 +258,15 @@ var Browser = React.createClass({
 	},
 
 	goBack: function () {
-		this.refs[WEBVIEW_REF].goBack();
+		this.isNetworkOk() && this.refs[WEBVIEW_REF].goBack();
 	},
 
 	goForward: function () {
-		this.refs[WEBVIEW_REF].goForward();
+		this.isNetworkOk() && this.refs[WEBVIEW_REF].goForward();
 	},
 
 	reload: function () {
-		this.refs[WEBVIEW_REF].reload();
+		this.isNetworkOk() && this.refs[WEBVIEW_REF].reload();
 	},
 
 	highlightWord: function (word) {
@@ -275,7 +290,17 @@ var Browser = React.createClass({
 	},
 
 	goToRandomUrl: function () {
-		this.sendCommand('GO_TO_RANDOM_URL');
+		this.isNetworkOk() && this.sendCommand('GO_TO_RANDOM_URL');
+	},
+
+	isNetworkOk: function () {
+		if (NetworkStatus.isOk()) {
+			return true;
+		}
+		else {
+			actions.emit(actions.NETWORK_ERROR_OCCURRED);
+			return false;
+		}
 	}
 });
 

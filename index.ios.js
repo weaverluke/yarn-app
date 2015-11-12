@@ -210,12 +210,14 @@ var yarn = React.createClass({
 		console.log('RESULTS: level:', Math.min(userProfileStore.get('level'), uiConfig.MAX_VOCAB_LEVEL),
 			', prevLevel:', Math.min(levelStats[levelStats.length - 2], uiConfig.MAX_VOCAB_LEVEL));
 
+		var previousLevel = levelStats.length > 1 ? levelStats[levelStats.length - 2] : levelStats[0];
+
 		return (
 			<ResultView
 				correctWords={gameStateStore.get('correct')}
 				totalWords={gameStateStore.get('pageWords').length}
 				level={Math.min(userProfileStore.get('level'), uiConfig.MAX_VOCAB_LEVEL)}
-				previousLevel={Math.min(levelStats[levelStats.length - 2], uiConfig.MAX_VOCAB_LEVEL)}
+				previousLevel={Math.min(previousLevel, uiConfig.MAX_VOCAB_LEVEL)}
 				score={userProfileStore.get('score')}
 				previousScore={userProfileStore.get('previousScore')}
 				onDonePressed={this.closeResultView}
@@ -519,11 +521,13 @@ var yarn = React.createClass({
 	},
 
 	hideNetworkErrorView: function () {
-		this.refs[BROWSER_REF].reload();
-
 		this.setState({
 			networkErrorViewVisible: false
 		});
+
+		setTimeout(function () {
+			this.refs[BROWSER_REF].reload();
+		}.bind(this), 2000);
 	},
 
 	componentDidMount: function () {
@@ -538,6 +542,7 @@ var yarn = React.createClass({
 		actions.on(actions.URL_FEATURE_REQUESTED, this.showUrlFeaturePopup);
 		actions.on(actions.GUARDIAN_INFO_REQUESTED, this.showGuardianInfoView);
 		actions.on(actions.NETWORK_ERROR_OCCURRED, this.showNetworkErrorView);
+		actions.on(actions.TRY_AGAIN, this.hideNetworkErrorView);
 
 		this.onUrlChange(this.state.url);
 	},
