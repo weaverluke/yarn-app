@@ -106,6 +106,7 @@ var yarn = React.createClass({
 
 		return (
 			<View style={[styles.container]}>
+				<View style={styles.content}>
 				<Browser
 					ref={BROWSER_REF}
 					url={this.state.url}
@@ -151,6 +152,7 @@ var yarn = React.createClass({
 				{this.renderIntroScreen()}
 				{this.renderGuardianInfoView()}
 				{this.renderNetworkErrorView()}
+				</View>
 			</View>
 		);
 	},
@@ -739,6 +741,11 @@ var styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: HEADER
+	},
+
+	content: {
+		marginTop: uiConfig.IOS_STATUSBAR_HEIGHT,
+		flex: 1
 	},
 
 	bottomBarWrap: {
