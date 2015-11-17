@@ -13,23 +13,23 @@
 
 
 @implementation DictionaryProxy
-  @synthesize bridge = _bridge;
+@synthesize bridge = _bridge;
 
-  RCT_EXPORT_MODULE()
+RCT_EXPORT_MODULE()
 
-  RCT_EXPORT_METHOD(showDefinition:(NSString *)word) {
+RCT_EXPORT_METHOD(showDefinition:(NSString *)word) {
   
-	UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
-	UIViewController *rootViewController = keyWindow.rootViewController;
+  UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
+  UIViewController *rootViewController = keyWindow.rootViewController;
   
-	NativeDictionaryProxy *referenceLibraryViewController =
-	[[NativeDictionaryProxy alloc] initWithTerm:word];
-	
-	// send reference to bridge to NativeDictionary Proxy so it can notify react-native app that it has been closed
-	[referenceLibraryViewController registerBridge:self.bridge];
+  NativeDictionaryProxy *referenceLibraryViewController =
+  [[NativeDictionaryProxy alloc] initWithTerm:word];
   
-	[rootViewController presentViewController:referenceLibraryViewController animated:YES completion:nil];
-  }
+  // send reference to bridge to NativeDictionary Proxy so it can notify react-native app that it has been closed
+  [referenceLibraryViewController registerBridge:self.bridge];
+  
+  [rootViewController presentViewController:referenceLibraryViewController animated:YES completion:nil];
+}
 
 //RCT_EXPORT_METHOD((BOOL)dictionaryHasDefinitionForTerm:(NSString *)word) {
 //  return [UIReferenceLibraryViewController dictionaryHasDefinitionForTerm:word];

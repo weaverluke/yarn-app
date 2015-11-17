@@ -1,0 +1,3 @@
+rootProject.name = 'yarn'
+
+include ':app'

@@ -2,29 +2,29 @@
 
 var React = require('react-native');
 
-var Browser = require('./app/views/browser/browser');
-var Popup = require('./app/views/popup/popup');
-var StatusBar = require('./app/views/statusbar/statusbar');
-var Settings = require('./app/views/settings/settings');
-var MainBar = require('./app/views/mainbar/mainbar');
-var Toast = require('./app/views/toast/toast');
-var ToastContent = require('./app/views/toast/wordscounttoastcontent');
-var SearchingView = require('./app/views/searching/searching');
-var GuardianInfoView = require('./app/views/guardianinfo/guardianinfo');
-var NetworkErrorView = require('./app/views/networkerror/networkerror');
+var Browser = require('./ios/app/views/browser/browser');
+var Popup = require('./ios/app/views/popup/popup');
+var StatusBar = require('./ios/app/views/statusbar/statusbar');
+var Settings = require('./ios/app/views/settings/settings');
+var MainBar = require('./ios/app/views/mainbar/mainbar');
+var Toast = require('./ios/app/views/toast/toast');
+var ToastContent = require('./ios/app/views/toast/wordscounttoastcontent');
+var SearchingView = require('./ios/app/views/searching/searching');
+var GuardianInfoView = require('./ios/app/views/guardianinfo/guardianinfo');
+var NetworkErrorView = require('./ios/app/views/networkerror/networkerror');
 
-var QuizStatusBar = require('./app/views/quiz/quizstatusbar');
-var QuestionView = require('./app/views/quiz/question');
-var ResultView = require('./app/views/quiz/result');
-var IntroView = require('./app/views/intro/intro');
+var QuizStatusBar = require('./ios/app/views/quiz/quizstatusbar');
+var QuestionView = require('./ios/app/views/quiz/question');
+var ResultView = require('./ios/app/views/quiz/result');
+var IntroView = require('./ios/app/views/intro/intro');
 
-var gameStateStore = require('./app/stores/gamestatestore');
-var userProfileStore = require('./app/stores/userprofilestore');
-var actions = require('./app/actions/actions');
-var log = require('./app/logger/logger');
-var uiConfig = require('./app/uiconfig');
+var gameStateStore = require('./ios/app/stores/gamestatestore');
+var userProfileStore = require('./ios/app/stores/userprofilestore');
+var actions = require('./ios/app/actions/actions');
+var log = require('./ios/app/logger/logger');
+var uiConfig = require('./ios/app/uiconfig');
 
-var WHITELIST = require('./app/whitelist');
+var WHITELIST = require('./ios/app/whitelist');
 
 var QUESTION_RESULT_TIMEOUT = 5000;
 
@@ -42,7 +42,7 @@ var {
 	WebView,
 	LayoutAnimation,
 	NativeAppEventEmitter
-} = React;
+	} = React;
 
 var subscription = NativeAppEventEmitter.addListener(
 	'DictionaryHidden',
@@ -53,7 +53,7 @@ var subscription = NativeAppEventEmitter.addListener(
 
 var {
 	DictionaryProxy
-} = require('NativeModules');
+	} = require('NativeModules');
 
 var HEADER = '#F9FAFB';
 
@@ -107,40 +107,40 @@ var yarn = React.createClass({
 		return (
 			<View style={[styles.container]}>
 				<View style={styles.content}>
-				<Browser
-					ref={BROWSER_REF}
-					url={this.state.url}
-					userLevel={userProfileStore.get('level')}
-					userRange={userProfileStore.get('range')}
-					onUrlChange={this.onUrlChange}
-					onScroll={this.onBrowserScroll}
-				/>
+					<Browser
+						ref={BROWSER_REF}
+						url={this.state.url}
+						userLevel={userProfileStore.get('level')}
+						userRange={userProfileStore.get('range')}
+						onUrlChange={this.onUrlChange}
+						onScroll={this.onBrowserScroll}
+					/>
 				{this.renderSettings()}
-				<View style={styles.bottomBarWrap}>
+					<View style={styles.bottomBarWrap}>
 					{this.renderMainBar()}
 					{bottomBar}
-				</View>
-				<Popup
-					visible={this.state.popupVisible}
-					onClose={this.onPopupSubmit}
-					onSubmit={this.onPopupSubmit}
-					title={this.state.popupTitle}
-					content={this.state.popupContent}
-					arrowRect={this.state.buttonRect}
-					onShowDictionary={this.onShowDictionary}
-				/>
-				<Popup
-					visible={this.state.initialPopupVisible}
-					onClose={this.closeInitialPopup}
-					onSubmit={this.closeInitialPopup}
-					type={Popup.POPUP_TYPE.INFO}
-					arrowRect={this.state.firstButtonRect}
-				/>
-				<Popup
-					visible={this.state.buyUrlFeaturePopupVisible}
-					onClose={this.closeUrlFeaturePopup}
-					onSubmit={this.buyUrlFeaturePressed}
-					type={Popup.POPUP_TYPE.BUY_URL_FEATURE}
+					</View>
+					<Popup
+						visible={this.state.popupVisible}
+						onClose={this.onPopupSubmit}
+						onSubmit={this.onPopupSubmit}
+						title={this.state.popupTitle}
+						content={this.state.popupContent}
+						arrowRect={this.state.buttonRect}
+						onShowDictionary={this.onShowDictionary}
+					/>
+					<Popup
+						visible={this.state.initialPopupVisible}
+						onClose={this.closeInitialPopup}
+						onSubmit={this.closeInitialPopup}
+						type={Popup.POPUP_TYPE.INFO}
+						arrowRect={this.state.firstButtonRect}
+					/>
+					<Popup
+						visible={this.state.buyUrlFeaturePopupVisible}
+						onClose={this.closeUrlFeaturePopup}
+						onSubmit={this.buyUrlFeaturePressed}
+						type={Popup.POPUP_TYPE.BUY_URL_FEATURE}
 					/>
 				{this.renderQuizStatusBar()}
 				{this.renderSearchingState()}
@@ -161,7 +161,7 @@ var yarn = React.createClass({
 		clearTimeout(this.nextQuestionTimeout);
 		this.refs.wordstrip.stopTimeoutAnimation();
 		//if (hasDictionaryDefinition) {
-			DictionaryProxy.showDefinition(text);
+		DictionaryProxy.showDefinition(text);
 		//}
 	},
 
@@ -612,7 +612,7 @@ var yarn = React.createClass({
 			currentGameState === GAME_STATES.WAITING_FOR_ANSWER ||
 			currentGameState === GAME_STATES.WRONG_ANSWER_CHOSEN ||
 			currentGameState === GAME_STATES.CORRECT_ANSWER_CHOSEN ) {
-				bottomBar = 'wordstrip';
+			bottomBar = 'wordstrip';
 		}
 
 		if (bottomBar === 'wordstrip') {

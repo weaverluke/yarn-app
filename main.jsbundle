@@ -54709,7 +54709,7 @@ scheduleApiInject:function(){
 clearTimeout(this.apiInjectTimeout);
 this.apiInjectTimeout = setTimeout((function(){
 this.refs[WEBVIEW_REF].injectYarnWebsiteApi();}).
-bind(this),1000);},
+bind(this),5000);},
 
 
 onSubmitEditing:function(){
@@ -55436,9 +55436,9 @@ bind(this));},
 
 injectYarnWebsiteApi:function(){
 try{
-console.log('sending YARN API to webview');
-this.refs[WEBVIEW_REF].injectBridgeScript();
-this.refs[WEBVIEW_REF].evalScript(YARN_API);}
+console.log('sending YARN API to webview');}
+
+
 catch(ex) {
 console.log('INJECTION ERROR!');}},
 
@@ -55666,33 +55666,27 @@ __d('yarn/ios/app/logger/logger.js',function(global, require, module, exports) {
 var url='http://logs-01.loggly.com/bulk/41096412-3533-4c39-bed4-a19e96b4aa42/tag/bulk/';
 var sessionTimestamp=Date.now();
 
+module.exports = function(data){
+if(typeof data === 'string'){
+data = {
+message:data};}
 
 
+data.sessionTimestamp = sessionTimestamp;
+data.timestamp = Date.now();
+
+var dataStr=JSON.stringify(data);
+
+console.log(data.message,data);
 
 
+return fetch(url,{
+method:'post',
+headers:{
+'Accept':'application/json',
+'Content-Type':'application/json'},
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-module.exports = function(){
-console.log.apply(console,arguments);};
+body:dataStr});};
 });
 __d('node-read/index.js',function(global, require, module, exports) {  var utils=require('node-read/lib/utils.js');
 var url=require('url/url.js');
@@ -81285,16 +81279,15 @@ actions.trigger(actions.NETWORK_ERROR_OCCURRED);
 return Promise.resolve([]);}
 
 
-return new Promise();}
+return fetch(createUrl(words,fromLang,toLang)).
+catch(function(){
+actions.trigger(actions.NETWORK_ERROR_OCCURRED);}).
 
+then(function(response){
+return response.text();}).
 
-
-
-
-
-
-
-
+then(function(responseText){
+return JSON.parse(responseText);});}
 
 
 
@@ -82120,7 +82113,53 @@ run();}else
 console.log('wait for dom content to be loaded');
 document.addEventListener('DOMContentLoaded',function(){
 console.log('DOMContentLoaded!',document.documentElement.outerHTML.length);
-run();});}};
+run();});}
+
+
+
+(function(){
+'use strict';
+
+
+
+var webViewBridgeHandlerId=0;
+
+var doc=document;
+var WebViewBridge={};
+var RNWBSchema="rnwb";
+var queue=[];
+var inProcess=false;
+var customEvent=doc.createEvent('Event');
+
+function noop(){}
+
+WebViewBridge = {
+
+_fetch:function(){
+var message;
+queue.unshift(webViewBridgeHandlerId);
+message = JSON.stringify(queue);
+queue = [];
+inProcess = false;
+return message;},
+
+send:function(value){
+queue.push(value);
+if(!inProcess){
+inProcess = true;
+
+window.location = RNWBSchema + '://message' + new Date().getTime();}},
+
+
+onMessage:noop};
+
+
+window.WebViewBridge = WebViewBridge;
+
+
+
+customEvent.initEvent('WebViewBridge',true,true);
+doc.dispatchEvent(customEvent);})();};
 });
 __d('yarn/ios/app/uiconfig.js',function(global, require, module, exports) {  module.exports = {
 
@@ -86258,4 +86297,4 @@ height:10}});
 module.exports = MainBar;
 });
 ;require("yarn/index.ios.js");
-__SSTOKENSTRING = "@generated SignedSource<<9a5b5a9da96968e4f4d5e9ba101a711b>>";
+__SSTOKENSTRING = "@generated SignedSource<<4c6101013c3f4fd0a7913e27db413b6b>>";
