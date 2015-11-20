@@ -81137,8 +81137,7 @@ resolve(question);}}).
 
 
 catch(function(ex){
-
-console.error('Can not translate words:',ex);
+console.log('Cannot translate words:',ex);
 reject();});},
 
 
@@ -81310,6 +81309,7 @@ then(function(responseText){
 return JSON.parse(responseText);}).
 
 catch(function(){
+console.log('Request to google translate api failed!');
 actions.trigger(actions.NETWORK_ERROR_OCCURRED);});}
 
 
@@ -81455,6 +81455,7 @@ emitChange();}
 
 
 function updateUserLevel(){
+console.log('updateUserLevel(), currentStats:',data);
 var totalAnswers=data.correctAnswers + data.wrongAnswers;
 
 if(totalAnswers < 8){
@@ -81464,19 +81465,26 @@ return;}
 
 var sum=0;
 var max=0;
+var maxLevel=0;
 
 for(var i=0,len=data.levelStats.length;i < len;i++) {
 
 var lvl=data.levelStats[i];
-var weight=(100 - i) * 0.9;
+var weight=1;
+var lvlResult=0;
 
 if(lvl.correct || lvl.wrong){
-sum += (i + 1) * lvl.correct / (lvl.correct + lvl.wrong) * weight;
-max += (i + 1) * weight;}}
+
+lvlResult = lvl.correct / (lvl.correct + lvl.wrong);
+sum += (i + 1) * lvlResult * weight;
+maxLevel = Math.max(maxLevel,i * lvlResult);
+
+lvl.correct && (max += (i + 1) * weight);}}
 
 
 
-data.level = parseInt(sum / max * 100);
+
+data.level = parseInt(sum / max * maxLevel);
 console.log('New user level:',data.level);
 
 
@@ -81491,6 +81499,7 @@ data.range = 15;}
 
 
 data.historyLevelValues.push(data.level);
+console.log('new user level:',data.level);
 
 saveData();
 emitChange();}
@@ -82841,7 +82850,8 @@ StyleSheet=
 
 
 
-React.StyleSheet;var View=React.View;var Text=React.Text;var Animated=React.Animated;
+
+React.StyleSheet;var View=React.View;var Text=React.Text;var Animated=React.Animated;var TouchableHighlight=React.TouchableHighlight;
 
 var NavBarLabel=require('yarn/ios/app/views/statusbar/navbarlabel.js');
 var NavBarButton=require('yarn/ios/app/views/statusbar/navbarbutton.js');
@@ -82911,7 +82921,11 @@ color:uiConfig.COLORS.MID_GREY}];
 
 
 return (
-React.createElement(View,{style:styles.contentWrap},
+React.createElement(TouchableHighlight,{
+style:styles.contentWrap,
+onPress:this.props.onNextPress,
+underlayColor:uiConfig.COLORS.PALE_BLUE},
+
 React.createElement(View,{style:styles.wordsCountCenterH},
 React.createElement(View,{style:styles.wordsCountCenterV},
 React.createElement(NavBarLabel,{
@@ -86235,10 +86249,11 @@ topImageBox:{
 justifyContent:'flex-start',
 overflow:'visible',
 height:70,
-backgroundColor:uiConfig.COLORS.MID_GREY},
+backgroundColor:uiConfig.COLORS.SELECTED_GREY},
 
 
 logoBox:{
+paddingTop:30,
 flex:1},
 
 
@@ -86274,4 +86289,4 @@ height:10}});
 module.exports = MainBar;
 });
 ;require("yarn/index.ios.js");
-__SSTOKENSTRING = "@generated SignedSource<<d34d30c7ef10948ea0378aa7203baa36>>";
+__SSTOKENSTRING = "@generated SignedSource<<779ab7ecb5dd6497fc7df799ceb2ed44>>";
