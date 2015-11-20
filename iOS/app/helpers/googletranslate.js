@@ -12,17 +12,18 @@ function translateWords(words, fromLang, toLang, callback) {
 		return Promise.resolve([]);
 	}
 
-	return new Promise();
-	//return fetch(createUrl(words, fromLang, toLang))
-	//	.then(function (response) {
-	//		return response.text();
-	//	})
-	//	.then(function (responseText) {
-	//		return JSON.parse(responseText);
-	//	})
-	//	.catch(function () {
-	//		actions.trigger(actions.NETWORK_ERROR_OCCURRED);
-	//	});
+	//return new Promise();
+	return fetch(createUrl(words, fromLang, toLang))
+		.then(function (response) {
+			return response.text();
+		})
+		.then(function (responseText) {
+			return JSON.parse(responseText);
+		})
+		.catch(function () {
+			console.log('Request to google translate api failed!');
+			actions.trigger(actions.NETWORK_ERROR_OCCURRED);
+		});
 }
 
 function createUrl(words, fromLang, toLang) {

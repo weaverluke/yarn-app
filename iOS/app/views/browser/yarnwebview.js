@@ -76,8 +76,10 @@ var Browser = React.createClass({
 				onNavigationStateChange={this.onNavigationStateChange}
 				startInLoadingState={true}
 				renderError={function () {
-					actions.emit(actions.NETWORK_ERROR_OCCURRED);
-					return <View><Text>Network error</Text></View>;
+					setTimeout(function () {
+						actions.emit(actions.NETWORK_ERROR_OCCURRED);
+					}.bind(this), 100);
+					return <View></View>;
 				}}
 			/>
 		);

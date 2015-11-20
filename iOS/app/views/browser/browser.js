@@ -27,6 +27,26 @@ var WORDS_PARSE_TIMEOUT = 10000;
 
 var uiConfig = require('../../uiconfig');
 
+var Browser2 = React.createClass({
+	render: function () {
+		return <WebView
+			url={this.props.url}
+			automaticallyAdjustContentInsets={false}
+			style={styles.webView}
+			javaScriptEnabledAndroid={true}
+			renderError={function () {actions.emit(actions.NETWORK_ERROR_OCCURRED); return <View><Text>looks like a problem with network...</Text></View>; }}
+			onShouldStartLoadWithRequest={this.onShouldStartLoadWithRequest}
+			startInLoadingState={true}
+			scalesPageToFit={true}
+		/>;
+	},
+
+	onShouldStartLoadWithRequest: function () {
+		return true;
+	}
+
+});
+
 var Browser = React.createClass({
 	lastUrl: '',
 	lastTitle: '',

@@ -527,7 +527,7 @@ var yarn = React.createClass({
 
 		setTimeout(function () {
 			this.refs[BROWSER_REF].reload();
-		}.bind(this), 2000);
+		}.bind(this), 1000);
 	},
 
 	componentDidMount: function () {

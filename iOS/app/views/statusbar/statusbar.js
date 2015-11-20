@@ -5,7 +5,8 @@ var {
 	StyleSheet,
 	View,
 	Text,
-	Animated
+	Animated,
+	TouchableHighlight
 } = React;
 
 var NavBarLabel = require('./navbarlabel');
@@ -76,17 +77,21 @@ var StatusBar = React.createClass({
 		}];
 
 		return (
-			<View style={styles.contentWrap}>
-				<View style={styles.wordsCountCenterH}>
-					<View style={styles.wordsCountCenterV}>
-						<NavBarLabel
-							texts={texts}
-							specialFont={true}
-							isFirst={true}
-						/>
+				<TouchableHighlight
+					style={styles.contentWrap}
+					onPress={this.props.onNextPress}
+					underlayColor={uiConfig.COLORS.PALE_BLUE}
+				>
+					<View style={styles.wordsCountCenterH}>
+						<View style={styles.wordsCountCenterV}>
+							<NavBarLabel
+								texts={texts}
+								specialFont={true}
+								isFirst={true}
+							/>
+						</View>
 					</View>
-				</View>
-			</View>
+				</TouchableHighlight>
 		);
 	},
 

@@ -98,6 +98,7 @@ function updateLevelStats(level, correct) {
 }
 
 function updateUserLevel() {
+	console.log('updateUserLevel(), currentStats:', data);
 	var totalAnswers = data.correctAnswers + data.wrongAnswers;
 	// we have to have at least 20 words to compute level
 	if (totalAnswers < 8) {
@@ -107,19 +108,26 @@ function updateUserLevel() {
 
 	var sum = 0;
 	var max = 0;
+	var maxLevel = 0;
 
 	for (var i = 0, len = data.levelStats.length; i < len; i++) {
 		// level must have any entries to be included into computations
 		var lvl = data.levelStats[i];
-		var weight = (100 - i) * 0.9;
+		var weight = 1; // tmp instead of  (100 - i) * 0.9;
+		var lvlResult = 0;
 
 		if (lvl.correct || lvl.wrong) {
-			sum += (i + 1) * lvl.correct / (lvl.correct + lvl.wrong) * weight;
-			max += (i + 1) * weight;
+			//console.log('lvl', i +1, 'correct', lvl.correct, 'wrong', lvl.wrong);
+			lvlResult = lvl.correct / (lvl.correct + lvl.wrong);
+			sum += (i + 1) * lvlResult * weight;
+			maxLevel = Math.max(maxLevel, i*lvlResult);
+			// increment max only if there are any positive results
+			lvl.correct && (max += (i + 1) * weight);
+			//console.log('sum', sum, 'maxLevel', maxLevel, 'max', max);
 		}
 	}
 
-	data.level = parseInt(sum / max * 100);
+	data.level = parseInt(sum / max * maxLevel);
 	console.log('New user level:', data.level);
 
 	// range update - after first 50 words shrink range to 30
@@ -134,6 +142,7 @@ function updateUserLevel() {
 	}
 
 	data.historyLevelValues.push(data.level);
+	console.log('new user level:', data.level);
 
 	saveData();
 	emitChange();

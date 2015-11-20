@@ -145,10 +145,11 @@ var styles = StyleSheet.create({
 		justifyContent: 'flex-start',
 		overflow: 'visible',
 		height: 70,
-		backgroundColor: uiConfig.COLORS.MID_GREY
+		backgroundColor: uiConfig.COLORS.SELECTED_GREY
 	},
 
 	logoBox: {
+		paddingTop: 30,
 		flex: 1
 	},
 

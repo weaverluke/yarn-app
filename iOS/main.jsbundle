@@ -1388,7 +1388,7 @@ networkErrorViewVisible:false});
 
 setTimeout((function(){
 this.refs[BROWSER_REF].reload();}).
-bind(this),2000);},
+bind(this),1000);},
 
 
 componentDidMount:function(){
@@ -54541,6 +54541,26 @@ var WORDS_PARSE_TIMEOUT=10000;
 
 var uiConfig=require('yarn/ios/app/uiconfig.js');
 
+var Browser2=React.createClass({displayName:'Browser2',
+render:function(){
+return React.createElement(WebView,{
+url:this.props.url,
+automaticallyAdjustContentInsets:false,
+style:styles.webView,
+javaScriptEnabledAndroid:true,
+renderError:function(){actions.emit(actions.NETWORK_ERROR_OCCURRED);return React.createElement(View,null,React.createElement(Text,null,'looks like a problem with network...'));},
+onShouldStartLoadWithRequest:this.onShouldStartLoadWithRequest,
+startInLoadingState:true,
+scalesPageToFit:true});},
+
+
+
+onShouldStartLoadWithRequest:function(){
+return true;}});
+
+
+
+
 var Browser=React.createClass({displayName:'Browser',
 lastUrl:'',
 lastTitle:'',
@@ -55277,8 +55297,10 @@ javaScriptEnabledAndroid:true,
 onNavigationStateChange:this.onNavigationStateChange,
 startInLoadingState:true,
 renderError:function(){
-actions.emit(actions.NETWORK_ERROR_OCCURRED);
-return React.createElement(View,null,React.createElement(Text,null,'Network error'));}}));},
+setTimeout((function(){
+actions.emit(actions.NETWORK_ERROR_OCCURRED);}).
+bind(this),100);
+return React.createElement(View,null);}}));},
 
 
 
@@ -55666,33 +55688,27 @@ __d('yarn/ios/app/logger/logger.js',function(global, require, module, exports) {
 var url='http://logs-01.loggly.com/bulk/41096412-3533-4c39-bed4-a19e96b4aa42/tag/bulk/';
 var sessionTimestamp=Date.now();
 
+module.exports = function(data){
+if(typeof data === 'string'){
+data = {
+message:data};}
 
 
+data.sessionTimestamp = sessionTimestamp;
+data.timestamp = Date.now();
+
+var dataStr=JSON.stringify(data);
+
+console.log(data.message,data);
 
 
+return fetch(url,{
+method:'post',
+headers:{
+'Accept':'application/json',
+'Content-Type':'application/json'},
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-module.exports = function(){
-console.log.apply(console,arguments);};
+body:dataStr});};
 });
 __d('node-read/index.js',function(global, require, module, exports) {  var utils=require('node-read/lib/utils.js');
 var url=require('url/url.js');
@@ -81285,16 +81301,16 @@ actions.trigger(actions.NETWORK_ERROR_OCCURRED);
 return Promise.resolve([]);}
 
 
-return new Promise();}
 
+return fetch(createUrl(words,fromLang,toLang)).
+then(function(response){
+return response.text();}).
 
+then(function(responseText){
+return JSON.parse(responseText);}).
 
-
-
-
-
-
-
+catch(function(){
+actions.trigger(actions.NETWORK_ERROR_OCCURRED);});}
 
 
 
@@ -86258,4 +86274,4 @@ height:10}});
 module.exports = MainBar;
 });
 ;require("yarn/index.ios.js");
-__SSTOKENSTRING = "@generated SignedSource<<9a5b5a9da96968e4f4d5e9ba101a711b>>";
+__SSTOKENSTRING = "@generated SignedSource<<d34d30c7ef10948ea0378aa7203baa36>>";
