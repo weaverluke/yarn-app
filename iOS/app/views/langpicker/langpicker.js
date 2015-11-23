@@ -9,7 +9,7 @@ var {
 } = React;
 
 // see https://github.com/facebook/react-native/issues/3228
-var PICKER_WIDTH = 320;
+var PICKER_WIDTH = 340;
 
 var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
@@ -75,7 +75,7 @@ var styles = StyleSheet.create({
 	langPicker: {
 		// it's impossible to center PickerIOS (https://github.com/facebook/react-native/issues/3228)
 		// so we compute left margin manually
-		marginLeft: width/2 - PICKER_WIDTH/2
+		//marginLeft: width/2 - PICKER_WIDTH/2
 	},
 
 	spacer: {

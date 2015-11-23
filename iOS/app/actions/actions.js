@@ -121,6 +121,13 @@ function preloadWord(pageWord) {
 			var startDate = Date.now();
 			googleTranslate.translateWords(wordsToTranslate, 'en', userProfileStore.get('language'))
 				.then(function (translatedWords) {
+					if (translatedWords.error) {
+						log({
+							message: 'Translation error',
+							error: translatedWords.error
+						});
+						return reject();
+					}
 					console.log('translations loaded', pageWord, Date.now() - startDate);
 					//console.log('translated words', translatedWords);
 					var question = translatedWords.data.translations.map(function (translatedWord, index) {

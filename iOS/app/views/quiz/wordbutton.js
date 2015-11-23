@@ -47,9 +47,10 @@ var WordButton = React.createClass({
 			backgroundColor: this.getColor('background')
 		};
 		var clickCallback = this.props.showDictIcon ? this.onDictIconPressed : this.onButtonPressed;
+		var underlayColor = this.props.type === BUTTON_TYPES.QUESTION ? uiConfig.COLORS.PALE_BLUE_DIM : uiConfig.COLORS.PALE_BLUE;
 		return (
 			<View style={[styles.wrap, additionalStyle]}>
-				<TouchableHighlight onPress={clickCallback} underlayColor={'rgb(238, 248, 253)'}>
+				<TouchableHighlight onPress={clickCallback} underlayColor={underlayColor}>
 					<View style={styles.buttonContentWrap}>
 						{this.renderDictIcon()}
 						{this.renderButtonContent()}
@@ -118,7 +119,7 @@ var WordButton = React.createClass({
 
 		if (this.props.showDictIcon) {
 			nextButton = (
-				<TouchableHighlight onPress={this.props.onNextPress}>
+				<TouchableHighlight onPress={this.props.onNextPress} underlayColor={uiConfig.COLORS.BLUE_DIM}>
 					<View style={styles.nextIconWrap}>
 						<View style={styles.vCenter}>
 							<Image source={{uri: iconUri}} style={styles.nextIcon}/>

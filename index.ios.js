@@ -62,6 +62,7 @@ var GAME_STATES = gameStateStore.GAME_STATES;
 var BROWSER_REF = 'browser';
 var DEFAULT_URL = 'http://www.theguardian.com/uk-news';
 //var DEFAULT_URL = 'http://www.theguardian.com/us-news/2015/sep/13/donald-trump-ben-carson-republican-debate';
+//DEFAULT_URL = 'http://www.theguardian.com/uk-news/2015/nov/23/undercover-police-target-hostile-reconnaissance-to-thwart-terror-attacks';
 
 var yarn = React.createClass({
 
@@ -706,14 +707,16 @@ var yarn = React.createClass({
 	},
 
 	onUserProfileChanged: function () {
-		if (this.lang !== userProfileStore.get('language')) {
-			this.lang = userProfileStore.get('language');
+		var profileLang = userProfileStore.get('language');
+		if (profileLang && profileLang !== this.lang) {
+			this.lang = profileLang;
 			this.resetGame();
 			this.reloadBrowser();
 		}
 		this.setState({
 			testYourselfPromptShown: userProfileStore.get('testYourselfPromptShown'),
-			introScreenShown: userProfileStore.get('introScreenShown')
+			// even if introScreenShown is true check also profileLang because if it's not selected user has to select it
+			introScreenShown: userProfileStore.get('introScreenShown') && profileLang
 		});
 	},
 

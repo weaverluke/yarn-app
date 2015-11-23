@@ -16,7 +16,8 @@ var NavBarButton = React.createClass({
 	getDefaultProps: function () {
 		return {
 			icon: '',
-			backgroundColor: 'white'
+			backgroundColor: 'white',
+			disabled: false
 		};
 	},
 
@@ -31,13 +32,20 @@ var NavBarButton = React.createClass({
 		var additionalStyle = {
 			backgroundColor: this.props.disabled ? uiConfig.COLORS.MID_GREY : this.props.backgroundColor
 		};
-		return (
-			<TouchableHighlight onPress={this.props.disabled ? function () {} : this.props.onPress}>
-				<View style={[styles.wrap, additionalStyle]}>
+		var content = <View style={[styles.wrap, additionalStyle]}>{img}</View>;
+
+		if (this.props.disabled) {
+			return content;
+		}
+		else {
+			return (
+				<TouchableHighlight onPress={this.props.onPress}>
+					<View style={[styles.wrap, additionalStyle]}>
 					{img}
-				</View>
-			</TouchableHighlight>
-		);
+					</View>
+				</TouchableHighlight>
+			);
+		}
 	},
 
 	renderIcon: function () {

@@ -185,7 +185,10 @@ module.exports = function () {
 			}
 			if (previouslyVisited != visitedWords.length) {
 				console.log('visited words', visitedWords.length, visitedWords);
-				send('WORDS', visitedWords);
+				// let react-native re-render ui and reinstall callbacks after scroll message
+				setTimeout(function () {
+					send('WORDS', visitedWords);
+				}, 700);
 			}
 
 		}
@@ -422,9 +425,7 @@ module.exports = function () {
 
 	function bindScrollInfo() {
 		window.addEventListener('scroll', function () {
-			setTimeout(function () {
-				send('SCROLL', {x: window.scrollX, y: window.scrollY});
-			}, 1);
+			send('SCROLL', {x: window.scrollX, y: window.scrollY});
 		});
 	}
 
