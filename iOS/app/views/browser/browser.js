@@ -130,9 +130,18 @@ var Browser = React.createClass({
 	},
 
 	cleanupUrl: function (url) {
-		return url.replace(/^(https?\:\/\/)/,'')
+		url = url.replace(/^(https?\:\/\/)/,'')
 			.replace(/^(www\.)/,'')
 			.split('/')[0];
+
+		// this is temporary, it should be enabled when we won't use redirect for first load
+		// this just hides 'wozniak.io' when first loading process occurrs
+		if (url === 'wozniak.io') {
+			return 'loading...';
+		}
+
+		return url;
+
 	},
 
 	componentDidMount: function () {

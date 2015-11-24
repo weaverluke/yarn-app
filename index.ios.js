@@ -63,6 +63,7 @@ var BROWSER_REF = 'browser';
 var DEFAULT_URL = 'http://www.theguardian.com/uk-news';
 //var DEFAULT_URL = 'http://www.theguardian.com/us-news/2015/sep/13/donald-trump-ben-carson-republican-debate';
 //DEFAULT_URL = 'http://www.theguardian.com/uk-news/2015/nov/23/undercover-police-target-hostile-reconnaissance-to-thwart-terror-attacks';
+DEFAULT_URL = 'http://wozniak.io/yarn.html';
 
 var yarn = React.createClass({
 
@@ -522,9 +523,7 @@ var yarn = React.createClass({
 	},
 
 	hideNetworkErrorView: function () {
-		this.setState({
-			networkErrorViewVisible: false
-		});
+		this.resetViews();
 
 		setTimeout(function () {
 			this.refs[BROWSER_REF].reload();
@@ -724,12 +723,30 @@ var yarn = React.createClass({
 		this.refs[BROWSER_REF].unhighlightWords();
 
 		clearTimeout(this.showSearchingTimeout);
-		clearTimeout(this.showSearchingTimeout);
 
 		this.setState({
 			question: [],
 			bottomBar: '',
 			toastShown: false
+		});
+	},
+
+	resetViews: function () {
+		this.setState({
+			url: this.state.url,
+			popupVisible: false,
+			question: [],
+			settingsViewVisible: false,
+			bottomBar: '',
+			toastShown: false,
+			wordsCountVisible: false,
+			gameState: gameStateStore.GAME_STATES.NOT_STARTED,
+			buyUrlFeaturePopupVisible: false,
+			browseOnToastVisible: false,
+			testYourselfPromptVisible: false,
+			firstWordReady: false,
+			guardianInfoViewVisible: false,
+			networkErrorViewVisible: false
 		});
 	},
 

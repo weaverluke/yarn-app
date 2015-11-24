@@ -431,15 +431,13 @@ module.exports = function () {
 
 	//var log = console.log.bind(console);
 	function log() {
-		var args = [].slice.call(arguments);
-		send('LOG', args);
+		//var args = [].slice.call(arguments);
+		//send('LOG', args);
 	}
 
 	function run() {
 		console.log('run()');
-		debugger;
 		WebViewBridgeReady(function (WebViewBridge) {
-			debugger;
 			console.log('bridge ready');
 			yarnBridge = WebViewBridge;
 			WebViewBridge.onMessage = function (msg) {
@@ -459,20 +457,28 @@ module.exports = function () {
 	}
 
 	function getDomain(url) {
-		return url.replace(/x/, '').split('/')[0];
+		return url.replace(/^http:\/\//, '').split('/')[0];
 	}
 
 	// try to prevent universal links
 	function hookLinks() {
 
+		//alert('hookLinks()');
 		// do not allow to open external links
 		document.addEventListener('click', function (ev) {
-			if (ev.target && ev.target.tagName && ev.target.tagName.toLowerCase() === 'a'
-				&& ev.target.getAttribute('href')) {
+			//alert('click ' + ev.target.tagName);
+			var target = ev.target;
+			if (ev.target.tagName && ev.target.tagName.toLowerCase() !== 'a') {
+				target = ev.target.closest('a');
+			}
 
-				var href = ev.target.getAttribute('href');
+			if (target && target.getAttribute('href')) {
 
-				if (href.indexOf('#') !== 0 && getDomain(href) !== getDomain(location.href)) {
+				// if there's http or https it can be redirect to other page
+				var href = target.getAttribute('href');
+				console.log('HREF:', href);
+				console.log('RESULT:', /^https?:\/\//.test(href) && getDomain(href) !== getDomain(location.href));
+				if (/^https?:\/\//.test(href) && getDomain(href) !== getDomain(location.href)) {
 					ev.preventDefault();
 					ev.stopPropagation();
 					send('NOT_ALLOWED_URL', href);
