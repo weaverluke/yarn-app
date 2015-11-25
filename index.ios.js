@@ -12,6 +12,7 @@ var ToastContent = require('./ios/app/views/toast/wordscounttoastcontent');
 var SearchingView = require('./ios/app/views/searching/searching');
 var GuardianInfoView = require('./ios/app/views/guardianinfo/guardianinfo');
 var NetworkErrorView = require('./ios/app/views/networkerror/networkerror');
+var LoadingCoverView = require('./ios/app/views/loadingcover/loadingcover');
 
 var QuizStatusBar = require('./ios/app/views/quiz/quizstatusbar');
 var QuestionView = require('./ios/app/views/quiz/question');
@@ -42,7 +43,7 @@ var {
 	WebView,
 	LayoutAnimation,
 	NativeAppEventEmitter
-	} = React;
+} = React;
 
 var subscription = NativeAppEventEmitter.addListener(
 	'DictionaryHidden',
@@ -85,12 +86,12 @@ var yarn = React.createClass({
 			browseOnToastVisible: false,
 			testYourselfPromptVisible: false,
 			testYourselfPromptShown: userProfileStore.get('testYourselfPromptShown'),
-			// start with true, and when user profile is loaded then this flag will be set correctly in onUserProfileChanged
-			introScreenShown: true,
 			// is first word preloaded? (translations are ready and we can start the test)
 			firstWordReady: false,
 			guardianInfoViewVisible: false,
-			networkErrorViewVisible: false
+			networkErrorViewVisible: false,
+			loadingCoverVisible: true,
+			introScreenVisible: true
 		};
 	},
 
@@ -151,12 +152,19 @@ var yarn = React.createClass({
 				{this.renderIntroToast()}
 				{this.renderResultView()}
 				{this.renderTestYourselfPrompt()}
-				{this.renderIntroScreen()}
+				{this.renderIntroView()}
 				{this.renderGuardianInfoView()}
 				{this.renderNetworkErrorView()}
+				{this.renderLoadingCover()}
 				</View>
 			</View>
 		);
+	},
+
+	renderLoadingCover: function () {
+		// as long as we're waiting for user profile to be loaded from async storage we cover whole app with white
+		// screen to make sure that user will see correct state when data is loaded
+		return <LoadingCoverView active={this.state.loadingCoverVisible} />
 	},
 
 	onShowDictionary: function (text, hasDictionaryDefinition) {
@@ -348,18 +356,16 @@ var yarn = React.createClass({
 		);
 	},
 
-	renderIntroScreen: function () {
-		if (this.state.introScreenShown) {
-			return;
+	renderIntroView: function () {
+		if (this.state.introScreenVisible) {
+			return <IntroView lang={userProfileStore.get('language')} onSubmit={this.onIntroViewSubmit} />;
 		}
-		return <IntroView lang={userProfileStore.get('language')} onSubmit={this.onIntroScreenSubmit} />;
 	},
 
-	onIntroScreenSubmit: function () {
+	onIntroViewSubmit: function () {
 		this.setState({
-			introScreenShown: true
+			introScreenVisible: false
 		});
-		userProfileStore.set('introScreenShown', true);
 	},
 
 	showTestYourselfPrompt: function () {
@@ -545,6 +551,17 @@ var yarn = React.createClass({
 		actions.on(actions.TRY_AGAIN, this.hideNetworkErrorView);
 
 		this.onUrlChange(this.state.url);
+
+
+		log({
+			message: 'componentDidMount',
+			state: this.state,
+			lang: userProfileStore.get('language')
+		});
+
+		if (userProfileStore.get('language') || userProfileStore.get('loaded')) {
+			this.onUserProfileChanged();
+		}
 	},
 
 	showUrlFeaturePopup: function () {
@@ -707,15 +724,36 @@ var yarn = React.createClass({
 
 	onUserProfileChanged: function () {
 		var profileLang = userProfileStore.get('language');
-		if (profileLang && profileLang !== this.lang) {
+		console.log('PROFILE LANG', profileLang);
+
+		log({
+			message: 'onUserProfileChanged',
+			lang: profileLang
+		});
+
+		if (!profileLang) {
+			this.setState({
+				introScreenVisible: true
+			});
+			// let react-native render everything and then proceed with animation
+			setTimeout(function () {
+				this.setState({
+					loadingCoverVisible: false
+				});
+			}.bind(this), 400);
+			return;
+		}
+
+		if (profileLang !== this.lang) {
 			this.lang = profileLang;
 			this.resetGame();
 			this.reloadBrowser();
 		}
+
 		this.setState({
-			testYourselfPromptShown: userProfileStore.get('testYourselfPromptShown'),
-			// even if introScreenShown is true check also profileLang because if it's not selected user has to select it
-			introScreenShown: userProfileStore.get('introScreenShown') && profileLang
+			introScreenVisible: false,
+			loadingCoverVisible: false,
+			testYourselfPromptShown: userProfileStore.get('testYourselfPromptShown')
 		});
 	},
 
@@ -775,6 +813,15 @@ var styles = StyleSheet.create({
 
 	bottomBarWrap: {
 
+	},
+
+	loadingCover: {
+		backgroundColor: 'white',
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0
 	}
 });
 

@@ -1,5 +1,8 @@
 ##Release notes
 
+v0.2.25
+- bugfixes
+
 v0.2.24
 - bugfixes 
 

@@ -13,11 +13,12 @@ var {
 var INITIAL_LEVEL = 30;
 
 var data = {
-	dataVersion: 2,
+	dataVersion: 3,
+	loaded: false, // changed when loaded is loaded from device
+
 	language: '',
 	testYourselfPromptShown: false,
 
-	introScreenShown: false,
 	buyVocabLevelShown: false,
 	buyVocabLevelPressed: false,
 
@@ -160,7 +161,15 @@ function loadData() {
 	AsyncStorage
 		.getItem(PERSISTENCE_KEY)
 		.then(function (stats) {
-			var parsedData = JSON.parse(stats);
+			var parsedData;
+
+			try {
+				parsedData = JSON.parse(stats);
+			} catch (ex) {
+				emitChange();
+				saveData();
+				return;
+			}
 
 			// if this is current version of data structure then load it
 			if (parsedData) {
@@ -174,6 +183,8 @@ function loadData() {
 			// disabled until we disabled separate stats for each language
 			//migrate4();
 			migrate5();
+
+			data.loaded = true;
 			console.log('data after migration:', data);
 
 			log({
@@ -182,6 +193,10 @@ function loadData() {
 			});
 
 			emitChange();
+		})
+		.catch(function () {
+			emitChange();
+			saveData();
 		})
 		.done();
 }
