@@ -120,7 +120,10 @@ var NavigatedView = React.createClass({
 	renderActionButton: function () {
 		if (this.props.actionText) {
 			return (
-				<TouchableHighlight onPress={this.createHideHandler(this.onActionButtonPress)} underlayColor={uiConfig.COLORS.BLUE_DIM}>
+				<TouchableHighlight
+					onPress={this.createHideHandler(this.props.onActionPressed)}
+					underlayColor={uiConfig.COLORS.BLUE_DIM}>
+
 					<View style={styles.actionButton}>
 						<Text style={styles.actionButtonText}>{this.props.actionText}</Text>
 					</View>

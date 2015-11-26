@@ -1,5 +1,13 @@
 ##Release notes
 
+v0.2.27
+- network error handlers improved
+- re-try scenario when network fails fixed
+
+v0.2.26
+- bugfixes for "Test me" button - improved error handling
+- onboarding view fixed
+
 v0.2.25
 - bugfixes
 
