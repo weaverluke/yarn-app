@@ -25,7 +25,7 @@ module.exports = function (data) {
 			'Content-Type': 'application/json'
 		},
 		body: dataStr
-	});
+	}).catch(function () {});
 };
 
 // tmp

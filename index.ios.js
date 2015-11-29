@@ -118,7 +118,8 @@ var yarn = React.createClass({
 						onUrlChange={this.onUrlChange}
 						onScroll={this.onBrowserScroll}
 					/>
-				{this.renderSettings()}
+					{this.renderSearchingState()}
+					{this.renderSettings()}
 					<View style={styles.bottomBarWrap}>
 					{this.renderMainBar()}
 					{bottomBar}
@@ -146,7 +147,6 @@ var yarn = React.createClass({
 						type={Popup.POPUP_TYPE.BUY_URL_FEATURE}
 					/>
 				{this.renderQuizStatusBar()}
-				{this.renderSearchingState()}
 				{this.renderToast()}
 				{this.renderBrowseOnToast()}
 				{this.renderIntroToast()}

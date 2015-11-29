@@ -1,15 +1,16 @@
 var API_KEY = 'AIzaSyDAjHprVDfX_6z2fAs6Vf03g2sOfEiTogs';
 var BASE_URL = 'https://www.googleapis.com/language/translate/v2?key=' + API_KEY;
-var actions = require('../actions/actions');
 var NetworkStatus = require('./networkstatus');
 
 function translateWords(words, fromLang, toLang, callback) {
 	if (!Array.isArray(words)) {
 		words = [words];
 	}
+
 	if (!NetworkStatus.isOk()) {
-		actions.trigger(actions.NETWORK_ERROR_OCCURRED);
-		return Promise.resolve([]);
+		var p = new Promise();
+		p.reject();
+		return p;
 	}
 
 	//return new Promise();
@@ -22,7 +23,6 @@ function translateWords(words, fromLang, toLang, callback) {
 		})
 		.catch(function () {
 			console.log('Request to google translate api failed!');
-			actions.trigger(actions.NETWORK_ERROR_OCCURRED);
 		});
 }
 
