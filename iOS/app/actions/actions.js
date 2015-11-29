@@ -161,9 +161,13 @@ function preloadWord(pageWord) {
 						});
 						resolve(question);
 					}
+				}, function () {
+					bus.emit(actions.NETWORK_ERROR_OCCURRED);
+					reject();
 				})
 				.catch(function (ex) {
 					console.log('Cannot translate words:', ex);
+					bus.emit(actions.NETWORK_ERROR_OCCURRED);
 					reject();
 				});
 

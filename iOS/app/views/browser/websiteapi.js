@@ -5,6 +5,10 @@ module.exports = function () {
 	}
 	window.yarnInitialised = true;
 
+	var RANDOM_BLACKLIST = [
+		/\/crosswords\//
+	];
+
 	window.yarnHighlight = (function () {
 
 		var SKIP_NODES = ['SCRIPT', 'NOSCRIPT'];
@@ -336,29 +340,57 @@ module.exports = function () {
 
 		links = matchingOrigin.length ? matchingOrigin : links;
 
+		var newUrl;
+		var popular = [];
+
 		links = links.map(function (link) {
-			return link.getAttribute('href');
-		}).map(function (href) {
 			// remove hashes from the end. It works for the guardian but might be problematic for sites
 			// with navigation implemented via hashes
-			return href.replace(/#.*/, '');
+			var href = link.getAttribute('href').replace(/#.*/, '');
+
+			if (link.closest('#tabs-popular-1')) {
+				popular.push(href);
+			}
+			return href;
 		});
 
-		var unique = [];
-		for (var i = 0; i < links.length; i++) {
-			if (unique.indexOf(links[i]) === -1) {
-				unique.push(links[i]);
-			}
+
+		// use popular links if these are available
+		if (popular.length > 5) {
+			newUrl = popular[Math.floor(Math.random() * popular.length)];
 		}
 
-		// sort from the longest to the shortest
-		unique.sort(function (a, b) {
-			return b.length - a.length;
-		});
+		else {
+			var unique = [];
 
-		// pick 30% of the longest links
-		var index = Math.floor(Math.random() * unique.length*0.3);
-		location = unique[index];
+			for (var i = 0; i < links.length; i++) {
+				if (unique.indexOf(links[i]) === -1) {
+					unique.push(links[i]);
+				}
+			}
+
+			unique = unique.filter(function (url) {
+				// exclude blacklisted items
+				for (var i = 0; i < RANDOM_BLACKLIST.length; i++) {
+					if (RANDOM_BLACKLIST[i].test(url)) {
+						return false;
+					}
+				}
+
+				return true;
+			});
+
+			// sort from the longest to the shortest
+			unique.sort(function (a, b) {
+				return b.length - a.length;
+			});
+
+			// pick 30% of the longest links
+			var index = Math.floor(Math.random() * unique.length * 0.3);
+			newUrl = unique[index];
+		}
+
+		location = newUrl;
 	}
 
 	function getLinksMatchingCurrentDomain(links) {

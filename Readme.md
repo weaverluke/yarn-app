@@ -1,5 +1,9 @@
 ##Release notes
 
+v0.2.28
+- network checks around each network call added - that fixes crashes during word search and scrolling after word search
+- searching bar covering settings view fixed
+
 v0.2.27
 - network error handlers improved
 - re-try scenario when network fails fixed
