@@ -609,7 +609,12 @@ var yarn = React.createClass({
 		}
 
 		if (gameStateStore.get('finished')) {
-			this.finishGame();
+			if (gameStateStore.get('singleWordMode')) {
+				this.handleSingleWordGameFinish();
+			}
+			else {
+				this.finishGame();
+			}
 			return;
 		}
 
@@ -704,6 +709,11 @@ var yarn = React.createClass({
 			level: userProfileStore.get('level'),
 			score: userProfileStore.get('score')
 		});
+	},
+
+	handleSingleWordGameFinish: function () {
+		this.refs[BROWSER_REF].ignoreWord(gameStateStore.get('currentWord'));
+		this.refs[BROWSER_REF].restoreScroll();
 	},
 
 	onWordPressed: function (word, index) {

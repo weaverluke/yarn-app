@@ -9,6 +9,8 @@ module.exports = function () {
 		/\/crosswords\//
 	];
 
+	var lastScrollPosition;
+
 	window.yarnHighlight = (function () {
 
 		var SKIP_NODES = ['SCRIPT', 'NOSCRIPT'];
@@ -40,8 +42,8 @@ module.exports = function () {
 			}
 			var head = document.head || document.getElementsByTagName('head')[0];
 
-			var bgAnimationStyle = '-webkit-transition: background-color 500ms linear;'+
-				'transition: background-color 500ms linear;';
+			var bgAnimationStyle = '-webkit-transition: background-color 500ms linear;' +
+					'transition: background-color 500ms linear;';
 
 			var commonCss = bgAnimationStyle +
 				'width: 2px; height: 100%;' +
@@ -49,7 +51,10 @@ module.exports = function () {
 				'top: 0;' +
 				'content: "";' +
 				'display: block;' +
-				'} ';
+				'} ' +
+				'.tap-area {' +
+				'position:absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;'+
+				'}';
 
 			var css = '[data-yarn-highlight] { position: relative; background-color:rgba(0,0,0,0) } ' +
 
@@ -119,8 +124,16 @@ module.exports = function () {
 				if (rx.test(n.nodeValue)) {
 					var node = n.parentNode;
 					node.innerHTML = node.innerHTML.replace(rx,
-						'<mark data-yarn-highlight="' +word+ '">' +word+ '</mark>'
+						'<mark data-yarn-highlight="' +word+ '">' +word+ '<span class="tap-area"></span></mark>'
 					);
+
+					var mark = node.querySelector('mark[data-yarn-highlight]');
+
+					mark && mark.addEventListener('click', function (ev) {
+						ev.preventDefault();
+						send('WORD_IN_BROWSER_PRESSED', word);
+					});
+
 					return true;
 				}
 			}
@@ -166,11 +179,21 @@ module.exports = function () {
 			}
 		}
 
+		function ignoreWord(word) {
+			if (!word.tagName) {
+				word = getWordElByWord(word);
+			}
+			if (word) {
+				word.dataset['ignored'] = 1;
+			}
+		}
+
 		function scrollToWord(word) {
 			if (!word.tagName) {
 				word = getWordElByWord(word);
 			}
 			if (word) {
+				saveScrollPosition();
 				word.scrollIntoViewIfNeeded();
 			}
 		}
@@ -179,7 +202,7 @@ module.exports = function () {
 			var previouslyVisited = visitedWords.length;
 			var words = [].slice.call(document.querySelectorAll('[data-yarn-highlight]'));
 			for (var i = 0; i < words.length; i++) {
-				if (isWordInView(words[i]) && ! words[i].dataset.yarnHighlighted) {
+				if (isWordInView(words[i]) && ! words[i].dataset.yarnHighlighted && !words[i].dataset['ignored']) {
 					highlight(words[i]);
 					var word = words[i].dataset.yarnHighlight;
 					if (visitedWords.indexOf(word) === -1) {
@@ -199,12 +222,6 @@ module.exports = function () {
 
 		function isWordInView(wordEl) {
 			var bbox = wordEl.getBoundingClientRect();
-
-			// this method makes sure that word is inside viewport
-			//return bbox.top > 0 &&
-			//	bbox.bottom < window.innerHeight &&
-			//	bbox.left > 0 &&
-			//	bbox.right < window.innerWidth;
 
 			// this checks only if bottom and right edges have been scrolled into view
 			// even if word was omitted during very fast scroll this method will catch it
@@ -246,7 +263,8 @@ module.exports = function () {
 			highlightVisitedWords: highlightVisitedWords,
 			getVisitedWords: getVisitedWords,
 			stopScrollTracking: stopScrollTracking,
-			unhighlight: unhighlight
+			unhighlight: unhighlight,
+			ignoreWord: ignoreWord
 		};
 
 	}());
@@ -328,6 +346,15 @@ module.exports = function () {
 
 			case 'GO_TO_RANDOM_URL':
 				return goToRandomUrl();
+
+			case 'SAVE_SCROLL':
+				return saveScrollPosition();
+
+			case 'RESTORE_SCROLL':
+				return restoreScrollPosition();
+
+			case 'IGNORE_WORD':
+				return ignoreWord(msg.data);
 
 			default:
 				return;
@@ -436,6 +463,19 @@ module.exports = function () {
 		}
 	}
 
+	function saveScrollPosition() {
+		lastScrollPosition = window.scrollY;
+	}
+
+	function restoreScrollPosition() {
+		window.scrollTo(window.scrollX, lastScrollPosition);
+	}
+
+	function ignoreWord(word) {
+		yarnHighlight.unhighlight(word);
+		yarnHighlight.ignoreWord(word);
+	}
+
 	function WebViewBridgeReady(cb) {
 		if (window.WebViewBridge) {
 			cb(window.WebViewBridge);
@@ -519,17 +559,6 @@ module.exports = function () {
 			}
 		});
 
-		//document.addEventListener('click', function (ev) {
-		//	if (yarnBridge) {
-		//		if (ev.target && ev.target.tagName.toLowerCase() === 'a' && ev.target.getAttribute('href')) {
-		//			ev.preventDefault();
-		//			ev.stopPropagation();
-		//
-		//			send('REQUEST_URL_CHANGE', ev.target.getAttribute('href'));
-		//			//location = ev.target.getAttribute('href');
-		//		}
-		//	}
-		//}, true);
 	}
 
 	console.log('start! ', location.href, document.readyState, document.documentElement.outerHTML.length);
@@ -546,50 +575,6 @@ module.exports = function () {
 		});
 	}
 
-	//(function() {
-	//	'use strict';
-	//
-	//	//this variable will be set during the injection by objective-c
-	//	//we need to know the handlerId in order to locate the callback properly.
-	//	var webViewBridgeHandlerId = 0;
-	//
-	//	var doc = document;
-	//	var WebViewBridge = {};
-	//	var RNWBSchema = "rnwb";
-	//	var queue = [];
-	//	var inProcess = false;
-	//	var customEvent = doc.createEvent('Event');
-	//
-	//	function noop() {}
-	//
-	//	WebViewBridge = {
-	//		//do not call _fetch directly. this is for internal use
-	//		_fetch: function () {
-	//			var message;
-	//			queue.unshift(webViewBridgeHandlerId);
-	//			message = JSON.stringify(queue);
-	//			queue = [];
-	//			inProcess = false;
-	//			return message;
-	//		},
-	//		send: function (value) {
-	//			queue.push(value);
-	//			if (!inProcess) {
-	//				inProcess = true;
-	//				//signal the objective-c that there is a message in the queue
-	//				window.location = RNWBSchema + '://message' + new Date().getTime();
-	//			}
-	//		},
-	//		onMessage: noop
-	//	};
-	//
-	//	window.WebViewBridge = WebViewBridge;
-	//
-	//	//alert('WEB VIEW BRIDGE READY')
-	//
-	//	customEvent.initEvent('WebViewBridge', true, true);
-	//	doc.dispatchEvent(customEvent);
-	//}());
 };
 
 

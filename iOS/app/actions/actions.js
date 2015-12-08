@@ -41,6 +41,7 @@ bus.on(actions.RESET, onReset);
 bus.on(actions.CHANGE_LEVEL, onChangeLevel);
 bus.on(actions.LOOKING_FOR_WORDS, onLookingForWords);
 bus.on(actions.HOME_BUTTON_PRESSED, onHomePressed);
+bus.on(actions.WORD_IN_BROWSER_PRESSED, onWordInBrowserPressed);
 
 function onWordsParsed(words) {
 	if (!words.length) {
@@ -80,9 +81,23 @@ function onVisitedWordsChanged(words) {
 	preloadWords();
 }
 
-function onStartGame() {
+function onStartGame(word) {
 	gameStateStore.pause(true);
-	gameStateStore.set('pageWords', gameStateStore.get('visitedPageWords'));
+	if (word) {
+		gameStateStore.set('pageWords', [word]);
+		gameStateStore.set('singleWordMode', true);
+		log({
+			message: 'start game in single mode',
+			word: word
+		});
+	}
+	else {
+		gameStateStore.set('pageWords', gameStateStore.get('visitedPageWords'));
+		log({
+			message: 'start game',
+			visitedWords: gameStateStore.get('visitedPageWords')
+		});
+	}
 	gameStateStore.pause(false);
 	userProfileStore.set('previousScore', userProfileStore.get('score'));
 
@@ -179,6 +194,11 @@ function preloadWord(pageWord) {
 }
 
 function onShowNextQuestion() {
+	if (gameStateStore.get('singleWordMode')) {
+		gameStateStore.set('finished', true);
+		return;
+	}
+
 	var currentWordIndex = gameStateStore.get('currentWordIndex') + 1;
 
 	if (currentWordIndex === gameStateStore.get('pageWords').length) {
@@ -232,7 +252,12 @@ function onWordPressed(word) {
 		console.log('wrong + 1', gameStateStore.get('wrong'));
 	}
 
-	if (gameStateStore.get('currentWordIndex') === gameStateStore.get('pageWords').length - 1) {
+	var lastWordInSingleModePressed = false;
+
+	if (
+		(!gameStateStore.get('singleWordMode') || lastWordInSingleModePressed) &&
+		(gameStateStore.get('currentWordIndex') === gameStateStore.get('pageWords').length - 1)
+	) {
 		userProfileStore.updateUserLevel();
 	}
 
@@ -277,6 +302,10 @@ function onLookingForWords() {
 
 function onHomePressed() {
 	onReset();
+}
+
+function onWordInBrowserPressed(word) {
+	onStartGame(word);
 }
 
 module.exports = bus;

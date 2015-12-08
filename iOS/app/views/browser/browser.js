@@ -177,7 +177,7 @@ var Browser = React.createClass({
 			url: this.state.url,
 			words: words
 		});
-		actions.emit('WORDS_PARSED', words);
+		actions.emit(actions.WORDS_PARSED, words);
 	},
 
 	goBack: function () {
@@ -269,6 +269,14 @@ var Browser = React.createClass({
 
 	resetLastParsedContent: function () {
 		this.refs[WEBVIEW_REF].resetLastParsedContent();
+	},
+
+	ignoreWord: function (word) {
+		this.refs[WEBVIEW_REF].ignoreWord(word);
+	},
+
+	restoreScroll: function (word) {
+		this.refs[WEBVIEW_REF].restoreScroll();
 	}
 });
 

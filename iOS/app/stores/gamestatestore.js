@@ -25,8 +25,9 @@ var initialData = {
 	correct: 0,
 	wrong: 0,
 	finished: false,
-	firstWordReady: false
-}
+	firstWordReady: false,
+	singleWordMode: false
+};
 
 var data = JSON.parse(JSON.stringify(initialData));
 var listenersPaused = false;

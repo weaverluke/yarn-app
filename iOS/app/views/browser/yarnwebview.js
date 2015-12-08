@@ -126,6 +126,10 @@ var Browser = React.createClass({
 					}
 					break;
 
+				case 'WORD_IN_BROWSER_PRESSED':
+					actions.emit(actions.WORD_IN_BROWSER_PRESSED, msg.data);
+					break;
+
 				case 'WORDS':
 					console.log('visited words:', msg.data);
 					this.props.onVisibleWordsChanged && this.props.onVisibleWordsChanged(msg.data);
@@ -275,6 +279,14 @@ var Browser = React.createClass({
 
 	scrollToWord: function (word) {
 		this.sendCommand('SCROLL_TO_WORD', word);
+	},
+
+	ignoreWord: function (word) {
+		this.sendCommand('IGNORE_WORD', word);
+	},
+
+	restoreScroll: function () {
+		this.sendCommand('RESTORE_SCROLL');
 	},
 
 	unhighlightWords: function () {
