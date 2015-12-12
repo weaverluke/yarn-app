@@ -264,6 +264,7 @@ var yarn = React.createClass({
 			<QuestionView
 				ref='wordstrip'
 				disabled={this.state.wordStripDisabled}
+				isSingleWordMode={gameStateStore.get('singleWordMode')}
 				onAction={this.onWordPressed}
 				onNextPress={this.showNextQuestion}
 				onShowDictionary={this.onShowDictionary}

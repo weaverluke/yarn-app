@@ -16,7 +16,8 @@ var Question = React.createClass({
 
 	getDefaultProps: function () {
 		return {
-			onAnimateInEnd: function () {}
+			onAnimateInEnd: function () {},
+			isSingleWordMode: false
 		};
 	},
 
@@ -68,6 +69,8 @@ var Question = React.createClass({
 				type = BUTTON_TYPES.ANSWER_ENABLED;
 			}
 
+			var buttonIconName = this.props.isSingleWordMode ? 'tick' : 'next';
+
 			return (
 				<WordButton
 					index={i}
@@ -75,6 +78,7 @@ var Question = React.createClass({
 					showDictIcon={this.props.disabled}
 					onAction={this.props.type !== BUTTON_TYPES.QUESTION ? this.props.onAction : function () {}}
 					onNextPress={this.props.onNextPress}
+					buttonIconName={buttonIconName}
 					onDictIconPressed={this.onDictIconPressed}
 					text={i === 0 ? word.text : word.definition}
 					hasDictionaryDefinition={word.hasDictionaryDefinition}

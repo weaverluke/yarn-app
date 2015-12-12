@@ -51,6 +51,8 @@
 		619A04171BF9011C002751FB /* magnifier.png in Resources */ = {isa = PBXBuildFile; fileRef = 619A040F1BF9011C002751FB /* magnifier.png */; };
 		619A04181BF9011C002751FB /* browse-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 619A04101BF9011C002751FB /* browse-icon.png */; };
 		619A04191BF9011C002751FB /* browse-icon-active.png in Resources */ = {isa = PBXBuildFile; fileRef = 619A04111BF9011C002751FB /* browse-icon-active.png */; };
+		61AA8F0B1C1CCDD500519B9C /* tick-finished.png in Resources */ = {isa = PBXBuildFile; fileRef = 61AA8F091C1CCDD500519B9C /* tick-finished.png */; };
+		61AA8F0C1C1CCDD500519B9C /* tick-anim-5s.gif in Resources */ = {isa = PBXBuildFile; fileRef = 61AA8F0A1C1CCDD500519B9C /* tick-anim-5s.gif */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
 
@@ -195,6 +197,8 @@
 		619A040F1BF9011C002751FB /* magnifier.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = magnifier.png; path = ../Resources/Images/magnifier.png; sourceTree = "<group>"; };
 		619A04101BF9011C002751FB /* browse-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "browse-icon.png"; path = "../Resources/Images/browse-icon.png"; sourceTree = "<group>"; };
 		619A04111BF9011C002751FB /* browse-icon-active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "browse-icon-active.png"; path = "../Resources/Images/browse-icon-active.png"; sourceTree = "<group>"; };
+		61AA8F091C1CCDD500519B9C /* tick-finished.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tick-finished.png"; path = "../Resources/Images/tick-finished.png"; sourceTree = "<group>"; };
+		61AA8F0A1C1CCDD500519B9C /* tick-anim-5s.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "tick-anim-5s.gif"; path = "../Resources/Images/tick-anim-5s.gif"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -358,6 +362,8 @@
 		619A03E31BF8EE06002751FB /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				61AA8F091C1CCDD500519B9C /* tick-finished.png */,
+				61AA8F0A1C1CCDD500519B9C /* tick-anim-5s.gif */,
 				6119151C1BFBD79000BB1382 /* logo-splash.jpg */,
 				619A040A1BF9011C002751FB /* settings-icon.png */,
 				619A040B1BF9011C002751FB /* settings-icon-active.png */,
@@ -687,6 +693,7 @@
 				6182327E1BF9186A000D7F47 /* webview-bridge-script.js in Resources */,
 				619A04161BF9011C002751FB /* next-icon.png in Resources */,
 				619A04131BF9011C002751FB /* settings-icon-active.png in Resources */,
+				61AA8F0C1C1CCDD500519B9C /* tick-anim-5s.gif in Resources */,
 				619A03FA1BF8EEB6002751FB /* next-anim-5s.gif in Resources */,
 				619A04151BF9011C002751FB /* random-icon.png in Resources */,
 				619A03F51BF8EEB6002751FB /* intro_1.png in Resources */,
@@ -700,6 +707,7 @@
 				619A03F21BF8EEB6002751FB /* next-finished.gif in Resources */,
 				619A03F71BF8EEB6002751FB /* intro_3.png in Resources */,
 				619A03F41BF8EEB6002751FB /* guardian-top.png in Resources */,
+				61AA8F0B1C1CCDD500519B9C /* tick-finished.png in Resources */,
 				6119151D1BFBD79000BB1382 /* logo-splash.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
