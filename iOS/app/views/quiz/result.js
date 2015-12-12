@@ -98,15 +98,10 @@ var ResultView = React.createClass({
 				<Stretch />
 
 				<View style={[styles.row, styles.lastRow]}>
-					<TouchableWithoutFeedback onPress={this.hide(this.props.onDonePressed)}>
-						<View style={[styles.button, styles.greyBg]}>
-							<Text style={styles.buttonText}>Done</Text>
-						</View>
-					</TouchableWithoutFeedback>
 					<TouchableWithoutFeedback onPress={this.hide(this.props.onRandomPressed)}>
 						<View style={[styles.button, styles.blueBg, styles.buttonWithImage]}>
 							<Image source={{uri: 'random-white-icon.png'}} style={styles.randomIcon}/>
-							<Text style={styles.buttonText}>Random!</Text>
+							<Text style={styles.buttonText}>Surprise me!</Text>
 						</View>
 					</TouchableWithoutFeedback>
 				</View>
