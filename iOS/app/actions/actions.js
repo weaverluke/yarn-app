@@ -83,23 +83,30 @@ function onVisitedWordsChanged(words) {
 
 function onStartGame(word) {
 	gameStateStore.pause(true);
-	if (word) {
-		gameStateStore.set('pageWords', [word]);
+	gameStateStore.set('finished', false);
+	gameStateStore.set('currentWordIndex', -1);
+
+	if (typeof word === 'string') {
+		gameStateStore.set('quizWords', [word]);
 		gameStateStore.set('singleWordMode', true);
 		log({
-			message: 'start game in single mode',
-			word: word
+			message: 'start game in single mode'
 		});
 	}
 	else {
-		gameStateStore.set('pageWords', gameStateStore.get('visitedPageWords'));
+		gameStateStore.set('singleWordMode', false);
+		gameStateStore.set('quizWords', gameStateStore.get('visitedPageWords'));
 		log({
 			message: 'start game',
 			visitedWords: gameStateStore.get('visitedPageWords')
 		});
 	}
 	gameStateStore.pause(false);
-	userProfileStore.set('previousScore', userProfileStore.get('score'));
+
+	// save previousScore only when starting new game
+	if (gameStateStore.get('correct') + gameStateStore.get('wrong') === 0) {
+		userProfileStore.set('previousScore', userProfileStore.get('score'));
+	}
 
 	bus.emit(actions.SHOW_NEXT_QUESTION);
 	log({
@@ -117,9 +124,11 @@ function preloadWords() {
 	}
 
 	// notify about first preloaded word
-	preloadedWords[visited[0]].then(function () {
-		gameStateStore.set('firstWordReady', true);
-	});
+	if (visited.length && preloadedWords[visited[0]]) {
+		preloadedWords[visited[0]].then(function () {
+			gameStateStore.set('firstWordReady', true);
+		});
+	}
 }
 
 function preloadWord(pageWord) {
@@ -194,19 +203,27 @@ function preloadWord(pageWord) {
 }
 
 function onShowNextQuestion() {
-	if (gameStateStore.get('singleWordMode')) {
+	if (
+		gameStateStore.get('singleWordMode') &&
+		(gameStateStore.get('currentState') === GAME_STATES.CORRECT_ANSWER_CHOSEN ||
+		gameStateStore.get('currentState') === GAME_STATES.WRONG_ANSWER_CHOSEN) &&
+		gameStateStore.get('pageWords').length !== gameStateStore.get('correct') + gameStateStore.get('wrong')
+	) {
+		gameStateStore.pause(true);
 		gameStateStore.set('finished', true);
+		gameStateStore.set('currentState', GAME_STATES.WORDS_FOUND);
+		gameStateStore.pause(false);
 		return;
 	}
 
 	var currentWordIndex = gameStateStore.get('currentWordIndex') + 1;
 
-	if (currentWordIndex === gameStateStore.get('pageWords').length) {
+	if (currentWordIndex === gameStateStore.get('quizWords').length) {
 		gameStateStore.set('finished', true);
 		return
 	}
 
-	var currentWord = gameStateStore.get('pageWords')[currentWordIndex];
+	var currentWord = gameStateStore.get('quizWords')[currentWordIndex];
 	preloadedWords[currentWord].then(function (question) {
 		gameStateStore.pause(true);
 		gameStateStore.set('currentWord', question[0]);
@@ -252,11 +269,12 @@ function onWordPressed(word) {
 		console.log('wrong + 1', gameStateStore.get('wrong'));
 	}
 
-	var lastWordInSingleModePressed = false;
+	var lastWordInSingleModePressed =
+			gameStateStore.get('pageWords').length === (gameStateStore.get('correct') + gameStateStore.get('wrong'));
 
 	if (
 		(!gameStateStore.get('singleWordMode') || lastWordInSingleModePressed) &&
-		(gameStateStore.get('currentWordIndex') === gameStateStore.get('pageWords').length - 1)
+		(gameStateStore.get('currentWordIndex') === gameStateStore.get('quizWords').length - 1)
 	) {
 		userProfileStore.updateUserLevel();
 	}

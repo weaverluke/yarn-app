@@ -181,7 +181,7 @@ var yarn = React.createClass({
 		}
 
 		var text = 'Word ' + (gameStateStore.get('currentWordIndex') + 1) +
-			' of ' + gameStateStore.get('pageWords').length;
+			' of ' + gameStateStore.get('quizWords').length;
 
 		return (
 			<QuizStatusBar
@@ -225,7 +225,7 @@ var yarn = React.createClass({
 		return (
 			<ResultView
 				correctWords={gameStateStore.get('correct')}
-				totalWords={gameStateStore.get('pageWords').length}
+				totalWords={gameStateStore.get('correct') + gameStateStore.get('wrong')}
 				level={Math.min(userProfileStore.get('level'), uiConfig.MAX_VOCAB_LEVEL)}
 				previousLevel={Math.min(previousLevel, uiConfig.MAX_VOCAB_LEVEL)}
 				score={userProfileStore.get('score')}
@@ -488,9 +488,9 @@ var yarn = React.createClass({
 	showNextQuestion: function () {
 		console.log('SHOW NEXT QUESTION');
 		clearTimeout(this.nextQuestionTimeout);
-		this.setState({
-			bottomBar: 'wordstrip'
-		});
+		//this.setState({
+		//	bottomBar: 'wordstrip'
+		//});
 		actions.emit(actions.SHOW_NEXT_QUESTION);
 	},
 
@@ -608,8 +608,10 @@ var yarn = React.createClass({
 			console.log('---------------------------------');
 		}
 
+		var currentGameState = gameStateStore.get('currentState');
+
 		if (gameStateStore.get('finished')) {
-			if (gameStateStore.get('singleWordMode')) {
+			if (gameStateStore.get('singleWordMode') && currentGameState === GAME_STATES.WORDS_FOUND) {
 				this.handleSingleWordGameFinish();
 			}
 			else {
@@ -617,8 +619,6 @@ var yarn = React.createClass({
 			}
 			return;
 		}
-
-		var currentGameState = gameStateStore.get('currentState');
 
 		var bottomBar = '';
 		var wordStripDisabled = false;
@@ -641,7 +641,9 @@ var yarn = React.createClass({
 			wordStripDisabled = currentGameState !== GAME_STATES.WAITING_FOR_ANSWER;
 		}
 
-		if (currentGameState === GAME_STATES.WAITING_FOR_ANSWER) {
+		// scroll to word if we're waiting for anser and this is not the first (index 0) word in quiz
+		// as the app will scroll to first word automatically when quiz view appears
+		if (currentGameState === GAME_STATES.WAITING_FOR_ANSWER && gameStateStore.get('currentWordIndex')) {
 			setTimeout(function () {
 				this.refs[BROWSER_REF].highlightWord(gameStateStore.get('currentWord').text);
 			}.bind(this, 200));
@@ -697,22 +699,27 @@ var yarn = React.createClass({
 	finishGame: function () {
 		this.refs[BROWSER_REF].unhighlightWords();
 		this.setState({
-			bottomBar: !!gameStateStore.get('pageWords').length ? 'result' : '',
+			bottomBar: !!gameStateStore.get('quizWords').length ? 'result' : '',
 			popupVisible: false,
-			infoBarVisible: false,
-			wordstripVisible: false
+			infoBarVisible: false
 		});
 		log({
 			message: 'game finished',
 			correctWords: gameStateStore.get('correct'),
-			totalWords: gameStateStore.get('pageWords').length,
+			totalWords: gameStateStore.get('correct') + gameStateStore.get('wrong'),
 			level: userProfileStore.get('level'),
 			score: userProfileStore.get('score')
 		});
 	},
 
 	handleSingleWordGameFinish: function () {
-		this.refs[BROWSER_REF].ignoreWord(gameStateStore.get('currentWord'));
+		this.setState({
+			bottomBar: 'wordscount',
+			popupVisible: false,
+			infoBarVisible: false,
+			wordsCountVisible: false
+		});
+		this.refs[BROWSER_REF].ignoreWord(gameStateStore.get('currentWord').text);
 		this.refs[BROWSER_REF].restoreScroll();
 	},
 

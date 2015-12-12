@@ -9,7 +9,7 @@ module.exports = function () {
 		/\/crosswords\//
 	];
 
-	var lastScrollPosition;
+	var lastScrollPosition = -1;
 
 	window.yarnHighlight = (function () {
 
@@ -186,6 +186,7 @@ module.exports = function () {
 			if (word) {
 				word.dataset['ignored'] = 1;
 			}
+			highlightVisitedWords();
 		}
 
 		function scrollToWord(word) {
@@ -195,6 +196,9 @@ module.exports = function () {
 			if (word) {
 				saveScrollPosition();
 				word.scrollIntoViewIfNeeded();
+				setTimeout(function () {
+					console.log('new scroll position', window.scrollY);
+				}, 1000);
 			}
 		}
 
@@ -202,7 +206,13 @@ module.exports = function () {
 			var previouslyVisited = visitedWords.length;
 			var words = [].slice.call(document.querySelectorAll('[data-yarn-highlight]'));
 			for (var i = 0; i < words.length; i++) {
-				if (isWordInView(words[i]) && ! words[i].dataset.yarnHighlighted && !words[i].dataset['ignored']) {
+				if (words[i].dataset.ignored) {
+					var ind = visitedWords.indexOf(words[i].dataset.yarnHighlight);
+					if (ind !== -1) {
+						visitedWords.splice(ind, 1);
+					}
+				}
+				else if (isWordInView(words[i]) && !words[i].dataset.yarnHighlighted) {
 					highlight(words[i]);
 					var word = words[i].dataset.yarnHighlight;
 					if (visitedWords.indexOf(word) === -1) {
@@ -210,8 +220,9 @@ module.exports = function () {
 					}
 				}
 			}
+
+			console.log('visitedWords', visitedWords);
 			if (previouslyVisited != visitedWords.length) {
-				console.log('visited words', visitedWords.length, visitedWords);
 				// let react-native re-render ui and reinstall callbacks after scroll message
 				setTimeout(function () {
 					send('WORDS', visitedWords);
@@ -468,7 +479,10 @@ module.exports = function () {
 	}
 
 	function restoreScrollPosition() {
-		window.scrollTo(window.scrollX, lastScrollPosition);
+		if (lastScrollPosition > -1) {
+			window.scrollTo(window.scrollX, lastScrollPosition);
+			lastScrollPosition = -1;
+		}
 	}
 
 	function ignoreWord(word) {

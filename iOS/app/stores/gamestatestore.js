@@ -14,8 +14,13 @@ var GAME_STATES = {
 };
 
 var initialData = {
+	// parsed and selected words from page that meets test criteria
 	pageWords: [],
+	// words for current quiz
+	quizWords: [],
+	// words that were visible in user's screen (user scrolled and saw them)
 	visitedPageWords: [],
+
 	currentWordIndex: -1,
 	currentWord: '',
 	currentQuestion: null,
