@@ -83,10 +83,6 @@ var languagesData = {
 				"name": "Dutch"
 			},
 			{
-				"language": "en",
-				"name": "English"
-			},
-			{
 				"language": "eo",
 				"name": "Esperanto"
 			},
