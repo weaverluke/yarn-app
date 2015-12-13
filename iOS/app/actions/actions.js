@@ -3,8 +3,8 @@ var bus = new Events.EventEmitter();
 var actions = require('./actiontypes');
 
 var getRandomWords = require('../helpers/getrandomwords');
-var googleTranslate = require('../helpers/googletranslate');
-var collins = require('../helpers/collins');
+var googleTranslate = require('../apis/googletranslate');
+var collins = require('../apis/collins');
 var log = require('../logger/logger');
 
 var gameStateStore = require('../stores/gamestatestore');

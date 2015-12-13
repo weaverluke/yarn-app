@@ -1,6 +1,7 @@
 var API_KEY = 'AIzaSyDAjHprVDfX_6z2fAs6Vf03g2sOfEiTogs';
 var BASE_URL = 'https://www.googleapis.com/language/translate/v2?key=' + API_KEY;
-var NetworkStatus = require('./networkstatus');
+var NetworkStatus = require('../helpers/networkstatus');
+var log = require('../logger/logger');
 
 var React = require('react-native');
 var {
@@ -26,14 +27,19 @@ function translateWords(words, fromLang, toLang, callback) {
 				return reject();
 			}
 
+			var url = createUrl(words, fromLang, toLang);
 			// 10s for request to be back
 			var requestTimeout = setTimeout(function () {
 				console.log('google translate request timeout');
+				log({
+					message: 'Google Translate api request timeout',
+					url: url
+				});
 				reject();
 			}, 10000);
 
 
-			fetch(createUrl(words, fromLang, toLang))
+			fetch(url)
 				.then(function (response) {
 					clearTimeout(requestTimeout);
 					return response.text();
@@ -42,8 +48,13 @@ function translateWords(words, fromLang, toLang, callback) {
 					var resp = JSON.parse(responseText);
 					resolve(resp);
 				})
-				.catch(function () {
+				.catch(function (err) {
 					console.log('Request to google translate api failed!');
+					log({
+						message: 'Request to Google Translate api failed',
+						url: url,
+						error: err && err.message
+					});
 					reject();
 				});
 		}, function () {
