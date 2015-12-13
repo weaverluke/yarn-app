@@ -351,8 +351,8 @@ var styles = StyleSheet.create({
 
 	buttonText: {
 		fontFamily: uiConfig.SPECIAL_FONT,
-		fontSize: 24,
-		lineHeight: 38,
+		fontSize: 30,
+		lineHeight: 42,
 		backgroundColor: 'transparent',
 		color: 'white'
 	},
@@ -379,7 +379,7 @@ var styles = StyleSheet.create({
 		width: uiConfig.TOOLBAR_ICON_SIZE + 8,
 		height: uiConfig.TOOLBAR_ICON_SIZE + 8,
 		marginRight: 10,
-		marginBottom: -4
+		marginBottom: -2
 	}
 });
 

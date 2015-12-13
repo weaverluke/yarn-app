@@ -74,7 +74,6 @@ var Browser = React.createClass({
 				url={this.state.url}
 				javaScriptEnabledAndroid={true}
 				onNavigationStateChange={this.onNavigationStateChange}
-				startInLoadingState={true}
 				renderError={function () {
 					setTimeout(function () {
 						actions.emit(actions.NETWORK_ERROR_OCCURRED);
@@ -83,6 +82,14 @@ var Browser = React.createClass({
 				}}
 			/>
 		);
+	},
+
+	componentWillReceiveProps: function (newProps) {
+		if (this.state.url !== newProps.url) {
+			this.setState({
+				url: newProps.url
+			});
+		}
 	},
 
 	componentDidMount: function () {

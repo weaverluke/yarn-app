@@ -71,15 +71,18 @@ var Browser = React.createClass({
 	},
 
 	render: function () {
+		// undefined to prevent WebView from loading when there's no url yet
+		var url = this.state.url || undefined;
 		return (
 			<View style={[styles.container]}>
 				{this.renderAddressBar()}
+
 				<YarnWebView
 					ref={WEBVIEW_REF}
 					style={styles.webView}
 					userRange={this.props.userRange}
 					userLevel={this.props.userLevel}
-					url={this.state.url}
+					url={url}
 					onNavigationStateChange={this.onNavigationStateChange}
 					onWordsParsed={this.onWordsParsed}
 					onVisibleWordsChanged={this.onVisibleWordsChanged}
@@ -127,6 +130,14 @@ var Browser = React.createClass({
 		//		</TouchableOpacity>
 		//	</View>
 		//);
+	},
+
+	componentWillReceiveProps: function (newProps) {
+		if (this.state.url !== newProps.url) {
+			this.setState({
+				url: newProps.url
+			});
+		}
 	},
 
 	cleanupUrl: function (url) {

@@ -1,21 +1,32 @@
 'use strict';
 var API_KEY = '0a7ad490-b65c-4c58-9600-3bc019f5173c';
-var BASE_URL = 'http://content.guardianapis.com/search?show-most-viewed=true&api-key=' + API_KEY;
+var BASE_URL = 'http://content.guardianapis.com/search?pageSize=15&show-most-viewed=true&api-key=' + API_KEY;
 var NetworkStatus = require('../helpers/networkstatus');
 var log = require('../logger/logger');
 
 var PERSISTENCE_KEY = '@yarn:usedGuardianUrls';
 var DEFAULT_WHEN_ERROR = 'http://www.theguardian.com/uk-news';
+var DAY_IN_MS = 24 * 60 * 60 * 1000;
 
 var React = require('react-native');
 var {
-	NetInfo
+	NetInfo,
+	AsyncStorage
 } = React;
 
 var alreadyVisited = [];
+// to reset :)
+//saveData();
 loadData();
 
 function saveData() {
+
+	// remove entries older than 1 week to save the storage
+	var now = Date.now();
+	alreadyVisited = alreadyVisited.filter(function (entry) {
+		return now - entry[1] < 7 * DAY_IN_MS;
+	});
+
 	console.log('saving used guardian urls:', alreadyVisited);
 
 	AsyncStorage
@@ -28,7 +39,7 @@ function loadData() {
 		.getItem(PERSISTENCE_KEY)
 		.then(function (jsonString) {
 			try {
-				alreadyVisited = JSON.parse(jsonString);
+				alreadyVisited = JSON.parse(jsonString) || [];
 			} catch (ex) {
 				log({
 					message: 'Cannot parse already visited pages',
@@ -42,7 +53,8 @@ function loadData() {
 		})
 		.done();
 }
-function addAlreadyVisited() {
+
+function addAlreadyVisited(url) {
 	alreadyVisited.push([url, Date.now()]);
 	saveData();
 }
@@ -80,7 +92,7 @@ module.exports = {
 				})
 				.then(function (responseText) {
 					var resp = JSON.parse(responseText);
-					var urls = extractUrls(responseText);
+					var urls = extractUrls(resp && resp.response);
 					if (urls) {
 						resolve(urls);
 					} else {
@@ -157,17 +169,17 @@ module.exports = {
 		});
 	},
 
-	getUniqueMostViewed: function (lang) {
+	getUniqueMostViewed: function () {
 		return new Promise(function (resolve, reject) {
-			module.exports.get(lang)
+			module.exports.get()
 				.then(function (urls) {
 					urls = filterOutAlreadyViewed(urls);
+					var url = DEFAULT_WHEN_ERROR;
 					if (urls.length) {
-						var url = urls[0];
+						url = urls[0];
 						addAlreadyVisited(url);
-					} else {
-						resolve(DEFAULT_WHEN_ERROR);
 					}
+					resolve(url);
 				}, function () {
 					reject();
 				}).catch(function () {
@@ -191,9 +203,10 @@ function extractUrls(response) {
 
 function filterOutAlreadyViewed(urls) {
 	urls = urls.filter(function (url) {
-		return !alreadyVisited.some(function (visitedUrl) {
+		// all already used are different from current one?
+		return alreadyVisited.every(function (visitedUrl) {
 			// visited url has array structure: [url, timestampWhenViewed]
-			return visitedUrl[0] === url;
+			return visitedUrl[0] !== url;
 		});
 	});
 	return urls;

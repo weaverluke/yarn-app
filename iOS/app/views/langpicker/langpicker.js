@@ -4,9 +4,10 @@ var React = require('react-native');
 var {
 	StyleSheet,
 	View,
-	PickerIOS,
-	PickerItemIOS
+	PickerIOS
 } = React;
+
+var PickerItemIOS = PickerIOS.Item;
 
 // see https://github.com/facebook/react-native/issues/3228
 var PICKER_WIDTH = 340;
@@ -69,6 +70,15 @@ var LangPicker = React.createClass({
 	}
 
 });
+
+LangPicker.getLanguageName = function (shortcut) {
+	for (var i = 0; i < languages.length; i++) {
+		if (languages[i].language === shortcut) {
+			return languages[i].name;
+		}
+	}
+	return shortcut;
+};
 
 var styles = StyleSheet.create({
 

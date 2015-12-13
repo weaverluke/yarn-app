@@ -13,11 +13,14 @@ var SearchingView = require('./ios/app/views/searching/searching');
 var GuardianInfoView = require('./ios/app/views/guardianinfo/guardianinfo');
 var NetworkErrorView = require('./ios/app/views/networkerror/networkerror');
 var LoadingCoverView = require('./ios/app/views/loadingcover/loadingcover');
+var LangPicker = require('./ios/app/views/langpicker/langpicker');
 
 var QuizStatusBar = require('./ios/app/views/quiz/quizstatusbar');
 var QuestionView = require('./ios/app/views/quiz/question');
 var ResultView = require('./ios/app/views/quiz/result');
 var IntroView = require('./ios/app/views/intro/intro');
+
+var GuardianAPI = require('./ios/app/apis/guardian');
 
 var gameStateStore = require('./ios/app/stores/gamestatestore');
 var userProfileStore = require('./ios/app/stores/userprofilestore');
@@ -70,7 +73,7 @@ var yarn = React.createClass({
 
 	getInitialState: function () {
 		return {
-			url: DEFAULT_URL,
+			url: '',
 			popupVisible: false,
 			question: [],
 			buttonRect: {},
@@ -300,6 +303,11 @@ var yarn = React.createClass({
 
 	renderToast: function () {
 		if (!this.state.toastShown && this.state.gameState === GAME_STATES.WORDS_FOUND) {
+
+			if (this.refs['introToast']) {
+				this.refs['introToast'].hide();
+			}
+
 			var toastContent = <ToastContent count={gameStateStore.get('pageWords').length} />;
 			return (
 				<Toast
@@ -317,7 +325,8 @@ var yarn = React.createClass({
 		if (!this.state.introToastShown) {
 			return (
 				<Toast
-					content={'Choose a page...'}
+					ref='introToast'
+					content={'loading...'}
 					onClose={this.hideIntroToast}
 				/>
 			);
@@ -470,7 +479,14 @@ var yarn = React.createClass({
 		if (this.state.bottomBar === 'result') {
 			this.closeResultView(true);
 		}
-		this.refs[BROWSER_REF].goToRandomUrl();
+		var langName = LangPicker.getLanguageName(userProfileStore.get('language'));
+		GuardianAPI.getUniqueForLanguage(langName)
+			.then(function (url) {
+				this.setState({
+					url: url
+				});
+		}.bind(this));
+		//this.refs[BROWSER_REF].goToRandomUrl();
 	},
 
 	showSettings: function () {
@@ -550,6 +566,13 @@ var yarn = React.createClass({
 		actions.on(actions.GUARDIAN_INFO_REQUESTED, this.showGuardianInfoView);
 		actions.on(actions.NETWORK_ERROR_OCCURRED, this.showNetworkErrorView);
 		actions.on(actions.TRY_AGAIN, this.hideNetworkErrorView);
+
+		GuardianAPI.getUniqueMostViewed().then(function (url) {
+			this.setState({
+				url: url
+			});
+			this.state.networkErrorViewVisible && this.hideNetworkErrorView();
+		}.bind(this));
 
 		this.onUrlChange(this.state.url);
 
