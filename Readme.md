@@ -1,5 +1,10 @@
 ##Release notes
 
+v0.2.29
+- in-page test mode
+- use the guardian api to fetch urls of initial and random pages
+- design updates according to design files
+
 v0.2.28
 - network checks around each network call added - that fixes crashes during word search and scrolling after word search
 - searching bar covering settings view fixed
