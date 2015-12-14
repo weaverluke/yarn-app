@@ -411,12 +411,13 @@ var yarn = React.createClass({
 	},
 
 	onUrlChange: function (url) {
-		actions.emit(actions.RESET);
 		this.setState({
+			url: url,
 			wordsCountVisible: false,
 			toastShown: false,
 			translationsReady: false
 		});
+		actions.emit(actions.RESET);
 		this.refs['mainbar'].animateIn();
 
 		// run api only for allowed websites
@@ -626,6 +627,12 @@ var yarn = React.createClass({
 	},
 
 	onGameStateChanged: function () {
+		//// quickly terminate if game was not started
+		//if (this.state.gameState === gameStateStore.get('currentState') &&
+		//		this.state.gameState === GAME_STATES.NOT_STARTED) {
+		//	return;
+		//}
+
 		if (this.state.gameState !== gameStateStore.get('currentState')) {
 			console.log('---------------------------------');
 			console.log('----', gameStateStore.get('currentState'), '----');
