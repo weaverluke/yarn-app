@@ -1,5 +1,10 @@
 ##Release notes
 
+v0.2.30
+- hide "Test me" button when there are no words highlighted
+- fix navigation issues when user uses in-page links
+- fix the guardian api calls - use 30% of language queries and 70% of most popular
+
 v0.2.29
 - in-page test mode
 - use the guardian api to fetch urls of initial and random pages
