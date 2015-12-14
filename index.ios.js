@@ -480,7 +480,7 @@ var yarn = React.createClass({
 			this.closeResultView(true);
 		}
 		var langName = LangPicker.getLanguageName(userProfileStore.get('language'));
-		GuardianAPI.getUniqueForLanguage(langName)
+		GuardianAPI.getUniqueMostViewed(langName)
 			.then(function (url) {
 				this.setState({
 					url: url

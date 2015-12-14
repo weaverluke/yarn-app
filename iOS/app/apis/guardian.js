@@ -1,11 +1,10 @@
 'use strict';
 var API_KEY = '0a7ad490-b65c-4c58-9600-3bc019f5173c';
-var BASE_URL = 'http://content.guardianapis.com/search?pageSize=15&show-most-viewed=true&api-key=' + API_KEY;
+var BASE_URL = 'http://content.guardianapis.com/search?pageSize=3&show-most-viewed=true&api-key=' + API_KEY;
 var NetworkStatus = require('../helpers/networkstatus');
 var log = require('../logger/logger');
 
 var PERSISTENCE_KEY = '@yarn:usedGuardianUrls';
-var DEFAULT_WHEN_ERROR = 'http://www.theguardian.com/uk-news';
 var DAY_IN_MS = 24 * 60 * 60 * 1000;
 
 var React = require('react-native');
@@ -60,7 +59,7 @@ function addAlreadyVisited(url) {
 }
 
 module.exports = {
-	get: function (query) {
+	get: function (query, page) {
 
 		if (!NetworkStatus.isOk()) {
 			return new Promise(function (res, rej) { rej(); });
@@ -75,6 +74,9 @@ module.exports = {
 				var url = BASE_URL;
 				if (query) {
 					url += '&q=' + query;
+				}
+				if (page) {
+					url += '&page=' + page;
 				}
 
 				var requestTimeout = setTimeout(function () {
@@ -118,76 +120,44 @@ module.exports = {
 
 	},
 
-	getUniqueForLanguage: function (lang) {
-		return new Promise(function (resolve, reject) {
-			var loaded = 0;
-			var result = {
-				mostViewed: [],
-				forLanguage: []
-			};
+	getUniqueMostViewed: function (lang, page) {
+		console.log('Guardian.getUniqueMostViewed(%s, %s)', lang, page);
+		page || (page = 0);
 
-			function onLoaded() {
-				loaded++;
-				if (loaded === 2) {
-					var url = DEFAULT_WHEN_ERROR;
-					if (result.mostViewed.length + result.forLanguage.length) {
-						if (result.forLanguage.length) {
-							url = result.forLanguage.shift();
-						} else {
-							url = result.mostViewed.shift();
-						}
-						addAlreadyVisited(url);
-					}
-					else {
-						log({
-							message: 'No links from The Guardian api'
-						});
-					}
-					resolve(url);
-				}
+		return new Promise(function (resolve, reject) {
+			// language results for 30% of queries
+			var query = '';
+			if (lang && Math.random() <= 0.3) {
+				query = lang;
 			}
 
-			module.exports.get()
-				.then(function (urls) {
-					result.mostViewed = filterOutAlreadyViewed(urls);
-					onLoaded();
-				}, function () {
-					onLoaded();
-				}).catch(function () {
-					onLoaded();
-			});
-
-			module.exports.get(lang)
-					.then(function (urls) {
-						result.forLanguage = filterOutAlreadyViewed(urls);
-						onLoaded();
-					}, function () {
-						onLoaded();
-					}).catch(function () {
-				onLoaded();
-			});
-		});
-	},
-
-	getUniqueMostViewed: function () {
-		return new Promise(function (resolve, reject) {
-			module.exports.get()
+			module.exports.get(query, page)
 				.then(function (urls) {
 					urls = filterOutAlreadyViewed(urls);
-					var url = DEFAULT_WHEN_ERROR;
 					if (urls.length) {
-						url = urls[0];
-						addAlreadyVisited(url);
+						addAlreadyVisited(urls[0]);
+						resolve(urls[0]);
 					}
-					resolve(url);
+					else {
+						// if no results after filtering then get next page
+						module.exports.getUniqueMostViewed(lang, page+1)
+							.then(function (result) {
+								resolve(result);
+							}, function () {
+								reject();
+							})
+							.catch(function () {
+								reject();
+							});
+					}
 				}, function () {
 					reject();
 				}).catch(function () {
 					reject();
-			});
+				});
+
 		});
 	}
-
 
 };
 
