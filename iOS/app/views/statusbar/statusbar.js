@@ -40,6 +40,16 @@ var StatusBar = React.createClass({
 
 	render: function () {
 		var items = this.props.showWordsCount ? this.renderWordsCount() : this.renderStats();
+		var navBarButton;
+		if (this.props.wordsCount) {
+			navBarButton = <NavBarButton
+				onPress={this.props.onNextPress}
+				icon='next'
+				disabled={this.props.nextButtonDisabled}
+				backgroundColor={uiConfig.COLORS.BLUE}
+				style={styles.nextButton}
+			/>;
+		}
 
 		return (
 			<Animated.View style={[styles.wrap, {
@@ -56,13 +66,7 @@ var StatusBar = React.createClass({
 					/>
 				</View>
 				{items}
-				<NavBarButton
-					onPress={this.props.onNextPress}
-					icon='next'
-					disabled={this.props.nextButtonDisabled}
-					backgroundColor={uiConfig.COLORS.BLUE}
-					style={styles.nextButton}
-				/>
+				{navBarButton}
 			</Animated.View>
 		);
 	},
