@@ -547,6 +547,23 @@ var yarn = React.createClass({
 	},
 
 	hideNetworkErrorView: function () {
+		// these states mean that we didn't start the quiz so we have to reloadthe page to be sure
+		// that everything is loaded correctly
+		var notAllowedGameStates = [
+			GAME_STATES.NOT_STARTED,
+			GAME_STATES.LOOKING_FOR_WORDS
+		];
+		if (notAllowedGameStates.indexOf(this.state.gameState) === -1) {
+			return;
+		}
+
+		// if game state is set to WORDS_FOUND then trigger that state again to start translation
+		// and do not refresh the page
+		if (this.state.gameState === GAME_STATES.WORDS_FOUND) {
+			gameStateStore.set('currentState', GAME_STATES.WORDS_FOUND);
+			return;
+		}
+
 		this.resetViews();
 
 		setTimeout(function () {
