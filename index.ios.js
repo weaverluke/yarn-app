@@ -39,25 +39,21 @@ console.log('DIM', width, height);
 var {
 	AppRegistry,
 	StyleSheet,
-	Text,
-	TextInput,
-	TouchableOpacity,
 	View,
-	WebView,
-	LayoutAnimation,
-	NativeAppEventEmitter
+	LayoutAnimation
+	//NativeAppEventEmitter
 } = React;
 
-var subscription = NativeAppEventEmitter.addListener(
-	'DictionaryHidden',
-	function () {
-		console.log('Dictionary hidden!');
-	}
-);
+//var subscription = NativeAppEventEmitter.addListener(
+//	'DictionaryHidden',
+//	function () {
+//		console.log('Dictionary hidden!');
+//	}
+//);
 
 var {
 	DictionaryProxy
-	} = require('NativeModules');
+} = require('NativeModules');
 
 var HEADER = '#F9FAFB';
 
@@ -102,13 +98,13 @@ var yarn = React.createClass({
 	showSearchingTimeout: 0,
 
 	render: function () {
-		console.log('render', this.state);
+		//console.log('render', this.state);
 		var bottomBar = this.renderBottomBar();
 
-		console.log('------------------------------------------------------------------');
-		console.log('level', userProfileStore.get('level'));
-		console.log('range', userProfileStore.get('range'));
-		console.log('------------------------------------------------------------------');
+		//console.log('------------------------------------------------------------------');
+		//console.log('level', userProfileStore.get('level'));
+		//console.log('range', userProfileStore.get('range'));
+		//console.log('------------------------------------------------------------------');
 
 		return (
 			<View style={[styles.container]}>
@@ -195,8 +191,15 @@ var yarn = React.createClass({
 	},
 
 	stopQuiz: function () {
+		var shouldScrollBack = gameStateStore.get('singleWordMode');
 		this.resetGame();
 		this.refs['mainbar'].animateIn();
+
+		if (shouldScrollBack) {
+			setTimeout(function () {
+				this.refs[BROWSER_REF].restoreScroll();
+			}.bind(this), 100);
+		}
 	},
 
 	renderBottomBar: function () {
@@ -248,7 +251,7 @@ var yarn = React.createClass({
 	},
 
 	renderInfoBar: function () {
-		console.log('render info bar, visited words:', gameStateStore.get('visitedPageWords').length);
+		//console.log('render info bar, visited words:', gameStateStore.get('visitedPageWords').length);
 		return (
 			<StatusBar
 				ref='wordscountbar'
@@ -433,7 +436,7 @@ var yarn = React.createClass({
 	onBrowserScroll: function (data) {
 		if (this.state.bottomBar === 'wordscount') {
 			if (!this.state.wordsCountVisible && data.y > 10) {
-				console.log('show wordscount bar');
+				//console.log('show wordscount bar');
 				this.setState({
 					wordsCountVisible: true
 				});
@@ -441,7 +444,7 @@ var yarn = React.createClass({
 				this.refs['wordscountbar'].animateIn(this.showTestYourselfPrompt);
 			}
 			else if (this.state.wordsCountVisible && data.y < 10) {
-				console.log('hide wordscount bar');
+				//console.log('hide wordscount bar');
 				this.setState({
 					wordsCountVisible: false
 				});
@@ -593,7 +596,6 @@ var yarn = React.createClass({
 		}.bind(this));
 
 		this.onUrlChange(this.state.url);
-
 
 		log({
 			message: 'componentDidMount',
@@ -829,9 +831,9 @@ var yarn = React.createClass({
 
 		this.setState({
 			question: [],
-			bottomBar: '',
-			toastShown: false
+			bottomBar: ''
 		});
+		gameStateStore.set('currentState', GAME_STATES.WORDS_FOUND);
 	},
 
 	resetViews: function () {

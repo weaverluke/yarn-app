@@ -161,7 +161,7 @@ var Browser = React.createClass({
 		// pass navigation state to parent
 		this.props.onNavigationStateChange && this.props.onNavigationStateChange(navState);
 
-		console.log('onNavigationStateChange', navState);
+		//console.log('onNavigationStateChange', navState);
 		this.setState({
 			url: navState.url,
 			status: navState.title,

@@ -31,6 +31,7 @@ module.exports = function () {
 			injectHighlightStyle();
 			reset();
 			words.forEach(prepareWord);
+			bindClickActionsToWords();
 			window.addEventListener('scroll', onPageScroll);
 			onPageScroll();
 			return visitedWords;
@@ -41,8 +42,6 @@ module.exports = function () {
 				styleEl.parentNode.removeChild(styleEl);
 			}
 			var head = document.head || document.getElementsByTagName('head')[0];
-
-			var disableMagnifyingGlassStyle = 'body { -webkit-touch-callout: none; }';
 
 			var bgAnimationStyle = '-webkit-transition: background-color 500ms linear;' +
 					'transition: background-color 500ms linear;';
@@ -56,6 +55,7 @@ module.exports = function () {
 				'} ' +
 				'.tap-area {' +
 				'position:absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;'+
+				'-webkit-user-select: none;' +
 				'}';
 
 			var css = '[data-yarn-highlight] { position: relative; background-color:rgba(0,0,0,0) } ' +
@@ -74,8 +74,7 @@ module.exports = function () {
 				'position:absolute; top:0; right:-2px;' +
 				'border-top-right-radius:2px;' +
 				'border-bottom-right-radius:2px;' +
-				commonCss +
-				disableMagnifyingGlassStyle;
+				commonCss;
 
 			styleEl = document.createElement('style');
 
@@ -125,22 +124,36 @@ module.exports = function () {
 				}
 
 				if (rx.test(n.nodeValue)) {
+					console.log('Found word!', word, n);
 					var node = n.parentNode;
 					node.innerHTML = node.innerHTML.replace(rx,
-						'<mark data-yarn-highlight="' +word+ '">' +word+ '<span class="tap-area"></span></mark>'
+						'<mark data-yarn-highlight="' +word+ '">' +word+ '<span class="yarn-tap-area"></span></mark>'
 					);
 
-					var mark = node.querySelector('mark[data-yarn-highlight]');
-
-					mark && mark.addEventListener('click', function (ev) {
-						ev.preventDefault();
-						send('WORD_IN_BROWSER_PRESSED', word);
-					});
+					//var mark = node.querySelector('mark[data-yarn-highlight="' + word + '"]');
+					//console.log('selecting node for word', word, mark);
+					//
+					//mark && mark.addEventListener('click', function (ev) {
+					//	ev.preventDefault();
+					//	console.log('word pressed', word, mark);
+					//	send('WORD_IN_BROWSER_PRESSED', word);
+					//});
 
 					return true;
 				}
 			}
 			return false;
+		}
+
+		function bindClickActionsToWords() {
+			[].slice.call(document.querySelectorAll('mark[data-yarn-highlight]')).forEach(function (el) {
+				el.addEventListener('click', function (ev) {
+					var word = el.dataset['yarn-highlight'];
+					ev.preventDefault();
+					console.log('word pressed', word);
+					send('WORD_IN_BROWSER_PRESSED', word);
+				});
+			});
 		}
 
 		function highlight(word, unhighlightOthers, scrollToHighlightedWord) {
@@ -193,6 +206,10 @@ module.exports = function () {
 		}
 
 		function scrollToWord(word) {
+			if (!word) {
+				return;
+			}
+
 			if (!word.tagName) {
 				word = getWordElByWord(word);
 			}

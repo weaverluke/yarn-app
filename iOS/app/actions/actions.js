@@ -25,6 +25,10 @@ var GAME_STATES = gameStateStore.GAME_STATES;
 
 var CHECK_DICT_DEFINITIONS = false;
 
+function copy(obj) {
+	return JSON.parse(JSON.stringify(obj));
+}
+
 Object.keys(actions).forEach(function (action) {
 	bus[action] = actions[action];
 });
@@ -89,9 +93,6 @@ function onStartGame(word) {
 	if (typeof word === 'string') {
 		gameStateStore.set('quizWords', [word]);
 		gameStateStore.set('singleWordMode', true);
-		log({
-			message: 'start game in single mode'
-		});
 	}
 	else {
 		gameStateStore.set('singleWordMode', false);
@@ -111,6 +112,7 @@ function onStartGame(word) {
 	bus.emit(actions.SHOW_NEXT_QUESTION);
 	log({
 		message: 'start game',
+		singleMode: word,
 		visitedWords: gameStateStore.get('visitedPageWords')
 	});
 }
@@ -135,7 +137,7 @@ function preloadWord(pageWord) {
 	var wordsToTranslate = getRandomWords(gameStateStore.get('randomWordsCount'));
 	wordsToTranslate.unshift(pageWord);
 
-	console.log('preloading word', pageWord);
+	console.log('preloading word', pageWord, wordsToTranslate);
 
 	var promise = new Promise(function (resolve, reject) {
 
@@ -152,7 +154,9 @@ function preloadWord(pageWord) {
 						});
 						return reject();
 					}
-					console.log('translations loaded', pageWord, Date.now() - startDate);
+					console.log('translations loaded', pageWord, Date.now() - startDate,
+							translatedWords.data.translations.length, translatedWords.data.translations);
+
 					//console.log('translated words', translatedWords);
 					var question = translatedWords.data.translations.map(function (translatedWord, index) {
 						return {
@@ -224,7 +228,11 @@ function onShowNextQuestion() {
 	}
 
 	var currentWord = gameStateStore.get('quizWords')[currentWordIndex];
+
+
+
 	preloadedWords[currentWord].then(function (question) {
+		question = copy(question);
 		gameStateStore.pause(true);
 		gameStateStore.set('currentWord', question[0]);
 

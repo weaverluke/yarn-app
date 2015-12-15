@@ -99,7 +99,7 @@ function updateLevelStats(level, correct) {
 }
 
 function updateUserLevel() {
-	console.log('updateUserLevel(), currentStats:', data);
+	//console.log('updateUserLevel(), currentStats:', data);
 	var totalAnswers = data.correctAnswers + data.wrongAnswers;
 	// we have to have at least 20 words to compute level
 	if (totalAnswers < 8) {
@@ -143,14 +143,14 @@ function updateUserLevel() {
 	}
 
 	data.historyLevelValues.push(data.level);
-	console.log('new user level:', data.level);
+	//console.log('new user level:', data.level);
 
 	saveData();
 	emitChange();
 }
 
 function saveData() {
-	console.log('saving userProfileStore:', data);
+	//console.log('saving userProfileStore:', data);
 
 	AsyncStorage
 		.setItem(PERSISTENCE_KEY, JSON.stringify(data))
