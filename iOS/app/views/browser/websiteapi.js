@@ -42,6 +42,8 @@ module.exports = function () {
 			}
 			var head = document.head || document.getElementsByTagName('head')[0];
 
+			var disableMagnifyingGlassStyle = 'body { -webkit-touch-callout: none; }';
+
 			var bgAnimationStyle = '-webkit-transition: background-color 500ms linear;' +
 					'transition: background-color 500ms linear;';
 
@@ -72,7 +74,8 @@ module.exports = function () {
 				'position:absolute; top:0; right:-2px;' +
 				'border-top-right-radius:2px;' +
 				'border-bottom-right-radius:2px;' +
-				commonCss;
+				commonCss +
+				disableMagnifyingGlassStyle;
 
 			styleEl = document.createElement('style');
 
