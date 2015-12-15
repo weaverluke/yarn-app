@@ -1,5 +1,10 @@
 ##Release notes
 
+v0.2.31
+- fix incorrect behaviours occurring after test canceling
+- do not hide test and word highlights after network error
+- make sure that correct test is triggered when user taps single word
+
 v0.2.30
 - hide "Test me" button when there are no words highlighted
 - fix navigation issues when user uses in-page links
