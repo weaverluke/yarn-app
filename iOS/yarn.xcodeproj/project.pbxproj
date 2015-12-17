@@ -23,6 +23,7 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		6119151B1BFA92B900BB1382 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		6119151D1BFBD79000BB1382 /* logo-splash.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6119151C1BFBD79000BB1382 /* logo-splash.jpg */; };
+		613123E51C2375AD0007EDCA /* tick-finished.gif in Resources */ = {isa = PBXBuildFile; fileRef = 613123E41C2375AD0007EDCA /* tick-finished.gif */; };
 		6182327C1BF9186A000D7F47 /* RCTWebView+WebViewBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 618232751BF9186A000D7F47 /* RCTWebView+WebViewBridge.m */; };
 		6182327D1BF9186A000D7F47 /* RCTWebViewManager+WebViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 618232771BF9186A000D7F47 /* RCTWebViewManager+WebViewManager.m */; };
 		6182327E1BF9186A000D7F47 /* webview-bridge-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 6182327B1BF9186A000D7F47 /* webview-bridge-script.js */; };
@@ -51,7 +52,6 @@
 		619A04171BF9011C002751FB /* magnifier.png in Resources */ = {isa = PBXBuildFile; fileRef = 619A040F1BF9011C002751FB /* magnifier.png */; };
 		619A04181BF9011C002751FB /* browse-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 619A04101BF9011C002751FB /* browse-icon.png */; };
 		619A04191BF9011C002751FB /* browse-icon-active.png in Resources */ = {isa = PBXBuildFile; fileRef = 619A04111BF9011C002751FB /* browse-icon-active.png */; };
-		61AA8F0B1C1CCDD500519B9C /* tick-finished.png in Resources */ = {isa = PBXBuildFile; fileRef = 61AA8F091C1CCDD500519B9C /* tick-finished.png */; };
 		61AA8F0C1C1CCDD500519B9C /* tick-anim-5s.gif in Resources */ = {isa = PBXBuildFile; fileRef = 61AA8F0A1C1CCDD500519B9C /* tick-anim-5s.gif */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
@@ -164,6 +164,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = yarn/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		6119151C1BFBD79000BB1382 /* logo-splash.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "logo-splash.jpg"; path = "../Resources/Images/logo-splash.jpg"; sourceTree = "<group>"; };
+		613123E41C2375AD0007EDCA /* tick-finished.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "tick-finished.gif"; path = "../Resources/Images/tick-finished.gif"; sourceTree = "<group>"; };
 		618232741BF9186A000D7F47 /* RCTWebView+WebViewBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTWebView+WebViewBridge.h"; sourceTree = "<group>"; };
 		618232751BF9186A000D7F47 /* RCTWebView+WebViewBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTWebView+WebViewBridge.m"; sourceTree = "<group>"; };
 		618232761BF9186A000D7F47 /* RCTWebViewManager+WebViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTWebViewManager+WebViewManager.h"; sourceTree = "<group>"; };
@@ -197,7 +198,6 @@
 		619A040F1BF9011C002751FB /* magnifier.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = magnifier.png; path = ../Resources/Images/magnifier.png; sourceTree = "<group>"; };
 		619A04101BF9011C002751FB /* browse-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "browse-icon.png"; path = "../Resources/Images/browse-icon.png"; sourceTree = "<group>"; };
 		619A04111BF9011C002751FB /* browse-icon-active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "browse-icon-active.png"; path = "../Resources/Images/browse-icon-active.png"; sourceTree = "<group>"; };
-		61AA8F091C1CCDD500519B9C /* tick-finished.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tick-finished.png"; path = "../Resources/Images/tick-finished.png"; sourceTree = "<group>"; };
 		61AA8F0A1C1CCDD500519B9C /* tick-anim-5s.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "tick-anim-5s.gif"; path = "../Resources/Images/tick-anim-5s.gif"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -362,7 +362,7 @@
 		619A03E31BF8EE06002751FB /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				61AA8F091C1CCDD500519B9C /* tick-finished.png */,
+				613123E41C2375AD0007EDCA /* tick-finished.gif */,
 				61AA8F0A1C1CCDD500519B9C /* tick-anim-5s.gif */,
 				6119151C1BFBD79000BB1382 /* logo-splash.jpg */,
 				619A040A1BF9011C002751FB /* settings-icon.png */,
@@ -706,8 +706,8 @@
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				619A03F21BF8EEB6002751FB /* next-finished.gif in Resources */,
 				619A03F71BF8EEB6002751FB /* intro_3.png in Resources */,
+				613123E51C2375AD0007EDCA /* tick-finished.gif in Resources */,
 				619A03F41BF8EEB6002751FB /* guardian-top.png in Resources */,
-				61AA8F0B1C1CCDD500519B9C /* tick-finished.png in Resources */,
 				6119151D1BFBD79000BB1382 /* logo-splash.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -830,6 +830,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.weaverdigital.yarnmvp;
 				PRODUCT_NAME = yarn;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -849,6 +850,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.weaverdigital.yarnmvp;
 				PRODUCT_NAME = yarn;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

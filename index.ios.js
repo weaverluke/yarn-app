@@ -414,6 +414,7 @@ var yarn = React.createClass({
 	},
 
 	onUrlChange: function (url) {
+		console.log('onUrlChange', url);
 		this.setState({
 			url: url,
 			wordsCountVisible: false,
@@ -792,6 +793,7 @@ var yarn = React.createClass({
 	onUserProfileChanged: function () {
 		var profileLang = userProfileStore.get('language');
 		console.log('PROFILE LANG', profileLang);
+		console.log('onUserProfileChanged, url:', this.state.url);
 
 		log({
 			message: 'onUserProfileChanged',

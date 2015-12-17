@@ -52,6 +52,8 @@ function onWordsParsed(words) {
 		gameStateStore.set('currentState', GAME_STATES.NOT_STARTED);
 		return;
 	}
+	words.unshift('Bowcott');
+	words.pop();
 
 	gameStateStore.pause(true);
 	gameStateStore.reset(true);
@@ -112,7 +114,7 @@ function onStartGame(word) {
 	bus.emit(actions.SHOW_NEXT_QUESTION);
 	log({
 		message: 'start game',
-		singleMode: word,
+		singleMode: typeof word === 'string' ? word : false,
 		visitedWords: gameStateStore.get('visitedPageWords')
 	});
 }
@@ -331,7 +333,10 @@ function onHomePressed() {
 }
 
 function onWordInBrowserPressed(word) {
-	onStartGame(word);
+	var currentGameState = gameStateStore.get('currentState');
+	if (currentGameState === GAME_STATES.WORDS_FOUND) {
+		onStartGame(word);
+	}
 }
 
 module.exports = bus;

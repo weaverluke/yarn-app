@@ -13,7 +13,17 @@ module.exports = function (data) {
 	data.sessionTimestamp = sessionTimestamp;
 	data.timestamp = Date.now();
 
-	var dataStr = JSON.stringify(data);
+	// put only message first, if JSON.stringify() fails in try-catch block then
+	// just that message will be sent
+	var dataStr = JSON.stringify({
+		message: data.message,
+		additionalInfo: 'possible JSON.stringfiy() in logger error'
+	});
+
+	try {
+		dataStr = JSON.stringify(data);
+	} catch (ex) {}
+
 
 	console.log(data.message, data);
 
