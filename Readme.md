@@ -1,10 +1,15 @@
 ##Release notes
 
+v0.2.33
+- hide 'loading...' toast when page is ready
+- show 'X words' toast after each word search
+- fix tap events for in-page words
+
 v0.2.32
 - app crash occurring on some devices during quiz setup fixed
 - missing "tick" icon when dictionary gets hidden in single word quiz mode fixed
 - blank page after language change fixed
-- hide 'loading...' toast when page is ready
+
 
 v0.2.31
 - fix incorrect behaviours occurring after test canceling
