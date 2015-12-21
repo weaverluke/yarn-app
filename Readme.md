@@ -4,6 +4,7 @@ v0.2.32
 - app crash occurring on some devices during quiz setup fixed
 - missing "tick" icon when dictionary gets hidden in single word quiz mode fixed
 - blank page after language change fixed
+- hide 'loading...' toast when page is ready
 
 v0.2.31
 - fix incorrect behaviours occurring after test canceling

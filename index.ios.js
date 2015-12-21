@@ -418,7 +418,6 @@ var yarn = React.createClass({
 		this.setState({
 			url: url,
 			wordsCountVisible: false,
-			toastShown: false,
 			translationsReady: false
 		});
 		actions.emit(actions.RESET);
@@ -660,6 +659,11 @@ var yarn = React.createClass({
 		}
 
 		var currentGameState = gameStateStore.get('currentState');
+		var toastShown = this.state.toastShown;
+
+		if (currentGameState === GAME_STATES.LOOKING_FOR_WORDS) {
+			toastShown = false;
+		}
 
 		if (gameStateStore.get('finished')) {
 			if (gameStateStore.get('singleWordMode') && currentGameState === GAME_STATES.WORDS_FOUND) {
@@ -726,6 +730,7 @@ var yarn = React.createClass({
 			firstWordReady: gameStateStore.get('firstWordReady'),
 			question: gameStateStore.get('currentQuestion'),
 			gameState: currentGameState,
+			toastShown: toastShown,
 			wordStripDisabled: wordStripDisabled,
 			bottomBar: bottomBar,
 			popupVisible: popupVisible,
