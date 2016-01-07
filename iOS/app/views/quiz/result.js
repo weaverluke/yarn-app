@@ -13,6 +13,7 @@ var {
 
 var QuizResult = require('./quizresult');
 var Popup = require('../popup/popup');
+var ToolbarRandomButton = require('../randommenu/toolbarrandombutton');
 
 var ANIMATION_TIME = 300;
 var SCORE_ANIMATION_TIME = 1500;
@@ -98,12 +99,7 @@ var ResultView = React.createClass({
 				<Stretch />
 
 				<View style={[styles.row, styles.lastRow]}>
-					<TouchableWithoutFeedback onPress={this.hide(this.props.onRandomPressed)}>
-						<View style={[styles.button, styles.blueBg, styles.buttonWithImage]}>
-							<Image source={{uri: 'random-white-icon.png'}} style={styles.randomIcon}/>
-							<Text style={styles.buttonText}>Surprise me!</Text>
-						</View>
-					</TouchableWithoutFeedback>
+					<ToolbarRandomButton />
 				</View>
 
 				<Popup
@@ -292,7 +288,15 @@ var styles = StyleSheet.create({
 	},
 
 	lastRow: {
-		borderBottomWidth: 0
+		borderBottomWidth: 0,
+		marginTop: 3, // so shadow is visible
+		shadowColor: '#000000',
+		shadowOffset: {
+			width: 0,
+			height: 1
+		},
+		shadowOpacity: 0.5,
+		shadowRadius: 1
 	},
 
 	text: {

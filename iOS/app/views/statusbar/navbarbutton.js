@@ -6,7 +6,6 @@ var {
 	View,
 	Text,
 	TouchableHighlight,
-	TouchableWithoutFeedback,
 	Image
 } = React;
 
@@ -40,14 +39,11 @@ var NavBarButton = React.createClass({
 		}
 		else {
 			return (
-				<TouchableWithoutFeedback
-					//onPressIn={function () { console.log('ON PRESS IN')}}
-					//onPressOut={function () { console.log('ON PRESS OUT')}}
-					onPress={function () { console.log('ON PRESS!!!!')}}>
+				<TouchableHighlight onPress={this.props.onPress}>
 					<View style={[styles.wrap, additionalStyle]}>
 					{img}
 					</View>
-				</TouchableWithoutFeedback>
+				</TouchableHighlight>
 			);
 		}
 	},

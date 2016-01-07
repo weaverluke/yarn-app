@@ -59,7 +59,9 @@ var StatusBar = React.createClass({
 				],
 				opacity: this.state.opacityValue
 			}]}>
-				<ToolbarRandomButton onPress={this.props.onRandomPressed} />
+				<View style={styles.randomButton}>
+					<ToolbarRandomButton />
+				</View>
 				{items}
 				{navBarButton}
 			</Animated.View>
@@ -261,16 +263,17 @@ var styles = StyleSheet.create({
 		alignItems: 'center'
 	},
 
-	//randomButton: {
-	//	marginRight: 3, // so shadow is visible
-	//	shadowColor: '#000000',
-	//	shadowOffset: {
-	//		width: 2,
-	//		height: 0
-	//	},
-	//	shadowOpacity: 0.5,
-	//	shadowRadius: 1
-	//}
+	randomButton: {
+		marginRight: 3, // so shadow is visible
+		width: uiConfig.TOOLBAR_BUTTON_WIDTH,
+		shadowColor: '#000000',
+		shadowOffset: {
+			width: 2,
+			height: 0
+		},
+		shadowOpacity: 0.5,
+		shadowRadius: 1
+	}
 
 });
 

@@ -148,6 +148,7 @@ var styles = StyleSheet.create({
 
 	randomButton: {
 		position: 'absolute',
+		width: uiConfig.TOOLBAR_BUTTON_WIDTH,
 		left: 0,
 		flex: 1,
 

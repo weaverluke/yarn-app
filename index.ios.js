@@ -373,10 +373,12 @@ var yarn = React.createClass({
 	},
 
 	renderRandomMenu: function () {
-		if (this.state.randomMenuVisible) {
+		var lang = userProfileStore.get('language');
+
+		if (lang) {
 			return <RandomMenu
 				onRandomSelected={this.onRandomPagePressed}
-				lang={LangPicker.getLanguageName(userProfileStore.get('language'))}
+				lang={LangPicker.getLanguageName(lang)}
 			/>;
 		}
 	},

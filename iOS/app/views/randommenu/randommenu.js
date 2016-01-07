@@ -5,13 +5,11 @@ var {
     StyleSheet,
     View,
     Text,
-    TouchableWithoutFeedback,
-    TouchableHighlight,
     Image,
     Animated,
 } = React;
 
-var ANIMATION_TIME = 300;
+var ANIMATION_TIME = 200;
 
 var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
@@ -22,27 +20,34 @@ var uiConfig = require('../../uiconfig');
 var RANDOM_MENU_ITEMS = [
     {
         label: 'tech',
+		value: 'tech',
         icon: 'clock'
     },
     {
         label: 'sport',
+		value: 'sport',
         icon: 'clock'
     },
     {
         label: 'lang',
+		value: 'lang',
         icon: 'yarn'
     },
     {
         label: 'business',
+		value: 'business',
         icon: 'refresh'
     },
     {
         label: 'surprise me',
+		value: '', // empty as we want random entry
         icon: 'random'
     }
 ];
 
 var RandomMenu = React.createClass({
+
+	debounceIndex: 0,
 
     getInitialState: function () {
         return {
@@ -62,7 +67,6 @@ var RandomMenu = React.createClass({
     render: function () {
         var items = this.state.items.map(this.renderButton);
         console.log('rendered items', items);
-        //var items = [];
 
         return (
             <Animated.View style={[styles.wrap, {
@@ -72,20 +76,13 @@ var RandomMenu = React.createClass({
 				opacity: this.state.opacityValue
 			}]}>
                 {items}
-				<View
-					style={styles.empty}
-					onStartShouldSetResponder={function () {return true;}}
-					onMoveShouldSetResponder={function () {return true;}}
-					onResponderMove={this.onResponderMove}
-					onResponderRelease={this.onResponderRelease}
-				/>
             </Animated.View>
         );
     },
 
 	renderButton: function (btn, ind) {
 		if (btn.label === 'lang') {
-			btn.label = this.props.lang.toLowerCase();
+			btn.value = btn.label = this.props.lang.toLowerCase();
 		}
 
 		var highlighted = this.state.highlightedIndex === ind;
@@ -111,31 +108,13 @@ var RandomMenu = React.createClass({
 	},
 
     componentDidMount: function () {
-        //this.state.visible && this.animateIn();
-        this.animateIn();
+		actions.on(actions.RANDOM_BUTTON_PRESS, this.onRandomButtonPress);
+		actions.on(actions.RANDOM_BUTTON_MOVE, this.onRandomButtonMove);
+		actions.on(actions.RANDOM_BUTTON_RELEASE, this.onRandomButtonRelease);
+	},
+
+    componentWillReceiveProps: function (newProps) {
     },
-    //
-    //componentWillReceiveProps: function (newProps) {
-    //    if (this.props.visible === newProps.visible) {
-    //        return;
-    //    }
-    //    newProps.visible ? this.animateIn() : this.animateOut();
-    //
-    //    // we're changing from hidden to visible so we're updating currently set language
-    //    if (!this.props.visible && newProps.visible) {
-    //        this.animateIn();
-    //        this.setState({lang: newProps.lang});
-    //    }
-    //
-    //    // change from visible to hidden
-    //    else if (this.props.visible && !newProps.visible) {
-    //        this.animateOut();
-    //        // lang has changed
-    //        if (this.props.lang !== this.state.lang) {
-    //            actions.emit(actions.CHANGE_LANG, this.state.lang);
-    //        }
-    //    }
-    //},
 
     animateIn: function (cb) {
         Animated.parallel([
@@ -156,10 +135,6 @@ var RandomMenu = React.createClass({
                 this.state.opacityValue,
                 { toValue: 0, duration: ANIMATION_TIME }
             )
-            //Animated.timing(
-            //	this.state.marginTopValue,
-            //	{ toValue: height }
-            //)
         ]).start(cb);
     },
 
@@ -168,16 +143,21 @@ var RandomMenu = React.createClass({
         this.animateOut(cb);
     },
 
-	onResponderMove: function (ev) {
-		console.log('onResponderMove', ev.nativeEvent.pageX, ev.nativeEvent.pageY, ev.nativeEvent.locationX, ev.nativeEvent.locationY);
-		if (!this.startPos) {
-			this.startPos = {
-				x: ev.nativeEvent.pageX,
-				y: ev.nativeEvent.pageY
-			};
-			this.debounceIndex = 0;
-			return;
-		}
+	show: function (cb) {
+		this.animateIn(cb);
+	},
+
+	onRandomButtonPress: function (ev) {
+		this.startPos = {
+			x: ev.nativeEvent.pageX,
+			y: ev.nativeEvent.pageY
+		};
+		this.debounceIndex = 0;
+		this.show();
+	},
+
+	onRandomButtonMove: function (ev) {
+		//console.log('onResponderMove', ev.nativeEvent.pageX, ev.nativeEvent.pageY, ev.nativeEvent.locationX, ev.nativeEvent.locationY);
 
 		// extremely simple debounce mechanism - use every 5th event
 		this.debounceIndex++;
@@ -213,20 +193,22 @@ var RandomMenu = React.createClass({
 		}
 	},
 
-	onResponderRelease: function (ev) {
+	onRandomButtonRelease: function (ev) {
+
 		this.hide();
-		if (this.state.highlightedIndex === -1) {
+		var selectedItem = this.state.items[this.state.highlightedIndex];
+		if (!selectedItem) {
 			return;
 		}
 
-		var selectedKey = this.state.items[this.state.highlightedIndex].label;
-		this.props.onRandomSelected && this.props.onRandomSelected(selectedKey);
+		this.props.onRandomSelected && this.props.onRandomSelected(selectedItem.value);
 
 		this.startPos = undefined;
 		this.setState({
 			highlightedIndex: -1
 		});
 	}
+
 });
 
 var styles = StyleSheet.create({
@@ -234,7 +216,7 @@ var styles = StyleSheet.create({
     wrap: {
         width: width,
         position: 'absolute',
-        bottom: 0,
+        bottom: uiConfig.TOOLBAR_HEIGHT,
 		backgroundColor: 'transparent',
 		shadowColor: '#000000',
 		shadowOffset: {
@@ -284,13 +266,7 @@ var styles = StyleSheet.create({
 
 	buttonActive: {
 		backgroundColor: uiConfig.COLORS.PALE_BLUE
-	},
-
-	empty: {
-		height: uiConfig.TOOLBAR_HEIGHT,
-		backgroundColor: 'transparent'
 	}
-
 });
 
 module.exports = RandomMenu;

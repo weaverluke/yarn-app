@@ -1,6 +1,7 @@
 module.exports = {
 
 	COLORS: {
+		LIGHTEST_GREY: 'rgb(250, 250, 250)',
 		LIGHT_GREY: 'rgb(242, 242, 242)',
 		SELECTED_GREY: 'rgb(120, 120, 120)',
 		SELECTED_GREY_DIM: 'rgb(94, 94, 94)',

@@ -8,20 +8,44 @@ var {
 	Image
 } = React;
 
+var actions = require('../../actions/actions');
+
 var uiConfig = require('../../uiconfig');
 
 var ToolbarRandomButton = React.createClass({
 
+	moveInProgress: false,
+
 	render: function () {
 		return (
-			<TouchableWithoutFeedback style={{backgroundColor: 'red'}} onPressIn={this.props.onPress}>
-				<View style={styles.wrap}>
-					<View style={styles.vCenter}>
-						<Image style={styles.randomIcon} source={{uri: 'random-icon.png'}} />
-					</View>
+			<View
+				style={styles.wrap}
+				onStartShouldSetResponder={function () {return true;}}
+				onMoveShouldSetResponder={function () {return true;}}
+				onResponderMove={this.onResponderMove}
+				onResponderRelease={this.onResponderRelease}
+			>
+				<View style={styles.vCenter}>
+					<Image style={styles.randomIcon} source={{uri: 'random-icon.png'}} />
 				</View>
-			</TouchableWithoutFeedback>
+			</View>
 		);
+	},
+
+	onResponderMove: function (ev) {
+		console.log('button.onResponderMove');
+		if (!this.moveInProgress) {
+			this.moveInProgress = true;
+			actions.emit(actions.RANDOM_BUTTON_PRESS, ev);
+			return;
+		}
+		actions.emit(actions.RANDOM_BUTTON_MOVE, ev);
+	},
+
+	onResponderRelease: function (ev) {
+		console.log('button.onResponderRelease');
+		actions.emit(actions.RANDOM_BUTTON_RELEASE, ev);
+		this.moveInProgress = false;
 	}
 
 });
@@ -29,18 +53,11 @@ var ToolbarRandomButton = React.createClass({
 var styles = StyleSheet.create({
 
 	wrap: {
-		width: uiConfig.TOOLBAR_BUTTON_WIDTH,
 		height: uiConfig.TOOLBAR_HEIGHT,
-		backgroundColor: uiConfig.COLORS.LIGHT_GREY,
-		shadowColor: '#000000',
-		shadowOffset: {
-			width: 1,
-			height: 0
-		},
-		shadowOpacity: 0.3,
-		shadowRadius: 1,
+		backgroundColor: uiConfig.COLORS.LIGHTEST_GREY,
 		flexDirection: 'row',
-		justifyContent: 'center'
+		justifyContent: 'center',
+		flex: 1
 	},
 
 	vCenter: {
