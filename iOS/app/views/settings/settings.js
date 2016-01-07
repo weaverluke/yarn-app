@@ -22,7 +22,7 @@ var actions = require('../../actions/actions');
 var uiConfig = require('../../uiconfig');
 var LangPicker = require('../langpicker/langpicker');
 
-var MainBar = React.createClass({
+var SettingsView = React.createClass({
 
 	getInitialState: function () {
 		return {
@@ -158,4 +158,4 @@ var styles = StyleSheet.create({
 
 });
 
-module.exports = MainBar;
+module.exports = SettingsView;

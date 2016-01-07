@@ -120,16 +120,12 @@ module.exports = {
 
 	},
 
-	getUniqueMostViewed: function (lang, page) {
-		console.log('Guardian.getUniqueMostViewed(%s, %s)', lang, page);
+	getUniqueMostViewed: function (key, page) {
+		console.log('Guardian.getUniqueMostViewed(%s, %s)', key, page);
 		page || (page = 0);
 
 		return new Promise(function (resolve, reject) {
-			// language results for 30% of queries
-			var query = '';
-			if (lang && Math.random() <= 0.3) {
-				query = lang;
-			}
+			var query = key;
 
 			module.exports.get(query, page)
 				.then(function (urls) {
@@ -140,7 +136,7 @@ module.exports = {
 					}
 					else {
 						// if no results after filtering then get next page
-						module.exports.getUniqueMostViewed(lang, page+1)
+						module.exports.getUniqueMostViewed(key, page+1)
 							.then(function (result) {
 								resolve(result);
 							}, function () {

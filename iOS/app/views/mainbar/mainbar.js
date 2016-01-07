@@ -17,6 +17,7 @@ var actions = require('../../actions/actions');
 var uiConfig = require('../../uiconfig');
 
 var NavBarButton = require('../statusbar/navbarbutton');
+var ToolbarRandomButton = require('../randommenu/toolbarrandombutton');
 
 var MainBar = React.createClass({
 
@@ -64,11 +65,7 @@ var MainBar = React.createClass({
 				</View>
 				<View style={styles.spacer} />
 				<View style={styles.randomButton}>
-					<NavBarButton
-						icon={'random'}
-						onPress={this.props.onRandomPressed}
-						backgroundColor={uiConfig.COLORS.LIGHT_GREY}
-					/>
+					<ToolbarRandomButton onPress={this.props.onRandomPressed} />
 				</View>
 			</Animated.View>
 		);

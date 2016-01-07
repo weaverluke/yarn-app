@@ -10,7 +10,6 @@ v0.2.32
 - missing "tick" icon when dictionary gets hidden in single word quiz mode fixed
 - blank page after language change fixed
 
-
 v0.2.31
 - fix incorrect behaviours occurring after test canceling
 - do not hide test and word highlights after network error

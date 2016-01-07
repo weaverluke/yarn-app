@@ -14,6 +14,7 @@ var GuardianInfoView = require('./ios/app/views/guardianinfo/guardianinfo');
 var NetworkErrorView = require('./ios/app/views/networkerror/networkerror');
 var LoadingCoverView = require('./ios/app/views/loadingcover/loadingcover');
 var LangPicker = require('./ios/app/views/langpicker/langpicker');
+var RandomMenu = require('./ios/app/views/randommenu/randommenu');
 
 var QuizStatusBar = require('./ios/app/views/quiz/quizstatusbar');
 var QuestionView = require('./ios/app/views/quiz/question');
@@ -90,7 +91,8 @@ var yarn = React.createClass({
 			guardianInfoViewVisible: false,
 			networkErrorViewVisible: false,
 			loadingCoverVisible: true,
-			introScreenVisible: true
+			introScreenVisible: true,
+			randomMenuVisible: false
 		};
 	},
 
@@ -151,6 +153,7 @@ var yarn = React.createClass({
 				{this.renderIntroToast()}
 				{this.renderResultView()}
 				{this.renderTestYourselfPrompt()}
+                {this.renderRandomMenu()}
 				{this.renderIntroView()}
 				{this.renderGuardianInfoView()}
 				{this.renderNetworkErrorView()}
@@ -237,7 +240,7 @@ var yarn = React.createClass({
 				score={userProfileStore.get('score')}
 				previousScore={userProfileStore.get('previousScore')}
 				onDonePressed={this.closeResultView}
-				onRandomPressed={this.onRandomPagePressed}
+				onRandomPressed={this.onRandomButtonPressed}
 				buyVocabLevelShown={userProfileStore.get('buyVocabLevelShown')}
 				buyVocabLevelPressed={userProfileStore.get('buyVocabLevelPressed')}
 				onBuyVocabLevelPressed={this.onBuyVocabLevelPressed}
@@ -260,7 +263,7 @@ var yarn = React.createClass({
 				showWordsCount={true}
 				wordsCount={gameStateStore.get('visitedPageWords').length}
 				startHidden={true}
-				onRandomPressed={this.onRandomPagePressed}
+				onRandomPressed={this.onRandomButtonPressed}
 			/>
 		);
 	},
@@ -289,7 +292,7 @@ var yarn = React.createClass({
 			<MainBar
 				ref='mainbar'
 				activeIcon={this.state.settingsViewVisible ? 'settings' : 'browse'}
-				onRandomPressed={this.onRandomPagePressed}
+				onRandomPressed={this.onRandomButtonPressed}
 			/>
 		);
 	},
@@ -367,6 +370,15 @@ var yarn = React.createClass({
 				type={Popup.POPUP_TYPE.TEST_YOURSELF_PROMPT}
 			/>
 		);
+	},
+
+	renderRandomMenu: function () {
+		if (this.state.randomMenuVisible) {
+			return <RandomMenu
+				onRandomSelected={this.onRandomPagePressed}
+				lang={LangPicker.getLanguageName(userProfileStore.get('language'))}
+			/>;
+		}
 	},
 
 	renderIntroView: function () {
@@ -479,12 +491,18 @@ var yarn = React.createClass({
 		});
 	},
 
-	onRandomPagePressed: function () {
+	onRandomButtonPressed: function () {
+		this.setState({
+			randomMenuVisible: true
+		});
+	},
+
+	onRandomPagePressed: function (key) {
 		if (this.state.bottomBar === 'result') {
 			this.closeResultView(true);
 		}
-		var langName = LangPicker.getLanguageName(userProfileStore.get('language'));
-		GuardianAPI.getUniqueMostViewed(langName)
+		//var langName = LangPicker.getLanguageName(userProfileStore.get('language'));
+		GuardianAPI.getUniqueMostViewed(key)
 			.then(function (url) {
 				this.setState({
 					url: url

@@ -11,6 +11,7 @@ var {
 
 var NavBarLabel = require('./navbarlabel');
 var NavBarButton = require('./navbarbutton');
+var ToolbarRandomButton = require('../randommenu/toolbarrandombutton');
 var uiConfig = require('../../uiconfig');
 
 var StatusBar = React.createClass({
@@ -58,13 +59,7 @@ var StatusBar = React.createClass({
 				],
 				opacity: this.state.opacityValue
 			}]}>
-				<View style={styles.randomButton}>
-					<NavBarButton
-						icon={'random'}
-						onPress={this.props.onRandomPressed}
-						backgroundColor={uiConfig.COLORS.LIGHT_GREY}
-					/>
-				</View>
+				<ToolbarRandomButton onPress={this.props.onRandomPressed} />
 				{items}
 				{navBarButton}
 			</Animated.View>
@@ -266,16 +261,16 @@ var styles = StyleSheet.create({
 		alignItems: 'center'
 	},
 
-	randomButton: {
-		marginRight: 3, // so shadow is visible
-		shadowColor: '#000000',
-		shadowOffset: {
-			width: 2,
-			height: 0
-		},
-		shadowOpacity: 0.5,
-		shadowRadius: 1
-	}
+	//randomButton: {
+	//	marginRight: 3, // so shadow is visible
+	//	shadowColor: '#000000',
+	//	shadowOffset: {
+	//		width: 2,
+	//		height: 0
+	//	},
+	//	shadowOpacity: 0.5,
+	//	shadowRadius: 1
+	//}
 
 });
 
