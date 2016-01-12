@@ -149,38 +149,29 @@ var RandomMenu = React.createClass({
 
 	onRandomButtonPress: function (ev) {
 		this.startPos = {
-			x: ev.nativeEvent.pageX,
-			y: ev.nativeEvent.pageY
+			x: ev.x,
+			y: ev.y
 		};
 		this.debounceIndex = 0;
 		this.show();
 	},
 
 	onRandomButtonMove: function (ev) {
-		//console.log('onResponderMove', ev.nativeEvent.pageX, ev.nativeEvent.pageY, ev.nativeEvent.locationX, ev.nativeEvent.locationY);
-
-		// extremely simple debounce mechanism - use every 5th event
-		this.debounceIndex++;
-		if (this.debounceIndex > 5) {
-			this.debounceIndex = 0;
-			return;
-		}
-
 		var newHighlightedIndex = this.state.highlightedIndex;
 
 		// horizontal movement across the buttons
-		if (height - ev.nativeEvent.pageY > uiConfig.TOOLBAR_HEIGHT) {
-			var deltaFromBottom = height - ev.nativeEvent.pageY;
+		if (height - ev.y > uiConfig.TOOLBAR_HEIGHT) {
+			var deltaFromBottom = height - ev.y;
 			newHighlightedIndex = this.state.items.length - Math.floor(deltaFromBottom / uiConfig.TOOLBAR_HEIGHT);
 		}
 		// area of random button
-		else if (ev.nativeEvent.pageX < uiConfig.TOOLBAR_BUTTON_WIDTH) {
+		else if (ev.x < uiConfig.TOOLBAR_BUTTON_WIDTH) {
 			newHighlightedIndex = -1;
 		}
 		// vertical movement along bottom bar
 		else {
 			var distanceFromStartToEdge = width - Math.max(this.startPos.x, uiConfig.TOOLBAR_BUTTON_WIDTH);
-			var delta = ev.nativeEvent.pageX - this.startPos.x;
+			var delta = ev.x - this.startPos.x;
 			var distanceOfOneButton = distanceFromStartToEdge / this.state.items.length;
 			var movedDistance = Math.ceil(delta / distanceOfOneButton);
 			newHighlightedIndex = this.state.items.length - movedDistance;

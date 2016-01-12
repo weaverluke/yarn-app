@@ -240,7 +240,6 @@ var yarn = React.createClass({
 				score={userProfileStore.get('score')}
 				previousScore={userProfileStore.get('previousScore')}
 				onDonePressed={this.closeResultView}
-				onRandomPressed={this.onRandomButtonPressed}
 				buyVocabLevelShown={userProfileStore.get('buyVocabLevelShown')}
 				buyVocabLevelPressed={userProfileStore.get('buyVocabLevelPressed')}
 				onBuyVocabLevelPressed={this.onBuyVocabLevelPressed}
@@ -263,7 +262,6 @@ var yarn = React.createClass({
 				showWordsCount={true}
 				wordsCount={gameStateStore.get('visitedPageWords').length}
 				startHidden={true}
-				onRandomPressed={this.onRandomButtonPressed}
 			/>
 		);
 	},
@@ -292,7 +290,6 @@ var yarn = React.createClass({
 			<MainBar
 				ref='mainbar'
 				activeIcon={this.state.settingsViewVisible ? 'settings' : 'browse'}
-				onRandomPressed={this.onRandomButtonPressed}
 			/>
 		);
 	},

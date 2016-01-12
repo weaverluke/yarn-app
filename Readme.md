@@ -1,5 +1,8 @@
 ##Release notes
 
+v0.2.34
+- new random menu
+
 v0.2.33
 - hide 'loading...' toast when page is ready
 - show 'X words' toast after each word search
