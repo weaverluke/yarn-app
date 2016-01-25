@@ -377,11 +377,13 @@ var yarn = React.createClass({
 		var lang = LangPicker.getLanguageName(userProfileStore.get('language')).toLowerCase();
 		var items = this.getMostReadCategoriesForRandomMenu(2);
 
-		items.unshift({
-			label: 'open in Safari',
-			query: '_safari_',
-			icon: 'external'
-		});
+		if (this.state.bottomBar !== 'result') {
+			items.unshift({
+				label: 'open in Safari',
+				query: '_safari_',
+				icon: 'external'
+			});
+		}
 
 		items.push({
 			label: lang,
