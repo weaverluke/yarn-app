@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "react-native start",
-    "bundle": "react-native bundle --entry-file=index.ios.js --platform=ios --bundle-output=ios/main.jsbundle --dev=false"
+    "bundle": "react-native bundle --entry-file=index.ios.js --platform=ios --bundle-output=ios/main.jsbundle --dev=false",
+    "clean": "rm -fr $TMPDIR/react-*"
   },
   "dependencies": {
     "events": "^1.1.0",

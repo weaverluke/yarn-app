@@ -30,7 +30,8 @@ var data = {
 	wrongAnswers: 0,
 	levelStats: [],
 	previousScore: 0,
-	historyLevelValues: [INITIAL_LEVEL]
+	historyLevelValues: [INITIAL_LEVEL],
+	selectedCategories: {}
 };
 
 var PERSISTENCE_KEY = '@yarn:userProfileStore';
@@ -183,6 +184,7 @@ function loadData() {
 			// disabled until we disabled separate stats for each language
 			//migrate4();
 			migrate5();
+			migrate6();
 
 			data.loaded = true;
 			console.log('data after migration:', data);
@@ -287,6 +289,12 @@ function migrate5() {
 	}
 	if (!('buyVocabLevelPressed' in data)) {
 		data.buyVocabLevelPressed = false;
+	}
+}
+
+function migrate6() {
+	if (!('selectedCategories' in data)) {
+		data.selectedCategories = {};
 	}
 }
 

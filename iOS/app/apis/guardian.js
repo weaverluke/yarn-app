@@ -1,6 +1,6 @@
 'use strict';
 var API_KEY = '0a7ad490-b65c-4c58-9600-3bc019f5173c';
-var BASE_URL = 'http://content.guardianapis.com/search?pageSize=3&show-most-viewed=true&api-key=' + API_KEY;
+var BASE_URL = 'http://content.guardianapis.com/search?pageSize=15&show-most-viewed=true&api-key=' + API_KEY;
 var NetworkStatus = require('../helpers/networkstatus');
 var log = require('../logger/logger');
 
@@ -53,8 +53,8 @@ function loadData() {
 		.done();
 }
 
-function addAlreadyVisited(url) {
-	alreadyVisited.push([url, Date.now()]);
+function addAlreadyVisited(result) {
+	alreadyVisited.push([result.url, Date.now()]);
 	saveData();
 }
 
@@ -73,7 +73,7 @@ module.exports = {
 
 				var url = BASE_URL;
 				if (query) {
-					url += '&q=' + query;
+					url += query;
 				}
 				if (page) {
 					url += '&page=' + page;
@@ -120,12 +120,20 @@ module.exports = {
 
 	},
 
-	getUniqueMostViewed: function (key, page) {
-		console.log('Guardian.getUniqueMostViewed(%s, %s)', key, page);
+	getUniqueMostViewed: function (conf, page) {
+		console.log('Guardian.getUniqueMostViewed()', conf, page);
 		page || (page = 0);
+		conf || (conf = {});
 
 		return new Promise(function (resolve, reject) {
-			var query = key;
+			var queryItems = [''];
+			if (conf.sectionId) {
+				queryItems.push('section=' + conf.sectionId);
+			}
+			if (conf.query) {
+				queryItems.push('q=' + conf.query);
+			}
+			var query = queryItems.join('&');
 
 			module.exports.get(query, page)
 				.then(function (urls) {
@@ -136,7 +144,7 @@ module.exports = {
 					}
 					else {
 						// if no results after filtering then get next page
-						module.exports.getUniqueMostViewed(key, page+1)
+						module.exports.getUniqueMostViewed(query, page+1)
 							.then(function (result) {
 								resolve(result);
 							}, function () {
@@ -161,18 +169,22 @@ function extractUrls(response) {
 	var urls = [];
 	if (response && response.status === 'ok' && response.results && response.results.length) {
 		urls = response.results.map(function (entry) {
-			return entry.webUrl;
+			return {
+				url: entry.webUrl,
+				sectionName: entry.sectionName,
+				sectionId: entry.sectionId
+			};
 		});
 		return urls;
 	}
 }
 
 function filterOutAlreadyViewed(urls) {
-	urls = urls.filter(function (url) {
+	urls = urls.filter(function (entry) {
 		// all already used are different from current one?
 		return alreadyVisited.every(function (visitedUrl) {
 			// visited url has array structure: [url, timestampWhenViewed]
-			return visitedUrl[0] !== url;
+			return visitedUrl[0] !== entry.url;
 		});
 	});
 	return urls;

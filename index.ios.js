@@ -41,7 +41,10 @@ var {
 	AppRegistry,
 	StyleSheet,
 	View,
-	LayoutAnimation
+	LinkingIOS,
+	AlertIOS
+
+	//LayoutAnimation
 	//NativeAppEventEmitter
 } = React;
 
@@ -80,6 +83,7 @@ var yarn = React.createClass({
 			bottomBar: '',
 			wordsCountVisible: false,
 			toastShown: false,
+			currentCategory: '',
 			introToastShown: false,
 			gameState: gameStateStore.GAME_STATES.NOT_STARTED,
 			buyUrlFeaturePopupVisible: false,
@@ -370,14 +374,59 @@ var yarn = React.createClass({
 	},
 
 	renderRandomMenu: function () {
-		var lang = userProfileStore.get('language');
+		var lang = LangPicker.getLanguageName(userProfileStore.get('language')).toLowerCase();
+		var items = this.getMostReadCategoriesForRandomMenu(2);
+
+		items.unshift({
+			label: 'open in Safari',
+			query: '_safari_',
+			icon: 'external'
+		});
+
+		items.push({
+			label: lang,
+			query: lang,
+			icon: 'yarn'
+		});
+
+		if (this.state.currentCategory) {
+			items.push({
+				label: this.state.currentCategory.name.toLowerCase(),
+				sectionId: this.state.currentCategory.id,
+				icon: 'refresh'
+			});
+		}
+
+		items.push({
+			label: 'surprise me',
+			icon: 'random'
+		});
+
 
 		if (lang) {
 			return <RandomMenu
 				onRandomSelected={this.onRandomPagePressed}
-				lang={LangPicker.getLanguageName(lang)}
+				items={items}
 			/>;
 		}
+	},
+
+	getMostReadCategoriesForRandomMenu: function (amount) {
+		var categories = userProfileStore.get('selectedCategories');
+		var sortedCatIds = Object.keys(categories).sort(function (catA, catB) {
+			return categories[catA].counter - categories[catB].counter;
+		});
+
+		var output = [];
+		for (var i = 0; i < amount && sortedCatIds[i]; i++) {
+			var currentCatId = sortedCatIds[i];
+			output.push({
+				label: categories[currentCatId].name.toLowerCase(),
+				sectionId: currentCatId,
+				icon: 'clock'
+			});
+		}
+		return output;
 	},
 
 	renderIntroView: function () {
@@ -496,15 +545,37 @@ var yarn = React.createClass({
 		});
 	},
 
-	onRandomPagePressed: function (key) {
+	onRandomPagePressed: function (config) {
+		if (config.query === '_safari_') {
+			LinkingIOS.canOpenURL(this.state.url, function (supported) {
+				if (!supported) {
+					AlertIOS.alert('Can\'t handle url: ' + this.state.url);
+				} else {
+					LinkingIOS.openURL(this.state.url);
+				}
+			}.bind(this));
+
+		}
+
+		if (config.sectionId) {
+			actions.emit(actions.RANDOM_CATEGORY_SELECTED, {
+				id: config.sectionId,
+				name: config.label
+			});
+		}
+
 		if (this.state.bottomBar === 'result') {
 			this.closeResultView(true);
 		}
 		//var langName = LangPicker.getLanguageName(userProfileStore.get('language'));
-		GuardianAPI.getUniqueMostViewed(key)
-			.then(function (url) {
+		GuardianAPI.getUniqueMostViewed(config)
+			.then(function (result) {
 				this.setState({
-					url: url
+					url: result.url,
+					currentCategory: {
+						name: result.sectionName,
+						id: result.sectionId
+					}
 				});
 		}.bind(this));
 		//this.refs[BROWSER_REF].goToRandomUrl();
@@ -605,9 +676,13 @@ var yarn = React.createClass({
 		actions.on(actions.NETWORK_ERROR_OCCURRED, this.showNetworkErrorView);
 		actions.on(actions.TRY_AGAIN, this.hideNetworkErrorView);
 
-		GuardianAPI.getUniqueMostViewed().then(function (url) {
+		GuardianAPI.getUniqueMostViewed().then(function (result) {
 			this.setState({
-				url: url
+				url: result.url,
+				currentCategory: {
+					name: result.sectionName,
+					id: result.sectionId
+				}
 			});
 			this.state.networkErrorViewVisible && this.hideNetworkErrorView();
 		}.bind(this));

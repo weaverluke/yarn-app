@@ -32,6 +32,8 @@
 		6119151B1BFA92B900BB1382 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		6119151D1BFBD79000BB1382 /* logo-splash.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6119151C1BFBD79000BB1382 /* logo-splash.jpg */; };
 		613123E51C2375AD0007EDCA /* tick-finished.gif in Resources */ = {isa = PBXBuildFile; fileRef = 613123E41C2375AD0007EDCA /* tick-finished.gif */; };
+		6179F0471C56BC180009DD76 /* external-icon-on.png in Resources */ = {isa = PBXBuildFile; fileRef = 6179F0451C56BC180009DD76 /* external-icon-on.png */; };
+		6179F0481C56BC180009DD76 /* external-icon-off.png in Resources */ = {isa = PBXBuildFile; fileRef = 6179F0461C56BC180009DD76 /* external-icon-off.png */; };
 		6182327C1BF9186A000D7F47 /* RCTWebView+WebViewBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 618232751BF9186A000D7F47 /* RCTWebView+WebViewBridge.m */; };
 		6182327D1BF9186A000D7F47 /* RCTWebViewManager+WebViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 618232771BF9186A000D7F47 /* RCTWebViewManager+WebViewManager.m */; };
 		6182327E1BF9186A000D7F47 /* webview-bridge-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 6182327B1BF9186A000D7F47 /* webview-bridge-script.js */; };
@@ -181,6 +183,8 @@
 		61127D701C3DC5EC0045A1E0 /* yarn-icon-on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "yarn-icon-on.png"; path = "../Resources/Images/yarn-icon-on.png"; sourceTree = "<group>"; };
 		6119151C1BFBD79000BB1382 /* logo-splash.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "logo-splash.jpg"; path = "../Resources/Images/logo-splash.jpg"; sourceTree = "<group>"; };
 		613123E41C2375AD0007EDCA /* tick-finished.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "tick-finished.gif"; path = "../Resources/Images/tick-finished.gif"; sourceTree = "<group>"; };
+		6179F0451C56BC180009DD76 /* external-icon-on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "external-icon-on.png"; path = "../Resources/Images/external-icon-on.png"; sourceTree = "<group>"; };
+		6179F0461C56BC180009DD76 /* external-icon-off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "external-icon-off.png"; path = "../Resources/Images/external-icon-off.png"; sourceTree = "<group>"; };
 		618232741BF9186A000D7F47 /* RCTWebView+WebViewBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTWebView+WebViewBridge.h"; sourceTree = "<group>"; };
 		618232751BF9186A000D7F47 /* RCTWebView+WebViewBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTWebView+WebViewBridge.m"; sourceTree = "<group>"; };
 		618232761BF9186A000D7F47 /* RCTWebViewManager+WebViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTWebViewManager+WebViewManager.h"; sourceTree = "<group>"; };
@@ -378,6 +382,8 @@
 		619A03E31BF8EE06002751FB /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				6179F0451C56BC180009DD76 /* external-icon-on.png */,
+				6179F0461C56BC180009DD76 /* external-icon-off.png */,
 				61127D691C3DC5EC0045A1E0 /* clock-icon-off.png */,
 				61127D6A1C3DC5EC0045A1E0 /* clock-icon-on.png */,
 				61127D6B1C3DC5EC0045A1E0 /* random-icon-off.png */,
@@ -734,7 +740,9 @@
 				619A04011BF8EF33002751FB /* ss-standard.otf in Resources */,
 				619A03F61BF8EEB6002751FB /* intro_2.png in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				6179F0471C56BC180009DD76 /* external-icon-on.png in Resources */,
 				619A03F21BF8EEB6002751FB /* next-finished.gif in Resources */,
+				6179F0481C56BC180009DD76 /* external-icon-off.png in Resources */,
 				61127D731C3DC5EC0045A1E0 /* random-icon-off.png in Resources */,
 				619A03F71BF8EEB6002751FB /* intro_3.png in Resources */,
 				613123E51C2375AD0007EDCA /* tick-finished.gif in Resources */,

@@ -19,15 +19,17 @@ var ToolbarRandomButton = React.createClass({
 	debounceIndex: 0,
 
 	componentWillMount: function () {
-		this._panResponder = PanResponder.create({
-			onStartShouldSetPanResponder: function (ev, gestureState) { return true; },
-			onStartShouldSetPanResponderCapture: function (ev, gestureState) { return true; },
-			onMoveShouldSetPanResponder: function (ev, gestureState) { return true; },
-			onMoveShouldSetPanResponderCapture: function (ev, gestureState) { return true; },
-			onPanResponderGrant: this.onPanResponderGrant,
-			onPanResponderMove: this.onPanResponderMove,
-			onPanResponderRelease: this.onPanResponderRelease
-		});
+		if (uiConfig.USE_GESTURES_FOR_RANDOM_MENU) {
+			this._panResponder = PanResponder.create({
+				onStartShouldSetPanResponder: function (ev, gestureState) { return true; },
+				onStartShouldSetPanResponderCapture: function (ev, gestureState) { return true; },
+				onMoveShouldSetPanResponder: function (ev, gestureState) { return true; },
+				onMoveShouldSetPanResponderCapture: function (ev, gestureState) { return true; },
+				onPanResponderGrant: this.onPanResponderGrant,
+				onPanResponderMove: this.onPanResponderMove,
+				onPanResponderRelease: this.onPanResponderRelease
+			});
+		}
 	},
 
 	onPanResponderGrant: function (ev, gestureState) {
@@ -52,43 +54,32 @@ var ToolbarRandomButton = React.createClass({
 	},
 
 	render: function () {
-		return (
-			<View style={styles.wrap} {...this._panResponder.panHandlers}>
-				<View style={styles.vCenter}>
-					<Image style={styles.randomIcon} source={{uri: 'random-icon.png'}} />
+		if (uiConfig.USE_GESTURES_FOR_RANDOM_MENU) {
+			return (
+				<View style={styles.wrap} {...this._panResponder.panHandlers}>
+					<View style={styles.vCenter}>
+						<Image style={styles.randomIcon} source={{uri: 'random-icon.png'}} />
+					</View>
 				</View>
-			</View>
-		);
+			);
+		}
+		else {
+			return (
+				<TouchableWithoutFeedback onPress={this.onPress}>
+					<View style={styles.wrap}>
+						<View style={styles.vCenter}>
+							<Image style={styles.randomIcon} source={{uri: 'random-icon.png'}} />
+						</View>
+					</View>
+				</TouchableWithoutFeedback>
+			);
+
+		}
 	},
 
-	//onResponderMove: function (ev) {
-	//	// extremely simple debounce mechanism - use every 5th event
-	//	this.debounceIndex++;
-	//	if (this.debounceIndex > 5) {
-	//		this.debounceIndex = 0;
-	//		return;
-	//	}
-	//
-	//	console.log('button.onResponderMove');
-	//	if (!this.moveInProgress) {
-	//		this.moveInProgress = true;
-	//		actions.emit(actions.RANDOM_BUTTON_PRESS, {
-	//			x: ev.nativeEvent.pageX,
-	//			y: ev.nativeEvent.pageY
-	//		});
-	//		return;
-	//	}
-	//	actions.emit(actions.RANDOM_BUTTON_MOVE, {
-	//		x: ev.nativeEvent.pageX,
-	//		y: ev.nativeEvent.pageY
-	//	});
-	//},
-	//
-	//onResponderRelease: function (ev) {
-	//	console.log('button.onResponderRelease');
-	//	actions.emit(actions.RANDOM_BUTTON_RELEASE, ev);
-	//	this.moveInProgress = false;
-	//}
+	onPress: function () {
+		actions.emit(actions.RANDOM_BUTTON_PRESS);
+	}
 
 });
 

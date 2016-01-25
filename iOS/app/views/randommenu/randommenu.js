@@ -7,6 +7,7 @@ var {
     Text,
     Image,
     Animated,
+	TouchableHighlight
 } = React;
 
 var ANIMATION_TIME = 200;
@@ -17,43 +18,15 @@ var {width, height} = Dimensions.get('window');
 var actions = require('../../actions/actions');
 var uiConfig = require('../../uiconfig');
 
-var RANDOM_MENU_ITEMS = [
-    {
-        label: 'tech',
-		value: 'tech',
-        icon: 'clock'
-    },
-    {
-        label: 'sport',
-		value: 'sport',
-        icon: 'clock'
-    },
-    {
-        label: 'lang',
-		value: 'lang',
-        icon: 'yarn'
-    },
-    {
-        label: 'business',
-		value: 'business',
-        icon: 'refresh'
-    },
-    {
-        label: 'surprise me',
-		value: '', // empty as we want random entry
-        icon: 'random'
-    }
-];
-
 var RandomMenu = React.createClass({
 
-	debounceIndex: 0,
+	visible: false,
 
     getInitialState: function () {
         return {
-            items: RANDOM_MENU_ITEMS,
+            items: this.props.items,
             opacityValue: new Animated.Value(0),
-            marginTopValue: new Animated.Value(0),
+            marginTopValue: new Animated.Value(20),
 			highlightedIndex: -1
         };
     },
@@ -64,9 +37,16 @@ var RandomMenu = React.createClass({
         };
     },
 
-    render: function () {
+	//render: function() {
+	//	return <View><Text>Test123321</Text></View>
+	//},
+
+	render: function () {
         var items = this.state.items.map(this.renderButton);
-        console.log('rendered items', items);
+
+		//var items = [<View><Text>TestA</Text></View>,<View><Text>TestB</Text></View>];
+		//console.log('rendered items', items);
+		//return (<View style={styles.text123}>{items}</View>);
 
         return (
             <Animated.View style={[styles.wrap, {
@@ -78,45 +58,91 @@ var RandomMenu = React.createClass({
                 {items}
             </Animated.View>
         );
-    },
+	},
 
 	renderButton: function (btn, ind) {
-		if (btn.label === 'lang') {
-			btn.value = btn.label = this.props.lang.toLowerCase();
-		}
-
 		var highlighted = this.state.highlightedIndex === ind;
 		var iconName = btn.icon + '-icon-' + (highlighted ? 'on.png' : 'off.png');
 		var buttonStyles = [styles.button];
 		var textStyles = [styles.buttonText];
+		if (btn.icon === 'external') {
+			buttonStyles.push({
+				backgroundColor: 'rgb(247,247,247)'
+			});
+		}
 
 		if (highlighted) {
 			buttonStyles.push(styles.buttonActive);
 			textStyles.push(styles.textActive);
 		}
 
-		return (
-			<View style={buttonStyles} key={btn.label}>
-				<View style={[styles.vCenter, styles.buttonImageWrap]}>
-					<Image source={{uri: iconName}} style={styles.buttonImage}/>
+		if (uiConfig.USE_GESTURES_FOR_RANDOM_MENU) {
+			return (
+				<View style={buttonStyles} key={'category-' + ind}>
+					<View style={[styles.vCenter, styles.buttonImageWrap]}>
+						<Image source={{uri: iconName}} style={styles.buttonImage}/>
+					</View>
+					<View style={styles.vCenter}>
+						<Text style={textStyles}>{btn.label}</Text>
+					</View>
 				</View>
-				<View style={styles.vCenter}>
-					<Text style={textStyles}>{btn.label}</Text>
+			);
+		}
+		else {
+			//return (<View key={"menu-item-" + ind}><Text>SOME TEXT</Text></View>);
+			return (
+				<View key={'category-' + ind} style={buttonStyles}>
+					<TouchableHighlight onPress={this.onCategoryPress(btn)} underlayColor={uiConfig.COLORS.BLUE}>
+						<View style={styles.row}>
+							<View style={[styles.vCenter, styles.buttonImageWrap]}>
+								<Image source={{uri: iconName}} style={styles.buttonImage}/>
+							</View>
+							<View style={styles.vCenter}>
+								<Text style={textStyles}>{btn.label}</Text>
+							</View>
+						</View>
+					</TouchableHighlight>
 				</View>
-			</View>
-		);
+			);
+		}
 	},
 
-    componentDidMount: function () {
-		actions.on(actions.RANDOM_BUTTON_PRESS, this.onRandomButtonPress);
-		actions.on(actions.RANDOM_BUTTON_MOVE, this.onRandomButtonMove);
-		actions.on(actions.RANDOM_BUTTON_RELEASE, this.onRandomButtonRelease);
+	onCategoryPress: function (category) {
+		return function () {
+			this.onMenuToggle();
+			this.props.onRandomSelected && this.props.onRandomSelected(category);
+		}.bind(this);
 	},
 
-    componentWillReceiveProps: function (newProps) {
-    },
+	componentDidMount: function () {
+		if (uiConfig.USE_GESTURES_FOR_RANDOM_MENU) {
+			actions.on(actions.RANDOM_BUTTON_PRESS, this.onRandomButtonPress);
+			actions.on(actions.RANDOM_BUTTON_MOVE, this.onRandomButtonMove);
+			actions.on(actions.RANDOM_BUTTON_RELEASE, this.onRandomButtonRelease);
+		}
+		else {
+			actions.on(actions.RANDOM_BUTTON_PRESS, this.onMenuToggle);
+		}
+	},
 
-    animateIn: function (cb) {
+	componentWillReceiveProps: function (newProps) {
+		if (JSON.stringify(newProps.items) !== JSON.stringify(this.state.items)) {
+			this.setState({
+				items: newProps.items
+			});
+		}
+	},
+
+	onMenuToggle: function () {
+		if (this.visible) {
+			this.hide();
+		} else {
+			this.show();
+		}
+		this.visible = !this.visible;
+	},
+
+	animateIn: function (cb) {
         Animated.parallel([
             Animated.timing(
                 this.state.opacityValue,
@@ -127,21 +153,21 @@ var RandomMenu = React.createClass({
                 { toValue: 0, duration: ANIMATION_TIME }
             )
         ]).start(cb);
-    },
+	},
 
-    animateOut: function (cb) {
+	animateOut: function (cb) {
         Animated.parallel([
             Animated.timing(
                 this.state.opacityValue,
                 { toValue: 0, duration: ANIMATION_TIME }
             )
         ]).start(cb);
-    },
+	},
 
 
-    hide: function (cb) {
+	hide: function (cb) {
         this.animateOut(cb);
-    },
+	},
 
 	show: function (cb) {
 		this.animateIn(cb);
@@ -152,7 +178,6 @@ var RandomMenu = React.createClass({
 			x: ev.x,
 			y: ev.y
 		};
-		this.debounceIndex = 0;
 		this.show();
 	},
 
@@ -192,7 +217,7 @@ var RandomMenu = React.createClass({
 			return;
 		}
 
-		this.props.onRandomSelected && this.props.onRandomSelected(selectedItem.value);
+		this.props.onRandomSelected && this.props.onRandomSelected(selectedItem);
 
 		this.startPos = undefined;
 		this.setState({
@@ -257,6 +282,12 @@ var styles = StyleSheet.create({
 
 	buttonActive: {
 		backgroundColor: uiConfig.COLORS.PALE_BLUE
+	},
+	row: {
+		flexDirection: 'row'
+	},
+	text123: {
+		backgroundColor: 'green'
 	}
 });
 

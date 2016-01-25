@@ -46,14 +46,13 @@ bus.on(actions.CHANGE_LEVEL, onChangeLevel);
 bus.on(actions.LOOKING_FOR_WORDS, onLookingForWords);
 bus.on(actions.HOME_BUTTON_PRESSED, onHomePressed);
 bus.on(actions.WORD_IN_BROWSER_PRESSED, onWordInBrowserPressed);
+bus.on(actions.RANDOM_CATEGORY_SELECTED, onRandomCategorySelected);
 
 function onWordsParsed(words) {
 	if (!words.length) {
 		gameStateStore.set('currentState', GAME_STATES.NOT_STARTED);
 		return;
 	}
-	words.unshift('Bowcott');
-	words.pop();
 
 	gameStateStore.pause(true);
 	gameStateStore.reset(true);
@@ -337,6 +336,19 @@ function onWordInBrowserPressed(word) {
 	if (currentGameState === GAME_STATES.WORDS_FOUND) {
 		onStartGame(word);
 	}
+}
+
+function onRandomCategorySelected(cat) {
+	var categories = userProfileStore.get('selectedCategories');
+
+	if (!categories[cat.id]) {
+		categories[cat.id] = {
+			name: cat.name,
+			counter: 0
+		};
+	}
+	categories[cat.id].counter++;
+	userProfileStore.set('selectedCategories', categories);
 }
 
 module.exports = bus;
