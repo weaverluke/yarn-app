@@ -1,5 +1,13 @@
 ##Release notes
 
+v0.2.36
+- added "Open in Safari" in navigation menu
+- added in-app purchases to activate premium vocab level
+- bugfixes
+
+v0.2.35
+- fixes for gestures in random menu
+
 v0.2.34
 - new random menu
 

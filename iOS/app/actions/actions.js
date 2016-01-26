@@ -1,6 +1,9 @@
 var Events = require('events');
 var bus = new Events.EventEmitter();
 var actions = require('./actiontypes');
+var uiConfig = require('../uiconfig');
+
+var InAppUtils = require('NativeModules').InAppUtils;
 
 var getRandomWords = require('../helpers/getrandomwords');
 var googleTranslate = require('../apis/googletranslate');
@@ -14,7 +17,8 @@ var words = require('../../../Languages/en/en.js');
 
 var React = require('react-native');
 var {
-	AsyncStorage
+	AsyncStorage,
+	AlertIOS
 } = React;
 
 //var {
@@ -47,6 +51,7 @@ bus.on(actions.LOOKING_FOR_WORDS, onLookingForWords);
 bus.on(actions.HOME_BUTTON_PRESSED, onHomePressed);
 bus.on(actions.WORD_IN_BROWSER_PRESSED, onWordInBrowserPressed);
 bus.on(actions.RANDOM_CATEGORY_SELECTED, onRandomCategorySelected);
+bus.on(actions.BUY_PREMIUM_VOCAB_LEVEL, onBuyPremiumVocabLevel);
 
 function onWordsParsed(words) {
 	if (!words.length) {
@@ -349,6 +354,23 @@ function onRandomCategorySelected(cat) {
 	}
 	categories[cat.id].counter++;
 	userProfileStore.set('selectedCategories', categories);
+}
+
+InAppUtils.loadProducts(['com.weaverdigital.yarnmvp.premiumvocablevel'], function (err, products) {
+	console.log('load products result: ', err, products);
+});
+
+function onBuyPremiumVocabLevel() {
+	InAppUtils.purchaseProduct('com.weaverdigital.yarnmvp.premiumvocablevel', function (err, resp) {
+		if (err) {
+			AlertIOS.alert('App-Store error', 'Error details: ' + err);
+		}
+		else if (resp && resp.productIdentifier) {
+			AlertIOS.alert('Purchase Successful', 'Your transaction ID is ' + resp.transactionIdentifier + '. Your Vocab Level is now unlocked!');
+			uiConfig.MAX_VOCAB_LEVEL = 101;
+			userProfileStore.set('premiumVocabLevel', true);
+		}
+	});
 }
 
 module.exports = bus;

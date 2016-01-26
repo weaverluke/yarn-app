@@ -1,9 +1,10 @@
-'use strict';
+
 
 var Events = require('events');
 var eventEmitter = new Events.EventEmitter();
 var CHANGE_EVENT = 'store:changed';
 var log = require('../logger/logger');
+var uiConfig = require('../uiconfig');
 
 var React = require('react-native');
 var {
@@ -15,6 +16,7 @@ var INITIAL_LEVEL = 30;
 var data = {
 	dataVersion: 3,
 	loaded: false, // changed when loaded is loaded from device
+	premiumVocabLevel: false,
 
 	language: '',
 	testYourselfPromptShown: false,
@@ -193,6 +195,10 @@ function loadData() {
 				message: 'user profile loaded',
 				userProfileData: data
 			});
+
+			if (data.premiumVocabLevel) {
+				uiConfig.MAX_VOCAB_LEVEL = 101;
+			}
 
 			emitChange();
 		})

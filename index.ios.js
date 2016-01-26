@@ -2,6 +2,7 @@
 
 var React = require('react-native');
 
+
 var Browser = require('./ios/app/views/browser/browser');
 var Popup = require('./ios/app/views/popup/popup');
 var StatusBar = require('./ios/app/views/statusbar/statusbar');
@@ -700,6 +701,10 @@ var yarn = React.createClass({
 		if (userProfileStore.get('language') || userProfileStore.get('loaded')) {
 			this.onUserProfileChanged();
 		}
+
+		//InAppUtils.loadProducts(['com.weaverdigital.yarnmvp.premiumvocablevel'], function (err, products) {
+		//
+		//});
 	},
 
 	showUrlFeaturePopup: function () {
