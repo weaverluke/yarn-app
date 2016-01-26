@@ -16,7 +16,6 @@ var {width, height} = Dimensions.get('window');
 var uiConfig = require('../../uiconfig');
 var COLORS = uiConfig.COLORS;
 var utils = require('../../utils');
-var actions = require('../../actions/actions');
 
 var POPUP_TYPE = {
 	INFO: 'INFO',
@@ -281,32 +280,37 @@ var Popup = React.createClass({
 
 		var startColor = utils.colorToObj(uiConfig.COLORS.BLUE);
 		var finalColor = utils.colorToObj(uiConfig.COLORS.MID_GREY);
-		actions.emit(actions.BUY_PREMIUM_VOCAB_LEVEL);
 
-		//!isAlreadyFinished && setTimeout(function () {
-		//
-		//	utils.animateColor({
-		//		start: startColor,
-		//		end: finalColor,
-		//		onChange: function (clr) {
-		//			this.setState({
-		//				buttonBgColor: utils.colorToString(clr)
-		//			});
-		//		}.bind(this),
-		//		duration: animationTime,
-		//		stepTime: 60
-		//	});
-		//
-		//	Animated.timing(
-		//		this.state.buttonWidth,
-		//		{ toValue: 130, duration: animationTime }
-		//	).start(function () {
-		//		this.setState({
-		//			buttonText: 'COMING SOON'
-		//		});
-		//	}.bind(this));
-		//
-		//}.bind(this), 100);
+		this.props.onSubmit && this.props.onSubmit();
+
+		if (this.props.type === POPUP_TYPE.BUY_VOCAB_LEVEL) {
+			return;
+		}
+
+		!isAlreadyFinished && setTimeout(function () {
+
+			utils.animateColor({
+				start: startColor,
+				end: finalColor,
+				onChange: function (clr) {
+					this.setState({
+						buttonBgColor: utils.colorToString(clr)
+					});
+				}.bind(this),
+				duration: animationTime,
+				stepTime: 60
+			});
+
+			Animated.timing(
+				this.state.buttonWidth,
+				{ toValue: 130, duration: animationTime }
+			).start(function () {
+				this.setState({
+					buttonText: 'COMING SOON'
+				});
+			}.bind(this));
+
+		}.bind(this), 100);
 	},
 
 	renderTestYourselfPrompt: function () {

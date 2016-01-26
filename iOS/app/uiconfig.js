@@ -45,5 +45,7 @@ module.exports = {
 
 	MAX_VOCAB_LEVEL: 60,
 
-	USE_GESTURES_FOR_RANDOM_MENU: true
+	USE_GESTURES_FOR_RANDOM_MENU: true,
+
+	GA_TOKEN: 'UA-9770610-4'
 };

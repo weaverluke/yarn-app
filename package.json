@@ -12,6 +12,9 @@
     "node-read": "git+https://github.com/mateuszwozniak/node-read.git",
     "path": "^0.12.7",
     "react-native": "^0.14.2",
+    "react-native-device-info": "^0.8.1",
+    "react-native-google-analytics": "^1.0.1",
+    "react-native-in-app-utils": "^2.2.0",
     "react-native-webview-bridge": "^0.4.0",
     "url": "^0.11.0",
     "util": "^0.10.3"

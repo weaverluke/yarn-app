@@ -49,7 +49,7 @@ var ResultView = React.createClass({
 			score: this.props.score === this.props.previousScore ? this.props.score : this.props.previousScore,
 			level: this.props.level === this.props.previousLevel ? this.props.level : this.props.previousLevel,
 			levelBackground: uiConfig.COLORS.ORANGE,
-			buyVocabLevelPopupVisible: this.props.buyVocabLevelShown
+			buyVocabLevelPopupVisible: !this.props.buyVocabLevelShown
 		};
 	},
 
@@ -107,7 +107,7 @@ var ResultView = React.createClass({
 					type={Popup.POPUP_TYPE.BUY_VOCAB_LEVEL}
 					withoutOverlay={true}
 					buyButtonInFinalState={this.props.buyVocabLevelPressed}
-					onBuyPressed={this.props.onBuyVocabLevelPressed}
+					onSubmit={this.props.onBuyVocabLevelPressed}
 				/>
 
 			</Animated.View>
@@ -223,7 +223,7 @@ var ResultView = React.createClass({
 	},
 
 	showBuyVocabLevelPopup: function () {
-		if (this.props.level === uiConfig.MAX_VOCAB_LEVEL) {
+		if (this.props.level >= uiConfig.MAX_VOCAB_LEVEL) {
 
 			this.setState({
 				levelBackground: uiConfig.COLORS.RED,

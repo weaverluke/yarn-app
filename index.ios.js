@@ -21,6 +21,7 @@ var QuizStatusBar = require('./ios/app/views/quiz/quizstatusbar');
 var QuestionView = require('./ios/app/views/quiz/question');
 var ResultView = require('./ios/app/views/quiz/result');
 var IntroView = require('./ios/app/views/intro/intro');
+var Analytics = require('./ios/app/helpers/analytics');
 
 var GuardianAPI = require('./ios/app/apis/guardian');
 
@@ -199,6 +200,7 @@ var yarn = React.createClass({
 	},
 
 	stopQuiz: function () {
+		Analytics.event('Test', 'Stop test');
 		var shouldScrollBack = gameStateStore.get('singleWordMode');
 		this.resetGame();
 		this.refs['mainbar'].animateIn();
@@ -255,6 +257,8 @@ var yarn = React.createClass({
 	onBuyVocabLevelPressed: function () {
 		userProfileStore.set('buyVocabLevelPressed', true);
 		userProfileStore.set('buyVocabLevelShown', true);
+		Analytics.event('Premium', 'Vocab Level');
+		actions.emit(actions.BUY_PREMIUM_VOCAB_LEVEL);
 	},
 
 	renderInfoBar: function () {
@@ -721,6 +725,7 @@ var yarn = React.createClass({
 
 	buyUrlFeaturePressed: function () {
 		console.log('BUY URL FEATURE');
+		Analytics.event('Premium', 'Web Browsing');
 		//this.closeUrlFeaturePopup();
 	},
 
