@@ -2,7 +2,6 @@
 
 var React = require('react-native');
 
-
 var Browser = require('./ios/app/views/browser/browser');
 var Popup = require('./ios/app/views/popup/popup');
 var StatusBar = require('./ios/app/views/statusbar/statusbar');
@@ -49,6 +48,17 @@ var {
 	//LayoutAnimation
 	//NativeAppEventEmitter
 } = React;
+
+ErrorUtils.setGlobalHandler(function (err) {
+	log({
+		message: 'JS Execution Error',
+		error: {
+			message: err.message,
+			stack: err.stack
+		}
+	});
+	AlertIOS.alert('Ops!', 'Looks like we\'ve encountered an error. Please restart the app if it behaves weirdly');
+});
 
 //var subscription = NativeAppEventEmitter.addListener(
 //	'DictionaryHidden',
