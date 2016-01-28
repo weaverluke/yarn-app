@@ -11,6 +11,7 @@ var {
 } = React;
 
 var ANIMATION_TIME = 200;
+var FINGERTIP_WIDTH = 40;
 
 var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
@@ -178,29 +179,54 @@ var RandomMenu = React.createClass({
 			x: ev.x,
 			y: ev.y
 		};
+		// if start event comes from random button placed in lower right corner of screen then we'll be turning off
+		// the menu when user goes back to that area
+		// but if the event comes from different place (e.g. center of screen, what is possible on results screen)
+		// then we'll be turning off the menu when user moves his finger back to this place +/- config.TOOLBAR_HEIGHT
+		if (ev.x > config.TOOLBAR_BUTTON_WIDTH) {
+			this.buttonArea = {
+				start: ev.x - FINGERTIP_WIDTH/2,
+				end: ev.x + FINGERTIP_WIDTH/2
+			}
+		}
+		else {
+			this.buttonArea = {
+				start: 0,
+				end: config.TOOLBAR_BUTTON_WIDTH
+			};
+		}
 		this.show();
 	},
 
 	onRandomButtonMove: function (ev) {
 		var newHighlightedIndex = this.state.highlightedIndex;
 
-		// horizontal movement across the buttons
+		// vertical movement across the buttons
 		if (height - ev.y > config.TOOLBAR_HEIGHT) {
 			var deltaFromBottom = height - ev.y;
 			newHighlightedIndex = this.state.items.length - Math.floor(deltaFromBottom / config.TOOLBAR_HEIGHT);
 		}
-		// area of random button
-		else if (ev.x < config.TOOLBAR_BUTTON_WIDTH) {
+		// finger is back on initial position from which menu has been triggered
+		else if (ev.x > this.buttonArea.start && ev.x < this.buttonArea.end) {
 			newHighlightedIndex = -1;
 		}
-		// vertical movement along bottom bar
 		else {
-			var distanceFromStartToEdge = width - Math.max(this.startPos.x, config.TOOLBAR_BUTTON_WIDTH);
-			var delta = ev.x - this.startPos.x;
+			var distanceFromStartToEdge;
+			if (ev.x < this.buttonArea.start) {
+				distanceFromStartToEdge = this.buttonArea.start;
+			}
+			else {
+				distanceFromStartToEdge = width - this.buttonArea.end;
+			}
+			var delta = Math.abs(ev.x - this.startPos.x);
 			var distanceOfOneButton = distanceFromStartToEdge / this.state.items.length;
 			var movedDistance = Math.ceil(delta / distanceOfOneButton);
 			newHighlightedIndex = this.state.items.length - movedDistance;
+
+			// make sure that it's not less than 0
+			newHighlightedIndex = Math.max(0, newHighlightedIndex);
 		}
+
 
 		if (this.state.highlightedIndex !== newHighlightedIndex) {
 			this.setState({
@@ -220,6 +246,7 @@ var RandomMenu = React.createClass({
 		this.props.onRandomSelected && this.props.onRandomSelected(selectedItem);
 
 		this.startPos = undefined;
+		this.buttonArea = undefined;
 		this.setState({
 			highlightedIndex: -1
 		});
