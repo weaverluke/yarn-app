@@ -25,27 +25,8 @@ var WEBVIEW_REF = 'webview';
 var TEXT_INPUT_REF = 'urlInput';
 var WORDS_PARSE_TIMEOUT = 10000;
 
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 
-var Browser2 = React.createClass({
-	render: function () {
-		return <WebView
-			url={this.props.url}
-			automaticallyAdjustContentInsets={false}
-			style={styles.webView}
-			javaScriptEnabledAndroid={true}
-			renderError={function () {actions.emit(actions.NETWORK_ERROR_OCCURRED); return <View><Text>looks like a problem with network...</Text></View>; }}
-			onShouldStartLoadWithRequest={this.onShouldStartLoadWithRequest}
-			startInLoadingState={true}
-			scalesPageToFit={true}
-		/>;
-	},
-
-	onShouldStartLoadWithRequest: function () {
-		return true;
-	}
-
-});
 
 var Browser = React.createClass({
 	lastUrl: '',
@@ -170,7 +151,7 @@ var Browser = React.createClass({
 	onGameStateChanged: function () {
 		if (gameStateStore.get('currentState') === gameStateStore.GAME_STATES.WAITING_FOR_ANSWER) {
 			if (gameStateStore.get('currentWordIndex') === 0) {
-				this.refs[WEBVIEW_REF].setHighlightColor(uiConfig.COLORS.BLUE_BG);
+				this.refs[WEBVIEW_REF].setHighlightColor(config.COLORS.BLUE_BG);
 			}
 		}
 	},
@@ -301,7 +282,7 @@ var styles = StyleSheet.create({
 		padding: 8,
 		borderBottomWidth: 1,
 		borderBottomColor: BORDER,
-		height: uiConfig.BROWSER_BAR_HEIGHT
+		height: config.BROWSER_BAR_HEIGHT
 	},
 	addressBarTextInput: {
 		backgroundColor: BGWASH,
@@ -355,7 +336,7 @@ var styles = StyleSheet.create({
 	smallAddressBar: {
 		height: 20,
 		borderBottomWidth: 1,
-		borderBottomColor: uiConfig.COLORS.MID_GREY
+		borderBottomColor: config.COLORS.MID_GREY
 	},
 
 	smallAddressBarText: {

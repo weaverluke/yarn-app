@@ -19,7 +19,7 @@ var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
 
 var actions = require('../../actions/actions');
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 var LangPicker = require('../langpicker/langpicker');
 
 var SettingsView = React.createClass({
@@ -129,7 +129,7 @@ var styles = StyleSheet.create({
 
 	wrap: {
 		width: width,
-		height: height - uiConfig.TOOLBAR_HEIGHT - uiConfig.IOS_STATUSBAR_HEIGHT,
+		height: height - config.TOOLBAR_HEIGHT - config.IOS_STATUSBAR_HEIGHT,
 		position: 'absolute',
 		top: 0
 	},
@@ -153,7 +153,7 @@ var styles = StyleSheet.create({
 		justifyContent: 'flex-start',
 		overflow: 'visible',
 		height: 70,
-		backgroundColor: uiConfig.COLORS.MID_GREY
+		backgroundColor: config.COLORS.MID_GREY
 	}
 
 });

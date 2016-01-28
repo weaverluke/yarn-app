@@ -3,12 +3,11 @@
 var React = require('react-native');
 var {
 	StyleSheet,
-	ScrollView,
+	Animated,
 	View,
-	Animated
 } = React;
 
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 var WordButton = require('./wordbutton');
 var BUTTON_TYPES = WordButton.BUTTON_TYPES;
 
@@ -143,7 +142,7 @@ var styles = StyleSheet.create({
 	},
 
 	toolbar: {
-		backgroundColor: uiConfig.COLORS.SELECTED_GREY,
+		backgroundColor: config.COLORS.SELECTED_GREY,
 		flexDirection: 'row'
 	},
 

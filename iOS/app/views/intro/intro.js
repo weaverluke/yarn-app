@@ -15,7 +15,7 @@ var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
 
 var actions = require('../../actions/actions');
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 var LangPicker = require('../langpicker/langpicker');
 
 var MainBar = React.createClass({
@@ -58,7 +58,7 @@ var MainBar = React.createClass({
 					<Image source={{uri: 'intro_3.png'}} style={styles.wideImage} />
 				</View>
 
-				<TouchableHighlight onPress={this.onActionButtonPress} underlayColor={uiConfig.COLORS.BLUE_DIM}>
+				<TouchableHighlight onPress={this.onActionButtonPress} underlayColor={config.COLORS.BLUE_DIM}>
 					<View style={styles.actionButton}>
 						<Text style={styles.actionButtonText}>Go</Text>
 					</View>
@@ -119,10 +119,10 @@ var styles = StyleSheet.create({
 
 	wrap: {
 		width: width,
-		height: height - uiConfig.IOS_STATUSBAR_HEIGHT,
+		height: height - config.IOS_STATUSBAR_HEIGHT,
 		position: 'absolute',
 		top: 0,
-		backgroundColor: uiConfig.COLORS.INTRO_BG,
+		backgroundColor: config.COLORS.INTRO_BG,
 		flex: 1
 	},
 
@@ -145,7 +145,7 @@ var styles = StyleSheet.create({
 		justifyContent: 'flex-start',
 		overflow: 'visible',
 		height: 70,
-		backgroundColor: uiConfig.COLORS.SELECTED_GREY
+		backgroundColor: config.COLORS.SELECTED_GREY
 	},
 
 	logoBox: {
@@ -162,15 +162,15 @@ var styles = StyleSheet.create({
 	},
 
 	actionButton: {
-		height: uiConfig.TOOLBAR_HEIGHT,
-		backgroundColor: uiConfig.COLORS.BLUE
+		height: config.TOOLBAR_HEIGHT,
+		backgroundColor: config.COLORS.BLUE
 	},
 
 	actionButtonText: {
 		textAlign: 'center',
 		alignSelf: 'stretch',
-		fontFamily: uiConfig.SPECIAL_FONT,
-		fontSize: uiConfig.WORD_BUTTON_QUESTION_TEXT_SIZE,
+		fontFamily: config.SPECIAL_FONT,
+		fontSize: config.WORD_BUTTON_QUESTION_TEXT_SIZE,
 		color: 'white',
 		paddingTop: 7
 	},

@@ -18,7 +18,7 @@ var ToolbarRandomButton = require('../randommenu/toolbarrandombutton');
 var ANIMATION_TIME = 300;
 var SCORE_ANIMATION_TIME = 1500;
 
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 var utils = require('../../utils');
 
 var Dimensions = require('Dimensions');
@@ -45,10 +45,10 @@ var ResultView = React.createClass({
 
 	getInitialState: function () {
 		return {
-			topOffsetValue: new Animated.Value(height - uiConfig.TOOLBAR_HEIGHT),
+			topOffsetValue: new Animated.Value(height - config.TOOLBAR_HEIGHT),
 			score: this.props.score === this.props.previousScore ? this.props.score : this.props.previousScore,
 			level: this.props.level === this.props.previousLevel ? this.props.level : this.props.previousLevel,
-			levelBackground: uiConfig.COLORS.ORANGE,
+			levelBackground: config.COLORS.ORANGE,
 			buyVocabLevelPopupVisible: !this.props.buyVocabLevelShown
 		};
 	},
@@ -189,8 +189,8 @@ var ResultView = React.createClass({
 	},
 
 	animateLevelBackground: function (cb) {
-		var startColor = utils.colorToObj(uiConfig.COLORS.ORANGE);
-		var endColor = utils.colorToObj(uiConfig.COLORS.LIGHT_ORANGE);
+		var startColor = utils.colorToObj(config.COLORS.ORANGE);
+		var endColor = utils.colorToObj(config.COLORS.LIGHT_ORANGE);
 		utils.animateColor({
 			start: startColor,
 			end: endColor,
@@ -223,11 +223,11 @@ var ResultView = React.createClass({
 	},
 
 	showBuyVocabLevelPopup: function () {
-		if (this.props.level >= uiConfig.MAX_VOCAB_LEVEL) {
+		if (this.props.level >= config.MAX_VOCAB_LEVEL) {
 
 			this.setState({
-				levelBackground: uiConfig.COLORS.RED,
-				level: uiConfig.MAX_VOCAB_LEVEL + '+'
+				levelBackground: config.COLORS.RED,
+				level: config.MAX_VOCAB_LEVEL + '+'
 			});
 
 			setTimeout(function () {
@@ -262,29 +262,29 @@ var styles = StyleSheet.create({
 		right: 0,
 		alignItems: 'stretch',
 		flex: 1,
-		backgroundColor: uiConfig.COLORS.LIGHT_GREY
+		backgroundColor: config.COLORS.LIGHT_GREY
 	},
 
 	spacer: {
-		height: uiConfig.TOOLBAR_HEIGHT,
+		height: config.TOOLBAR_HEIGHT,
 		backgroundColor: 'transparent',
 		borderBottomWidth: 1,
-		borderBottomColor: uiConfig.COLORS.MID_GREY
+		borderBottomColor: config.COLORS.MID_GREY
 	},
 
 	stretch: {
-		height: uiConfig.TOOLBAR_HEIGHT,
+		height: config.TOOLBAR_HEIGHT,
 		backgroundColor: 'transparent',
 		flex: 1
 	},
 
 	row: {
-		height: uiConfig.TOOLBAR_HEIGHT,
+		height: config.TOOLBAR_HEIGHT,
 		backgroundColor: 'white',
 		flexDirection: 'row',
 		alignItems: 'stretch',
 		borderBottomWidth: 1,
-		borderBottomColor: uiConfig.COLORS.MID_GREY
+		borderBottomColor: config.COLORS.MID_GREY
 	},
 
 	lastRow: {
@@ -300,7 +300,7 @@ var styles = StyleSheet.create({
 	},
 
 	text: {
-		fontFamily: uiConfig.SPECIAL_FONT,
+		fontFamily: config.SPECIAL_FONT,
 		fontSize: 30,
 		lineHeight: 40,
 		backgroundColor: 'transparent'
@@ -317,19 +317,19 @@ var styles = StyleSheet.create({
 	},
 
 	blueBg: {
-		backgroundColor: uiConfig.COLORS.BLUE
+		backgroundColor: config.COLORS.BLUE
 	},
 
 	paleBlueBg: {
-		backgroundColor: uiConfig.COLORS.PALE_BLUE
+		backgroundColor: config.COLORS.PALE_BLUE
 	},
 
 	orangeBg: {
-		backgroundColor: uiConfig.COLORS.ORANGE
+		backgroundColor: config.COLORS.ORANGE
 	},
 
 	greyBg: {
-		backgroundColor: uiConfig.COLORS.SELECTED_GREY
+		backgroundColor: config.COLORS.SELECTED_GREY
 	},
 
 	transparentBg: {
@@ -337,11 +337,11 @@ var styles = StyleSheet.create({
 	},
 
 	blueText: {
-		color: uiConfig.COLORS.BLUE
+		color: config.COLORS.BLUE
 	},
 
 	orangeText: {
-		color: uiConfig.COLORS.ORANGE
+		color: config.COLORS.ORANGE
 	},
 
 	whiteText: {
@@ -354,7 +354,7 @@ var styles = StyleSheet.create({
 	},
 
 	buttonText: {
-		fontFamily: uiConfig.SPECIAL_FONT,
+		fontFamily: config.SPECIAL_FONT,
 		fontSize: 30,
 		lineHeight: 42,
 		backgroundColor: 'transparent',
@@ -371,7 +371,7 @@ var styles = StyleSheet.create({
 		lineHeight: 36,
 		fontWeight: '500',
 		justifyContent: 'center',
-		color: uiConfig.COLORS.TEXT
+		color: config.COLORS.TEXT
 	},
 
 	buttonWithImage: {
@@ -380,8 +380,8 @@ var styles = StyleSheet.create({
 	},
 
 	randomIcon: {
-		width: uiConfig.TOOLBAR_ICON_SIZE + 8,
-		height: uiConfig.TOOLBAR_ICON_SIZE + 8,
+		width: config.TOOLBAR_ICON_SIZE + 8,
+		height: config.TOOLBAR_ICON_SIZE + 8,
 		marginRight: 10,
 		marginBottom: -2
 	}

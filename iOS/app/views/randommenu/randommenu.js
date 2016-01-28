@@ -16,7 +16,7 @@ var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
 
 var actions = require('../../actions/actions');
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 
 var RandomMenu = React.createClass({
 
@@ -76,7 +76,7 @@ var RandomMenu = React.createClass({
 			textStyles.push(styles.textActive);
 		}
 
-		if (uiConfig.USE_GESTURES_FOR_RANDOM_MENU) {
+		if (config.USE_GESTURES_FOR_RANDOM_MENU) {
 			return (
 				<View style={buttonStyles} key={'category-' + ind}>
 					<View style={[styles.vCenter, styles.buttonImageWrap]}>
@@ -92,7 +92,7 @@ var RandomMenu = React.createClass({
 			//return (<View key={"menu-item-" + ind}><Text>SOME TEXT</Text></View>);
 			return (
 				<View key={'category-' + ind} style={buttonStyles}>
-					<TouchableHighlight onPress={this.onCategoryPress(btn)} underlayColor={uiConfig.COLORS.BLUE}>
+					<TouchableHighlight onPress={this.onCategoryPress(btn)} underlayColor={config.COLORS.BLUE}>
 						<View style={styles.row}>
 							<View style={[styles.vCenter, styles.buttonImageWrap]}>
 								<Image source={{uri: iconName}} style={styles.buttonImage}/>
@@ -115,7 +115,7 @@ var RandomMenu = React.createClass({
 	},
 
 	componentDidMount: function () {
-		if (uiConfig.USE_GESTURES_FOR_RANDOM_MENU) {
+		if (config.USE_GESTURES_FOR_RANDOM_MENU) {
 			actions.on(actions.RANDOM_BUTTON_PRESS, this.onRandomButtonPress);
 			actions.on(actions.RANDOM_BUTTON_MOVE, this.onRandomButtonMove);
 			actions.on(actions.RANDOM_BUTTON_RELEASE, this.onRandomButtonRelease);
@@ -185,17 +185,17 @@ var RandomMenu = React.createClass({
 		var newHighlightedIndex = this.state.highlightedIndex;
 
 		// horizontal movement across the buttons
-		if (height - ev.y > uiConfig.TOOLBAR_HEIGHT) {
+		if (height - ev.y > config.TOOLBAR_HEIGHT) {
 			var deltaFromBottom = height - ev.y;
-			newHighlightedIndex = this.state.items.length - Math.floor(deltaFromBottom / uiConfig.TOOLBAR_HEIGHT);
+			newHighlightedIndex = this.state.items.length - Math.floor(deltaFromBottom / config.TOOLBAR_HEIGHT);
 		}
 		// area of random button
-		else if (ev.x < uiConfig.TOOLBAR_BUTTON_WIDTH) {
+		else if (ev.x < config.TOOLBAR_BUTTON_WIDTH) {
 			newHighlightedIndex = -1;
 		}
 		// vertical movement along bottom bar
 		else {
-			var distanceFromStartToEdge = width - Math.max(this.startPos.x, uiConfig.TOOLBAR_BUTTON_WIDTH);
+			var distanceFromStartToEdge = width - Math.max(this.startPos.x, config.TOOLBAR_BUTTON_WIDTH);
 			var delta = ev.x - this.startPos.x;
 			var distanceOfOneButton = distanceFromStartToEdge / this.state.items.length;
 			var movedDistance = Math.ceil(delta / distanceOfOneButton);
@@ -232,7 +232,7 @@ var styles = StyleSheet.create({
     wrap: {
         width: width,
         position: 'absolute',
-        bottom: uiConfig.TOOLBAR_HEIGHT,
+        bottom: config.TOOLBAR_HEIGHT,
 		backgroundColor: 'transparent',
 		shadowColor: '#000000',
 		shadowOffset: {
@@ -245,9 +245,9 @@ var styles = StyleSheet.create({
 
     button: {
 		backgroundColor: 'white',
-        height: uiConfig.TOOLBAR_HEIGHT,
+        height: config.TOOLBAR_HEIGHT,
         borderTopWidth: 1,
-        borderTopColor: uiConfig.COLORS.MID_GREY,
+        borderTopColor: config.COLORS.MID_GREY,
 		flexDirection: 'row',
 		flex: 1
     },
@@ -266,8 +266,8 @@ var styles = StyleSheet.create({
 	buttonText: {
 		fontSize: 30,
 		lineHeight: 38,
-		fontFamily: uiConfig.SPECIAL_FONT,
-		color: uiConfig.COLORS.SELECTED_GREY,
+		fontFamily: config.SPECIAL_FONT,
+		color: config.COLORS.SELECTED_GREY,
 		backgroundColor: 'transparent'
 	},
 
@@ -277,11 +277,11 @@ var styles = StyleSheet.create({
 	},
 
 	textActive: {
-		color: uiConfig.COLORS.BLUE
+		color: config.COLORS.BLUE
 	},
 
 	buttonActive: {
-		backgroundColor: uiConfig.COLORS.PALE_BLUE
+		backgroundColor: config.COLORS.PALE_BLUE
 	},
 	row: {
 		flexDirection: 'row'

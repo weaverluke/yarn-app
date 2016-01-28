@@ -14,9 +14,8 @@ var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
 
 var actions = require('../../actions/actions');
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 
-var NavBarButton = require('../statusbar/navbarbutton');
 var ToolbarRandomButton = require('../randommenu/toolbarrandombutton');
 
 var MainBar = React.createClass({
@@ -24,7 +23,7 @@ var MainBar = React.createClass({
 	getInitialState: function () {
 		return {
 			opacityValue: new Animated.Value(0),
-			marginTopValue: new Animated.Value(uiConfig.TOOLBAR_ANIMATION_OFFSET)
+			marginTopValue: new Animated.Value(config.TOOLBAR_ANIMATION_OFFSET)
 		};
 	},
 
@@ -100,7 +99,7 @@ var MainBar = React.createClass({
 			),
 			Animated.timing(
 				this.state.marginTopValue,
-				{ toValue: uiConfig.TOOLBAR_ANIMATION_OFFSET }
+				{ toValue: config.TOOLBAR_ANIMATION_OFFSET }
 			)
 		]).start(cb);
 	},
@@ -118,12 +117,12 @@ var styles = StyleSheet.create({
 
 	wrap: {
 		flexDirection: 'row',
-		height: uiConfig.TOOLBAR_HEIGHT,
+		height: config.TOOLBAR_HEIGHT,
 		position: 'absolute',
 		bottom: 0,
 		width: width,
 		borderTopWidth: 1,
-		borderTopColor: uiConfig.COLORS.MID_GREY
+		borderTopColor: config.COLORS.MID_GREY
 	},
 
 	buttonWrap: {
@@ -133,13 +132,13 @@ var styles = StyleSheet.create({
 	},
 
 	icon: {
-		width: uiConfig.TOOLBAR_ICON_SIZE,
-		height: uiConfig.TOOLBAR_ICON_SIZE
+		width: config.TOOLBAR_ICON_SIZE,
+		height: config.TOOLBAR_ICON_SIZE
 	},
 
 	iconCentral: {
-		width: uiConfig.TOOLBAR_ICON_SIZE + 8,
-		height: uiConfig.TOOLBAR_ICON_SIZE + 8
+		width: config.TOOLBAR_ICON_SIZE + 8,
+		height: config.TOOLBAR_ICON_SIZE + 8
 	},
 
 	spacer: {
@@ -148,7 +147,7 @@ var styles = StyleSheet.create({
 
 	randomButton: {
 		position: 'absolute',
-		width: uiConfig.TOOLBAR_BUTTON_WIDTH,
+		width: config.TOOLBAR_BUTTON_WIDTH,
 		left: 0,
 		flex: 1,
 

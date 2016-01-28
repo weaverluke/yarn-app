@@ -4,12 +4,10 @@ var {
 	View,
 	Text,
 	Dimensions,
-	Animated,
-	Easing,
-	TouchableWithoutFeedback
+	Animated
 } = React;
 
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 var {width, height} = Dimensions.get('window');
 
 var QuizResult = React.createClass({
@@ -89,7 +87,7 @@ var ProgressBar = React.createClass({
 var styles = StyleSheet.create({
 
 	progressBox: {
-		height: uiConfig.TOOLBAR_HEIGHT,
+		height: config.TOOLBAR_HEIGHT,
 		backgroundColor: '#FFFFFF'
 	},
 
@@ -101,26 +99,26 @@ var styles = StyleSheet.create({
 	},
 
 	text: {
-		color: uiConfig.COLORS.SELECTED_GREY,
-		fontSize: uiConfig.PROGRESSBAR_FONT_SIZE,
-		lineHeight: uiConfig.PROGRESSBAR_FONT_SIZE + 10,
-		fontFamily: uiConfig.SPECIAL_FONT
+		color: config.COLORS.SELECTED_GREY,
+		fontSize: config.PROGRESSBAR_FONT_SIZE,
+		lineHeight: config.PROGRESSBAR_FONT_SIZE + 10,
+		fontFamily: config.SPECIAL_FONT
 	},
 
 	progressBarWrap: {
 		flexDirection: 'row',
 		backgroundColor: 'white',
-		height: uiConfig.PROGRESSBAR_HEIGHT
+		height: config.PROGRESSBAR_HEIGHT
 	},
 
 	progressBar: {
-		backgroundColor: uiConfig.COLORS.GREEN,
-		height: uiConfig.PROGRESSBAR_HEIGHT
+		backgroundColor: config.COLORS.GREEN,
+		height: config.PROGRESSBAR_HEIGHT
 	},
 
 	progressBarEnd: {
 		backgroundColor: 'white',
-		height: uiConfig.PROGRESSBAR_HEIGHT
+		height: config.PROGRESSBAR_HEIGHT
 	}
 
 });

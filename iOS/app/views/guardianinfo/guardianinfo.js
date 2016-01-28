@@ -4,18 +4,10 @@ var React = require('react-native');
 var {
 	StyleSheet,
 	View,
-	Text,
-	TouchableWithoutFeedback,
-	TouchableHighlight,
-	Image,
-	Animated,
+	Image
 } = React;
 
 var NavigatedView = require('../navigatedview/navigatedview');
-
-var Dimensions = require('Dimensions');
-var {width, height} = Dimensions.get('window');
-var uiConfig = require('../../uiconfig');
 
 var Guardian = React.createClass({
 

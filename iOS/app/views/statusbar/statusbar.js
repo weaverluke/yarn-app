@@ -12,7 +12,7 @@ var {
 var NavBarLabel = require('./navbarlabel');
 var NavBarButton = require('./navbarbutton');
 var ToolbarRandomButton = require('../randommenu/toolbarrandombutton');
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 
 var StatusBar = React.createClass({
 
@@ -33,9 +33,9 @@ var StatusBar = React.createClass({
 
 	getInitialState: function () {
 		return {
-			height: uiConfig.TOOLBAR_HEIGHT,
+			height: config.TOOLBAR_HEIGHT,
 			opacityValue: new Animated.Value(this.props.startHidden ? 0 : 1),
-			marginTopValue: new Animated.Value(this.props.startHidden ? uiConfig.TOOLBAR_ANIMATION_OFFSET : 0)
+			marginTopValue: new Animated.Value(this.props.startHidden ? config.TOOLBAR_ANIMATION_OFFSET : 0)
 		};
 	},
 
@@ -47,7 +47,7 @@ var StatusBar = React.createClass({
 				onPress={this.props.onNextPress}
 				icon='next'
 				disabled={this.props.nextButtonDisabled}
-				backgroundColor={uiConfig.COLORS.BLUE}
+				backgroundColor={config.COLORS.BLUE}
 				style={styles.nextButton}
 			/>;
 		}
@@ -71,17 +71,17 @@ var StatusBar = React.createClass({
 	renderWordsCount: function () {
 		var texts = [{
 			text: this.props.wordsCount,
-			color: uiConfig.COLORS.ORANGE
+			color: config.COLORS.ORANGE
 		},{
 			text: ' ' + (this.props.wordsCount === 1 ? 'word' : 'words') + '...',
-			color: uiConfig.COLORS.MID_GREY
+			color: config.COLORS.MID_GREY
 		}];
 
 		return (
 				<TouchableHighlight
 					style={styles.contentWrap}
 					onPress={this.props.onNextPress}
-					underlayColor={uiConfig.COLORS.PALE_BLUE}
+					underlayColor={config.COLORS.PALE_BLUE}
 				>
 					<View style={styles.wordsCountCenterH}>
 						<View style={styles.wordsCountCenterV}>
@@ -111,13 +111,13 @@ var StatusBar = React.createClass({
 					<ProgressBar progress={progress}/>
 				</View>
 				<NavBarLabel
-					texts={[{text: this.props.score, color: uiConfig.COLORS.ORANGE}]}
+					texts={[{text: this.props.score, color: config.COLORS.ORANGE}]}
 					style={styles.score}
 					specialFont={true}
 				/>
 				<NavBarLabel
-					texts={[{text: this.props.level, color: uiConfig.COLORS.RED}]}
-					color={uiConfig.COLORS.RED}
+					texts={[{text: this.props.level, color: config.COLORS.RED}]}
+					color={config.COLORS.RED}
 					style={styles.level}
 					specialFont={true}
 				/>
@@ -146,7 +146,7 @@ var StatusBar = React.createClass({
 			),
 			Animated.timing(
 				this.state.marginTopValue,
-				{ toValue: uiConfig.TOOLBAR_ANIMATION_OFFSET }
+				{ toValue: config.TOOLBAR_ANIMATION_OFFSET }
 			)
 		]).start(cb);
 	}
@@ -182,8 +182,8 @@ var styles = StyleSheet.create({
 
 	wrap: {
 		borderTopWidth: 1,
-		borderTopColor: uiConfig.COLORS.MID_GREY,
-		height: uiConfig.TOOLBAR_HEIGHT,
+		borderTopColor: config.COLORS.MID_GREY,
+		height: config.TOOLBAR_HEIGHT,
 		flexDirection: 'row',
 		alignItems: 'stretch',
 		backgroundColor: 'white'
@@ -209,15 +209,15 @@ var styles = StyleSheet.create({
 
 	text: {
 		textAlign: 'right',
-		color: uiConfig.COLORS.TEXT,
-		fontSize: uiConfig.PROGRESSBAR_FONT_SIZE,
+		color: config.COLORS.TEXT,
+		fontSize: config.PROGRESSBAR_FONT_SIZE,
 		fontWeight: '700'
 	},
 
 	textTotal: {
 		textAlign: 'left',
-		color: uiConfig.COLORS.TEXT,
-		fontSize: uiConfig.PROGRESSBAR_FONT_SIZE
+		color: config.COLORS.TEXT,
+		fontSize: config.PROGRESSBAR_FONT_SIZE
 	},
 
 	progressBarWrap: {
@@ -226,13 +226,13 @@ var styles = StyleSheet.create({
 	},
 
 	progressBar: {
-		backgroundColor: uiConfig.COLORS.GREEN,
-		height: uiConfig.PROGRESSBAR_HEIGHT
+		backgroundColor: config.COLORS.GREEN,
+		height: config.PROGRESSBAR_HEIGHT
 	},
 
 	progressBarEnd: {
-		backgroundColor: uiConfig.COLORS.MID_GREY,
-		height: uiConfig.PROGRESSBAR_HEIGHT
+		backgroundColor: config.COLORS.MID_GREY,
+		height: config.PROGRESSBAR_HEIGHT
 	},
 
 	progressBox: {
@@ -265,7 +265,7 @@ var styles = StyleSheet.create({
 
 	randomButton: {
 		marginRight: 3, // so shadow is visible
-		width: uiConfig.TOOLBAR_BUTTON_WIDTH,
+		width: config.TOOLBAR_BUTTON_WIDTH,
 		shadowColor: '#000000',
 		shadowOffset: {
 			width: 2,

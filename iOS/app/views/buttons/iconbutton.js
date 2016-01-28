@@ -9,7 +9,7 @@ var {
 	Image
 } = React;
 
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 
 var IconButton = React.createClass({
 
@@ -22,14 +22,14 @@ var IconButton = React.createClass({
 
 	getInitialState: function () {
 		return {
-			height: uiConfig.TOOLBAR_HEIGHT
+			height: config.TOOLBAR_HEIGHT
 		};
 	},
 
 	render: function () {
 		var img = this.renderIcon();
 		var additionalStyle = {
-			backgroundColor: this.props.disabled ? uiConfig.COLORS.MID_GREY : this.props.backgroundColor
+			backgroundColor: this.props.disabled ? config.COLORS.MID_GREY : this.props.backgroundColor
 		};
 		return (
 			<TouchableWithoutFeedback onPress={this.props.disabled ? function () {} : this.props.onPress}>
@@ -60,9 +60,9 @@ var IconButton = React.createClass({
 var styles = StyleSheet.create({
 	wrap: {
 		backgroundColor: '#FFFFFF',
-		width: uiConfig.TOOLBAR_BUTTON_WIDTH,
+		width: config.TOOLBAR_BUTTON_WIDTH,
 		borderLeftWidth: 1,
-		borderLeftColor: uiConfig.COLORS.MID_GREY,
+		borderLeftColor: config.COLORS.MID_GREY,
 		alignSelf: 'stretch',
 		// these two do not work, I don't know why, so I'm using marginTop for icon positioning
 		alignItems: 'center',
@@ -70,15 +70,15 @@ var styles = StyleSheet.create({
 	},
 
 	icon: {
-		width: uiConfig.TOOLBAR_ICON_SIZE,
-		height: uiConfig.TOOLBAR_ICON_SIZE,
-		marginTop: Math.floor((uiConfig.TOOLBAR_HEIGHT - uiConfig.TOOLBAR_ICON_SIZE) / 2)
+		width: config.TOOLBAR_ICON_SIZE,
+		height: config.TOOLBAR_ICON_SIZE,
+		marginTop: Math.floor((config.TOOLBAR_HEIGHT - config.TOOLBAR_ICON_SIZE) / 2)
 	},
 
 	bigIcon: {
-		width: uiConfig.TOOLBAR_BIG_ICON_SIZE,
-		height: uiConfig.TOOLBAR_BIG_ICON_SIZE,
-		marginTop: Math.floor((uiConfig.TOOLBAR_HEIGHT - uiConfig.TOOLBAR_BIG_ICON_SIZE) / 7)
+		width: config.TOOLBAR_BIG_ICON_SIZE,
+		height: config.TOOLBAR_BIG_ICON_SIZE,
+		marginTop: Math.floor((config.TOOLBAR_HEIGHT - config.TOOLBAR_BIG_ICON_SIZE) / 7)
 	}
 });
 

@@ -1,7 +1,7 @@
 var Events = require('events');
 var bus = new Events.EventEmitter();
 var actions = require('./actiontypes');
-var uiConfig = require('../uiconfig');
+var config = require('../config');
 
 var InAppUtils = require('NativeModules').InAppUtils;
 
@@ -367,7 +367,7 @@ function onBuyPremiumVocabLevel() {
 		}
 		else if (resp && resp.productIdentifier) {
 			AlertIOS.alert('Purchase Successful', 'Your transaction ID is ' + resp.transactionIdentifier + '. Your Vocab Level is now unlocked!');
-			uiConfig.MAX_VOCAB_LEVEL = 101;
+			config.MAX_VOCAB_LEVEL = 101;
 			userProfileStore.set('premiumVocabLevel', true);
 		}
 	});

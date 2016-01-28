@@ -21,7 +21,7 @@ var actions = require('../../actions/actions');
 var YARN_API = require('./websiteapi').toString();
 YARN_API = '(' + YARN_API + '())';
 
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 
 function encodeMessage(name, data) {
 	return JSON.stringify({
@@ -128,7 +128,7 @@ var Browser = React.createClass({
 				case 'WEBSITE_READY':
 					// run api only for allowed websites
 					if (WHITELIST.doesMatch(this.state.url)) {
-						this.setHighlightColor(uiConfig.COLORS.ORANGE_BG);
+						this.setHighlightColor(config.COLORS.ORANGE_BG);
 						this.requestWebsiteContent();
 					}
 					break;
@@ -224,7 +224,7 @@ var Browser = React.createClass({
 			}
 			this.lastParsedContent = contentToParse;
 			var range = this.props.userRange;
-			var level = Math.min(this.props.userLevel || 50, uiConfig.MAX_VOCAB_LEVEL);
+			var level = Math.min(this.props.userLevel || 50, config.MAX_VOCAB_LEVEL);
 			var words = wordHelpers.extractWordsFromArticle(contentToParse, level - range, level + range);
 
 			var attempts = 0;

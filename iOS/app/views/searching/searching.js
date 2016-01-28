@@ -21,9 +21,9 @@ var colors = [
 	'rgba(247, 148, 30, 0.3)'
 ];
 
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 
-var Toast = React.createClass({
+var Searching = React.createClass({
 
 	getInitialState: function () {
 		return {
@@ -157,11 +157,11 @@ var Toast = React.createClass({
 var styles = StyleSheet.create({
 	wrap: {
 		position: 'absolute',
-		//top: uiConfig.BROWSER_BAR_HEIGHT,
+		//top: config.BROWSER_BAR_HEIGHT,
 		top: 20,
 		left: 0,
 		right: 0,
-		bottom: uiConfig.TOOLBAR_HEIGHT,
+		bottom: config.TOOLBAR_HEIGHT,
 		alignItems: 'center',
 		flex: 1,
 		backgroundColor: 'transparent'
@@ -185,4 +185,4 @@ var styles = StyleSheet.create({
 });
 
 
-module.exports = Toast;
+module.exports = Searching;

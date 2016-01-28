@@ -9,13 +9,7 @@ var {
 
 var PickerItemIOS = PickerIOS.Item;
 
-// see https://github.com/facebook/react-native/issues/3228
-var PICKER_WIDTH = 340;
-
-var Dimensions = require('Dimensions');
-var {width, height} = Dimensions.get('window');
-
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 var languages = require('./googlelanguages');
 
 var LangPicker = React.createClass({

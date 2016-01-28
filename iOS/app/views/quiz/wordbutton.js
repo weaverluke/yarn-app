@@ -11,7 +11,7 @@ var {
 	PropTypes
 } = React;
 
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 
 var BUTTON_TYPES = {
 	QUESTION: 'QUESTION',
@@ -47,7 +47,7 @@ var WordButton = React.createClass({
 			backgroundColor: this.getColor('background')
 		};
 		var clickCallback = this.props.showDictIcon ? this.onDictIconPressed : this.onButtonPressed;
-		var underlayColor = this.props.type === BUTTON_TYPES.QUESTION ? uiConfig.COLORS.PALE_BLUE_DIM : uiConfig.COLORS.PALE_BLUE;
+		var underlayColor = this.props.type === BUTTON_TYPES.QUESTION ? config.COLORS.PALE_BLUE_DIM : config.COLORS.PALE_BLUE;
 		return (
 			<View style={[styles.wrap, additionalStyle]}>
 				<TouchableHighlight onPress={clickCallback} underlayColor={underlayColor}>
@@ -119,7 +119,7 @@ var WordButton = React.createClass({
 
 		if (this.props.showDictIcon) {
 			nextButton = (
-				<TouchableHighlight onPress={this.props.onNextPress} underlayColor={uiConfig.COLORS.BLUE_DIM}>
+				<TouchableHighlight onPress={this.props.onNextPress} underlayColor={config.COLORS.BLUE_DIM}>
 					<View style={styles.nextIconWrap}>
 						<View style={styles.vCenter}>
 							<Image source={{uri: iconUri}} style={styles.nextIcon}/>
@@ -187,7 +187,7 @@ var styles = StyleSheet.create({
 
 	wrap: {
 		borderTopWidth: 1,
-		borderTopColor: uiConfig.COLORS.MID_GREY,
+		borderTopColor: config.COLORS.MID_GREY,
 		alignItems: 'stretch',
 		alignSelf: 'stretch',
 		flex: 1
@@ -196,7 +196,7 @@ var styles = StyleSheet.create({
 	buttonContentWrap: {
 		flexDirection: 'row',
 		flex: 1,
-		height: uiConfig.QUIZ_BUTTON_HEIGHT
+		height: config.QUIZ_BUTTON_HEIGHT
 	},
 
 	buttonContent: {
@@ -206,16 +206,16 @@ var styles = StyleSheet.create({
 	},
 
 	questionText: {
-		color: uiConfig.COLORS.BLUE,
-		fontFamily: uiConfig.SPECIAL_FONT,
-		fontSize: uiConfig.WORD_BUTTON_QUESTION_TEXT_SIZE,
+		color: config.COLORS.BLUE,
+		fontFamily: config.SPECIAL_FONT,
+		fontSize: config.WORD_BUTTON_QUESTION_TEXT_SIZE,
 		paddingTop: 5,
 		flex: 1
 	},
 
 	answerButtonText: {
-		fontSize: uiConfig.WORD_BUTTON_ANSWER_TEXT_SIZE,
-		lineHeight: uiConfig.WORD_BUTTON_ANSWER_TEXT_SIZE,
+		fontSize: config.WORD_BUTTON_ANSWER_TEXT_SIZE,
+		lineHeight: config.WORD_BUTTON_ANSWER_TEXT_SIZE,
 		flex: 1
 	},
 
@@ -228,7 +228,7 @@ var styles = StyleSheet.create({
 
 	dictIconWrap: {
 		width: 40,
-		height: uiConfig.QUIZ_BUTTON_HEIGHT,
+		height: config.QUIZ_BUTTON_HEIGHT,
 		alignSelf: 'stretch',
 		flexDirection: 'row'
 	},
@@ -239,9 +239,9 @@ var styles = StyleSheet.create({
 	},
 
 	nextIconWrap: {
-		backgroundColor: uiConfig.COLORS.BLUE,
+		backgroundColor: config.COLORS.BLUE,
 		width: 70,
-		height: uiConfig.QUIZ_BUTTON_HEIGHT,
+		height: config.QUIZ_BUTTON_HEIGHT,
 		alignSelf: 'stretch',
 		flexDirection: 'row'
 	},
@@ -267,41 +267,41 @@ var styles = StyleSheet.create({
 
 var BUTTON_COLORS = {
 	QUESTION: {
-		background: uiConfig.COLORS.PALE_BLUE,
-		text: uiConfig.COLORS.BLUE
+		background: config.COLORS.PALE_BLUE,
+		text: config.COLORS.BLUE
 	},
 
 	//ANSWER_ENABLED: {
-	//	backgroundColor: uiConfig.COLORS.SELECTED_GREY,
+	//	backgroundColor: config.COLORS.SELECTED_GREY,
 	//	color: '#FFFFFF'
 	//},
 
 	//ANSWER_DISABLED: {
-	//	backgroundColor: uiConfig.COLORS.MID_GREY,
+	//	backgroundColor: config.COLORS.MID_GREY,
 	//	color: '#FFFFFF'
 	//},
 
 	CORRECT_ANSWER_SELECTED: {
-		background: uiConfig.COLORS.PALE_GREEN,
-		text: uiConfig.COLORS.TEXT,
-		info: uiConfig.COLORS.GREEN
+		background: config.COLORS.PALE_GREEN,
+		text: config.COLORS.TEXT,
+		info: config.COLORS.GREEN
 	},
 
 	CORRECT_ANSWER_NOT_SELECTED: {
 		background: '#FFF',
-		text: uiConfig.COLORS.GREEN
+		text: config.COLORS.GREEN
 	},
 
 	WRONG_ANSWER_SELECTED: {
-		background: uiConfig.COLORS.PALE_PINK,
-		text: uiConfig.COLORS.TEXT,
-		info: uiConfig.COLORS.RED
+		background: config.COLORS.PALE_PINK,
+		text: config.COLORS.TEXT,
+		info: config.COLORS.RED
 	},
 
 	DEFAULT: {
 		background: '#FFF',
-		text: uiConfig.COLORS.TEXT,
-		info: uiConfig.COLORS.TEXT
+		text: config.COLORS.TEXT,
+		info: config.COLORS.TEXT
 	}
 };
 

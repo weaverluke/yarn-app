@@ -14,7 +14,7 @@ var ANIMATION_TIME = 400;
 
 var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 
 var Toast = React.createClass({
 
@@ -24,8 +24,8 @@ var Toast = React.createClass({
 		return {
 			content: '',
 			fadeInTimeout: 0,
-			width: uiConfig.TOAST_WIDTH,
-			height: uiConfig.TOAST_HEIGHT,
+			width: config.TOAST_WIDTH,
+			height: config.TOAST_HEIGHT,
 			onClose: function () {}
 		};
 	},
@@ -137,14 +137,14 @@ var styles = StyleSheet.create({
 
 	toast: {
 		backgroundColor: '#FFF',
-		borderColor: uiConfig.COLORS.MID_GREY,
+		borderColor: config.COLORS.MID_GREY,
 		borderRadius: 10,
 		borderWidth: 1,
 		overflow: 'hidden'
 	},
 
 	shadowWrap: {
-		borderColor: uiConfig.COLORS.MID_GREY,
+		borderColor: config.COLORS.MID_GREY,
 		borderRadius: 10,
 		shadowColor: '#000',
 		shadowOffset: {
@@ -156,8 +156,8 @@ var styles = StyleSheet.create({
 	},
 
 	textContent: {
-		fontFamily: uiConfig.SPECIAL_FONT,
-		color: uiConfig.COLORS.ORANGE,
+		fontFamily: config.SPECIAL_FONT,
+		color: config.COLORS.ORANGE,
 		fontSize: 24,
 		lineHeight: 38,
 		alignSelf: 'center',

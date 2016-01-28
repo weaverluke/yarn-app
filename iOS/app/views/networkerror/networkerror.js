@@ -5,17 +5,12 @@ var {
 	StyleSheet,
 	View,
 	Text,
-	TouchableWithoutFeedback,
-	TouchableHighlight,
 	Image,
-	Animated,
 } = React;
 
 var NavigatedView = require('../navigatedview/navigatedview');
 
-var Dimensions = require('Dimensions');
-var {width, height} = Dimensions.get('window');
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 
 var NetworkError = React.createClass({
 
@@ -52,7 +47,7 @@ var NetworkError = React.createClass({
 var styles = StyleSheet.create({
 
 	contentWrap: {
-		backgroundColor: uiConfig.COLORS.INTRO_BG,
+		backgroundColor: config.COLORS.INTRO_BG,
 		flex: 1
 	},
 
@@ -63,13 +58,13 @@ var styles = StyleSheet.create({
 	},
 
 	mainText: {
-		fontFamily: uiConfig.SPECIAL_FONT,
+		fontFamily: config.SPECIAL_FONT,
 		fontSize: 30,
 		lineHeight: 28,
 		marginLeft: 20,
 		marginRight: 20,
 		marginTop: 30,
-		color: uiConfig.COLORS.SELECTED_GREY
+		color: config.COLORS.SELECTED_GREY
 	},
 
 	secondLevelText: {
@@ -77,7 +72,7 @@ var styles = StyleSheet.create({
 		marginRight: 20,
 		marginTop: 25,
 		fontSize: 18,
-		color: uiConfig.COLORS.SELECTED_GREY
+		color: config.COLORS.SELECTED_GREY
 	},
 
 	flex: {

@@ -11,7 +11,7 @@ var {
 
 var actions = require('../../actions/actions');
 
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 
 var ToolbarRandomButton = React.createClass({
 
@@ -19,7 +19,7 @@ var ToolbarRandomButton = React.createClass({
 	debounceIndex: 0,
 
 	componentWillMount: function () {
-		if (uiConfig.USE_GESTURES_FOR_RANDOM_MENU) {
+		if (config.USE_GESTURES_FOR_RANDOM_MENU) {
 			this._panResponder = PanResponder.create({
 				onStartShouldSetPanResponder: function (ev, gestureState) { return true; },
 				onStartShouldSetPanResponderCapture: function (ev, gestureState) { return true; },
@@ -54,7 +54,7 @@ var ToolbarRandomButton = React.createClass({
 	},
 
 	render: function () {
-		if (uiConfig.USE_GESTURES_FOR_RANDOM_MENU) {
+		if (config.USE_GESTURES_FOR_RANDOM_MENU) {
 			return (
 				<View style={styles.wrap} {...this._panResponder.panHandlers}>
 					<View style={styles.vCenter}>
@@ -86,8 +86,8 @@ var ToolbarRandomButton = React.createClass({
 var styles = StyleSheet.create({
 
 	wrap: {
-		height: uiConfig.TOOLBAR_HEIGHT,
-		backgroundColor: uiConfig.COLORS.LIGHTEST_GREY,
+		height: config.TOOLBAR_HEIGHT,
+		backgroundColor: config.COLORS.LIGHTEST_GREY,
 		flexDirection: 'row',
 		justifyContent: 'center',
 		flex: 1
@@ -99,8 +99,8 @@ var styles = StyleSheet.create({
 	},
 
 	randomIcon: {
-		width: uiConfig.TOOLBAR_ICON_SIZE + 8,
-		height: uiConfig.TOOLBAR_ICON_SIZE + 8
+		width: config.TOOLBAR_ICON_SIZE + 8,
+		height: config.TOOLBAR_ICON_SIZE + 8
 	}
 
 });

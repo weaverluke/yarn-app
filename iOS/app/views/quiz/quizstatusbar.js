@@ -10,7 +10,7 @@ var {
 	PropTypes
 } = React;
 
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 
 var QuizStatusBar = React.createClass({
 
@@ -32,7 +32,7 @@ var QuizStatusBar = React.createClass({
 	getInitialState: function () {
 		return {
 			opacityValue: new Animated.Value(0),
-			marginTopValue: new Animated.Value(-uiConfig.TOOLBAR_ANIMATION_OFFSET)
+			marginTopValue: new Animated.Value(-config.TOOLBAR_ANIMATION_OFFSET)
 		};
 	},
 
@@ -96,7 +96,7 @@ var QuizStatusBar = React.createClass({
 			),
 			Animated.timing(
 				this.state.marginTopValue,
-				{ toValue: -uiConfig.TOOLBAR_ANIMATION_OFFSET }
+				{ toValue: -config.TOOLBAR_ANIMATION_OFFSET }
 			)
 		]).start();
 	}
@@ -110,10 +110,10 @@ var styles = StyleSheet.create({
 		top: 0,
 		left: 0,
 		right: 0,
-		height: uiConfig.TOOLBAR_HEIGHT,
+		height: config.TOOLBAR_HEIGHT,
 		borderBottomWidth: 1,
-		borderBottomColor: uiConfig.COLORS.MID_GREY,
-		backgroundColor: uiConfig.COLORS.LIGHT_GREY,
+		borderBottomColor: config.COLORS.MID_GREY,
+		backgroundColor: config.COLORS.LIGHT_GREY,
 		shadowColor: '#000000',
 		shadowOffset: {
 			width: 0,
@@ -135,7 +135,7 @@ var styles = StyleSheet.create({
 	},
 
 	clickableText: {
-		color: uiConfig.COLORS.BLUE,
+		color: config.COLORS.BLUE,
 		fontSize: 18
 	},
 
@@ -160,7 +160,7 @@ var styles = StyleSheet.create({
 		marginTop: 6,
 		marginRight: 2,
 		fontFamily: 'SS Standard',
-		color: uiConfig.COLORS.BLUE
+		color: config.COLORS.BLUE
 	}
 
 });

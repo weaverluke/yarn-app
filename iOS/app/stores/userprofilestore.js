@@ -4,7 +4,7 @@ var Events = require('events');
 var eventEmitter = new Events.EventEmitter();
 var CHANGE_EVENT = 'store:changed';
 var log = require('../logger/logger');
-var uiConfig = require('../uiconfig');
+var config = require('../config');
 
 var React = require('react-native');
 var {
@@ -197,7 +197,7 @@ function loadData() {
 			});
 
 			if (data.premiumVocabLevel) {
-				uiConfig.MAX_VOCAB_LEVEL = 101;
+				config.MAX_VOCAB_LEVEL = 101;
 			}
 
 			emitChange();

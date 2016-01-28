@@ -12,7 +12,7 @@ var {
 
 var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 
 var NavigatedView = React.createClass({
 
@@ -122,7 +122,7 @@ var NavigatedView = React.createClass({
 			return (
 				<TouchableHighlight
 					onPress={this.createHideHandler(this.props.onActionPressed)}
-					underlayColor={uiConfig.COLORS.BLUE_DIM}>
+					underlayColor={config.COLORS.BLUE_DIM}>
 
 					<View style={styles.actionButton}>
 						<Text style={styles.actionButtonText}>{this.props.actionText}</Text>
@@ -184,7 +184,7 @@ var styles = StyleSheet.create({
 
 	wrap: {
 		width: width,
-		height: height - uiConfig.IOS_STATUSBAR_HEIGHT,
+		height: height - config.IOS_STATUSBAR_HEIGHT,
 		position: 'absolute',
 		top: 0,
 		flex: 1,
@@ -193,11 +193,11 @@ var styles = StyleSheet.create({
 
 	topBar: {
 		borderBottomWidth: 1,
-		borderBottomColor: uiConfig.COLORS.MID_GREY,
-		backgroundColor: uiConfig.COLORS.LIGHT_GREY,
+		borderBottomColor: config.COLORS.MID_GREY,
+		backgroundColor: config.COLORS.LIGHT_GREY,
 		flexDirection: 'row',
 		alignItems: 'stretch',
-		height: uiConfig.TOOLBAR_HEIGHT
+		height: config.TOOLBAR_HEIGHT
 	},
 
 	leftContent: {
@@ -210,7 +210,7 @@ var styles = StyleSheet.create({
 	},
 
 	clickableText: {
-		color: uiConfig.COLORS.BLUE,
+		color: config.COLORS.BLUE,
 		fontSize: 18
 	},
 
@@ -236,7 +236,7 @@ var styles = StyleSheet.create({
 		marginTop: 6,
 		marginRight: 2,
 		fontFamily: 'SS Standard',
-		color: uiConfig.COLORS.BLUE
+		color: config.COLORS.BLUE
 	},
 
 	spacer: {
@@ -244,15 +244,15 @@ var styles = StyleSheet.create({
 	},
 
 	actionButton: {
-		height: uiConfig.TOOLBAR_HEIGHT,
-		backgroundColor: uiConfig.COLORS.BLUE
+		height: config.TOOLBAR_HEIGHT,
+		backgroundColor: config.COLORS.BLUE
 	},
 
 	actionButtonText: {
 		textAlign: 'center',
 		alignSelf: 'stretch',
-		fontFamily: uiConfig.SPECIAL_FONT,
-		fontSize: uiConfig.WORD_BUTTON_QUESTION_TEXT_SIZE,
+		fontFamily: config.SPECIAL_FONT,
+		fontSize: config.WORD_BUTTON_QUESTION_TEXT_SIZE,
 		color: 'white',
 		paddingTop: 7
 	}

@@ -7,9 +7,9 @@ var {
 	Hits
 } = GAnalytics;
 
-var uiConfig = require('../uiconfig');
+var config = require('../config');
 
-var ga = new Analytics(uiConfig.GA_TOKEN, clientId);
+var ga = new Analytics(config.GA_TOKEN, clientId);
 
 module.exports = {
 	event: function (category, action, optLabel, optValue, optNonInteraction) {

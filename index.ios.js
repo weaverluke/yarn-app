@@ -29,7 +29,7 @@ var gameStateStore = require('./ios/app/stores/gamestatestore');
 var userProfileStore = require('./ios/app/stores/userprofilestore');
 var actions = require('./ios/app/actions/actions');
 var log = require('./ios/app/logger/logger');
-var uiConfig = require('./ios/app/uiconfig');
+var config = require('./ios/app/config');
 
 var WHITELIST = require('./ios/app/whitelist');
 
@@ -233,8 +233,8 @@ var yarn = React.createClass({
 			return <View/>;
 		}
 		var levelStats = userProfileStore.get('historyLevelValues');
-		console.log('RESULTS: level:', Math.min(userProfileStore.get('level'), uiConfig.MAX_VOCAB_LEVEL),
-			', prevLevel:', Math.min(levelStats[levelStats.length - 2], uiConfig.MAX_VOCAB_LEVEL));
+		console.log('RESULTS: level:', Math.min(userProfileStore.get('level'), config.MAX_VOCAB_LEVEL),
+			', prevLevel:', Math.min(levelStats[levelStats.length - 2], config.MAX_VOCAB_LEVEL));
 
 		var previousLevel = levelStats.length > 1 ? levelStats[levelStats.length - 2] : levelStats[0];
 
@@ -242,8 +242,8 @@ var yarn = React.createClass({
 			<ResultView
 				correctWords={gameStateStore.get('correct')}
 				totalWords={gameStateStore.get('correct') + gameStateStore.get('wrong')}
-				level={Math.min(userProfileStore.get('level'), uiConfig.MAX_VOCAB_LEVEL)}
-				previousLevel={Math.min(previousLevel, uiConfig.MAX_VOCAB_LEVEL)}
+				level={Math.min(userProfileStore.get('level'), config.MAX_VOCAB_LEVEL)}
+				previousLevel={Math.min(previousLevel, config.MAX_VOCAB_LEVEL)}
 				score={userProfileStore.get('score')}
 				previousScore={userProfileStore.get('previousScore')}
 				onDonePressed={this.closeResultView}
@@ -984,7 +984,7 @@ var styles = StyleSheet.create({
 	},
 
 	content: {
-		marginTop: uiConfig.IOS_STATUSBAR_HEIGHT,
+		marginTop: config.IOS_STATUSBAR_HEIGHT,
 		flex: 1
 	},
 

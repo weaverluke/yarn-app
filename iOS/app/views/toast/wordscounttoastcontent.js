@@ -7,7 +7,7 @@ var {
 	Text,
 } = React;
 
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 
 var ToastContent = React.createClass({
 
@@ -47,16 +47,16 @@ var styles = StyleSheet.create({
 
 	text: {
 		fontSize: 26,
-		fontFamily: uiConfig.SPECIAL_FONT,
-		color: uiConfig.COLORS.MID_GREY,
+		fontFamily: config.SPECIAL_FONT,
+		color: config.COLORS.MID_GREY,
 		marginLeft: 10
 	},
 
 	number: {
 		fontSize: 36,
 		marginTop: 4,
-		fontFamily: uiConfig.SPECIAL_FONT,
-		color: uiConfig.COLORS.ORANGE
+		fontFamily: config.SPECIAL_FONT,
+		color: config.COLORS.ORANGE
 	}
 });
 

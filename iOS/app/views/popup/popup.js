@@ -13,8 +13,8 @@ var {
 var Dimensions = require('Dimensions');
 var {width, height} = Dimensions.get('window');
 
-var uiConfig = require('../../uiconfig');
-var COLORS = uiConfig.COLORS;
+var config = require('../../config');
+var COLORS = config.COLORS;
 var utils = require('../../utils');
 
 var POPUP_TYPE = {
@@ -49,7 +49,7 @@ var Popup = React.createClass({
 			return {
 				buttonAnimationFinished: true,
 				buttonText: 'COMING SOON',
-				buttonBgColor: uiConfig.COLORS.MID_GREY,
+				buttonBgColor: config.COLORS.MID_GREY,
 				// used for button width animation
 				buttonWidth: new Animated.Value(130)
 			};
@@ -58,7 +58,7 @@ var Popup = React.createClass({
 		return {
 			buttonAnimationFinished: false,
 			buttonText: '£1.69',
-			buttonBgColor: uiConfig.COLORS.BLUE,
+			buttonBgColor: config.COLORS.BLUE,
 			// used for button width animation
 			buttonWidth: new Animated.Value(50)
 		};
@@ -278,8 +278,8 @@ var Popup = React.createClass({
 
 		var animationTime = 500;
 
-		var startColor = utils.colorToObj(uiConfig.COLORS.BLUE);
-		var finalColor = utils.colorToObj(uiConfig.COLORS.MID_GREY);
+		var startColor = utils.colorToObj(config.COLORS.BLUE);
+		var finalColor = utils.colorToObj(config.COLORS.MID_GREY);
 
 		this.props.onSubmit && this.props.onSubmit();
 
@@ -321,7 +321,7 @@ var Popup = React.createClass({
 			height: 60
 		};
 		var buttonStyle = {
-			backgroundColor: uiConfig.COLORS.SELECTED_GREY
+			backgroundColor: config.COLORS.SELECTED_GREY
 		};
 		var buttonTextStyle = {
 			fontWeight: '500',
@@ -339,7 +339,7 @@ var Popup = React.createClass({
 							<Text>any time!</Text>
 						</View>
 						<View>
-							<TouchableHighlight onPress={this.props.onSubmit} underlayColor={uiConfig.COLORS.SELECTED_GREY_DIM}>
+							<TouchableHighlight onPress={this.props.onSubmit} underlayColor={config.COLORS.SELECTED_GREY_DIM}>
 								<View style={[styles.confirmButton, buttonStyle]}>
 									<Text style={[styles.confirmButtonText, buttonTextStyle]}>GOT IT</Text>
 								</View>
@@ -403,7 +403,7 @@ var styles = StyleSheet.create({
 	popup: {
 		position: 'absolute',
 		//left: 10,
-		bottom: uiConfig.TOOLBAR_HEIGHT + ARROW_WIDTH/2,
+		bottom: config.TOOLBAR_HEIGHT + ARROW_WIDTH/2,
 		flex: 1,
 		backgroundColor: '#FFFFFF',
 		borderRadius: 3,
@@ -530,7 +530,7 @@ var styles = StyleSheet.create({
 	dictionary: {
 		borderWidth: 1,
 		borderRadius: 4,
-		backgroundColor: uiConfig.COLORS.GREEN,
+		backgroundColor: config.COLORS.GREEN,
 		position: 'absolute',
 		padding: 5,
 		top: 0,

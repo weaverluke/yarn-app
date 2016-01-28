@@ -8,13 +8,13 @@ var {
 	TouchableWithoutFeedback
 } = React;
 
-var uiConfig = require('../../uiconfig');
+var config = require('../../config');
 
 var NavBarLabel = React.createClass({
 
 	getDefaultProps: function () {
 		return {
-			color: uiConfig.COLORS.MID_GREY,
+			color: config.COLORS.MID_GREY,
 			backgroundColor: '#FFFFFF',
 			texts: [],
 			isFirst: false,
@@ -24,7 +24,7 @@ var NavBarLabel = React.createClass({
 
 	getInitialState: function () {
 		return {
-			height: uiConfig.TOOLBAR_HEIGHT
+			height: config.TOOLBAR_HEIGHT
 		};
 	},
 
@@ -51,7 +51,7 @@ var NavBarLabel = React.createClass({
 	renderTextItem: function (cfg, key, useSpecialFont) {
 		var extraStyle = {};
 		if (useSpecialFont) {
-			extraStyle.fontFamily = uiConfig.SPECIAL_FONT;
+			extraStyle.fontFamily = config.SPECIAL_FONT;
 			extraStyle.fontSize = 24;
 			extraStyle.lineHeight = 25;
 			extraStyle.height = 24;
@@ -69,7 +69,7 @@ var NavBarLabel = React.createClass({
 var styles = StyleSheet.create({
 	wrap: {
 		borderLeftWidth: 1,
-		borderLeftColor: uiConfig.COLORS.MID_GREY,
+		borderLeftColor: config.COLORS.MID_GREY,
 		alignItems: 'center',
 		paddingLeft: 10,
 		paddingRight: 10
