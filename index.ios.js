@@ -257,16 +257,12 @@ var yarn = React.createClass({
 				score={userProfileStore.get('score')}
 				previousScore={userProfileStore.get('previousScore')}
 				onDonePressed={this.closeResultView}
-				buyVocabLevelShown={userProfileStore.get('buyVocabLevelShown')}
-				buyVocabLevelPressed={userProfileStore.get('buyVocabLevelPressed')}
 				onBuyVocabLevelPressed={this.onBuyVocabLevelPressed}
 			/>
 		);
 	},
 
 	onBuyVocabLevelPressed: function () {
-		userProfileStore.set('buyVocabLevelPressed', true);
-		userProfileStore.set('buyVocabLevelShown', true);
 		Analytics.event('Buy Premium Feature', 'Buy Vocab Level');
 		actions.emit(actions.BUY_PREMIUM_VOCAB_LEVEL);
 	},

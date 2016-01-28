@@ -37,9 +37,7 @@ var ResultView = React.createClass({
 			previousLevel: 0,
 			score: 0,
 			previousScore: 0,
-			showWordsCount: false,
-			buyVocabLevelShown: false,
-			buyVocabLevelPressed: false
+			showWordsCount: false
 		};
 	},
 
@@ -49,7 +47,7 @@ var ResultView = React.createClass({
 			score: this.props.score === this.props.previousScore ? this.props.score : this.props.previousScore,
 			level: this.props.level === this.props.previousLevel ? this.props.level : this.props.previousLevel,
 			levelBackground: config.COLORS.ORANGE,
-			buyVocabLevelPopupVisible: !this.props.buyVocabLevelShown
+			buyVocabLevelPopupVisible: false
 		};
 	},
 

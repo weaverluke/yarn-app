@@ -367,7 +367,7 @@ function onBuyPremiumVocabLevel() {
 		}
 		else if (resp && resp.productIdentifier) {
 			AlertIOS.alert('Purchase Successful', 'Your transaction ID is ' + resp.transactionIdentifier + '. Your Vocab Level is now unlocked!');
-			config.MAX_VOCAB_LEVEL = 101;
+			config.MAX_VOCAB_LEVEL = Infinity;
 			userProfileStore.set('premiumVocabLevel', true);
 		}
 	});

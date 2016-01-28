@@ -21,9 +21,6 @@ var data = {
 	language: '',
 	testYourselfPromptShown: false,
 
-	buyVocabLevelShown: false,
-	buyVocabLevelPressed: false,
-
 	wordsLimit: 10,
 	level: INITIAL_LEVEL,
 	range: 25,
@@ -185,7 +182,8 @@ function loadData() {
 			migrate3();
 			// disabled until we disabled separate stats for each language
 			//migrate4();
-			migrate5();
+			// disabled as we now do not store that data
+			//migrate5();
 			migrate6();
 
 			data.loaded = true;
@@ -197,7 +195,7 @@ function loadData() {
 			});
 
 			if (data.premiumVocabLevel) {
-				config.MAX_VOCAB_LEVEL = 101;
+				config.MAX_VOCAB_LEVEL = Infinity;
 			}
 
 			emitChange();
@@ -289,14 +287,6 @@ function migrate4() {
 	saveData();
 }
 
-function migrate5() {
-	if (!('buyVocabLevelShown' in data)) {
-		data.buyVocabLevelShown = false;
-	}
-	if (!('buyVocabLevelPressed' in data)) {
-		data.buyVocabLevelPressed = false;
-	}
-}
 
 function migrate6() {
 	if (!('selectedCategories' in data)) {
