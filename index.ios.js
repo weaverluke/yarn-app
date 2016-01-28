@@ -210,7 +210,7 @@ var yarn = React.createClass({
 	},
 
 	stopQuiz: function () {
-		Analytics.event('Test flow', 'Stop test');
+		Analytics.event('Test flow', 'Quiz cancelled');
 		var shouldScrollBack = gameStateStore.get('singleWordMode');
 		this.resetGame();
 		this.refs['mainbar'].animateIn();

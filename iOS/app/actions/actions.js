@@ -5,6 +5,8 @@ var config = require('../config');
 
 var InAppUtils = require('NativeModules').InAppUtils;
 
+var Analytics = require('../helpers/analytics');
+
 var getRandomWords = require('../helpers/getrandomwords');
 var googleTranslate = require('../apis/googletranslate');
 var collins = require('../apis/collins');
@@ -223,6 +225,7 @@ function onShowNextQuestion() {
 		gameStateStore.set('finished', true);
 		gameStateStore.set('currentState', GAME_STATES.WORDS_FOUND);
 		gameStateStore.pause(false);
+		Analytics.event('Test flow', 'Single-word quiz completed');
 		return;
 	}
 
@@ -230,7 +233,8 @@ function onShowNextQuestion() {
 
 	if (currentWordIndex === gameStateStore.get('quizWords').length) {
 		gameStateStore.set('finished', true);
-		return
+		Analytics.event('Test flow', 'Quiz completed');
+		return;
 	}
 
 	var currentWord = gameStateStore.get('quizWords')[currentWordIndex];
