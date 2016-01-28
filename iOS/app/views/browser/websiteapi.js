@@ -5,10 +5,6 @@ module.exports = function () {
 	}
 	window.yarnInitialised = true;
 
-	var RANDOM_BLACKLIST = [
-		/\/crosswords\//
-	];
-
 	var lastScrollPosition = -1;
 
 	window.yarnHighlight = (function () {
@@ -378,9 +374,6 @@ module.exports = function () {
 			case 'UNHIGHLIGHT_WORDS':
 				return yarnHighlight.unhighlight();
 
-			case 'GO_TO_RANDOM_URL':
-				return goToRandomUrl();
-
 			case 'SAVE_SCROLL':
 				return saveScrollPosition();
 
@@ -393,80 +386,6 @@ module.exports = function () {
 			default:
 				return;
 		}
-	}
-
-	function goToRandomUrl() {
-		var links = [].slice.call(document.getElementsByTagName('a'));
-		var matchingOrigin = getLinksMatchingCurrentDomain(links);
-
-		links = matchingOrigin.length ? matchingOrigin : links;
-
-		var newUrl;
-		var popular = [];
-
-		links = links.map(function (link) {
-			// remove hashes from the end. It works for the guardian but might be problematic for sites
-			// with navigation implemented via hashes
-			var href = link.getAttribute('href').replace(/#.*/, '');
-
-			if (link.closest('#tabs-popular-1')) {
-				popular.push(href);
-			}
-			return href;
-		});
-
-
-		// use popular links if these are available
-		if (popular.length > 5) {
-			newUrl = popular[Math.floor(Math.random() * popular.length)];
-		}
-
-		else {
-			var unique = [];
-
-			for (var i = 0; i < links.length; i++) {
-				if (unique.indexOf(links[i]) === -1) {
-					unique.push(links[i]);
-				}
-			}
-
-			unique = unique.filter(function (url) {
-				// exclude blacklisted items
-				for (var i = 0; i < RANDOM_BLACKLIST.length; i++) {
-					if (RANDOM_BLACKLIST[i].test(url)) {
-						return false;
-					}
-				}
-
-				return true;
-			});
-
-			// sort from the longest to the shortest
-			unique.sort(function (a, b) {
-				return b.length - a.length;
-			});
-
-			// pick 30% of the longest links
-			var index = Math.floor(Math.random() * unique.length * 0.3);
-			newUrl = unique[index];
-		}
-
-		location = newUrl;
-	}
-
-	function getLinksMatchingCurrentDomain(links) {
-		var origin = location.origin;
-
-		return links.filter(function (link) {
-			var href = link.getAttribute('href');
-			// ignore url to this page
-			if (!href || href === location.href) {
-				return false;
-			}
-			// trim trailing slash as location.origin doesn't have it
-			href = href.replace(/\/$/, '');
-			return href && href.indexOf(origin) === 0 && href !== origin;
-		});
 	}
 
 	var lastBodyLength = -1;

@@ -308,10 +308,6 @@ var Browser = React.createClass({
 		this.sendCommand('SET_HIGHLIGHT_COLOR', color);
 	},
 
-	goToRandomUrl: function () {
-		this.isNetworkOk() && this.sendCommand('GO_TO_RANDOM_URL');
-	},
-
 	isNetworkOk: function () {
 		if (NetworkStatus.isOk()) {
 			return true;
