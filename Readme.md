@@ -1,5 +1,12 @@
 ##Release notes
 
+v0.2.37
+- analytics added
+- error logging added
+- improvements for random menu - better behaviour of menu on random screen
+- crash during vocab scanning fixed
+- code cleanup
+
 v0.2.36
 - added "Open in Safari" in navigation menu
 - added in-app purchases to activate premium vocab level
