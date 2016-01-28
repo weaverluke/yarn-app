@@ -47,5 +47,5 @@ module.exports = {
 
 	USE_GESTURES_FOR_RANDOM_MENU: true,
 
-	GA_TOKEN: 'UA-9770610-4'
+	GA_TOKEN: 'UA-59306540-2'
 };

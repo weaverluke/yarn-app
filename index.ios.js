@@ -200,7 +200,7 @@ var yarn = React.createClass({
 	},
 
 	stopQuiz: function () {
-		Analytics.event('Test', 'Stop test');
+		Analytics.event('Test flow', 'Stop test');
 		var shouldScrollBack = gameStateStore.get('singleWordMode');
 		this.resetGame();
 		this.refs['mainbar'].animateIn();
@@ -257,7 +257,7 @@ var yarn = React.createClass({
 	onBuyVocabLevelPressed: function () {
 		userProfileStore.set('buyVocabLevelPressed', true);
 		userProfileStore.set('buyVocabLevelShown', true);
-		Analytics.event('Premium', 'Vocab Level');
+		Analytics.event('Buy Premium Feature', 'Buy Vocab Level');
 		actions.emit(actions.BUY_PREMIUM_VOCAB_LEVEL);
 	},
 
@@ -724,8 +724,7 @@ var yarn = React.createClass({
 	},
 
 	buyUrlFeaturePressed: function () {
-		console.log('BUY URL FEATURE');
-		Analytics.event('Premium', 'Web Browsing');
+		Analytics.event('Buy Premium Feature', 'Buy Web Browsing');
 		//this.closeUrlFeaturePopup();
 	},
 

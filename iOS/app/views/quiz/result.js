@@ -106,7 +106,7 @@ var ResultView = React.createClass({
 					visible={this.state.buyVocabLevelPopupVisible}
 					type={Popup.POPUP_TYPE.BUY_VOCAB_LEVEL}
 					withoutOverlay={true}
-					buyButtonInFinalState={this.props.buyVocabLevelPressed}
+					buyButtonInFinalState={false}
 					onSubmit={this.props.onBuyVocabLevelPressed}
 				/>
 
