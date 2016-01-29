@@ -365,7 +365,7 @@ InAppUtils.loadProducts(['com.weaverdigital.yarnmvp.premiumvocablevel'], functio
 });
 
 function onBuyPremiumVocabLevel() {
-	InAppUtils.purchaseProduct('com.weaverdigital.yarnmvp.premiumvocablevel', function (err, resp) {
+	InAppUtils.purchaseProduct('com.weaverdigital.yarnmobile.premiumvocablevel', function (err, resp) {
 		if (err) {
 			AlertIOS.alert('App-Store error', 'Error details: ' + err);
 		}
