@@ -32,6 +32,7 @@
 		6119151B1BFA92B900BB1382 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		6119151D1BFBD79000BB1382 /* logo-splash.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6119151C1BFBD79000BB1382 /* logo-splash.jpg */; };
 		613123E51C2375AD0007EDCA /* tick-finished.gif in Resources */ = {isa = PBXBuildFile; fileRef = 613123E41C2375AD0007EDCA /* tick-finished.gif */; };
+		614FECA81C679BBF00BA2D5D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 614FECA71C679BBF00BA2D5D /* StoreKit.framework */; };
 		6179F0471C56BC180009DD76 /* external-icon-on.png in Resources */ = {isa = PBXBuildFile; fileRef = 6179F0451C56BC180009DD76 /* external-icon-on.png */; };
 		6179F0481C56BC180009DD76 /* external-icon-off.png in Resources */ = {isa = PBXBuildFile; fileRef = 6179F0461C56BC180009DD76 /* external-icon-off.png */; };
 		6179F05D1C56CB0D0009DD76 /* libInAppUtils.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6179F05A1C56CAFE0009DD76 /* libInAppUtils.a */; };
@@ -206,6 +207,7 @@
 		61127D701C3DC5EC0045A1E0 /* yarn-icon-on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "yarn-icon-on.png"; path = "../Resources/Images/yarn-icon-on.png"; sourceTree = "<group>"; };
 		6119151C1BFBD79000BB1382 /* logo-splash.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "logo-splash.jpg"; path = "../Resources/Images/logo-splash.jpg"; sourceTree = "<group>"; };
 		613123E41C2375AD0007EDCA /* tick-finished.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "tick-finished.gif"; path = "../Resources/Images/tick-finished.gif"; sourceTree = "<group>"; };
+		614FECA71C679BBF00BA2D5D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		6179F0451C56BC180009DD76 /* external-icon-on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "external-icon-on.png"; path = "../Resources/Images/external-icon-on.png"; sourceTree = "<group>"; };
 		6179F0461C56BC180009DD76 /* external-icon-off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "external-icon-off.png"; path = "../Resources/Images/external-icon-off.png"; sourceTree = "<group>"; };
 		6179F0541C56CAFE0009DD76 /* InAppUtils.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = InAppUtils.xcodeproj; path = "../node_modules/react-native-in-app-utils/InAppUtils.xcodeproj"; sourceTree = "<group>"; };
@@ -271,6 +273,7 @@
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
+				614FECA81C679BBF00BA2D5D /* StoreKit.framework in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -523,6 +526,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				614FECA71C679BBF00BA2D5D /* StoreKit.framework */,
 				13B07FAE1A68108700A75B9A /* yarn */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* yarnTests */,
@@ -595,6 +599,11 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = QL7MV2PABG;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};

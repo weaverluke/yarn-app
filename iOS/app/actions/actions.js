@@ -360,12 +360,29 @@ function onRandomCategorySelected(cat) {
 	userProfileStore.set('selectedCategories', categories);
 }
 
-InAppUtils.loadProducts(['com.weaverdigital.yarnmvp.premiumvocablevel'], function (err, products) {
-	console.log('load products result: ', err, products);
-});
 
 function onBuyPremiumVocabLevel() {
-	InAppUtils.purchaseProduct('com.weaverdigital.yarnmobile.premiumvocablevel', function (err, resp) {
+	InAppUtils.loadProducts([config.PREMIUM_VOCAB_LEVEL_ID], function (err, products) { //	debugger;
+		if (err) {
+			log({
+				message: 'Cannot load products',
+				details: err
+			});
+			return AlertIOS.alert('Error', 'Cannot connect to AppStore. Please try again later.');
+		}
+
+		if (products && products.length) {
+			for (var i = 0; i < products.length; i++) {
+				if (products[i].identifier === config.PREMIUM_VOCAB_LEVEL_ID) {
+					return purchaseVocabLevel();
+				}
+			}
+		}
+	});
+}
+
+function purchaseVocabLevel() {
+	InAppUtils.purchaseProduct(config.PREMIUM_VOCAB_LEVEL_ID, function (err, resp) {
 		if (err) {
 			AlertIOS.alert('App-Store error', 'Error details: ' + err);
 		}
@@ -375,6 +392,7 @@ function onBuyPremiumVocabLevel() {
 			userProfileStore.set('premiumVocabLevel', true);
 		}
 	});
+
 }
 
 module.exports = bus;
