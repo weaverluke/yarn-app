@@ -57,7 +57,10 @@ ErrorUtils.setGlobalHandler(function (err) {
 			stack: err.stack
 		}
 	});
-	AlertIOS.alert('Ops!', 'Looks like we\'ve encountered an error. Please restart the app if it behaves weirdly');
+	// do not show errors from react-native-webview-bridge as these do not break the app
+	if (!/RCTWebViewManager\.onMessage/.test(err.message)) {
+		AlertIOS.alert('Ops!', 'Looks like we\'ve encountered an error. Please restart the app if it behaves weirdly');
+	}
 });
 
 //var subscription = NativeAppEventEmitter.addListener(
@@ -76,10 +79,6 @@ var HEADER = '#F9FAFB';
 var GAME_STATES = gameStateStore.GAME_STATES;
 
 var BROWSER_REF = 'browser';
-var DEFAULT_URL = 'http://www.theguardian.com/uk-news';
-//var DEFAULT_URL = 'http://www.theguardian.com/us-news/2015/sep/13/donald-trump-ben-carson-republican-debate';
-//DEFAULT_URL = 'http://www.theguardian.com/uk-news/2015/nov/23/undercover-police-target-hostile-reconnaissance-to-thwart-terror-attacks';
-DEFAULT_URL = 'http://wozniak.io/yarn.html';
 
 var yarn = React.createClass({
 
