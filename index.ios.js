@@ -710,27 +710,23 @@ var yarn = React.createClass({
 		if (userProfileStore.get('language') || userProfileStore.get('loaded')) {
 			this.onUserProfileChanged();
 		}
-
-		//InAppUtils.loadProducts(['com.weaverdigital.yarnmvp.premiumvocablevel'], function (err, products) {
-		//
-		//});
 	},
 
 	showUrlFeaturePopup: function () {
 		this.setState({
 			buyUrlFeaturePopupVisible: true
-		})
+		});
+		this.buyUrlFeaturePressed();
 	},
 
 	closeUrlFeaturePopup: function () {
 		this.setState({
 			buyUrlFeaturePopupVisible: false
-		})
+		});
 	},
 
 	buyUrlFeaturePressed: function () {
 		Analytics.event('Buy Premium Feature', 'Buy Web Browsing');
-		//this.closeUrlFeaturePopup();
 	},
 
 	_componentDidMount: function () {

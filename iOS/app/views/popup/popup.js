@@ -186,12 +186,12 @@ var Popup = React.createClass({
 	},
 
 	renderBuyUrlFeaturePopup: function () {
-		var popupWidth = 200;//(width - 2*POPUP_MARGIN) * 0.6;
+		var popupWidth = 150;//(width - 2*POPUP_MARGIN) * 0.6;
 		var extraStyle = {
 			top: 30,
 			width: popupWidth,
 			left: (width-popupWidth)/2,//POPUP_MARGIN,
-			height: 100
+			height: 70
 		};
 		var arrowLeft = popupWidth/2;// this.computeArrowPosition();
 
@@ -205,19 +205,11 @@ var Popup = React.createClass({
 				<View style={[styles.contentWrap]}>
 					<View>
 						<View style={styles.row}>
-							<Text>Add </Text>
 							<Text style={styles.bold}>Web Browsing </Text>
-							<Text>to</Text>
+							<Text>is</Text>
 						</View>
-						<Text>use Yarn across all your</Text>
-						<Text>favourite webistes</Text>
-					</View>
-					<View style={styles.bottomActionButtonWrap}>
-						<TouchableWithoutFeedback onPress={this.onBuyPressed}>
-							<Animated.View style={[styles.actionButton, buttonStyle]}>
-								<Text style={styles.confirmButtonText}>{this.state.buttonText}</Text>
-							</Animated.View>
-						</TouchableWithoutFeedback>
+						<Text>not yet available.</Text>
+						<Text>We'll add it soon!</Text>
 					</View>
 				</View>
 				<View style={[styles.arrowTop, {left: arrowLeft}]}>
