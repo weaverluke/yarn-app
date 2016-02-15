@@ -713,9 +713,10 @@ var yarn = React.createClass({
 	},
 
 	showUrlFeaturePopup: function () {
-		this.setState({
-			buyUrlFeaturePopupVisible: true
-		});
+		// do not show popup for now
+		//this.setState({
+		//	buyUrlFeaturePopupVisible: true
+		//});
 		this.buyUrlFeaturePressed();
 	},
 
