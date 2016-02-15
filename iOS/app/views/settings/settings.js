@@ -51,7 +51,17 @@ var SettingsView = React.createClass({
 					</View>
 				</TouchableWithoutFeedback>
 
-				<LangPicker lang={this.state.lang} onLanguageChange={this.onLanguageChange} />
+				<View style={styles.spacer} />
+				<View style={styles.langPickerContainer}>
+					<LangPicker lang={this.state.lang} onLanguageChange={this.onLanguageChange} />
+				</View>
+				<View style={styles.spacer} />
+				<TouchableHighlight style={styles.button} onPress={this.onRestorePurchasesPressed} underlayColor={config.COLORS.LIGHT_GREY}>
+					<View>
+						<Text style={styles.buttonText}>Restore in-app purchases</Text>
+					</View>
+				</TouchableHighlight>
+				<View style={styles.spacer2} />
 
 			</Animated.View>
 		);
@@ -122,6 +132,10 @@ var SettingsView = React.createClass({
 
 	hide: function (cb) {
 		this.animateOut(cb);
+	},
+
+	onRestorePurchasesPressed: function () {
+		actions.emit(actions.RESTORE_PURCHASES_PRESSED);
 	}
 });
 
@@ -154,6 +168,33 @@ var styles = StyleSheet.create({
 		overflow: 'visible',
 		height: 70,
 		backgroundColor: config.COLORS.MID_GREY
+	},
+
+	langPickerContainer: {
+		height: 200,
+	},
+
+	spacer: {
+		flex: 1
+	},
+
+	spacer2: {
+		height: config.TOOLBAR_HEIGHT
+	},
+
+	button: {
+		height: config.TOOLBAR_HEIGHT,
+		backgroundColor: 'white',
+		borderTopColor: config.COLORS.MID_GREY,
+		borderBottomColor: config.COLORS.MID_GREY,
+		borderTopWidth: 1,
+		borderBottomWidth: 1,
+		flexDirection: 'column',
+		justifyContent: 'center'
+	},
+
+	buttonText: {
+		marginLeft: 20
 	}
 
 });

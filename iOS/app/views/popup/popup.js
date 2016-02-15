@@ -57,7 +57,7 @@ var Popup = React.createClass({
 
 		return {
 			buttonAnimationFinished: false,
-			buttonText: '£1.69',
+			buttonText: '£2.29',
 			buttonBgColor: config.COLORS.BLUE,
 			// used for button width animation
 			buttonWidth: new Animated.Value(50)

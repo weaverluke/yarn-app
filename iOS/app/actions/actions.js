@@ -54,6 +54,7 @@ bus.on(actions.HOME_BUTTON_PRESSED, onHomePressed);
 bus.on(actions.WORD_IN_BROWSER_PRESSED, onWordInBrowserPressed);
 bus.on(actions.RANDOM_CATEGORY_SELECTED, onRandomCategorySelected);
 bus.on(actions.BUY_PREMIUM_VOCAB_LEVEL, onBuyPremiumVocabLevel);
+bus.on(actions.RESTORE_PURCHASES_PRESSED, onRestoreInAppPurchases);
 
 function onWordsParsed(words) {
 	if (!words.length) {
@@ -368,7 +369,7 @@ function onBuyPremiumVocabLevel() {
 				message: 'Cannot load products',
 				details: err
 			});
-			return AlertIOS.alert('Error', 'Cannot connect to AppStore. Please try again later.');
+			return AlertIOS.alert('Error', 'Cannot connect to App Store. Please try again later.');
 		}
 
 		if (products && products.length) {
@@ -384,12 +385,29 @@ function onBuyPremiumVocabLevel() {
 function purchaseVocabLevel() {
 	InAppUtils.purchaseProduct(config.PREMIUM_VOCAB_LEVEL_ID, function (err, resp) {
 		if (err) {
-			AlertIOS.alert('App-Store error', 'Error details: ' + err);
+			AlertIOS.alert('App Store error', 'Error details: ' + err);
 		}
 		else if (resp && resp.productIdentifier) {
 			AlertIOS.alert('Purchase Successful', 'Your transaction ID is ' + resp.transactionIdentifier + '. Your Vocab Level is now unlocked!');
 			config.MAX_VOCAB_LEVEL = Infinity;
 			userProfileStore.set('premiumVocabLevel', true);
+		}
+	});
+}
+
+function onRestoreInAppPurchases() {
+	InAppUtils.restorePurchases(function (error, products) {
+		if (error) {
+			AlertIOS.alert('App Store Error', 'Could not connect to the store. Please try again later');
+			log({
+				message: 'Cannot restore in-app purchases',
+				details: error
+			});
+		}
+		else {
+			config.MAX_VOCAB_LEVEL = Infinity;
+			userProfileStore.set('premiumVocabLevel', true);
+			AlertIOS.alert('Restore Successful', 'Successfully restored all your purchases.');
 		}
 	});
 
